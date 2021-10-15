@@ -117,8 +117,8 @@ export function separableConvolution(
       }
       const result = columnConvolution.convolve(columnData);
       for (let i = 0; i < result.length; i++) {
-        const idx = (i + kernelOffsetY) * hFactor + wOffset + channel;
-        newImage.data[idx] = round(clamp(result[i]));
+        const index = (i + kernelOffsetY) * hFactor + wOffset;
+        newImage.setValueByIndex(index, channel, round(clamp(result[i])));
       }
     }
   }
@@ -133,60 +133,75 @@ export function separableConvolution(
   for (let channel = 0; channel < channels; channel++) {
     for (let bY = 0; bY < height; bY++) {
       for (let bX = 0; bX < kernelOffsetX; bX++) {
-        const idx = (bY * width + bX) * channels + channel;
+        const index = (bY * width + bX) * channels;
 
         const bXopp = width - bX - 1;
         const bYopp = height - bY - 1;
-        const idxOpp = (bYopp * width + bXopp) * channels + channel;
-
-        newImage.data[idx] = computeConvolutionPixel(
-          bX,
-          bY,
+        const indexOpp = (bYopp * width + bXopp) * channels;
+        newImage.setValueByIndex(
+          index,
           channel,
-          image,
-          kernel,
-          interpolateBorder,
-          clamp,
+          computeConvolutionPixel(
+            bX,
+            bY,
+            channel,
+            image,
+            kernel,
+            interpolateBorder,
+            clamp,
+          ),
         );
-        newImage.data[idxOpp] = computeConvolutionPixel(
-          bXopp,
-          bYopp,
+        newImage.setValueByIndex(
+          indexOpp,
           channel,
-          image,
-          kernel,
-          interpolateBorder,
-          clamp,
+          computeConvolutionPixel(
+            bXopp,
+            bYopp,
+            channel,
+            image,
+            kernel,
+            interpolateBorder,
+            clamp,
+          ),
         );
       }
     }
   }
 
   // apply the convolution on the top and bottom borders
-  for (let c = 0; c < channels; c++) {
+  for (let channel = 0; channel < channels; channel++) {
     for (let bX = 0; bX < width; bX++) {
       for (let bY = 0; bY < kernelOffsetY; bY++) {
-        const idx = (bY * width + bX) * channels + c;
+        const index = (bY * width + bX) * channels;
         const bXopp = width - bX - 1;
         const bYopp = height - bY - 1;
-        const idxOpp = (bYopp * width + bXopp) * channels + c;
+        const indexOpp = (bYopp * width + bXopp) * channels;
 
-        newImage.data[idx] = computeConvolutionPixel(
-          bX,
-          bY,
-          c,
-          image,
-          kernel,
-          interpolateBorder,
-          clamp,
+        newImage.setValueByIndex(
+          index,
+          channel,
+          computeConvolutionPixel(
+            bX,
+            bY,
+            channel,
+            image,
+            kernel,
+            interpolateBorder,
+            clamp,
+          ),
         );
-        newImage.data[idxOpp] = computeConvolutionPixel(
-          bXopp,
-          bYopp,
-          c,
-          image,
-          kernel,
-          interpolateBorder,
-          clamp,
+        newImage.setValueByIndex(
+          indexOpp,
+          channel,
+          computeConvolutionPixel(
+            bXopp,
+            bYopp,
+            channel,
+            image,
+            kernel,
+            interpolateBorder,
+            clamp,
+          ),
         );
       }
     }
