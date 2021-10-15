@@ -1,5 +1,5 @@
+import { decode, ColorDepth, ImageKind } from 'IJS';
 import { readImage } from 'test';
-import { decode, ColorDepth, ImageKind } from 'ijs';
 
 describe('decode various formats', function () {
   it('auto decode png', async () => {
@@ -25,7 +25,7 @@ describe('invalid data format', () => {
   });
   it('should throw for unknown data', () => {
     expect(() => decode(new Uint8Array(10))).toThrow(
-      /unrecognized data format/
+      /unrecognized data format/,
     );
   });
 });

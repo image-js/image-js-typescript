@@ -1,4 +1,4 @@
-import { Image } from '../Image';
+import { IJS } from '../IJS';
 import { validateChannel } from '../utils/validators';
 
 export interface IHistogramOptions {
@@ -12,11 +12,14 @@ export interface IHistogramOptions {
 
 /**
  * Returns a histogram of pixel intensities.
- * @param image
+ *
+ * @param image - The image.
+ * @param options - Options.
+ * @returns - The histogram.
  */
 export function histogram(
-  image: Image,
-  options: IHistogramOptions = {}
+  image: IJS,
+  options: IHistogramOptions = {},
 ): number[] {
   let { channel } = options;
   if (typeof channel !== 'number') {
@@ -27,8 +30,8 @@ export function histogram(
   }
   validateChannel(channel, image);
   const hist = new Array(image.maxValue + 1).fill(0);
-  for (let i = channel; i < image.data.length; i += image.channels) {
-    hist[image.data[i]]++;
+  for (let i = 0; i < image.size; i++) {
+    hist[image.getValueByIndex(i, channel)]++;
   }
   return hist;
 }

@@ -1,4 +1,4 @@
-import { Image, ImageCoordinates } from '../Image';
+import { IJS, ImageCoordinates } from '../IJS';
 import { InterpolationType, BorderType } from '../types';
 
 import { transform } from './transform';
@@ -19,10 +19,10 @@ export interface IRotateOptions {
 }
 
 export function rotate(
-  image: Image,
+  image: IJS,
   angle: number,
-  options: IRotateOptions = {}
-): Image {
+  options: IRotateOptions = {},
+): IJS {
   const { center = ImageCoordinates.CENTER, scale = 1 } = options;
 
   let centerCoordinates;
@@ -39,13 +39,13 @@ export function rotate(
 function getRotationMatrix(
   angle: number,
   center: [number, number],
-  scale: number
+  scale: number,
 ): number[][] {
   const angleRadians = (angle * Math.PI) / 180;
   const alpha = scale * Math.cos(angleRadians);
   const beta = scale * Math.sin(angleRadians);
   return [
     [alpha, beta, (1 - alpha) * center[0] - beta * center[1]],
-    [-beta, alpha, beta * center[0] + (1 - alpha) * center[1]]
+    [-beta, alpha, beta * center[0] + (1 - alpha) * center[1]],
   ];
 }

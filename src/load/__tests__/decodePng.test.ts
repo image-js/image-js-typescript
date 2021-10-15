@@ -1,5 +1,5 @@
 import { readImage } from 'test';
-import { decodePng, ColorDepth, ImageKind } from 'ijs';
+import { decodePng, ColorDepth, ImageKind } from 'IJS';
 
 describe('Load PNG', function () {
   const tests: [string, ColorDepth, ImageKind][] = [
@@ -13,7 +13,7 @@ describe('Load PNG', function () {
     ['rgba32', ColorDepth.UINT8, ImageKind.RGBA],
     ['rgba64', ColorDepth.UINT16, ImageKind.RGBA],
     ['plt-4bpp', ColorDepth.UINT8, ImageKind.RGB],
-    ['plt-8bpp-color', ColorDepth.UINT8, ImageKind.RGB]
+    ['plt-8bpp-color', ColorDepth.UINT8, ImageKind.RGB],
   ];
 
   it.each(tests)('should load from buffer %s', async (name, depth, kind) => {

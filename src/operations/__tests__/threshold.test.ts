@@ -2,8 +2,8 @@ import {
   computeThreshold,
   threshold,
   ImageKind,
-  ThresholdAlgorithm
-} from 'ijs';
+  ThresholdAlgorithm,
+} from 'IJS';
 import { getTestImage, getImage, decodeImage } from 'test';
 
 test('threshold with a fixed value of 100', () => {
@@ -22,9 +22,9 @@ test('threshold with a fixed value of 100', () => {
       [0, 0, 0, 255, 255, 255, 255, 0],
       [0, 0, 0, 255, 255, 255, 255, 0],
       [0, 0, 0, 0, 0, 0, 0, 0],
-      [255, 255, 255, 255, 255, 255, 255, 255]
+      [255, 255, 255, 255, 255, 255, 255, 255],
     ],
-    ImageKind.GREY
+    ImageKind.GREY,
   );
 
   expect(th.data).toStrictEqual(expected.data);
@@ -58,9 +58,9 @@ test('automatic threshold with OTSU', () => {
       [0, 0, 0, 255, 255, 255, 255, 0],
       [0, 0, 0, 255, 255, 255, 255, 0],
       [0, 0, 0, 0, 0, 0, 0, 0],
-      [255, 255, 255, 255, 255, 255, 255, 255]
+      [255, 255, 255, 255, 255, 255, 255, 255],
     ],
-    ImageKind.GREY
+    ImageKind.GREY,
   );
   expect(th.data).toStrictEqual(expected.data);
 });
@@ -68,6 +68,6 @@ test('automatic threshold with OTSU', () => {
 test('error too many channels', () => {
   const testImage = getTestImage();
   expect(() =>
-    threshold(testImage, { algorithm: ThresholdAlgorithm.OTSU })
+    threshold(testImage, { algorithm: ThresholdAlgorithm.OTSU }),
   ).toThrow(/threshold can only be computed on images with one channel/);
 });

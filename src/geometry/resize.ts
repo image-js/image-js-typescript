@@ -1,8 +1,8 @@
-import { Image } from '../Image';
+import { IJS } from '../IJS';
 import { InterpolationType, BorderType } from '../types';
-import { getInterpolationFunction } from '../utils/interpolatePixel';
-import { getBorderInterpolation } from '../utils/interpolateBorder';
 import { getClamp } from '../utils/clamp';
+import { getBorderInterpolation } from '../utils/interpolateBorder';
+import { getInterpolationFunction } from '../utils/interpolatePixel';
 
 export interface IResizeOptions {
   width?: number;
@@ -15,14 +15,18 @@ export interface IResizeOptions {
   borderValue?: number;
 }
 
-export function resize(image: Image, options: IResizeOptions): Image {
+/**
+ * @param image
+ * @param options
+ */
+export function resize(image: IJS, options: IResizeOptions): IJS {
   const {
     interpolationType = InterpolationType.BILINEAR,
     borderType = BorderType.CONSTANT,
-    borderValue = 0
+    borderValue = 0,
   } = options;
   const { width, height } = checkOptions(image, options);
-  const newImage = Image.createFrom(image, { width, height });
+  const newImage = IJS.createFrom(image, { width, height });
   const interpolate = getInterpolationFunction(interpolationType);
   const interpolateBorder = getBorderInterpolation(borderType, borderValue);
   const clamp = getClamp(newImage);
@@ -42,7 +46,7 @@ export function resize(image: Image, options: IResizeOptions): Image {
           ny,
           c,
           interpolateBorder,
-          clamp
+          clamp,
         );
         newImage.data[wOffset + c] = newValue;
       }
@@ -51,16 +55,20 @@ export function resize(image: Image, options: IResizeOptions): Image {
   return newImage;
 }
 
+/**
+ * @param image
+ * @param options
+ */
 function checkOptions(
-  image: Image,
-  options: IResizeOptions
+  image: IJS,
+  options: IResizeOptions,
 ): { width: number; height: number; xFactor: number; yFactor: number } {
   const {
     width,
     height,
     xFactor,
     yFactor,
-    preserveAspectRatio = true
+    preserveAspectRatio = true,
   } = options;
 
   if (
@@ -70,7 +78,7 @@ function checkOptions(
     yFactor === undefined
   ) {
     throw new Error(
-      'At least one of the width, height, xFactor or yFactor options must be passed'
+      'At least one of the width, height, xFactor or yFactor options must be passed',
     );
   }
 
@@ -82,7 +90,7 @@ function checkOptions(
     height,
     yFactor,
     image.height,
-    preserveAspectRatio
+    preserveAspectRatio,
   );
 
   if (maybeWidth === undefined) {
@@ -109,15 +117,21 @@ function checkOptions(
     width: newWidth,
     height: newHeight,
     xFactor: xFactor ? xFactor : newWidth / image.width,
-    yFactor: yFactor ? yFactor : newHeight / image.height
+    yFactor: yFactor ? yFactor : newHeight / image.height,
   };
 }
 
+/**
+ * @param sizeOpt
+ * @param factor
+ * @param sizeImg
+ * @param preserveAspectRatio
+ */
 function getSize(
   sizeOpt: number | undefined,
   factor: number | undefined,
   sizeImg: number,
-  preserveAspectRatio: boolean
+  preserveAspectRatio: boolean,
 ): number | undefined {
   if (sizeOpt === undefined) {
     if (factor !== undefined) {

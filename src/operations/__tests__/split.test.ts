@@ -1,8 +1,8 @@
-import { Image, ImageKind } from 'ijs';
+import { IJS, ImageKind } from 'IJS';
 
 test('split RGB', () => {
-  const img = new Image(1, 2, {
-    data: Uint8Array.from([0, 1, 2, 253, 254, 255])
+  const img = new IJS(1, 2, {
+    data: Uint8Array.from([0, 1, 2, 253, 254, 255]),
   });
   const split = img.split();
   expect(split).toHaveLength(3);
@@ -10,8 +10,8 @@ test('split RGB', () => {
     expect(g).toMatchObject({
       width: 1,
       height: 2,
-      kind: ImageKind.GREY
-    })
+      kind: ImageKind.GREY,
+    }),
   );
   expect(split[0].data).toStrictEqual(Uint8Array.from([0, 253]));
   expect(split[1].data).toStrictEqual(Uint8Array.from([1, 254]));
@@ -19,9 +19,9 @@ test('split RGB', () => {
 });
 
 test('split GREYA', () => {
-  const img = new Image(1, 2, {
+  const img = new IJS(1, 2, {
     kind: ImageKind.GREYA,
-    data: Uint8Array.from([0, 1, 254, 255])
+    data: Uint8Array.from([0, 1, 254, 255]),
   });
   const split = img.split();
   expect(split).toHaveLength(2);

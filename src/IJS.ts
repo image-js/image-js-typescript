@@ -95,6 +95,7 @@ export class IJS {
 
   /**
    * Construct a new IJS knowing its dimensions.
+   *
    * @param width
    * @param height
    * @param options
@@ -161,7 +162,9 @@ export class IJS {
 
   /**
    * Create a new IJS base on the properties of an existing one.
+   *
    * @param other - Reference image.
+   * @param options
    */
   public static createFrom(other: IJS, options?: ImageOptions): IJS {
     return new IJS(other.width, other.height, {
@@ -173,6 +176,7 @@ export class IJS {
 
   /**
    * Get all the channels of a pixel.
+   *
    * @param y - Row index.
    * @param x - Column index.
    * @returns Channels of the pixel.
@@ -188,6 +192,7 @@ export class IJS {
 
   /**
    * Set all the channels of a pixel.
+   *
    * @param y - Row index.
    * @param x - Column index.
    * @param value - New channel values of the pixel to set.
@@ -201,6 +206,7 @@ export class IJS {
 
   /**
    * Get the value of a specific pixel channel. Select pixel using coordinates.
+   *
    * @param y - Row index.
    * @param x - Column index.
    * @param channel - Channel index.
@@ -211,6 +217,7 @@ export class IJS {
 
   /**
    * Set the value of a specific pixel channel. Select pixel using coordinates.
+   *
    * @param y - Row index.
    * @param x - Column index.
    * @param channel - Channel index.
@@ -222,6 +229,7 @@ export class IJS {
 
   /**
    * Get the value of a specific pixel channel. Select pixel using index.
+   *
    * @param index - Index of the pixel.
    * @param channel - Channel index.
    */
@@ -230,6 +238,7 @@ export class IJS {
   }
   /**
    * Set the value of a specific pixel channel. Select pixel using index.
+   *
    * @param index - Index of the pixel.
    * @param channel - Channel index.
    * @param value - Value to set.
@@ -246,7 +255,7 @@ export class IJS {
   }
 
   public [Symbol.for('nodejs.util.inspect.custom')](): string {
-    return `Image {
+    return `IJS {
   width: ${this.width}
   height: ${this.height}
   depth: ${this.depth}
@@ -257,7 +266,9 @@ export class IJS {
   }
 
   /**
-   * Fill the image with a value or a color
+   * Fill the image with a value or a color.
+   *
+   * @param value
    */
   public fill(value: number | number[]): this {
     if (typeof value === 'number') {
@@ -281,7 +292,8 @@ export class IJS {
   }
 
   /**
-   * Fill one channel with a value
+   * Fill one channel with a value.
+   *
    * @param channel - The channel to fill.
    * @param value - The new value.
    */
@@ -296,6 +308,8 @@ export class IJS {
 
   /**
    * Fill the alpha channel with the specified value.
+   *
+   * @param value
    */
   public fillAlpha(value: number): this {
     validateValue(value, this);
@@ -362,6 +376,12 @@ export class IJS {
 }
 /**
  * Create data array and set alpha channel to max value if applicable.
+ *
+ * @param size
+ * @param channels
+ * @param alpha
+ * @param depth
+ * @param maxValue
  */
 function createPixelArray(
   size: number,
@@ -393,6 +413,9 @@ function createPixelArray(
   return arr;
 }
 
+/**
+ * @param img
+ */
 function printData(img: IJS): string {
   const channels = [];
   for (let c = 0; c < img.channels; c++) {
@@ -403,6 +426,10 @@ function printData(img: IJS): string {
   }`;
 }
 
+/**
+ * @param img
+ * @param c
+ */
 function printChannel(img: IJS, c: number): string {
   const result = [];
   const padding = img.depth === 8 ? 3 : 5;

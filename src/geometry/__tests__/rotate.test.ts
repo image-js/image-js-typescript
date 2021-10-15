@@ -1,4 +1,4 @@
-import { rotate, readSync, BorderType, InterpolationType } from 'ijs';
+import { rotate, readSync, BorderType, InterpolationType } from 'IJS';
 import { getTestImage } from 'test';
 
 test('rotate + scale compared to opencv (nearest)', () => {
@@ -8,7 +8,7 @@ test('rotate + scale compared to opencv (nearest)', () => {
     scale: 0.8,
     borderType: BorderType.REFLECT,
     interpolationType: InterpolationType.NEAREST,
-    center: [2, 4]
+    center: [2, 4],
   });
 
   expect(rotated.data).toStrictEqual(expected.data);

@@ -1,4 +1,4 @@
-import { encodePng, decode } from 'ijs';
+import { encodePng, decode } from 'IJS';
 import { readImage } from 'test';
 
 describe('encode PNG', () => {

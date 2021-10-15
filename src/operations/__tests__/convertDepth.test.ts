@@ -1,9 +1,16 @@
-import { ColorDepth, ImageKind } from 'ijs';
+import { ColorDepth, ImageKind } from 'IJS';
 import { getImage } from 'test';
 
 describe('convert depth', () => {
   it('Uint8 to Uint16', () => {
-    const img = getImage([[1, 2], [3, 4]], ImageKind.GREY, ColorDepth.UINT8);
+    const img = getImage(
+      [
+        [1, 2],
+        [3, 4],
+      ],
+      ImageKind.GREY,
+      ColorDepth.UINT8,
+    );
 
     const newImg = img.convertDepth(ColorDepth.UINT16);
     expect(newImg.width).toStrictEqual(2);
@@ -15,9 +22,12 @@ describe('convert depth', () => {
 
   it('Uint16 to Uint8', () => {
     const img = getImage(
-      [[30, 260], [512, 2047]],
+      [
+        [30, 260],
+        [512, 2047],
+      ],
       ImageKind.GREY,
-      ColorDepth.UINT16
+      ColorDepth.UINT16,
     );
 
     const newImg = img.convertDepth(ColorDepth.UINT8);
@@ -31,11 +41,17 @@ describe('convert depth', () => {
   it('Uint16 to Uint8 for rgba', () => {
     const img = getImage(
       [
-        [[256, 256, 256, 256], [512, 512, 512, 512]],
-        [[768, 768, 768, 768], [1024, 1024, 1024, 1024]]
+        [
+          [256, 256, 256, 256],
+          [512, 512, 512, 512],
+        ],
+        [
+          [768, 768, 768, 768],
+          [1024, 1024, 1024, 1024],
+        ],
       ],
       ImageKind.RGBA,
-      ColorDepth.UINT16
+      ColorDepth.UINT16,
     );
 
     const newImg = img.convertDepth(ColorDepth.UINT8);
@@ -44,7 +60,7 @@ describe('convert depth', () => {
     expect(newImg.kind).toStrictEqual(ImageKind.RGBA);
     expect(newImg.depth).toStrictEqual(ColorDepth.UINT8);
     expect(newImg.data).toStrictEqual(
-      Uint8Array.from([1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4])
+      Uint8Array.from([1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4]),
     );
   });
 });

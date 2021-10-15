@@ -1,13 +1,13 @@
-import { BorderType, Image } from 'ijs';
-
+import { IJS } from '../../IJS';
 import {
+  BorderType,
   getBorderInterpolation,
   interpolateConstantPoint,
   interpolateReflectPoint,
   interpolateReplicatePoint,
   interpolateWrapPoint,
-  interpolateReflect101Point
-} from '../../src/utils/interpolateBorder';
+  interpolateReflect101Point,
+} from '../interpolateBorder';
 
 test('in range', () => {
   expect(interpolateReflectPoint(0, 10)).toBe(0);
@@ -17,9 +17,10 @@ test('in range', () => {
 });
 
 test('too far', () => {
-  const image = new Image(10, 10);
+  const image = new IJS(10, 10);
   const interpolate = getBorderInterpolation(BorderType.REFLECT, 0);
-  const exp = /interpolateBorder only supports borders smaller than the original image/;
+  const exp =
+    /interpolateBorder only supports borders smaller than the original image/;
   expect(() => interpolate(-10, 0, 0, image)).toThrow(exp);
   expect(() => interpolate(19, 0, 0, image)).toThrow(exp);
   expect(() => interpolate(-110, 0, 0, image)).toThrow(exp);
@@ -28,8 +29,8 @@ test('too far', () => {
 
 test('CONSTANT', () => {
   expect(interpolateConstantPoint(-4, 10)).toStrictEqual(-1);
-  expect(interpolateConstantPoint(0, 10)).toStrictEqual(0);
-  expect(interpolateConstantPoint(1, 10)).toStrictEqual(1);
+  expect(interpolateConstantPoint(0, 10)).toBe(0);
+  expect(interpolateConstantPoint(1, 10)).toBe(1);
   expect(interpolateConstantPoint(-200, 10)).toStrictEqual(-1);
   expect(interpolateConstantPoint(200, 10)).toStrictEqual(-1);
 });

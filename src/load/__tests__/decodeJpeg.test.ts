@@ -1,5 +1,5 @@
+import { decodeJpeg, ColorDepth, ImageKind } from 'IJS';
 import { readImage } from 'test';
-import { decodeJpeg, ColorDepth, ImageKind } from 'ijs';
 
 describe('Load JPEG', function () {
   const tests = [['grey6'], ['grey12'], ['rgb6'], ['rgb12']];

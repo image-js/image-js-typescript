@@ -1,7 +1,7 @@
 import { join } from 'path';
 
 import { existsSync } from 'fs-extra';
-import { write, read, ImageFormat, ImageKind } from 'ijs';
+import { write, read, ImageFormat, ImageKind } from 'IJS';
 import { getTestImage, makeTmpDir, cleanTmpDir } from 'test';
 
 let tmpDir: string;

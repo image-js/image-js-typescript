@@ -1,10 +1,10 @@
 import { inverse, Matrix } from 'ml-matrix';
 
-import { Image, ImageCoordinates } from '../Image';
-import { getInterpolationFunction } from '../utils/interpolatePixel';
+import { IJS, ImageCoordinates } from '../IJS';
 import { InterpolationType, BorderType } from '../types';
-import { getBorderInterpolation } from '../utils/interpolateBorder';
 import { getClamp } from '../utils/clamp';
+import { getBorderInterpolation } from '../utils/interpolateBorder';
+import { getInterpolationFunction } from '../utils/interpolatePixel';
 
 export interface ITransformOptions {
   width?: number;
@@ -16,15 +16,20 @@ export interface ITransformOptions {
   fullImage?: boolean;
 }
 
+/**
+ * @param image
+ * @param transformMatrix
+ * @param options
+ */
 export function transform(
-  image: Image,
+  image: IJS,
   transformMatrix: number[][],
-  options: ITransformOptions = {}
-): Image {
+  options: ITransformOptions = {},
+): IJS {
   const {
     borderType = BorderType.CONSTANT,
     borderValue = 0,
-    interpolationType = InterpolationType.BILINEAR
+    interpolationType = InterpolationType.BILINEAR,
   } = options;
   let { width = image.width, height = image.height } = options;
 
@@ -36,7 +41,7 @@ export function transform(
       image.getCoordinates(ImageCoordinates.TOP_LEFT),
       image.getCoordinates(ImageCoordinates.TOP_RIGHT),
       image.getCoordinates(ImageCoordinates.BOTTOM_RIGHT),
-      image.getCoordinates(ImageCoordinates.BOTTOM_LEFT)
+      image.getCoordinates(ImageCoordinates.BOTTOM_LEFT),
     ];
 
     corners[1][0] += 1;
@@ -47,7 +52,7 @@ export function transform(
     const transformedCorners = corners.map((corner) => {
       return [
         transformPoint(transformMatrix[0], corner[0], corner[1]),
-        transformPoint(transformMatrix[1], corner[0], corner[1])
+        transformPoint(transformMatrix[1], corner[0], corner[1]),
       ];
     });
 
@@ -78,9 +83,7 @@ export function transform(
     transformMatrix[1].length !== 3
   ) {
     throw new Error(
-      `transformation matrix must be 2x3, found ${transformMatrix.length}x${
-        transformMatrix[1].length
-      }`
+      `transformation matrix must be 2x3, found ${transformMatrix.length}x${transformMatrix[1].length}`,
     );
   }
 
@@ -88,9 +91,9 @@ export function transform(
     transformMatrix = [transformMatrix[0], transformMatrix[1], [0, 0, 1]];
     transformMatrix = inverse(new Matrix(transformMatrix)).to2DArray();
   }
-  const newImage = Image.createFrom(image, {
+  const newImage = IJS.createFrom(image, {
     width,
-    height
+    height,
   });
 
   const interpolateBorder = getBorderInterpolation(borderType, borderValue);
@@ -111,7 +114,7 @@ export function transform(
           ny,
           c,
           interpolateBorder,
-          clamp
+          clamp,
         );
         newImage.data[wOffset + c] = newValue;
       }
@@ -121,6 +124,11 @@ export function transform(
   return newImage;
 }
 
+/**
+ * @param transform
+ * @param x
+ * @param y
+ */
 function transformPoint(transform: number[], x: number, y: number): number {
   return transform[0] * x + transform[1] * y + transform[2];
 }
