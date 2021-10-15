@@ -88,7 +88,7 @@ export class IJS {
   public readonly height: number;
 
   /**
-   * The total number of pixels in the image (width x height).
+   * The total number of pixels in the image (width column height).
    */
   public readonly size: number;
 
@@ -208,13 +208,13 @@ export class IJS {
 
   /**
    * Get all the channels of a pixel.
-   * @param y - Row index.
-   * @param x - Column index.
+   * @param row - Row index.
+   * @param column - Column index.
    * @returns Channels of the pixel.
    */
-  public getPixel(y: number, x: number): number[] {
+  public getPixel(row: number, x: number): number[] {
     const result = [];
-    const start = (y * this.width + x) * this.channels;
+    const start = (row * this.width + x) * this.channels;
     for (let i = 0; i < this.channels; i++) {
       result.push(this.data[start + i]);
     }
@@ -223,12 +223,12 @@ export class IJS {
 
   /**
    * Set all the channels of a pixel.
-   * @param y - Row index.
-   * @param x - Column index.
+   * @param row - Row index.
+   * @param column - Column index.
    * @param value - New channel values of the pixel to set.
    */
-  public setPixel(y: number, x: number, value: number[]): void {
-    const start = (y * this.width + x) * this.channels;
+  public setPixel(row: number, column: number, value: number[]): void {
+    const start = (row * this.width + column) * this.channels;
     for (let i = 0; i < this.channels; i++) {
       this.data[start + i] = value[i];
     }
@@ -236,23 +236,28 @@ export class IJS {
 
   /**
    * Get the value of a specific pixel channel. Select pixel using coordinates.
-   * @param y - Row index.
-   * @param x - Column index.
+   * @param row - Row index.
+   * @param column - Column index.
    * @param channel - Channel index.
    */
-  public getValue(y: number, x: number, channel: number): number {
-    return this.data[(y * this.width + x) * this.channels + channel];
+  public getValue(row: number, column: number, channel: number): number {
+    return this.data[(row * this.width + column) * this.channels + channel];
   }
 
   /**
    * Set the value of a specific pixel channel. Select pixel using coordinates.
-   * @param y - Row index.
-   * @param x - Column index.
+   * @param row - Row index.
+   * @param column - Column index.
    * @param channel - Channel index.
    * @param value - Value to set.
    */
-  public setValue(y: number, x: number, channel: number, value: number): void {
-    this.data[(y * this.width + x) * this.channels + channel] = value;
+  public setValue(
+    row: number,
+    column: number,
+    channel: number,
+    value: number,
+  ): void {
+    this.data[(row * this.width + column) * this.channels + channel] = value;
   }
 
   /**

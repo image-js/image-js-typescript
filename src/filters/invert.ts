@@ -13,10 +13,14 @@ export function invert(image: IJS, options?: IInvertOptions): IJS {
   const newImage = getOutputImage(image, options);
   const { maxValue } = newImage;
   for (let i = 0; i < newImage.size; i++) {
-    for (let c = 0; c < newImage.channels; c++) {
-      newImage.setValueByIndex(i,c, maxValue - image.getValueByIndex(i,c));
+    for (let channel = 0; channel < newImage.channels; channel++) {
+      newImage.setValueByIndex(
+        i,
+        channel,
+        maxValue - image.getValueByIndex(i, channel),
+      );
     }
   }
 
-   return newImage;
+  return newImage;
 }

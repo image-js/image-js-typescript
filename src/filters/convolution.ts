@@ -32,17 +32,17 @@ export function directConvolution(
   const newImage = getOutputImage(image, options);
   const clamp = getClamp(newImage);
 
-  for (let c = 0; c < image.channels; c++) {
-    for (let x = 0; x < image.width; x++) {
-      for (let y = 0; y < image.height; y++) {
+  for (let channel = 0; channel < image.channels; channel++) {
+    for (let column = 0; column < image.width; column++) {
+      for (let row = 0; row < image.height; row++) {
         newImage.setValue(
-          y,
-          x,
-          c,
+          row,
+          column,
+          channel,
           computeConvolutionPixel(
-            x,
-            y,
-            c,
+            column,
+            row,
+            channel,
             image,
             kernel,
             interpolateBorder,
@@ -99,10 +99,10 @@ export function separableConvolution(
   const columnData = new Float64Array(height);
   const convolvedData = new Float64Array(cutWidth * height);
 
-  for (let c = 0; c < channels; c++) {
+  for (let channel = 0; channel < channels; channel++) {
     for (let row = 0; row < height; row++) {
       for (let column = 0; column < width; column++) {
-        rowData[column] = image.getValue(row, column, c);
+        rowData[column] = image.getValue(row, column, channel);
       }
       const convolvedRow = rowConvolution.convolve(rowData);
       for (let column = 0; column < cutWidth; column++) {
@@ -110,14 +110,14 @@ export function separableConvolution(
       }
     }
 
-    for (let x = 0; x < cutWidth; x++) {
-      const wOffset = (x + kernelOffsetX) * channels;
+    for (let column = 0; column < cutWidth; column++) {
+      const wOffset = (column + kernelOffsetX) * channels;
       for (let y = 0; y < height; y++) {
-        columnData[y] = convolvedData[y * cutWidth + x];
+        columnData[y] = convolvedData[y * cutWidth + column];
       }
       const result = columnConvolution.convolve(columnData);
       for (let i = 0; i < result.length; i++) {
-        const idx = (i + kernelOffsetY) * hFactor + wOffset + c;
+        const idx = (i + kernelOffsetY) * hFactor + wOffset + channel;
         newImage.data[idx] = round(clamp(result[i]));
       }
     }
@@ -130,19 +130,19 @@ export function separableConvolution(
   const kernel = matrixY.mmul(matrixX).to2DArray();
 
   // Apply convolution on the left and right borders
-  for (let c = 0; c < channels; c++) {
+  for (let channel = 0; channel < channels; channel++) {
     for (let bY = 0; bY < height; bY++) {
       for (let bX = 0; bX < kernelOffsetX; bX++) {
-        const idx = (bY * width + bX) * channels + c;
+        const idx = (bY * width + bX) * channels + channel;
 
         const bXopp = width - bX - 1;
         const bYopp = height - bY - 1;
-        const idxOpp = (bYopp * width + bXopp) * channels + c;
+        const idxOpp = (bYopp * width + bXopp) * channels + channel;
 
         newImage.data[idx] = computeConvolutionPixel(
           bX,
           bY,
-          c,
+          channel,
           image,
           kernel,
           interpolateBorder,
@@ -151,7 +151,7 @@ export function separableConvolution(
         newImage.data[idxOpp] = computeConvolutionPixel(
           bXopp,
           bYopp,
-          c,
+          channel,
           image,
           kernel,
           interpolateBorder,
