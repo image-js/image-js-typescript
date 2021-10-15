@@ -1,3 +1,13 @@
+import {
+  IBlurOptions,
+  blur,
+  IConvolutionOptions,
+  directConvolution,
+  separableConvolution,
+  gaussianBlur,
+  GaussianBlurOptions,
+} from './filters';
+import { invert, IInvertOptions } from './filters/invert';
 import { convertColor, IConvertColorOptions } from './operations/convertColor';
 import { convertDepth } from './operations/convertDepth';
 import { validateChannel, validateValue } from './utils/validators';
@@ -383,6 +393,37 @@ export class IJS {
 
   public convertDepth(newDepth: ColorDepth): IJS {
     return convertDepth(this, newDepth);
+  }
+  // FILTERS
+
+  public blur(options: IBlurOptions): IJS {
+    return blur(this, options);
+  }
+
+  public directConvolution(
+    kernel: number[][],
+    options?: IConvolutionOptions,
+  ): IJS {
+    return directConvolution(this, kernel, options);
+  }
+
+  public separableConvolution(
+    kernelX: number[],
+    kernelY: number[],
+    options?: IConvolutionOptions,
+  ): IJS {
+    return separableConvolution(this, kernelX, kernelY, options);
+  }
+
+  public gaussianBlur(options: GaussianBlurOptions): IJS {
+    return gaussianBlur(this, options);
+  }
+
+  /**
+   * Invert the colors of the image.
+   */
+  public invert(options?: IInvertOptions): IJS {
+    return invert(this, options);
   }
 }
 /**
