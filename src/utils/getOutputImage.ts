@@ -11,7 +11,7 @@ export interface OutOptions {
 interface OutInternalOptions {
   /**
    * Parameters that will be combined with the ones from
-   * thisImage`.
+   * `thisImage`.
    */
   newParameters?: ImageOptions;
 }
@@ -19,7 +19,6 @@ interface OutInternalOptions {
 /**
  * Use this function to support getting the output image of an algorithm from
  * user-supplied options.
- * @private
  * @param thisImage - Current image on which the algorithm is applied.
  * @param options - Options object received by the algorithm.
  * @param internalOptions - Some additional private options.
