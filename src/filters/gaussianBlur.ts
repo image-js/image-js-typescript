@@ -3,24 +3,24 @@ import { BorderType } from '../utils/interpolateBorder';
 
 import { separableConvolution } from './convolution';
 
-interface IGaussianBlurBaseOptions {
+interface GaussianBlurBaseOptions {
   size: number;
   borderType?: BorderType;
   out?: IJS;
 }
 
-export interface IGaussianBlurSigmaOptions extends IGaussianBlurBaseOptions {
+export interface GaussianBlurSigmaOptions extends GaussianBlurBaseOptions {
   sigma: number;
 }
 
-export interface IGaussianBlurXYOptions extends IGaussianBlurBaseOptions {
+export interface GaussianBlurXYOptions extends GaussianBlurBaseOptions {
   sigmaX: number;
   sigmaY: number;
 }
 
 export type GaussianBlurOptions =
-  | IGaussianBlurSigmaOptions
-  | IGaussianBlurXYOptions;
+  | GaussianBlurSigmaOptions
+  | GaussianBlurXYOptions;
 
 function getRadius(size: number): number {
   if (size % 2 !== 1 || size < 0) {

@@ -5,16 +5,16 @@ import {
 import { Matrix } from 'ml-matrix';
 
 import { IJS } from '../IJS';
-import { BorderType } from '../types';
 import { getClamp, ClampFunction } from '../utils/clamp';
 import { getOutputImage } from '../utils/getOutputImage';
 import {
+  BorderType,
   getBorderInterpolation,
   BorderInterpolationFunction,
 } from '../utils/interpolateBorder';
 import { round } from '../utils/round';
 
-export interface IConvolutionOptions {
+export interface ConvolutionOptions {
   borderType?: BorderType;
   borderValue?: number;
   normalize?: boolean;
@@ -24,7 +24,7 @@ export interface IConvolutionOptions {
 export function directConvolution(
   image: IJS,
   kernel: number[][],
-  options: IConvolutionOptions = {},
+  options: ConvolutionOptions = {},
 ): IJS {
   const { borderType = BorderType.REFLECT_101, borderValue = 0 } = options;
   const interpolateBorder = getBorderInterpolation(borderType, borderValue);
@@ -60,7 +60,7 @@ export function separableConvolution(
   image: IJS,
   kernelX: number[],
   kernelY: number[],
-  options: IConvolutionOptions = {},
+  options: ConvolutionOptions = {},
 ): IJS {
   const {
     normalize,

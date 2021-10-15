@@ -1,14 +1,14 @@
 import {
-  IBlurOptions,
+  BlurOptions,
   blur,
-  IConvolutionOptions,
+  ConvolutionOptions,
   directConvolution,
   separableConvolution,
   gaussianBlur,
   GaussianBlurOptions,
 } from './filters';
-import { invert, IInvertOptions } from './filters/invert';
-import { convertColor, IConvertColorOptions } from './operations/convertColor';
+import { invert, InvertOptions } from './filters/invert';
+import { convertColor, ConvertColorOptions } from './operations/convertColor';
 import { convertDepth } from './operations/convertDepth';
 import { validateChannel, validateValue } from './utils/validators';
 
@@ -391,7 +391,7 @@ export class IJS {
 
   public convertColor(
     kind: ImageColorModel,
-    options?: IConvertColorOptions,
+    options?: ConvertColorOptions,
   ): IJS {
     return convertColor(this, kind, options);
   }
@@ -401,13 +401,13 @@ export class IJS {
   }
   // FILTERS
 
-  public blur(options: IBlurOptions): IJS {
+  public blur(options: BlurOptions): IJS {
     return blur(this, options);
   }
 
   public directConvolution(
     kernel: number[][],
-    options?: IConvolutionOptions,
+    options?: ConvolutionOptions,
   ): IJS {
     return directConvolution(this, kernel, options);
   }
@@ -415,7 +415,7 @@ export class IJS {
   public separableConvolution(
     kernelX: number[],
     kernelY: number[],
-    options?: IConvolutionOptions,
+    options?: ConvolutionOptions,
   ): IJS {
     return separableConvolution(this, kernelX, kernelY, options);
   }
@@ -427,7 +427,7 @@ export class IJS {
   /**
    * Invert the colors of the image.
    */
-  public invert(options?: IInvertOptions): IJS {
+  public invert(options?: InvertOptions): IJS {
     return invert(this, options);
   }
 }

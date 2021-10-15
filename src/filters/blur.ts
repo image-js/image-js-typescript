@@ -3,7 +3,7 @@ import { BorderType } from '../utils/interpolateBorder';
 
 import { separableConvolution } from './convolution';
 
-export interface IBlurOptions {
+export interface BlurOptions {
   width: number;
   height: number;
   borderType?: BorderType;
@@ -11,7 +11,7 @@ export interface IBlurOptions {
   out?: IJS;
 }
 
-export function blur(image: IJS, options: IBlurOptions): IJS {
+export function blur(image: IJS, options: BlurOptions): IJS {
   const { width, height } = options;
   const kernelX = new Array(width).fill(1);
   const kernelY = new Array(height).fill(1);
