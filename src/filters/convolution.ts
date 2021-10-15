@@ -4,7 +4,7 @@ import {
 } from 'ml-convolution';
 import { Matrix } from 'ml-matrix';
 
-import { Image } from '../Image';
+import { IJS } from '../IJS';
 import { BorderType } from '../types';
 import { getClamp, ClampFunction } from '../utils/clamp';
 import { getOutputImage } from '../utils/getOutputImage';
@@ -18,14 +18,14 @@ export interface IConvolutionOptions {
   borderType?: BorderType;
   borderValue?: number;
   normalize?: boolean;
-  out?: Image;
+  out?: IJS;
 }
 
 export function directConvolution(
-  image: Image,
+  image: IJS,
   kernel: number[][],
   options: IConvolutionOptions = {},
-): Image {
+): IJS {
   const { borderType = BorderType.REFLECT_101, borderValue = 0 } = options;
   const interpolateBorder = getBorderInterpolation(borderType, borderValue);
 
@@ -35,15 +35,19 @@ export function directConvolution(
   for (let c = 0; c < image.channels; c++) {
     for (let x = 0; x < image.width; x++) {
       for (let y = 0; y < image.height; y++) {
-        const idx = (y * image.width + x) * image.channels + c;
-        newImage.data[idx] = computeConvolutionPixel(
-          x,
+        newImage.setValue(
           y,
+          x,
           c,
-          image,
-          kernel,
-          interpolateBorder,
-          clamp,
+          computeConvolutionPixel(
+            x,
+            y,
+            c,
+            image,
+            kernel,
+            interpolateBorder,
+            clamp,
+          ),
         );
       }
     }
@@ -53,11 +57,11 @@ export function directConvolution(
 }
 
 export function separableConvolution(
-  image: Image,
+  image: IJS,
   kernelX: number[],
   kernelY: number[],
   options: IConvolutionOptions = {},
-): Image {
+): IJS {
   const {
     normalize,
     borderType = BorderType.REFLECT_101,
@@ -72,12 +76,12 @@ export function separableConvolution(
   const doubleKernelOffsetY = kernelY.length - 1;
   const kernelOffsetY = doubleKernelOffsetY / 2;
 
-  const { width, height, channels, data } = image;
+  const { width, height, channels } = image;
 
   const hFactor = channels * width;
   const cutWidth = width - doubleKernelOffsetX;
 
-  const newImage = Image.createFrom(image);
+  const newImage = IJS.createFrom(image);
   const clamp = getClamp(newImage);
 
   const rowConvolution = new DirectConvolution(
@@ -96,14 +100,13 @@ export function separableConvolution(
   const convolvedData = new Float64Array(cutWidth * height);
 
   for (let c = 0; c < channels; c++) {
-    for (let y = 0; y < height; y++) {
-      const rowIndex = y * hFactor;
-      for (let x = 0; x < width; x++) {
-        rowData[x] = data[rowIndex + x * channels + c];
+    for (let row = 0; row < height; row++) {
+      for (let column = 0; column < width; column++) {
+        rowData[column] = image.getValue(row, column, c);
       }
       const convolvedRow = rowConvolution.convolve(rowData);
-      for (let x = 0; x < cutWidth; x++) {
-        convolvedData[y * cutWidth + x] = convolvedRow[x];
+      for (let column = 0; column < cutWidth; column++) {
+        convolvedData[row * cutWidth + column] = convolvedRow[column];
       }
     }
 
@@ -196,7 +199,7 @@ function computeConvolutionPixel(
   x: number,
   y: number,
   channel: number,
-  image: Image,
+  image: IJS,
   kernel: number[][],
   interpolateBorder: BorderInterpolationFunction,
   clamp: ClampFunction,
