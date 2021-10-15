@@ -1,5 +1,5 @@
 import { IJS } from '../IJS';
-import { BorderType } from '../types';
+import { BorderType } from '../utils/interpolateBorder';
 
 import { separableConvolution } from './convolution';
 
