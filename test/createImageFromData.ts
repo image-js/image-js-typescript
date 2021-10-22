@@ -17,7 +17,7 @@ function createImageFrom2DArray(
   colorModel: ImageColorModel,
 ): IJS {
   const { channels } = colorModels[colorModel];
-  const height = size;
+  const height = data.length;
   const width = data[0].length / channels;
   const imageData = new Uint8Array(height * width * channels);
   for (let row = 0; row < height; row++) {
