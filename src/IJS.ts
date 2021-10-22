@@ -63,7 +63,7 @@ export class IJS {
   public readonly height: number;
 
   /**
-   * The total number of pixels in the image (width column height).
+   * The total number of pixels in the image (width × height).
    */
   public readonly size: number;
 
