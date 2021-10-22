@@ -1,12 +1,10 @@
-import { readImage } from 'test';
-
 import { decode } from '..';
 import { ColorDepth } from '../../IJS';
 import { ImageColorModel } from '../../utils/colorModels';
 
-describe('decode various formats', function () {
+describe('decode various formats', () => {
   it('auto decode png', async () => {
-    const buffer = readImage('grey8.png');
+    const buffer = testUtils.loadBuffer('formats/grey8.png');
     expect(() => decode(buffer)).not.toThrow();
     const decoded = decode(buffer);
     expect(decoded.depth).toStrictEqual(ColorDepth.UINT8);
@@ -14,7 +12,7 @@ describe('decode various formats', function () {
   });
 
   it('auto decode jpeg', async () => {
-    const buffer = readImage('rgb12.jpg');
+    const buffer = testUtils.loadBuffer('formats/rgb12.jpg');
     expect(() => decode(buffer)).not.toThrow();
     const decoded = decode(buffer);
     expect(decoded.depth).toStrictEqual(ColorDepth.UINT8);
