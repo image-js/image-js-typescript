@@ -12,7 +12,7 @@ import { createImageFromData } from './createImageFromData';
  * @param path - Path to the image.
  * @returns Buffer of the image.
  */
-export function loadBuffer(path: TestImagePath): ArrayBufferView {
+export function loadBuffer(path: TestImagePath): Uint8Array {
   return readFileSync(join(__dirname, 'img', path));
 }
 

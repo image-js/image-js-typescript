@@ -1,11 +1,9 @@
-import { readImage } from 'test';
-
 import { decodePng } from '..';
 import { ColorDepth } from '../../IJS';
 import { ImageColorModel } from '../../utils/colorModels';
 
-describe('Load PNG', function () {
-  const tests: [string, ColorDepth, ImageColorModel][] = [
+describe('Load PNG', () => {
+  const tests = [
     // ['name', components, alpha, bitDepth]
     ['grey8', ColorDepth.UINT8, ImageColorModel.GREY],
     ['grey16', ColorDepth.UINT16, ImageColorModel.GREY],
@@ -17,12 +15,12 @@ describe('Load PNG', function () {
     ['rgba64', ColorDepth.UINT16, ImageColorModel.RGBA],
     ['plt-4bpp', ColorDepth.UINT8, ImageColorModel.RGB],
     ['plt-8bpp-color', ColorDepth.UINT8, ImageColorModel.RGB],
-  ];
+  ] as const;
 
   it.each(tests)(
     'should load from buffer %s',
     async (name, depth, colorModel) => {
-      const buffer = readImage(`${name}.png`);
+      const buffer = testUtils.loadBuffer(`formats/${name}.png`);
       const img = decodePng(buffer);
       expect(img.depth).toBe(depth);
       expect(img.colorModel).toBe(colorModel);
