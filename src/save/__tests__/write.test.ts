@@ -1,7 +1,7 @@
 import { join } from 'path';
 
+// @ts-expect-error
 import { existsSync } from 'fs-extra';
-import { getTestImage, makeTmpDir, cleanTmpDir } from 'test';
 
 import { write } from '..';
 import { read } from '../..';
@@ -10,14 +10,14 @@ import { ImageFormat } from '../encode';
 
 let tmpDir: string;
 beforeEach(() => {
-  tmpDir = makeTmpDir();
+  tmpDir = testUtils.makeTmpDir();
 });
 afterEach(() => {
-  cleanTmpDir(tmpDir);
+  testUtils.cleanTmpDir(tmpDir);
 });
 
 test('write image to disk', async () => {
-  const img = getTestImage();
+  const img = testUtils.load('opencv/test.png');
   const destination = join(tmpDir, 'image.png');
   await write(destination, img);
   expect(existsSync(destination)).toBe(true);
@@ -26,7 +26,7 @@ test('write image to disk', async () => {
 });
 
 test('write image to disk (jpeg)', async () => {
-  const img = getTestImage();
+  const img = testUtils.load('opencv/test.png');
   const destination = join(tmpDir, 'image.png');
   await write(destination, img, { format: ImageFormat.jpeg });
   expect(existsSync(destination)).toBe(true);

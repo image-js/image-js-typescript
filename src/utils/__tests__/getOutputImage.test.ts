@@ -4,10 +4,10 @@ import { getOutputImage } from '../getOutputImage';
 
 describe('getOutputImage', () => {
   it('should default to creating an empty image', () => {
-    const img = new IJS(2, 2, {
-      colorModel: ImageColorModel.GREY,
-      data: Uint8Array.of(0, 1, 2, 3),
-    });
+    const img = testUtils.createGreyImage([
+      [0, 1],
+      [2, 3],
+    ]);
     const output = getOutputImage(img);
     expect(output).toMatchObject({
       width: 2,
@@ -15,11 +15,14 @@ describe('getOutputImage', () => {
       colorModel: ImageColorModel.GREY,
       depth: ColorDepth.UINT8,
     });
-    expect(output.data).toStrictEqual(new Uint8Array(4));
+    expect(output).toMatchImageData([
+      [0, 0],
+      [0, 0],
+    ]);
   });
 
   it('should create with requirements', () => {
-    const img = new IJS();
+    const img = new IJS(1, 2);
     const requirements = {
       colorModel: ImageColorModel.GREY,
     };
@@ -30,11 +33,11 @@ describe('getOutputImage', () => {
   });
 
   it('should accept out with matching requirements', () => {
-    const img = new IJS();
+    const img = new IJS(1, 2);
     const requirements = {
       colorModel: ImageColorModel.GREY,
     };
-    const correct = new IJS(requirements);
+    const correct = new IJS(1, 2, requirements);
     const output = getOutputImage(
       img,
       { out: correct },
@@ -44,11 +47,11 @@ describe('getOutputImage', () => {
   });
 
   it('should throw with non-matching requirements', () => {
-    const img = new IJS();
+    const img = new IJS(1, 2);
     const requirements = {
       colorModel: ImageColorModel.GREY,
     };
-    const incorrect = new IJS();
+    const incorrect = new IJS(1, 2);
     expect(() =>
       getOutputImage(img, { out: incorrect }, { newParameters: requirements }),
     ).toThrow(
@@ -57,7 +60,7 @@ describe('getOutputImage', () => {
   });
 
   it('should throw if out is not an image', () => {
-    const img = new IJS();
+    const img = new IJS(1, 2);
     // @ts-ignore
     expect(() => getOutputImage(img, { out: 'str' })).toThrow(
       /out must be an IJS object/,

@@ -1,5 +1,3 @@
-import { getImage, decodeImage } from 'test';
-
 import { encodeJpeg } from '..';
 import { ColorDepth } from '../../IJS';
 import { decode } from '../../load/decode';
@@ -7,20 +5,10 @@ import { ImageColorModel } from '../../utils/colorModels';
 
 describe('encode JPEG', () => {
   it('encode an 8-bit rgba image', () => {
-    const image = getImage(
-      [
-        [
-          [1, 1, 1, 255],
-          [2, 2, 2, 255],
-        ],
-        [
-          [3, 3, 3, 255],
-          [4, 4, 4, 255],
-        ],
-      ],
-      ImageColorModel.RGBA,
-      ColorDepth.UINT8,
-    );
+    const image = testUtils.createRgbaImage([
+      [1, 1, 1, 255, 2, 2, 2, 255],
+      [3, 3, 3, 255, 4, 4, 4, 255],
+    ]);
 
     const encoded = encodeJpeg(image);
 
@@ -31,7 +19,7 @@ describe('encode JPEG', () => {
     expect(reloaded.depth).toStrictEqual(ColorDepth.UINT8);
   });
   it('decode the encoded jpeg returns image with same characteristics', () => {
-    const image = decodeImage('rgb6.jpg');
+    const image = testUtils.load('formats/rgb6.jpg');
     const encoded = encodeJpeg(image);
     const reloadedImage = decode(encoded);
 
