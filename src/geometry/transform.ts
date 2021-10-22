@@ -101,12 +101,12 @@ export function transform(
 
   const interpolate = getInterpolationFunction(interpolationType);
   const hFactor = newImage.width * newImage.channels;
-  for (let y = 0; y < newImage.height; y++) {
-    const hOffset = hFactor * y;
-    for (let x = 0; x < newImage.width; x++) {
-      const wOffset = hOffset + x * image.channels;
-      const nx = transformPoint(transformMatrix[0], x, y);
-      const ny = transformPoint(transformMatrix[1], x, y);
+  for (let row = 0; row < newImage.height; row++) {
+    const hOffset = hFactor * row;
+    for (let column = 0; column < newImage.width; column++) {
+      const wOffset = hOffset + column * image.channels;
+      const nx = transformPoint(transformMatrix[0], column, row);
+      const ny = transformPoint(transformMatrix[1], column, row);
       for (let c = 0; c < newImage.channels; c++) {
         const newValue = interpolate(
           image,
@@ -126,9 +126,13 @@ export function transform(
 
 /**
  * @param transform
- * @param x
- * @param y
+ * @param column
+ * @param row
  */
-function transformPoint(transform: number[], x: number, y: number): number {
-  return transform[0] * x + transform[1] * y + transform[2];
+function transformPoint(
+  transform: number[],
+  column: number,
+  row: number,
+): number {
+  return transform[0] * column + transform[1] * row + transform[2];
 }
