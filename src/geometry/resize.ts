@@ -30,25 +30,22 @@ export function resize(image: IJS, options: IResizeOptions): IJS {
   const interpolate = getInterpolationFunction(interpolationType);
   const interpolateBorder = getBorderInterpolation(borderType, borderValue);
   const clamp = getClamp(newImage);
-  const hFactor = newImage.width * newImage.channels;
   const intervalX = (image.width - 1) / (width - 1);
   const intervalY = (image.height - 1) / (height - 1);
-  for (let y = 0; y < newImage.height; y++) {
-    const hOffset = hFactor * y;
-    for (let x = 0; x < newImage.width; x++) {
-      const wOffset = hOffset + x * image.channels;
-      const nx = x * intervalX;
-      const ny = y * intervalY;
-      for (let c = 0; c < newImage.channels; c++) {
+  for (let row = 0; row < newImage.height; row++) {
+    for (let column = 0; column < newImage.width; column++) {
+      const nx = column * intervalX;
+      const ny = row * intervalY;
+      for (let channel = 0; channel < newImage.channels; channel++) {
         const newValue = interpolate(
           image,
           nx,
           ny,
-          c,
+          channel,
           interpolateBorder,
           clamp,
         );
-        newImage.data[wOffset + c] = newValue;
+        newImage.setValue(row, column, channel, newValue);
       }
     }
   }
