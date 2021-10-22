@@ -1,9 +1,20 @@
+import { readFileSync } from 'fs';
 import { join } from 'path';
 
 import { IJS, ImageColorModel, readSync } from '../src';
 
 import { TestImagePath } from './TestImagePath';
 import { createImageFromData } from './createImageFromData';
+
+/**
+ * Returns a buffer of the given image.
+ *
+ * @param path - Path to the image.
+ * @returns Buffer of the image.
+ */
+export function loadBuffer(path: TestImagePath): ArrayBufferView {
+  return readFileSync(join(__dirname, 'img', path));
+}
 
 /**
  * Load an image from the test/img directory.
@@ -13,7 +24,6 @@ import { createImageFromData } from './createImageFromData';
 export function load(path: TestImagePath): IJS {
   return readSync(join(__dirname, 'img', path));
 }
-
 /**
  * Create an image from 8-bit Grey data.
  *
@@ -52,6 +62,7 @@ export function createRgbaImage(imageData: number[][] | string): IJS {
 declare global {
   // eslint-disable-next-line no-var
   var testUtils: {
+    loadBuffer: typeof loadBuffer;
     load: typeof load;
     createGreyImage: typeof createGreyImage;
     createGreyaImage: typeof createGreyaImage;
