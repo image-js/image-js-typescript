@@ -39,6 +39,11 @@ export interface ImageOptions {
   colorModel?: ImageColorModel;
 }
 
+export interface CreateFromOptions extends ImageOptions {
+  width?: number;
+  height?: number;
+}
+
 export type ImageValues = [number, number, number, number];
 
 export class IJS {
@@ -167,8 +172,9 @@ export class IJS {
    * @param options - Image options.
    * @returns New image.
    */
-  public static createFrom(other: IJS, options?: ImageOptions): IJS {
-    return new IJS(other.width, other.height, {
+  public static createFrom(other: IJS, options: CreateFromOptions = {}): IJS {
+    const { width = other.width, height = other.height } = options;
+    return new IJS(width, height, {
       depth: other.depth,
       colorModel: other.colorModel,
       ...options,
