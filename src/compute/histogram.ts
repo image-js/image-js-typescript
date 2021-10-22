@@ -1,7 +1,7 @@
 import { IJS } from '../IJS';
 import { validateChannel } from '../utils/validators';
 
-export interface IHistogramOptions {
+export interface HistogramOptions {
   /**
    * The channel for which to compute the histogram.
    * If it is unspecified, the image must have one channel or the method will
@@ -13,13 +13,13 @@ export interface IHistogramOptions {
 /**
  * Returns a histogram of pixel intensities.
  *
- * @param image - The image.
- * @param options - Options.
+ * @param image - The original image.
+ * @param options - Histogram options.
  * @returns - The histogram.
  */
 export function histogram(
   image: IJS,
-  options: IHistogramOptions = {},
+  options: HistogramOptions = {},
 ): number[] {
   let { channel } = options;
   if (typeof channel !== 'number') {
