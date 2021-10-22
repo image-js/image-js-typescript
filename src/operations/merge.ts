@@ -1,22 +1,24 @@
-import { Image, ImageKind } from '../Image';
+import { IJS, ImageColorModel } from '../IJS';
 
 /**
  * Inverse of split. Merges multiple single-channel images into one.
- * @param images An array of single-channel images
+ *
+ * @param images - An array of single-channel images.
+ * @returns The merged image.
  */
-export function merge(images: Image[]): Image {
+export function merge(images: IJS[]): IJS {
   const channels = images.length;
 
-  let kind: ImageKind;
+  let colorModel: ImageColorModel;
   if (channels === 2) {
-    kind = ImageKind.GREYA;
+    colorModel = ImageColorModel.GREYA;
   } else if (channels === 3) {
-    kind = ImageKind.RGB;
+    colorModel = ImageColorModel.RGB;
   } else if (channels === 4) {
-    kind = ImageKind.RGBA;
+    colorModel = ImageColorModel.RGBA;
   } else {
     throw new RangeError(
-      `merge expects an array of two to four images. Got ${channels}`
+      `merge expects an array of two to four images. Got ${channels}`,
     );
   }
 
@@ -38,11 +40,11 @@ export function merge(images: Image[]): Image {
     }
   }
 
-  const newImage = Image.createFrom(first, { kind });
+  const newImage = IJS.createFrom(first, { colorModel });
   for (let c = 0; c < channels; c++) {
     const img = images[c];
-    for (let i = 0; i < newImage.data.length; i += channels) {
-      newImage.data[i + c] = img.data[i / channels];
+    for (let i = 0; i < newImage.size; i++) {
+      newImage.setValueByIndex(i, c, img.getValueByIndex(i, 0));
     }
   }
 
