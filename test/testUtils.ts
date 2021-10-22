@@ -1,5 +1,8 @@
-import { readFileSync } from 'fs';
+import { tmpdir } from 'os';
 import { join } from 'path';
+
+// @ts-expect-error Package has not types
+import { readFileSync, mkdtempSync, ensureDirSync, removeSync } from 'fs-extra';
 
 import { IJS, ImageColorModel, readSync } from '../src';
 
@@ -74,6 +77,22 @@ export function createRgbaImage(imageData: number[][] | string): IJS {
   return createImageFromData(imageData, ImageColorModel.RGBA);
 }
 
+/**
+ *
+ */
+export function makeTmpDir(): string {
+  const dir = mkdtempSync(join(tmpdir(), 'ijs-test-'));
+  ensureDirSync(dir);
+  return dir;
+}
+
+/**
+ * @param dir
+ */
+export function cleanTmpDir(dir: string): void {
+  removeSync(dir);
+}
+
 declare global {
   // eslint-disable-next-line no-var
   var testUtils: {
@@ -84,5 +103,7 @@ declare global {
     createGreyaImage: typeof createGreyaImage;
     createRgbImage: typeof createRgbImage;
     createRgbaImage: typeof createRgbaImage;
+    makeTmpDir: typeof makeTmpDir;
+    cleanTmpDir: typeof cleanTmpDir;
   };
 }
