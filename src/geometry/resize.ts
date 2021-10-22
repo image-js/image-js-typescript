@@ -1,10 +1,12 @@
 import { IJS } from '../IJS';
-import { InterpolationType, BorderType } from '../types';
 import { getClamp } from '../utils/clamp';
-import { getBorderInterpolation } from '../utils/interpolateBorder';
-import { getInterpolationFunction } from '../utils/interpolatePixel';
+import { getBorderInterpolation, BorderType } from '../utils/interpolateBorder';
+import {
+  getInterpolationFunction,
+  InterpolationType,
+} from '../utils/interpolatePixel';
 
-export interface IResizeOptions {
+export interface ResizeOptions {
   width?: number;
   height?: number;
   xFactor?: number;
@@ -16,10 +18,13 @@ export interface IResizeOptions {
 }
 
 /**
- * @param image
- * @param options
+ * Returns a resized copy of an image.
+ *
+ * @param image - Original image.
+ * @param options - Resize options.
+ * @returns The new image.
  */
-export function resize(image: IJS, options: IResizeOptions): IJS {
+export function resize(image: IJS, options: ResizeOptions): IJS {
   const {
     interpolationType = InterpolationType.BILINEAR,
     borderType = BorderType.CONSTANT,
@@ -58,7 +63,7 @@ export function resize(image: IJS, options: IResizeOptions): IJS {
  */
 function checkOptions(
   image: IJS,
-  options: IResizeOptions,
+  options: ResizeOptions,
 ): { width: number; height: number; xFactor: number; yFactor: number } {
   const {
     width,

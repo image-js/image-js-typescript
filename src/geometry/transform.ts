@@ -1,12 +1,14 @@
 import { inverse, Matrix } from 'ml-matrix';
 
 import { IJS, ImageCoordinates } from '../IJS';
-import { InterpolationType, BorderType } from '../types';
 import { getClamp } from '../utils/clamp';
-import { getBorderInterpolation } from '../utils/interpolateBorder';
-import { getInterpolationFunction } from '../utils/interpolatePixel';
+import { getBorderInterpolation, BorderType } from '../utils/interpolateBorder';
+import {
+  getInterpolationFunction,
+  InterpolationType,
+} from '../utils/interpolatePixel';
 
-export interface ITransformOptions {
+export interface TransformOptions {
   width?: number;
   height?: number;
   interpolationType?: InterpolationType;
@@ -17,14 +19,17 @@ export interface ITransformOptions {
 }
 
 /**
- * @param image
- * @param transformMatrix
- * @param options
+ * Transforms an image using a matrix.
+ *
+ * @param image - Original image.
+ * @param transformMatrix - 2×3 transform matrix.
+ * @param options - Transform options.
+ * @returns The new image.
  */
 export function transform(
   image: IJS,
   transformMatrix: number[][],
-  options: ITransformOptions = {},
+  options: TransformOptions = {},
 ): IJS {
   const {
     borderType = BorderType.CONSTANT,
@@ -100,23 +105,20 @@ export function transform(
   const clamp = getClamp(newImage);
 
   const interpolate = getInterpolationFunction(interpolationType);
-  const hFactor = newImage.width * newImage.channels;
   for (let row = 0; row < newImage.height; row++) {
-    const hOffset = hFactor * row;
     for (let column = 0; column < newImage.width; column++) {
-      const wOffset = hOffset + column * image.channels;
       const nx = transformPoint(transformMatrix[0], column, row);
       const ny = transformPoint(transformMatrix[1], column, row);
-      for (let c = 0; c < newImage.channels; c++) {
+      for (let channel = 0; channel < newImage.channels; channel++) {
         const newValue = interpolate(
           image,
           nx,
           ny,
-          c,
+          channel,
           interpolateBorder,
           clamp,
         );
-        newImage.data[wOffset + c] = newValue;
+        newImage.setValue(row, column, channel, newValue);
       }
     }
   }

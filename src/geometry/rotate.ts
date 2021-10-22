@@ -1,9 +1,10 @@
 import { IJS, ImageCoordinates } from '../IJS';
-import { InterpolationType, BorderType } from '../types';
+import { BorderType } from '../utils/interpolateBorder';
+import { InterpolationType } from '../utils/interpolatePixel';
 
 import { transform } from './transform';
 
-export interface IRotateOptions {
+export interface RotateOptions {
   center?: ImageCoordinates | [number, number];
   scale?: number;
   width?: number;
@@ -18,10 +19,18 @@ export interface IRotateOptions {
   borderValue?: number;
 }
 
+/**
+ * Rotate an image of a given angle.
+ *
+ * @param image - Original image.
+ * @param angle - Angle in degrees.
+ * @param options - Rotate options.
+ * @returns A new rotated image.
+ */
 export function rotate(
   image: IJS,
   angle: number,
-  options: IRotateOptions = {},
+  options: RotateOptions = {},
 ): IJS {
   const { center = ImageCoordinates.CENTER, scale = 1 } = options;
 
@@ -36,6 +45,14 @@ export function rotate(
   return transform(image, transformMatrix, options);
 }
 
+/**
+ * Generates a rotation matrix for the given angle.
+ *
+ * @param angle - Angle in degrees.
+ * @param center - Center point of the image.
+ * @param scale - Scalinf factor.
+ * @returns Rotation matrix.
+ */
 function getRotationMatrix(
   angle: number,
   center: [number, number],
