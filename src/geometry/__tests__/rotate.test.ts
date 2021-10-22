@@ -1,5 +1,9 @@
-import { rotate, readSync, BorderType, InterpolationType } from 'IJS';
 import { getTestImage } from 'test';
+
+import { rotate } from '..';
+import { readSync } from '../../load';
+import { BorderType } from '../../utils/interpolateBorder';
+import { InterpolationType } from '../../utils/interpolatePixel';
 
 test('rotate + scale compared to opencv (nearest)', () => {
   const expected = readSync('test/img/testRotate.png');

@@ -1,4 +1,5 @@
-import { IJS, ColorDepth, ImageKind } from 'IJS';
+import { IJS, ColorDepth } from '../IJS';
+import { ImageColorModel } from '../utils/colorModels';
 
 describe('create new images', () => {
   it('should create a 8-bit image', () => {
@@ -8,7 +9,7 @@ describe('create new images', () => {
       height: 20,
       size: 200,
       depth: ColorDepth.UINT8,
-      kind: ImageKind.RGB,
+      colorModel: ImageColorModel.RGB,
       components: 3,
       channels: 3,
       alpha: false,
@@ -24,7 +25,7 @@ describe('create new images', () => {
       height: 20,
       size: 200,
       depth: ColorDepth.UINT16,
-      kind: ImageKind.RGB,
+      colorModel: ImageColorModel.RGB,
       components: 3,
       channels: 3,
       alpha: false,
@@ -34,10 +35,10 @@ describe('create new images', () => {
   });
 
   it('should create a grey image with alpha', () => {
-    const img = new IJS(10, 20, { kind: ImageKind.GREYA });
+    const img = new IJS(10, 20, { colorModel: ImageColorModel.GREYA });
     expect(img).toMatchObject({
       depth: ColorDepth.UINT8,
-      kind: ImageKind.GREYA,
+      colorModel: ImageColorModel.GREYA,
       components: 1,
       channels: 2,
       alpha: true,
@@ -75,7 +76,7 @@ describe('create new images', () => {
       0, 1, 2,
       3, 4, 5
     ]);
-    const img = new IJS(3, 2, { data, kind: ImageKind.GREY });
+    const img = new IJS(3, 2, { data, colorModel: ImageColorModel.GREY });
     expect(img.getValue(1, 0, 0)).toBe(3);
     expect(img.data).toBe(data);
   });
@@ -129,7 +130,7 @@ describe('get and set pixels', () => {
 });
 
 test('clone', () => {
-  const img = new IJS(2, 2, { kind: ImageKind.GREY });
+  const img = new IJS(2, 2, { colorModel: ImageColorModel.GREY });
   img.setValue(0, 1, 0, 50);
   const copy = img.clone();
   expect(copy).toStrictEqual(img);
@@ -196,7 +197,7 @@ test('fill channel invalid channel', () => {
 });
 
 test('fill alpha', () => {
-  const img = new IJS(1, 2, { kind: ImageKind.RGBA });
+  const img = new IJS(1, 2, { colorModel: ImageColorModel.RGBA });
   img.fillAlpha(0);
   expect(img.data).toStrictEqual(Uint8Array.from([0, 0, 0, 0, 0, 0, 0, 0]));
   img.fillAlpha(50);

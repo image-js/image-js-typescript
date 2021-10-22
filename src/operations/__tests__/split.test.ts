@@ -1,4 +1,5 @@
-import { IJS, ImageKind } from 'IJS';
+import { IJS } from '../../IJS';
+import { ImageColorModel } from '../../utils/colorModels';
 
 test('split RGB', () => {
   const img = new IJS(1, 2, {
@@ -10,7 +11,7 @@ test('split RGB', () => {
     expect(g).toMatchObject({
       width: 1,
       height: 2,
-      kind: ImageKind.GREY,
+      colorModel: ImageColorModel.GREY,
     }),
   );
   expect(split[0].data).toStrictEqual(Uint8Array.from([0, 253]));
@@ -20,7 +21,7 @@ test('split RGB', () => {
 
 test('split GREYA', () => {
   const img = new IJS(1, 2, {
-    kind: ImageKind.GREYA,
+    colorModel: ImageColorModel.GREYA,
     data: Uint8Array.from([0, 1, 254, 255]),
   });
   const split = img.split();

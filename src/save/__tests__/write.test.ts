@@ -1,8 +1,12 @@
 import { join } from 'path';
 
 import { existsSync } from 'fs-extra';
-import { write, read, ImageFormat, ImageKind } from 'IJS';
 import { getTestImage, makeTmpDir, cleanTmpDir } from 'test';
+
+import { write } from '..';
+import { read } from '../..';
+import { ImageColorModel } from '../../utils/colorModels';
+import { ImageFormat } from '../encode';
 
 let tmpDir: string;
 beforeEach(() => {
@@ -28,5 +32,5 @@ test('write image to disk (jpeg)', async () => {
   expect(existsSync(destination)).toBe(true);
   const imgRead = await read(destination);
   expect(imgRead.width).toBe(img.width);
-  expect(imgRead.kind).toBe(ImageKind.RGBA);
+  expect(imgRead.colorModel).toBe(ImageColorModel.RGBA);
 });

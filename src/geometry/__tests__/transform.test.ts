@@ -1,5 +1,7 @@
-import { transform, readSync } from 'IJS';
 import { getTestImage } from 'test';
+
+import { transform } from '..';
+import { readSync } from '../../load';
 
 describe('transform with a transformation matrix', () => {
   it('compare result of translation with opencv', () => {

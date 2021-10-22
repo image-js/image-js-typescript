@@ -1,17 +1,17 @@
-import { IJS, ImageKind, ColorDepth } from 'IJS';
 import { getTestImage, getImage } from 'test';
 
-test('GREY to GREYA', () => {
-  const image = new IJS({
-    width: 2,
-    height: 2,
-    data: new Uint8Array([10, 30, 50, 70]),
-    kind: ImageKind.GREY,
-  });
+import { IJS, ColorDepth } from '../../IJS';
+import { ImageColorModel } from '../../utils/colorModels';
 
-  const converted = image.convertColor(ImageKind.GREYA);
-  expect(converted.data).toStrictEqual(
-    new Uint8Array([10, 255, 30, 255, 50, 255, 70, 255]),
+test('GREY to GREYA', () => {
+  const image = testUtils.createGreyImage([
+    [10, 30],
+    [50, 70],
+  ]);
+
+  const converted = image.convertColor(ImageColorModel.GREYA);
+  expect(converted).toMatchImageData(
+    [[10, 255, 30, 255], [50, 255, 70, 255]],
   );
 });
 
@@ -20,10 +20,10 @@ test('GREYA to GREY', () => {
     width: 2,
     height: 2,
     data: new Uint8Array([10, 100, 30, 100, 50, 100, 70, 100]),
-    kind: ImageKind.GREYA,
+    colorModel: ImageColorModel.GREYA,
   });
 
-  const converted = image.convertColor(ImageKind.GREY);
+  const converted = image.convertColor(ImageColorModel.GREY);
   expect(converted.data).toStrictEqual(new Uint8Array([10, 30, 50, 70]));
 });
 
@@ -32,10 +32,10 @@ test('GREY to RGB', () => {
     width: 2,
     height: 2,
     data: new Uint8Array([10, 30, 50, 70]),
-    kind: ImageKind.GREY,
+    colorModel: ImageColorModel.GREY,
   });
 
-  const converted = image.convertColor(ImageKind.RGB);
+  const converted = image.convertColor(ImageColorModel.RGB);
   expect(converted.data).toStrictEqual(
     new Uint8Array([10, 10, 10, 30, 30, 30, 50, 50, 50, 70, 70, 70]),
   );
@@ -46,10 +46,10 @@ test('GREYA to RGB', () => {
     width: 2,
     height: 2,
     data: new Uint8Array([10, 100, 30, 100, 50, 100, 70, 100]),
-    kind: ImageKind.GREYA,
+    colorModel: ImageColorModel.GREYA,
   });
 
-  const converted = image.convertColor(ImageKind.RGB);
+  const converted = image.convertColor(ImageColorModel.RGB);
   expect(converted.data).toStrictEqual(
     new Uint8Array([10, 10, 10, 30, 30, 30, 50, 50, 50, 70, 70, 70]),
   );
@@ -60,10 +60,10 @@ test('GREY to RGBA', () => {
     width: 2,
     height: 2,
     data: new Uint8Array([10, 30, 50, 70]),
-    kind: ImageKind.GREY,
+    colorModel: ImageColorModel.GREY,
   });
 
-  const converted = image.convertColor(ImageKind.RGBA);
+  const converted = image.convertColor(ImageColorModel.RGBA);
   expect(converted.data).toStrictEqual(
     // prettier-ignore
     new Uint8Array([10, 10, 10, 255, 30, 30, 30, 255, 50, 50, 50, 255, 70, 70, 70, 255]),
@@ -75,10 +75,10 @@ test('GREYA to RGBA', () => {
     width: 2,
     height: 2,
     data: new Uint8Array([10, 100, 30, 100, 50, 100, 70, 100]),
-    kind: ImageKind.GREYA,
+    colorModel: ImageColorModel.GREYA,
   });
 
-  const converted = image.convertColor(ImageKind.RGBA);
+  const converted = image.convertColor(ImageColorModel.RGBA);
   expect(converted.data).toStrictEqual(
     // prettier-ignore
     new Uint8Array([10, 10, 10, 100, 30, 30, 30, 100, 50, 50, 50, 100, 70, 70, 70, 100]),
@@ -90,10 +90,10 @@ test('RGB to RGBA', () => {
     width: 2,
     height: 1,
     data: new Uint8Array([10, 20, 30, 40, 60, 70]),
-    kind: ImageKind.RGB,
+    colorModel: ImageColorModel.RGB,
   });
 
-  const converted = image.convertColor(ImageKind.RGBA);
+  const converted = image.convertColor(ImageColorModel.RGBA);
   expect(converted.data).toStrictEqual(
     new Uint8Array([10, 20, 30, 255, 40, 60, 70, 255]),
   );
@@ -104,24 +104,24 @@ test('RGBA to RGB', () => {
     width: 2,
     height: 1,
     data: new Uint8Array([10, 20, 30, 100, 40, 60, 70, 100]),
-    kind: ImageKind.RGBA,
+    colorModel: ImageColorModel.RGBA,
   });
 
-  const converted = image.convertColor(ImageKind.RGB);
+  const converted = image.convertColor(ImageColorModel.RGB);
   expect(converted.data).toStrictEqual(
     new Uint8Array([10, 20, 30, 40, 60, 70]),
   );
 });
 
-test('Cannot convert to same kind', () => {
+test('Cannot convert to same colorModel', () => {
   const image = new IJS({
     width: 2,
     height: 1,
     data: new Uint8Array([10, 20, 30, 40, 60, 70]),
-    kind: ImageKind.RGB,
+    colorModel: ImageColorModel.RGB,
   });
 
-  expect(() => image.convertColor(ImageKind.RGB)).toThrow(
+  expect(() => image.convertColor(ImageColorModel.RGB)).toThrow(
     /Cannot convert color, image is already RGB/,
   );
 });
@@ -131,11 +131,11 @@ test('GREY to RGBA 16-bit', () => {
     width: 2,
     height: 2,
     data: new Uint16Array([256, 512, 768, 1024]),
-    kind: ImageKind.GREY,
+    colorModel: ImageColorModel.GREY,
     depth: ColorDepth.UINT16,
   });
 
-  const converted = image.convertColor(ImageKind.RGBA);
+  const converted = image.convertColor(ImageColorModel.RGBA);
   expect(converted.data).toStrictEqual(
     // prettier-ignore
     new Uint16Array([256, 256, 256, 65535, 512, 512, 512, 65535, 768, 768, 768, 65535, 1024, 1024, 1024, 65535]),
@@ -144,7 +144,7 @@ test('GREY to RGBA 16-bit', () => {
 
 test('image to GREY', () => {
   const testImage = getTestImage();
-  const grey = testImage.convertColor(ImageKind.GREY);
+  const grey = testImage.convertColor(ImageColorModel.GREY);
   const expected = getImage(
     [
       [255, 255, 255, 255, 255, 255, 255, 255],
@@ -158,7 +158,7 @@ test('image to GREY', () => {
       [0, 0, 0, 0, 0, 0, 0, 0],
       [255, 255, 255, 255, 255, 255, 255, 255],
     ],
-    ImageKind.GREY,
+    ImageColorModel.GREY,
   );
   expect(grey.data).toStrictEqual(expected.data);
 });

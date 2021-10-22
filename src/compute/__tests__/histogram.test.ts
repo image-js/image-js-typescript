@@ -1,4 +1,4 @@
-import { ImageKind } from '../../IJS';
+import { ImageColorModel } from '../../utils/colorModels';
 
 test('RGBA image - channel 0', () => {
   const image = testUtils.createRgbaImage([
@@ -15,7 +15,7 @@ test('RGBA image - channel 0', () => {
 test('RGBA image - channel 2', () => {
   const image = getImage(
     [[[230, 80, 120, 255]], [[100, 140, 120, 1]]],
-    ImageKind.RGBA,
+    ImageColorModel.RGBA,
   );
   const histogram = image.histogram({ channel: 2 });
   const expected = new Array(256).fill(0);
@@ -32,7 +32,7 @@ test('binary image', function () {
       [0, 255, 255, 255, 0],
       [0, 0, 0, 0, 0],
     ],
-    ImageKind.GREY,
+    ImageColorModel.GREY,
   );
   const histogram = image.histogram();
   expect(histogram[0]).toBe(16);

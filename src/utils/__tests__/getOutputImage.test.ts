@@ -1,18 +1,18 @@
-import { IJS, ImageKind, ColorDepth } from 'IJS';
-
-import { getOutputImage } from '../src/utils/getOutputImage';
+import { IJS, ColorDepth } from '../../IJS';
+import { ImageColorModel } from '../colorModels';
+import { getOutputImage } from '../getOutputImage';
 
 describe('getOutputImage', () => {
   it('should default to creating an empty image', () => {
     const img = new IJS(2, 2, {
-      kind: ImageKind.GREY,
+      colorModel: ImageColorModel.GREY,
       data: Uint8Array.of(0, 1, 2, 3),
     });
     const output = getOutputImage(img);
     expect(output).toMatchObject({
       width: 2,
       height: 2,
-      kind: ImageKind.GREY,
+      colorModel: ImageColorModel.GREY,
       depth: ColorDepth.UINT8,
     });
     expect(output.data).toStrictEqual(new Uint8Array(4));
@@ -21,18 +21,18 @@ describe('getOutputImage', () => {
   it('should create with requirements', () => {
     const img = new IJS();
     const requirements = {
-      kind: ImageKind.GREY,
+      colorModel: ImageColorModel.GREY,
     };
     const output = getOutputImage(img, {}, { newParameters: requirements });
     expect(output).toMatchObject({
-      kind: ImageKind.GREY,
+      colorModel: ImageColorModel.GREY,
     });
   });
 
   it('should accept out with matching requirements', () => {
     const img = new IJS();
     const requirements = {
-      kind: ImageKind.GREY,
+      colorModel: ImageColorModel.GREY,
     };
     const correct = new IJS(requirements);
     const output = getOutputImage(
@@ -46,12 +46,14 @@ describe('getOutputImage', () => {
   it('should throw with non-matching requirements', () => {
     const img = new IJS();
     const requirements = {
-      kind: ImageKind.GREY,
+      colorModel: ImageColorModel.GREY,
     };
     const incorrect = new IJS();
     expect(() =>
       getOutputImage(img, { out: incorrect }, { newParameters: requirements }),
-    ).toThrow(/cannot use out. Its kind property must be GREY. Found RGB/);
+    ).toThrow(
+      /cannot use out. Its colorModel property must be GREY. Found RGB/,
+    );
   });
 
   it('should throw if out is not an image', () => {

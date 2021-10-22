@@ -1,5 +1,8 @@
-import { decode, ColorDepth, ImageKind } from 'IJS';
 import { readImage } from 'test';
+
+import { decode } from '..';
+import { ColorDepth } from '../../IJS';
+import { ImageColorModel } from '../../utils/colorModels';
 
 describe('decode various formats', function () {
   it('auto decode png', async () => {
@@ -7,7 +10,7 @@ describe('decode various formats', function () {
     expect(() => decode(buffer)).not.toThrow();
     const decoded = decode(buffer);
     expect(decoded.depth).toStrictEqual(ColorDepth.UINT8);
-    expect(decoded.kind).toStrictEqual(ImageKind.GREY);
+    expect(decoded.colorModel).toStrictEqual(ImageColorModel.GREY);
   });
 
   it('auto decode jpeg', async () => {
@@ -15,7 +18,7 @@ describe('decode various formats', function () {
     expect(() => decode(buffer)).not.toThrow();
     const decoded = decode(buffer);
     expect(decoded.depth).toStrictEqual(ColorDepth.UINT8);
-    expect(decoded.kind).toStrictEqual(ImageKind.RGBA);
+    expect(decoded.colorModel).toStrictEqual(ImageColorModel.RGBA);
   });
 });
 
