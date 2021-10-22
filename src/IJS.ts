@@ -1,7 +1,10 @@
 import { convertColor, IConvertColorOptions } from './operations/convertColor';
 import { convertDepth } from './operations/convertDepth';
+import { split } from './operations/split';
 import { ImageColorModel, colorModels } from './utils/colorModels';
 import { validateChannel, validateValue } from './utils/validators';
+
+import { histogram, HistogramOptions } from '.';
 
 export { ImageColorModel };
 
@@ -383,7 +386,16 @@ export class IJS {
     }
   }
 
+  // COMPUTE
+  public histogram(options?: HistogramOptions): number[] {
+    return histogram(this, options);
+  }
+
   // OPERATIONS
+
+  public split(): IJS[] {
+    return split(this);
+  }
 
   public convertColor(
     colorModel: ImageColorModel,

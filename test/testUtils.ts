@@ -54,6 +54,7 @@ declare global {
   var testUtils: {
     load: typeof load;
     createGreyImage: typeof createGreyImage;
+    createGreyaImage: typeof createGreyaImage;
     createRgbImage: typeof createRgbImage;
     createRgbaImage: typeof createRgbaImage;
   };
