@@ -1,11 +1,8 @@
-import { getTestImage } from 'test';
-
 import { transform } from '..';
-import { readSync } from '../../load';
 
 describe('transform with a transformation matrix', () => {
   it('compare result of translation with opencv', () => {
-    const img = getTestImage();
+    const img = testUtils.load('opencv/test.png');
     const translation = [
       [1, 0, 2],
       [0, 1, 4],
@@ -15,7 +12,6 @@ describe('transform with a transformation matrix', () => {
       height: 20,
     });
 
-    const expected = readSync('test/img/testTranslation.png');
-    expect(transformed.data).toStrictEqual(expected.data);
+    expect(transformed).toMatchImage('opencv/testTranslation.png');
   });
 });
