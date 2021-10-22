@@ -1,13 +1,9 @@
-import { getTestImage } from 'test';
-
 import { rotate } from '..';
-import { readSync } from '../../load';
 import { BorderType } from '../../utils/interpolateBorder';
 import { InterpolationType } from '../../utils/interpolatePixel';
 
 test('rotate + scale compared to opencv (nearest)', () => {
-  const expected = readSync('test/img/testRotate.png');
-  const img = getTestImage();
+  const img = testUtils.load('opencv/test.png');
   const rotated = rotate(img, 30, {
     scale: 0.8,
     borderType: BorderType.REFLECT,
@@ -15,31 +11,31 @@ test('rotate + scale compared to opencv (nearest)', () => {
     center: [2, 4],
   });
 
-  expect(rotated.data).toStrictEqual(expected.data);
+  expect(rotated).toMatchImage('opencv/testRotate.png');
 });
 
-// test('rotate + scale compared to opencv (bilinear)', () => {
-//   const expected = readSync('test/img/testRotateBilinear.png');
-//   const img = getTestImage();
-//   const rotated = rotate(img, 30, {
-//     scale: 1.4,
-//     borderType: BorderType.REFLECT,
-//     interpolationType: InterpolationType.BILINEAR,
-//     center: [2, 4]
-//   });
+test('rotate + scale compared to opencv (bilinear)', () => {
+  const img = testUtils.load('opencv/test.png');
 
-//   expect(rotated.data).toStrictEqual(expected.data);
-// });
+  const rotated = rotate(img, 30, {
+    scale: 1.4,
+    borderType: BorderType.REFLECT,
+    interpolationType: InterpolationType.BILINEAR,
+    center: [2, 4],
+  });
 
-// test('rotate + scale compared to opencv (bicubic)', () => {
-//   const expected = readSync('test/img/testRotateBicubic.png');
-//   const img = getTestImage();
-//   const rotated = rotate(img, 30, {
-//     scale: 1.4,
-//     borderType: BorderType.REFLECT,
-//     interpolationType: InterpolationType.BICUBIC,
-//     center: [2, 4]
-//   });
+  expect(rotated).toMatchImage('opencv/testRotateBilinear.png');
+});
 
-//   expect(rotated.data).toStrictEqual(expected.data);
-// });
+test('rotate + scale compared to opencv (bicubic)', () => {
+  const img = testUtils.load('opencv/test.png');
+
+  const rotated = rotate(img, 30, {
+    scale: 1.4,
+    borderType: BorderType.REFLECT,
+    interpolationType: InterpolationType.BICUBIC,
+    center: [2, 4],
+  });
+
+  expect(rotated).toMatchImage('opencv/testRotateBicubic.png');
+});
