@@ -1,4 +1,14 @@
-import { convertColor, IConvertColorOptions } from './operations/convertColor';
+import {
+  BlurOptions,
+  blur,
+  ConvolutionOptions,
+  directConvolution,
+  separableConvolution,
+  gaussianBlur,
+  GaussianBlurOptions,
+} from './filters';
+import { invert, InvertOptions } from './filters/invert';
+import { convertColor, ConvertColorOptions } from './operations/convertColor';
 import { convertDepth } from './operations/convertDepth';
 import { split } from './operations/split';
 import { ImageColorModel, colorModels } from './utils/colorModels';
@@ -61,7 +71,7 @@ export class IJS {
   public readonly height: number;
 
   /**
-   * The total number of pixels in the image (width x height).
+   * The total number of pixels in the image (width × height).
    */
   public readonly size: number;
 
@@ -186,7 +196,6 @@ export class IJS {
 
   /**
    * Get all the channels of a pixel.
-   *
    * @param row - Row index.
    * @param column - Column index.
    * @returns Channels of the pixel.
@@ -202,7 +211,6 @@ export class IJS {
 
   /**
    * Set all the channels of a pixel.
-   *
    * @param row - Row index.
    * @param column - Column index.
    * @param value - New channel values of the pixel to set.
@@ -216,7 +224,6 @@ export class IJS {
 
   /**
    * Get the value of a specific pixel channel. Select pixel using coordinates.
-   *
    * @param row - Row index.
    * @param column - Column index.
    * @param channel - Channel index.
@@ -228,7 +235,6 @@ export class IJS {
 
   /**
    * Set the value of a specific pixel channel. Select pixel using coordinates.
-   *
    * @param row - Row index.
    * @param column - Column index.
    * @param channel - Channel index.
@@ -405,13 +411,44 @@ export class IJS {
 
   public convertColor(
     colorModel: ImageColorModel,
-    options?: IConvertColorOptions,
+    options?: ConvertColorOptions,
   ): IJS {
     return convertColor(this, colorModel, options);
   }
 
   public convertDepth(newDepth: ColorDepth): IJS {
     return convertDepth(this, newDepth);
+  }
+  // FILTERS
+
+  public blur(options: BlurOptions): IJS {
+    return blur(this, options);
+  }
+
+  public directConvolution(
+    kernel: number[][],
+    options?: ConvolutionOptions,
+  ): IJS {
+    return directConvolution(this, kernel, options);
+  }
+
+  public separableConvolution(
+    kernelX: number[],
+    kernelY: number[],
+    options?: ConvolutionOptions,
+  ): IJS {
+    return separableConvolution(this, kernelX, kernelY, options);
+  }
+
+  public gaussianBlur(options: GaussianBlurOptions): IJS {
+    return gaussianBlur(this, options);
+  }
+
+  /**
+   * Invert the colors of the image.
+   */
+  public invert(options?: InvertOptions): IJS {
+    return invert(this, options);
   }
 }
 

@@ -1,7 +1,7 @@
 import { IJS, ImageColorModel } from '../IJS';
 import { getOutputImage } from '../utils/getOutputImage';
 
-export interface IConvertColorOptions {
+export interface ConvertColorOptions {
   out?: IJS;
 }
 
@@ -13,7 +13,7 @@ export interface IConvertColorOptions {
 export function convertColor(
   image: IJS,
   colorModel: ImageColorModel,
-  options: IConvertColorOptions = {},
+  options: ConvertColorOptions = {},
 ): IJS {
   const canConvert = new Map([
     [
