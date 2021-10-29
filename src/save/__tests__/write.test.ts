@@ -29,7 +29,6 @@ test('write image to disk (jpeg)', async () => {
   await write(destination, img, { format: ImageFormat.jpeg });
   expect(existsSync(destination)).toBe(true);
   const imgRead = await read(destination);
-  expect(img.colorModel).toBe(ImageColorModel.RGB);
+  expect(imgRead.width).toBe(img.width);
   expect(imgRead.colorModel).toBe(ImageColorModel.RGBA);
-  expect(imgRead).toMatchImage(img);
 });
