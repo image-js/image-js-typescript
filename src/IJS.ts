@@ -270,7 +270,13 @@ export class IJS {
    * @returns The raw data.
    */
   public getRawImage() {
-    return { width: this.width, height: this.height, data: this.data };
+    return {
+      width: this.width,
+      height: this.height,
+      data: this.data,
+      channels: this.channels,
+      depth: this.depth,
+    };
   }
 
   public [Symbol.for('nodejs.util.inspect.custom')](): string {
