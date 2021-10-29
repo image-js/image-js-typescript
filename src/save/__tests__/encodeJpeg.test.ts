@@ -29,13 +29,12 @@ describe('encode JPEG', () => {
   });
 
   it('encoding a 16-bit image should convert it to a 8-bit image', () => {
-    const image = getImage(
+    const image = testUtils.createGreyImage(
       [
         [256, 512],
         [768, 1024],
       ],
-      ImageColorModel.GREY,
-      ColorDepth.UINT16,
+      { depth: ColorDepth.UINT16 },
     );
     const encoded = encodeJpeg(image);
     const reloaded = decode(encoded);
