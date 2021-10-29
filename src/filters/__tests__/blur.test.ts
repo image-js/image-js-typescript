@@ -1,17 +1,17 @@
-import { blur, BorderType, read } from 'ijs';
-import { getTestImage } from 'test';
+import { BorderType } from '../../utils/interpolateBorder';
+import { blur } from '../blur';
 
 describe('blur', () => {
   it('blur compared to opencv', async () => {
-    const img = getTestImage();
+    const img = testUtils.load('opencv/test.png');
 
     const blurred = blur(img, {
       width: 3,
       height: 5,
-      borderType: BorderType.REFLECT
+      borderType: BorderType.REFLECT,
     });
 
-    const expected = await read('test/img/testBlur.png');
-    expect(blurred.data).toStrictEqual(expected.data);
+    const expected = testUtils.load('opencv/testBlur.png');
+    expect(blurred).toMatchImage(expected);
   });
 });
