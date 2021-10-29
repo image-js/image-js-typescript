@@ -20,10 +20,13 @@ describe('convert depth', () => {
   });
 
   it('Uint16 to Uint8', () => {
-    const img = testUtils.createGreyImage([
-      [30, 260],
-      [512, 2047],
-    ]);
+    const img = testUtils.createGreyImage(
+      [
+        [30, 260],
+        [512, 2047],
+      ],
+      { depth: ColorDepth.UINT16 },
+    );
 
     const newImg = img.convertDepth(ColorDepth.UINT8);
     expect(newImg.width).toBe(2);
@@ -37,10 +40,13 @@ describe('convert depth', () => {
   });
 
   it('Uint16 to Uint8 for rgba', () => {
-    const img = testUtils.createRgbaImage([
-      [256, 256, 256, 256, 512, 512, 512, 512],
-      [68, 768, 768, 768, 1024, 1024, 1024, 1024],
-    ]);
+    const img = testUtils.createRgbaImage(
+      [
+        [256, 256, 256, 256, 512, 512, 512, 512],
+        [768, 768, 768, 768, 1024, 1024, 1024, 1024],
+      ],
+      { depth: ColorDepth.UINT16 },
+    );
 
     const newImg = img.convertDepth(ColorDepth.UINT8);
     expect(newImg.width).toBe(2);
