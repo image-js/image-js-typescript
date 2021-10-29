@@ -1,4 +1,4 @@
-import { Image } from '../Image';
+import { IJS } from '../IJS';
 import { getOutputImage } from '../utils/getOutputImage';
 import { validateValue } from '../utils/validators';
 
@@ -24,28 +24,28 @@ export enum ThresholdAlgorithm {
   // YEN
 }
 
-interface IThresholdOptionsBase {
-  out?: Image;
+interface ThresholdOptionsBase {
+  out?: IJS;
 }
 
-export interface IThresholdOptionsThreshold extends IThresholdOptionsBase {
+export interface ThresholdOptionsThreshold extends ThresholdOptionsBase {
   threshold: number;
 }
 
-export interface IThresholdOptionsAlgorithm extends IThresholdOptionsBase {
+export interface ThresholdOptionsAlgorithm extends ThresholdOptionsBase {
   algorithm: ThresholdAlgorithm;
 }
 
 export type ThresholdOptions =
-  | IThresholdOptionsThreshold
-  | IThresholdOptionsAlgorithm;
+  | ThresholdOptionsThreshold
+  | ThresholdOptionsAlgorithm;
 
 /**
  * @param image
  * @param algorithm
  */
 export function computeThreshold(
-  image: Image,
+  image: IJS,
   algorithm: ThresholdAlgorithm,
 ): number {
   if (image.channels !== 1) {
@@ -71,7 +71,7 @@ export function computeThreshold(
  * @param image
  * @param options
  */
-export function threshold(image: Image, options: ThresholdOptions): Image {
+export function threshold(image: IJS, options: ThresholdOptions): IJS {
   let thresholdValue: number;
   if ('threshold' in options) {
     thresholdValue = options.threshold;
@@ -81,9 +81,12 @@ export function threshold(image: Image, options: ThresholdOptions): Image {
 
   validateValue(thresholdValue, image);
   const result = getOutputImage(image, options);
-  for (let i = 0; i < image.data.length; i++) {
-    result.data[i] = image.data[i] > thresholdValue ? image.maxValue : 0;
+  for (let i = 0; i < image.size; i++) {
+    result.setValueByIndex(
+      i,
+      0,
+      image.getValueByIndex(i, 0) > thresholdValue ? image.maxValue : 0,
+    );
   }
-
   return result;
 }
