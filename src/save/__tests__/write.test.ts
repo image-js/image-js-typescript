@@ -1,7 +1,5 @@
+import { existsSync } from 'fs';
 import { join } from 'path';
-
-// @ts-expect-error
-import { existsSync } from 'fs-extra';
 
 import { write } from '..';
 import { read } from '../..';

@@ -1,16 +1,14 @@
+import { readFileSync, mkdtempSync, rmSync } from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
-
-// @ts-expect-error Package has not types
-import { readFileSync, mkdtempSync, ensureDirSync, removeSync } from 'fs-extra';
 
 import { IJS, ImageColorModel, readSync } from '../src';
 
 import { TestImagePath } from './TestImagePath';
-import { createImageFromData } from './createImageFromData';
+import { createImageFromData, CreateImageOptions } from './createImageFromData';
 
 /**
- * Retrun the path to a given image.
+ * Return the path to a given image.
  *
  * @param name - Test image name.
  * @returns The path to the image.
@@ -42,10 +40,14 @@ export function load(path: TestImagePath): IJS {
  * Create an image from 8-bit Grey data.
  *
  * @param imageData - Raw image data.
+ * @param options - Additional options to create the image.
  * @returns The grey image.
  */
-export function createGreyImage(imageData: number[][] | string): IJS {
-  return createImageFromData(imageData, ImageColorModel.GREY);
+export function createGreyImage(
+  imageData: number[][] | string,
+  options?: CreateImageOptions,
+): IJS {
+  return createImageFromData(imageData, ImageColorModel.GREY, options);
 }
 
 /**
@@ -61,36 +63,46 @@ export function createGreyaImage(imageData: number[][] | string): IJS {
  * Create an image from 8-bit RGB data.
  *
  * @param imageData - Raw image data.
+ * @param options - Additional options to create the image.
  * @returns The RGB image.
  */
-export function createRgbImage(imageData: number[][] | string): IJS {
-  return createImageFromData(imageData, ImageColorModel.RGB);
+export function createRgbImage(
+  imageData: number[][] | string,
+  options?: CreateImageOptions,
+): IJS {
+  return createImageFromData(imageData, ImageColorModel.RGB, options);
 }
 
 /**
  * Create an image from 8-bit RGBA data.
  *
  * @param imageData - Raw image data.
+ * @param options - Additional options to create the image.
  * @returns The RGBA image.
  */
-export function createRgbaImage(imageData: number[][] | string): IJS {
-  return createImageFromData(imageData, ImageColorModel.RGBA);
+export function createRgbaImage(
+  imageData: number[][] | string,
+  options?: CreateImageOptions,
+): IJS {
+  return createImageFromData(imageData, ImageColorModel.RGBA, options);
 }
 
 /**
+ * Creates a new temporary directory.
  *
+ * @returns The path to the created directory.
  */
 export function makeTmpDir(): string {
-  const dir = mkdtempSync(join(tmpdir(), 'ijs-test-'));
-  ensureDirSync(dir);
-  return dir;
+  return mkdtempSync(join(tmpdir(), 'ijs-test-'));
 }
 
 /**
- * @param dir
+ * Delete a previously created temporary directory.
+ *
+ * @param dir - Path of the directory to remove.
  */
 export function cleanTmpDir(dir: string): void {
-  removeSync(dir);
+  rmSync(dir, { recursive: true, force: true });
 }
 
 declare global {

@@ -8,7 +8,7 @@ import { histogram, HistogramOptions } from '.';
 
 export { ImageColorModel };
 
-type ImageDataArray = Uint8Array | Uint16Array | Uint8ClampedArray;
+export type ImageDataArray = Uint8Array | Uint16Array | Uint8ClampedArray;
 
 export enum ColorDepth {
   UINT8 = 8,
