@@ -22,7 +22,7 @@ test('RGBA image - channel 2', () => {
 });
 
 test('binary image', () => {
-  const image = testUtils.createRgbaImage([
+  const image = testUtils.createGreyImage([
     [0, 0, 0, 0, 0],
     [0, 255, 255, 255, 0],
     [0, 255, 255, 255, 0],
