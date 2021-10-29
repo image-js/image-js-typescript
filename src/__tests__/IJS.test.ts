@@ -110,7 +110,6 @@ test('clone', () => {
   img.setValue(0, 1, 0, 50);
   const copy = img.clone();
   expect(copy).toMatchImage(img);
-  expect(copy.data).not.toBe(img.data);
 });
 
 test('changeEach', () => {
