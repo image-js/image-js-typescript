@@ -22,7 +22,7 @@ export async function read(path: string | URL): Promise<IJS> {
 /**
  * Synchronous version of @see {@link read}.
  *
- * @param path The path to the image.
+ * @param path - The path to the image.
  * @returns IJS instance.
  */
 export function readSync(path: string | URL): IJS {

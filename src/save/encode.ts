@@ -42,8 +42,11 @@ export function encode(image: IJS, options: EncodeOptionsPng): Uint8Array;
  */
 export function encode(image: IJS, options: EncodeOptionsJpeg): Uint8Array;
 /**
- * @param image
- * @param options
+ * Encode an image in JPEG or PNG format.
+ *
+ * @param image - Image to encode.
+ * @param options - Encoding options.
+ * @returns The encoded image.
  */
 export function encode(
   image: IJS,
