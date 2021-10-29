@@ -23,21 +23,28 @@ const defaultPng: EncodeOptionsPng = { format: ImageFormat.png };
 /**
  * Encodes the image to an output format.
  * Defaults to PNG.
+ *
  * @param image - Image to encode.
  */
 export function encode(image: IJS): Uint8Array;
 /**
  * Encodes the image to PNG.
+ *
  * @param image - Image to encode.
  * @param options - Format and options passed to the PNG encoder.
  */
 export function encode(image: IJS, options: EncodeOptionsPng): Uint8Array;
 /**
  * Encodes the image to JPEG.
+ *
  * @param image - Image to encode.
  * @param options - Format and options passed to the JPEG encoder.
  */
 export function encode(image: IJS, options: EncodeOptionsJpeg): Uint8Array;
+/**
+ * @param image
+ * @param options
+ */
 export function encode(
   image: IJS,
   options: EncodeOptionsPng | EncodeOptionsJpeg = defaultPng,

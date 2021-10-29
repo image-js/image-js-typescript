@@ -50,8 +50,8 @@ export function rotate(
  *
  * @param angle - Angle in degrees.
  * @param center - Center point of the image.
- * @param scale - Scalinf factor.
- * @returns Rotation matrix.
+ * @param scale - Scaling factor.
+ * @returns 2 x 3 rotation matrix.
  */
 function getRotationMatrix(
   angle: number,
@@ -59,10 +59,10 @@ function getRotationMatrix(
   scale: number,
 ): number[][] {
   const angleRadians = (angle * Math.PI) / 180;
-  const alpha = scale * Math.cos(angleRadians);
-  const beta = scale * Math.sin(angleRadians);
+  const cos = scale * Math.cos(angleRadians);
+  const sin = scale * Math.sin(angleRadians);
   return [
-    [alpha, beta, (1 - alpha) * center[0] - beta * center[1]],
-    [-beta, alpha, beta * center[0] + (1 - alpha) * center[1]],
+    [cos, sin, (1 - cos) * center[0] - sin * center[1]],
+    [-sin, cos, sin * center[0] + (1 - cos) * center[1]],
   ];
 }
