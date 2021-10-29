@@ -22,15 +22,16 @@ test('write image to disk', async () => {
   await write(destination, img);
   expect(existsSync(destination)).toBe(true);
   const imgRead = await read(destination);
-  expect(imgRead).toStrictEqual(img);
+  expect(imgRead).toMatchImage(img);
 });
 
 test('write image to disk (jpeg)', async () => {
   const img = testUtils.load('opencv/test.png');
-  const destination = join(tmpDir, 'image.png');
+  const destination = join(tmpDir, 'image.jpeg');
   await write(destination, img, { format: ImageFormat.jpeg });
   expect(existsSync(destination)).toBe(true);
   const imgRead = await read(destination);
-  expect(imgRead.width).toBe(img.width);
+  expect(img.colorModel).toBe(ImageColorModel.RGB);
   expect(imgRead.colorModel).toBe(ImageColorModel.RGBA);
+  expect(imgRead).toMatchImage(img);
 });
