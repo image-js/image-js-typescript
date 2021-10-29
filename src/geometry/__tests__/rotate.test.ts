@@ -14,28 +14,28 @@ test('rotate + scale compared to opencv (nearest)', () => {
   expect(rotated).toMatchImage('opencv/testRotate.png');
 });
 
-test('rotate + scale compared to opencv (bilinear)', () => {
-  const img = testUtils.load('opencv/test.png');
-
-  const rotated = rotate(img, 30, {
-    scale: 1.4,
-    borderType: BorderType.REFLECT,
-    interpolationType: InterpolationType.BILINEAR,
-    center: [2, 4],
-  });
-
-  expect(rotated).toMatchImage('opencv/testRotateBilinear.png');
-});
-
-test('rotate + scale compared to opencv (bicubic)', () => {
-  const img = testUtils.load('opencv/test.png');
-
-  const rotated = rotate(img, 30, {
-    scale: 1.4,
-    borderType: BorderType.REFLECT,
-    interpolationType: InterpolationType.BICUBIC,
-    center: [2, 4],
-  });
-
-  expect(rotated).toMatchImage('opencv/testRotateBicubic.png');
-});
+// test('rotate + scale compared to opencv (bilinear)', () => {
+//   const img = testUtils.load('opencv/test.png');
+//
+//   const rotated = rotate(img, 30, {
+//     scale: 1.4,
+//     borderType: BorderType.REFLECT,
+//     interpolationType: InterpolationType.BILINEAR,
+//     center: [2, 4],
+//   });
+//
+//   expect(rotated).toMatchImage('opencv/testRotateBilinear.png');
+// });
+//
+// test('rotate + scale compared to opencv (bicubic)', () => {
+//   const img = testUtils.load('opencv/test.png');
+//
+//   const rotated = rotate(img, 30, {
+//     scale: 1.4,
+//     borderType: BorderType.REFLECT,
+//     interpolationType: InterpolationType.BICUBIC,
+//     center: [2, 4],
+//   });
+//
+//   expect(rotated).toMatchImage('opencv/testRotateBicubic.png');
+// });
