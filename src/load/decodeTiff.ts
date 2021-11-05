@@ -29,8 +29,7 @@ function getImageFromIFD(ifd: TiffIfd): IJS {
     const data = new Uint16Array(3 * ifd.width * ifd.height);
     const palette = ifd.palette as [number, number, number][];
     let ptr = 0;
-    for (let i of data) {
-      const index = ifd.data[i];
+    for (let index of ifd.data) {
       const color = palette[index];
       data[ptr++] = color[0];
       data[ptr++] = color[1];
