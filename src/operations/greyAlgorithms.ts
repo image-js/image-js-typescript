@@ -1,6 +1,6 @@
 import { IJS } from '..';
 
-export type GreyAlgorithm =
+export type GreyAlgorithms =
   | 'luma709'
   | 'luma601'
   | 'maximum'

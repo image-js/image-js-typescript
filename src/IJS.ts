@@ -14,7 +14,8 @@ import { split } from './operations/split';
 import { ImageColorModel, colorModels } from './utils/colorModels';
 import { validateChannel, validateValue } from './utils/validators';
 
-import { histogram, HistogramOptions } from '.';
+import { GreyOptions, histogram, HistogramOptions } from '.';
+import grey from './operations/grey';
 
 export { ImageColorModel };
 
@@ -423,6 +424,11 @@ export class IJS {
   public convertDepth(newDepth: ColorDepth): IJS {
     return convertDepth(this, newDepth);
   }
+
+public grey(options?: GreyOptions) : IJS {
+  return grey(this, options);
+}
+
   // FILTERS
 
   public blur(options: BlurOptions): IJS {

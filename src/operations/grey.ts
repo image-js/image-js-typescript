@@ -1,11 +1,14 @@
-import { clamp } from '../internal/clamp';
-import { getOutputImage } from '../internal/getOutputImage';
-import { GREY } from '../model/model';
+import { IJS, ImageColorModel } from '..';
 
-import { methods } from './greyAlgorithms';
+import * as greyAlgorithms from './greyAlgorithms';
 
+export interface GreyOptions {
+  algorithm?: string;
+  keepAlpha?: boolean;
+  mergeAlpha?: boolean;
+}
 /**
- * Call back that converts the RGB channels to grey. It will be clamped after.
+ * Call back that converts the RGB channels to grey. It is clamped afterwards.
  *
  * @callback GreyAlgorithmCallback
  * @param {number} red - value of the red channel
@@ -15,48 +18,44 @@ import { methods } from './greyAlgorithms';
  */
 
 /**
- * Converts the current image to greyscale.
- * The source image has to be RGB.
- * If there is an alpha channel we need to decide what to do:
- * keepAlpha : we will keep the alpha channel and you will get a GREY / A image
- * mergeAlpha : we will multiply each pixel of the image by the alpha
+ * Convert the current image to grayscale.
+ * The source image has to be RGB or RGBA.
+ * If there is an alpha channel you have to specify what to do:
+ * keepAlpha :  keep the alpha channel, you will get a GREYA image
+ * mergeAlpha : multiply each pixel of the image by the alpha
  *
- * @memberof Image
- * @instance
- * @param [options]
- * @param [options.algorithm='luma709'] - Algorithm to get the grey value from RGB values
- * @param [options.keepAlpha=false] - If true, the RGB values are treated
- *          separately from the alpha channel and the method returns a GREYA image.
- * @param [options.mergeAlpha=true] - If true, the alpha channel will be used to scale the grey pixel.
- * @param [options.out]
- * @returns
+ * @param image - Original image to convert to grey.
+ * @param options - The grey conversion options.
+ * @returns The grey image.
  */
-export default function grey(options = {}) {
+export default function grey(image: IJS, options: GreyOptions = {}): IJS {
   let { algorithm = 'luma709', keepAlpha = false, mergeAlpha = true } = options;
 
   if (typeof algorithm !== 'string' && typeof algorithm !== 'function') {
     throw new TypeError('algorithm must be a string or a function');
   }
 
-  this.checkProcessable('grey', {
-    bitDepth: [8, 16],
-    alpha: [0, 1],
-  });
+  if (
+    image.colorModel !== ImageColorModel.RGB &&
+    image.colorModel !== ImageColorModel.RGBA
+  ) {
+    throw new Error('Image color model is not RGB or RGBA');
+  }
 
-  if (this.components === 1) {
+  if (image.components === 1) {
     algorithm = 'red'; // actually we just take the first channel if it is a grey image
   }
 
-  keepAlpha &= this.alpha;
-  mergeAlpha &= this.alpha;
+  keepAlpha = keepAlpha && image.alpha;
+  mergeAlpha = mergeAlpha && image.alpha;
   if (keepAlpha) {
     mergeAlpha = false;
   }
 
-  let newImage = getOutputImage(this, options, {
+  let newImage = getOutputImage(image, options, {
     components: 1,
     alpha: keepAlpha,
-    colorModel: GREY,
+    colorModel: ImageColorModel.GREY,
   });
 
   let method;
@@ -70,21 +69,21 @@ export default function grey(options = {}) {
   }
 
   let ptr = 0;
-  for (let i = 0; i < this.data.length; i += this.channels) {
+  for (let i = 0; i < image.size; i++) {
     if (mergeAlpha) {
       newImage.data[ptr++] = clamp(
-        (method(this.data[i], this.data[i + 1], this.data[i + 2], this) *
-          this.data[i + this.components]) /
-          this.maxValue,
-        this,
+        (method(image.data[i], image.data[i + 1], image.data[i + 2], image) *
+          image.data[i + image.components]) /
+          image.maxValue,
+        image,
       );
     } else {
       newImage.data[ptr++] = clamp(
-        method(this.data[i], this.data[i + 1], this.data[i + 2], this),
-        this,
+        method(image.data[i], image.data[i + 1], image.data[i + 2], image),
+        image,
       );
       if (newImage.alpha) {
-        newImage.data[ptr++] = this.data[i + this.components];
+        newImage.data[ptr++] = image.data[i + image.components];
       }
     }
   }
