@@ -19,9 +19,12 @@ export type GreyAlgorithm =
   | 'lightness';
 
 /**
+ * Converts R, G and B values to a single value using Luma 709 standard({@link https://en.wikipedia.org/wiki/Luma_(video)}).
+ *
  * @param red - Red value of current pixel.
  * @param green - Green value of current pixel.
  * @param blue - Blue value of current pixel.
+ * @returns - Corresponding gray value.
  */
 export function luma709(red: number, green: number, blue: number): number {
   // sRGB
@@ -34,9 +37,12 @@ export function luma709(red: number, green: number, blue: number): number {
   return (red * 6966 + green * 23436 + blue * 2366) >> 15;
 }
 /**
+ *  Converts R, G and B values to a single value using Luma 601 standard({@link https://en.wikipedia.org/wiki/Luma_(video)}).
+ *
  * @param red - Red value of current pixel.
  * @param green - Green value of current pixel.
  * @param blue - Blue value of current pixel.
+ * @returns - Corresponding gray value.
  */
 export function luma601(red: number, green: number, blue: number): number {
   // NTSC
@@ -44,63 +50,87 @@ export function luma601(red: number, green: number, blue: number): number {
   return (red * 9798 + green * 19235 + blue * 3735) >> 15;
 }
 /**
+ * Return the maximal value between red, green and blue.
+ *
  * @param red - Red value of current pixel.
  * @param green - Green value of current pixel.
  * @param blue - Blue value of current pixel.
+ * @returns - Corresponding gray value.
  */
 export function max(red: number, green: number, blue: number): number {
   return Math.max(red, green, blue);
 }
 /**
+ * Return the minimal value between red, green and blue.
+ *
  * @param red - Red value of current pixel.
  * @param green - Green value of current pixel.
  * @param blue - Blue value of current pixel.
+ * @returns - Corresponding gray value.
  */
 export function min(red: number, green: number, blue: number): number {
   return Math.min(red, green, blue);
 }
 /**
+ * Return the average of red, green and blue.
+ *
  * @param red - Red value of current pixel.
  * @param green - Green value of current pixel.
  * @param blue - Blue value of current pixel.
+ * @returns - Corresponding gray value.
  */
 export function average(red: number, green: number, blue: number): number {
   return ((red + green + blue) / 3) >> 0;
 }
 /**
+ * Return the average between the max and min values of red, green and blue.
+ *
  * @param red - Red value of current pixel.
  * @param green - Green value of current pixel.
  * @param blue - Blue value of current pixel.
+ * @returns - Corresponding gray value.
  */
 export function minmax(red: number, green: number, blue: number): number {
   return (Math.max(red, green, blue) + Math.min(red, green, blue)) / 2;
 }
 /**
+ * Return the red value.
+ *
  * @param red - Red value of current pixel.
+ * @returns - Corresponding gray value.
  */
 export function red(red: number): number {
   return red;
 }
 /**
+ * Return the green value.
+ *
  * @param red - Red value of current pixel.
  * @param green - Green value of current pixel.
+ * @returns - Corresponding gray value.
  */
 export function green(red: number, green: number): number {
   return green;
 }
 /**
+ * Return the blue value.
+ *
  * @param red - Red value of current pixel.
  * @param green - Green value of current pixel.
  * @param blue - Blue value of current pixel.
+ * @returns - Corresponding gray value.
  */
 export function blue(red: number, green: number, blue: number): number {
   return blue;
 }
 /**
+ * Return the minimum of the inverses of red, green and blue.
+ *
  * @param red - Red value of current pixel.
  * @param green - Green value of current pixel.
  * @param blue - Blue value of current pixel.
  * @param image - Image to convert to grey.
+ * @returns - Corresponding gray value.
  */
 export function black(
   red: number,
@@ -115,10 +145,13 @@ export function black(
   );
 }
 /**
+ * Returns the cyan component of a pixel.
+ *
  * @param red - Red value of current pixel.
  * @param green - Green value of current pixel.
  * @param blue - Blue value of current pixel.
  * @param image - Image to convert to grey.
+ * @returns - Corresponding gray value.
  */
 export function cyan(
   red: number,
@@ -133,10 +166,13 @@ export function cyan(
   );
 }
 /**
+ * Returns the magenta component of a pixel.
+ *
  * @param red - Red value of current pixel
  * @param green - Green value of current pixel
  * @param blue - Blue value of current pixel
  * @param image - Image to convert to grey.
+ * @returns - Corresponding gray value.
  */
 export function magenta(
   red: number,
@@ -152,10 +188,13 @@ export function magenta(
   );
 }
 /**
+ * Returns the yellow component of a pixel.
+ *
  * @param red - Red value of current pixel
  * @param green - Green value of current pixel
  * @param blue - Blue value of current pixel
  * @param image - Image to convert to grey.
+ * @returns - Corresponding gray value.
  */
 export function yellow(
   red: number,
@@ -171,10 +210,13 @@ export function yellow(
   );
 }
 /**
+ * Returns the hue of a pixel.
+ *
  * @param red - Red value of current pixel
  * @param green - Green value of current pixel
  * @param blue - Blue value of current pixel
  * @param image - Image to convert to grey.
+ * @returns - Corresponding gray value.
  */
 export function hue(
   red: number,
@@ -206,10 +248,13 @@ export function hue(
   return ((hue / 6) * image.maxValue) >> 0;
 }
 /**
+ * Returns the saturation component of a pixel.
+ *
  * @param red - Red value of current pixel
  * @param green - Green value of current pixel
  * @param blue - Blue value of current pixel
  * @param image - Image to convert to grey.
+ * @returns - Corresponding gray value.
  */
 export function saturation(
   red: number,
@@ -224,9 +269,12 @@ export function saturation(
   return maxValue === 0 ? 0 : (delta / maxValue) * image.maxValue;
 }
 /**
+ * Returns the lightness of a pixel.
+ *
  * @param red - Red value of current pixel
  * @param green - Green value of current pixel
  * @param blue - Blue value of current pixel
+ * @returns - Corresponding gray value.
  */
 export function lightness(red: number, green: number, blue: number): number {
   let minValue = min(red, green, blue);
