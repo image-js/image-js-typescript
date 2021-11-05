@@ -1,9 +1,19 @@
 import { IJS, ImageColorModel } from '..';
+import { getClamp } from '../utils/clamp';
 
 import * as greyAlgorithms from './greyAlgorithms';
 
+export type GreyAlgorithms = keyof typeof greyAlgorithms;
+
+export type GreyAlgorithmCallback = (
+  red: number,
+  green: number,
+  blue: number,
+  image: IJS,
+) => number;
+
 export interface GreyOptions {
-  algorithm?: string;
+  algorithm?: GreyAlgorithms | GreyAlgorithmCallback;
   keepAlpha?: boolean;
   mergeAlpha?: boolean;
 }
@@ -42,31 +52,29 @@ export default function grey(image: IJS, options: GreyOptions = {}): IJS {
     throw new Error('Image color model is not RGB or RGBA');
   }
 
-  if (image.components === 1) {
-    algorithm = 'red'; // actually we just take the first channel if it is a grey image
-  }
-
   keepAlpha = keepAlpha && image.alpha;
   mergeAlpha = mergeAlpha && image.alpha;
   if (keepAlpha) {
     mergeAlpha = false;
   }
 
-  let newImage = getOutputImage(image, options, {
-    components: 1,
-    alpha: keepAlpha,
-    colorModel: ImageColorModel.GREY,
+  let newColorModel = keepAlpha ? ImageColorModel.RGBA : ImageColorModel.RGB;
+  let newImage = IJS.createFrom(image, {
+    colorModel: newColorModel,
   });
 
-  let method;
+  let method: GreyAlgorithmCallback;
   if (typeof algorithm === 'function') {
     method = algorithm;
   } else {
-    method = methods[algorithm.toLowerCase()];
+    // eslint-disable-next-line import/namespace
+    method = greyAlgorithms[algorithm];
     if (!method) {
       throw new Error(`unsupported grey algorithm: ${algorithm}`);
     }
   }
+
+  let clamp = getClamp(newImage);
 
   let ptr = 0;
   for (let i = 0; i < image.size; i++) {
@@ -77,6 +85,7 @@ export default function grey(image: IJS, options: GreyOptions = {}): IJS {
           image.maxValue,
         image,
       );
+      newImage.setValueByIndex(i, 0, 1);
     } else {
       newImage.data[ptr++] = clamp(
         method(image.data[i], image.data[i + 1], image.data[i + 2], image),

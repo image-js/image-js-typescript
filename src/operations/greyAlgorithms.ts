@@ -1,23 +1,5 @@
 import { IJS } from '..';
 
-export type GreyAlgorithms =
-  | 'luma709'
-  | 'luma601'
-  | 'maximum'
-  | 'minimum'
-  | 'average'
-  | 'minmax'
-  | 'red'
-  | 'green'
-  | 'blue'
-  | 'cyan'
-  | 'magenta'
-  | 'yellow'
-  | 'black'
-  | 'hue'
-  | 'saturation'
-  | 'lightness';
-
 /**
  * Converts R, G and B values to a single value using Luma 709 standard({@link https://en.wikipedia.org/wiki/Luma_(video)}).
  *
