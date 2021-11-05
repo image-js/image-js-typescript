@@ -58,7 +58,7 @@ export default function grey(image: IJS, options: GreyOptions = {}): IJS {
     mergeAlpha = false;
   }
 
-  let newColorModel = keepAlpha ? ImageColorModel.RGBA : ImageColorModel.RGB;
+  let newColorModel = keepAlpha ? ImageColorModel.GREYA : ImageColorModel.GREY;
   let newImage = IJS.createFrom(image, {
     colorModel: newColorModel,
   });
@@ -76,25 +76,27 @@ export default function grey(image: IJS, options: GreyOptions = {}): IJS {
 
   let clamp = getClamp(newImage);
 
-  let ptr = 0;
   for (let i = 0; i < image.size; i++) {
+    const red = image.getValueByIndex(i, 0);
+    const green = image.getValueByIndex(i, 1);
+    const blue = image.getValueByIndex(i, 2);
+    const alpha = image.getValueByIndex(i, 3);
+    let newValue;
     if (mergeAlpha) {
-      newImage.data[ptr++] = clamp(
-        (method(image.data[i], image.data[i + 1], image.data[i + 2], image) *
-          image.data[i + image.components]) /
-          image.maxValue,
-        image,
+      newValue = clamp(
+        (method(red, green, blue, image) * alpha) / image.maxValue,
       );
-      newImage.setValueByIndex(i, 0, 1);
     } else {
-      newImage.data[ptr++] = clamp(
-        method(image.data[i], image.data[i + 1], image.data[i + 2], image),
-        image,
-      );
-      if (newImage.alpha) {
-        newImage.data[ptr++] = image.data[i + image.components];
+      newValue = clamp(method(red, green, blue, image));
+      if (keepAlpha) {
+        newImage.setValueByIndex(
+          i,
+          newImage.channels - 1,
+          image.getValueByIndex(1, image.channels - 1),
+        );
       }
     }
+    newImage.setValueByIndex(i, 0, newValue);
   }
 
   return newImage;
