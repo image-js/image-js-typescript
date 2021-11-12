@@ -1,3 +1,4 @@
+import { copyAlpha } from '..';
 import { IJS } from '../IJS';
 import { getOutputImage } from '../utils/getOutputImage';
 
@@ -9,7 +10,7 @@ export interface InvertOptions {
 }
 
 /**
- * Invert the colors and the alpha channel (if applicable) of an image.
+ * Invert the components of an image.
  *
  * @param image - The image to invert.
  * @param options - Invert options.
@@ -18,13 +19,17 @@ export interface InvertOptions {
 
 export function invert(image: IJS, options?: InvertOptions): IJS {
   const newImage = getOutputImage(image, options);
+  if (image.alpha) {
+    copyAlpha(image, newImage);
+  }
+
   const { maxValue } = newImage;
   for (let i = 0; i < newImage.size; i++) {
-    for (let channel = 0; channel < image.channels; channel++) {
+    for (let component = 0; component < image.components; component++) {
       newImage.setValueByIndex(
         i,
-        channel,
-        maxValue - image.getValueByIndex(i, channel),
+        component,
+        maxValue - image.getValueByIndex(i, component),
       );
     }
   }

@@ -11,7 +11,7 @@ test('invert an RGBA image', () => {
   const img = testUtils.createRgbaImage([[0, 50, 127, 200, 255, 250, 4, 200]]);
   const inverted = img.invert();
   expect(inverted).not.toBe(img);
-  expect(inverted).toMatchImageData([[255, 205, 128, 55, 0, 5, 251, 55]]);
+  expect(inverted).toMatchImageData([[255, 205, 128, 200, 0, 5, 251, 200]]);
 });
 
 test('invert a grey image with alpha', () => {
@@ -21,8 +21,8 @@ test('invert a grey image with alpha', () => {
   ]);
   const inverted = image.invert();
   expect(inverted).toMatchImageData([
-    [255, 0],
-    [0, 255],
+    [255, 255],
+    [0, 0],
   ]);
 });
 
@@ -62,7 +62,7 @@ test('invert with out parameter set to self', () => {
   ]);
   image.invert({ out: image });
   expect(image).toMatchImageData([
-    [255, 0],
-    [0, 255],
+    [255, 255],
+    [0, 0],
   ]);
 });
