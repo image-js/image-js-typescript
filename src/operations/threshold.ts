@@ -18,7 +18,6 @@ import shanbhag from './thresholds/shanbhag';
 import { triangle } from './thresholds/triangle';
 import yen from './thresholds/yen';
 
-// TODO: convert more algorithms to TS.
 export enum ThresholdAlgorithm {
   HUANG = 'HUANG',
   INTERMODES = 'INTERMODES',
@@ -107,7 +106,6 @@ export function computeThreshold(
   }
 }
 
-// TODO: add support for other threshold types.
 // See: https://docs.opencv.org/4.0.1/d7/d1b/group__imgproc__misc.html#gaa9e58d2860d4afa658ef70a9b1115576
 /**
  * Create a black and white image based on a threshold value.
