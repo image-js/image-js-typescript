@@ -476,7 +476,7 @@ export class IJS {
 
   // GEOMETRY
 
-  public rotate(angle: number, options: RotateOptions): IJS {
+  public rotate(angle: number, options?: RotateOptions): IJS {
     return rotate(this, angle, options);
   }
 
@@ -486,7 +486,7 @@ export class IJS {
 
   public transform(
     transformMatrix: number[][],
-    options: TransformOptions,
+    options?: TransformOptions,
   ): IJS {
     return transform(this, transformMatrix, options);
   }
