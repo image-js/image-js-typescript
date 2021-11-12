@@ -41,8 +41,11 @@ export type ThresholdOptions =
   | ThresholdOptionsAlgorithm;
 
 /**
- * @param image
- * @param algorithm
+ * Compute threshold value for an image using the specified algorithm.
+ *
+ * @param image - The grey image.
+ * @param algorithm - Algorithm that defines the threshold.
+ * @returns The threshold value for the image.
  */
 export function computeThreshold(
   image: IJS,
@@ -68,8 +71,11 @@ export function computeThreshold(
 // TODO: add support for other threshold types.
 // See: https://docs.opencv.org/4.0.1/d7/d1b/group__imgproc__misc.html#gaa9e58d2860d4afa658ef70a9b1115576
 /**
- * @param image
- * @param options
+ * Create a black and white image based on a threshold value.
+ *
+ * @param image - The grey image to convert.
+ * @param options - Threshold options.
+ * @returns The converted image.
  */
 export function threshold(image: IJS, options: ThresholdOptions): IJS {
   let thresholdValue: number;
