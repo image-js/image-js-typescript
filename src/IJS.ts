@@ -15,7 +15,17 @@ import { split } from './operations/split';
 import { ImageColorModel, colorModels } from './utils/colorModels';
 import { validateChannel, validateValue } from './utils/validators';
 
-import { GreyOptions, histogram, HistogramOptions } from '.';
+import {
+  GreyOptions,
+  histogram,
+  HistogramOptions,
+  resize,
+  ResizeOptions,
+  rotate,
+  RotateOptions,
+  transform,
+  TransformOptions,
+} from '.';
 
 export { ImageColorModel };
 
@@ -462,6 +472,23 @@ export class IJS {
    */
   public invert(options?: InvertOptions): IJS {
     return invert(this, options);
+  }
+
+  // GEOMETRY
+
+  public rotate(angle: number, options: RotateOptions): IJS {
+    return rotate(this, angle, options);
+  }
+
+  public resize(options: ResizeOptions): IJS {
+    return resize(this, options);
+  }
+
+  public transform(
+    transformMatrix: number[][],
+    options: TransformOptions,
+  ): IJS {
+    return transform(this, transformMatrix, options);
   }
 }
 
