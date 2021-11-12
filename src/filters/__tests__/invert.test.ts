@@ -1,10 +1,17 @@
-import { IJS, ImageColorModel } from '../../IJS';
+import { IJS } from '../../IJS';
 
 test('invert an RGB image', () => {
   const img = testUtils.createRgbImage([[0, 50, 127, 255, 250, 4]]);
   const inverted = img.invert();
   expect(inverted).not.toBe(img);
   expect(inverted).toMatchImageData([[255, 205, 128, 0, 5, 251]]);
+});
+
+test('invert an RGBA image', () => {
+  const img = testUtils.createRgbaImage([[0, 50, 127, 200, 255, 250, 4, 200]]);
+  const inverted = img.invert();
+  expect(inverted).not.toBe(img);
+  expect(inverted).toMatchImageData([[255, 205, 128, 55, 0, 5, 251, 55]]);
 });
 
 test('invert a grey image with alpha', () => {
