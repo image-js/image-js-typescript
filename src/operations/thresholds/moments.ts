@@ -14,7 +14,7 @@
  * @param total - Number of pixels in the image.
  * @returns The threshold.
  */
-export default function moments(histogram: number[], total: number): number {
+export default function moments(histogram: Uint32Array, total: number): number {
   // moments
   const m0 = 1.0;
   let m1 = 0.0;

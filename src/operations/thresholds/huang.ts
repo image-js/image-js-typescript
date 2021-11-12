@@ -10,7 +10,7 @@
  * @param histogram - Image histogram.
  * @returns The threshold.
  */
-export default function huang(histogram: number[]): number {
+export default function huang(histogram: Uint32Array): number {
   /* Determine the first non-zero bin */
   let firstBin = 0;
   for (let ih = 0; ih < histogram.length; ih++) {

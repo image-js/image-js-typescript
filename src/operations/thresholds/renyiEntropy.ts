@@ -5,7 +5,6 @@
 // M. Emre Celebi
 // 06.15.2007
 // Ported to ImageJ plugin by G.Landini from E Celebi's fourier_0.8 routines
-import { asc as sortAsc } from 'num-sort';
 
 /**
  * Return a threshold for a histogram using its entropy.
@@ -117,8 +116,8 @@ export default function renyiEntropy(histogram: Uint32Array, total: number) {
   }
   /* End Maximum Entropy Thresholding */
 
-  const tStars = [threshold1, threshold2, threshold3];
-  tStars.sort(sortAsc);
+  const tStars = new Uint32Array([threshold1, threshold2, threshold3]);
+  tStars.sort();
 
   let betas;
 

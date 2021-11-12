@@ -12,7 +12,7 @@
  * @param total - Total number of pixels of the image.
  * @returns The threshold.
  */
-export function otsu(histogramCounts: number[], total: number): number {
+export function otsu(histogramCounts: Uint32Array, total: number): number {
   let sumB = 0;
   let wB = 0;
   let maximum = 0;

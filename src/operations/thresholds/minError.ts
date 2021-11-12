@@ -14,7 +14,10 @@
  * @param total - Number of pixels in the image.
  * @returns The threshold.
  */
-export default function minError(histogram: number[], total: number): number {
+export default function minError(
+  histogram: Uint32Array,
+  total: number,
+): number {
   let threshold;
   let Tprev = -2;
   let mu, nu, p, q, sigma2, tau2, w0, w1, w2, sqterm, temp;
@@ -74,7 +77,7 @@ export default function minError(histogram: number[], total: number): number {
 
 // aux func
 
-function sumA(y: number[], j: number): number {
+function sumA(y: Uint32Array, j: number): number {
   let x = 0;
   for (let i = 0; i <= j; i++) {
     x += y[i];
@@ -82,7 +85,7 @@ function sumA(y: number[], j: number): number {
   return x;
 }
 
-function sumB(y: number[], j: number): number {
+function sumB(y: Uint32Array, j: number): number {
   let x = 0;
   for (let i = 0; i <= j; i++) {
     x += i * y[i];
@@ -90,7 +93,7 @@ function sumB(y: number[], j: number): number {
   return x;
 }
 
-function sumC(y: number[], j: number): number {
+function sumC(y: Uint32Array, j: number): number {
   let x = 0;
   for (let i = 0; i <= j; i++) {
     x += i * i * y[i];

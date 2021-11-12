@@ -19,7 +19,7 @@
  * @param total - Total number of pixels of the image.
  * @returns The threshold.
  */
-export default function yen(histogram: number[], total: number): number {
+export default function yen(histogram: Uint32Array, total: number): number {
   const normHisto = new Array(histogram.length); // normalized histogram
   for (let ih = 0; ih < histogram.length; ih++) {
     normHisto[ih] = histogram[ih] / total;

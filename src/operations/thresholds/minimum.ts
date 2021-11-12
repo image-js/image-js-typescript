@@ -12,7 +12,7 @@
  * @param histogram - Image histogram.
  * @returns The threshold.
  */
-export default function minimum(histogram: number[]): number {
+export default function minimum(histogram: Uint32Array): number {
   if (histogram.length < 2) {
     // validate that the histogram has at least two color values
     return 0;

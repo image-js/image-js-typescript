@@ -19,7 +19,7 @@
  * @param total - Number of pixels in the image.
  * @returns The threshold.
  */
-export default function li(histogram: number[], total: number): number {
+export default function li(histogram: Uint32Array, total: number): number {
   let threshold;
   let sumBack; /* sum of the background pixels at a given threshold */
   let sumObj; /* sum of the object pixels at a given threshold */

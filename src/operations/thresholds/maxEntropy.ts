@@ -15,7 +15,10 @@
  * @param total - Number of pixels in the image.
  * @returns The threshold.
  */
-export default function maxEntropy(histogram: number[], total: number): number {
+export default function maxEntropy(
+  histogram: Uint32Array,
+  total: number,
+): number {
   const normHisto = new Array(histogram.length); // normalized histogram
   for (let ih = 0; ih < histogram.length; ih++) {
     normHisto[ih] = histogram[ih] / total;

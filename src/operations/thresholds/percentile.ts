@@ -12,7 +12,7 @@
  * @param histogram - Image histogram.
  * @returns The threshold.
  */
-export default function percentile(histogram: number[]): number {
+export default function percentile(histogram: Uint32Array): number {
   let threshold = -1;
   const percentile = 0.5; // default fraction of foreground pixels
   const avec = new Array(histogram.length);
@@ -31,7 +31,7 @@ export default function percentile(histogram: number[]): number {
   return threshold;
 }
 
-function partialSum(histogram: number[], endIndex: number): number {
+function partialSum(histogram: Uint32Array, endIndex: number): number {
   let x = 0;
   for (let i = 0; i <= endIndex; i++) {
     x += histogram[i];

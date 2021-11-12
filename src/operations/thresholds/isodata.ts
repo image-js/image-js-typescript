@@ -10,7 +10,7 @@
  * @param histogram - Image histogram.
  * @returns The threshold.
  */
-export default function isodata(histogram: number[]): number {
+export default function isodata(histogram: Uint32Array): number {
   let l; // the average grey value of pixels with intensities < g
   let toth; // the the average grey value of pixels with intensities > g
   let totl; // the total the average grey value of pixels with intensities < g
