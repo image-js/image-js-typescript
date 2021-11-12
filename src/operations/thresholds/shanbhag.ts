@@ -3,7 +3,14 @@
 // Image Thresholding" Graphical Models and Image Processing, 56(5): 414-419
 // Ported to ImageJ plugin by G.Landini from E Celebi's fourier_0.8 routines
 
-export default function shanbhag(histogram, total) {
+/**
+ * Return a threshold for a histogram using Shanbhag algorithm.
+ *
+ * @param histogram - The image histogram.
+ * @param total - Total number of pixels of the image.
+ * @returns The threshold.
+ */
+export default function shanbhag(histogram: number[], total: number): number {
   const normHisto = new Array(histogram.length); // normalized histogram
   for (let ih = 0; ih < histogram.length; ih++) {
     normHisto[ih] = histogram[ih] / total;

@@ -7,13 +7,20 @@
 // Ported to ImageJ plugin by G.Landini from E Celebi's fourier_0.8 routines
 import { asc as sortAsc } from 'num-sort';
 
-export default function renyiEntropy(histogram, total) {
+/**
+ * Return a threshold for a histogram using its entropy.
+ *
+ * @param histogram - The image histogram.
+ * @param total - Total number of pixels of the image.
+ * @returns The threshold.
+ */
+export default function renyiEntropy(histogram: Uint32Array, total: number) {
   let firstBin; // First non-zero bin
   let lastBin; // last non-zero bin
 
   const normHisto = new Array(histogram.length); // normalized histogram
-  const P1 = new Array(histogram.length); // acumulative normalized histogram
-  const P2 = new Array(histogram.length); // acumulative normalized histogram
+  const P1 = new Array(histogram.length); // accumulative normalized histogram
+  const P2 = new Array(histogram.length); // accumulative normalized histogram
 
   // Entropy Variables
   let threshold1 = 0;
@@ -135,7 +142,7 @@ export default function renyiEntropy(histogram, total) {
   const optThreshold = Math.round(
     tStars[0] * (P1[tStars[0]] + 0.25 * omega * betas[0]) +
       0.25 * tStars[1] * omega * betas[1] +
-      tStars[2] * (P2[tStars[2]] + 0.25 * omega * betas[2])
+      tStars[2] * (P2[tStars[2]] + 0.25 * omega * betas[2]),
   );
 
   return optThreshold;

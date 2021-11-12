@@ -7,21 +7,21 @@ import { triangle } from './thresholds/triangle';
 
 // TODO: convert more algorithms to TS.
 export enum ThresholdAlgorithm {
-  // HUANG,
-  // INTERMODES,
-  // ISODATA,
-  // LI,
-  // MAX_ENTROPY,
-  // MEAN,
-  // MIN_ERROR,
-  // MINIMUM,
-  // MOMENTS,
+  HUANG = 'HUANG',
+  INTERMODES = 'INTERMODES',
+  ISODATA = 'ISODATA',
+  LI = 'LI',
+  MAX_ENTROPY = 'MAX_ENTROPY',
+  MEAN = 'MEAN',
+  MIN_ERROR = 'MIN_ERROR',
+  MINIMUM = 'MINIMUM',
+  MOMENTS = 'MOMENTS',
   OTSU = 'OTSU',
-  // PERCENTILE,
-  // RENYI_ENTROPY,
-  // SHANBHAG,
+  PERCENTILE = 'PERCENTILE',
+  RENYI_ENTROPY = 'RENYI_ENTROPY',
+  SHANBHAG = 'SHANBHAG',
   TRIANGLE = 'TRIANGLE',
-  // YEN
+  YEN = 'YEN',
 }
 
 interface ThresholdOptionsBase {

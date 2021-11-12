@@ -6,7 +6,15 @@
 // Shreveport, LA 71115, USA
 // http://sourceforge.net/projects/fourier-ipal
 // http://www.lsus.edu/faculty/~ecelebi/fourier.htm
-export default function moments(histogram, total) {
+
+/**
+ * Return a threshold for a histogram.
+ *
+ * @param histogram - Image histogram.
+ * @param total - Number of pixels in the image.
+ * @returns The threshold.
+ */
+export default function moments(histogram: number[], total: number): number {
   // moments
   const m0 = 1.0;
   let m1 = 0.0;

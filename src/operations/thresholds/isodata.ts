@@ -4,7 +4,13 @@
  * IEEE Transactions on Systems, Man and Cybernetics 8: 630-632.
  *
  */
-export default function isodata(histogram) {
+/**
+ * Return a threshold for a histogram using Isodata algorithm.
+ *
+ * @param histogram - Image histogram.
+ * @returns The threshold.
+ */
+export default function isodata(histogram: number[]): number {
   let l; // the average grey value of pixels with intensities < g
   let toth; // the the average grey value of pixels with intensities > g
   let totl; // the total the average grey value of pixels with intensities < g

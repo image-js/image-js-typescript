@@ -7,7 +7,14 @@
  * @returns {number} - the threshold
  */
 
-export default function mean(histogram, total) {
+/**
+ * Return a threshold for a histogram by making its average.
+ *
+ * @param histogram - Image histogram.
+ * @param total - Number of pixels in the image.
+ * @returns The threshold.
+ */
+export default function mean(histogram: number[], total: number): number {
   let sum = 0;
   for (let i = 0; i < histogram.length; i++) {
     sum += i * histogram[i];

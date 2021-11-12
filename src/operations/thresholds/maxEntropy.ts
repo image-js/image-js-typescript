@@ -8,7 +8,14 @@
  * @returns {number} - the threshold
  */
 
-export default function maxEntropy(histogram, total) {
+/**
+ * Return a threshold for a histogram using maximal enthropy algorithm.
+ *
+ * @param histogram - Image histogram.
+ * @param total - Number of pixels in the image.
+ * @returns The threshold.
+ */
+export default function maxEntropy(histogram: number[], total: number): number {
   const normHisto = new Array(histogram.length); // normalized histogram
   for (let ih = 0; ih < histogram.length; ih++) {
     normHisto[ih] = histogram[ih] / total;

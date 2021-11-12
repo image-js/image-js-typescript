@@ -5,7 +5,14 @@
 // Original Matlab code Copyright (C) 2004 Antti Niemisto
 // See http://www.cs.tut.fi/~ant/histthresh/ for an excellent slide presentation
 // and the original Matlab code.
-export default function percentile(histogram) {
+
+/**
+ * Return a threshold for a histogram using percentiles.
+ *
+ * @param histogram - Image histogram.
+ * @returns The threshold.
+ */
+export default function percentile(histogram: number[]): number {
   let threshold = -1;
   const percentile = 0.5; // default fraction of foreground pixels
   const avec = new Array(histogram.length);
@@ -24,7 +31,7 @@ export default function percentile(histogram) {
   return threshold;
 }
 
-function partialSum(histogram, endIndex) {
+function partialSum(histogram: number[], endIndex: number): number {
   let x = 0;
   for (let i = 0; i <= endIndex; i++) {
     x += histogram[i];

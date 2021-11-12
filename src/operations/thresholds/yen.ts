@@ -12,7 +12,14 @@
 // 06.15.2007
 // Ported to ImageJ plugin by G.Landini from E Celebi's fourier_0.8 routines
 
-export default function yen(histogram, total) {
+/**
+ * Return a threshold for a histogram using Yen algorithm.
+ *
+ * @param histogram - The image histogram.
+ * @param total - Total number of pixels of the image.
+ * @returns The threshold.
+ */
+export default function yen(histogram: number[], total: number): number {
   const normHisto = new Array(histogram.length); // normalized histogram
   for (let ih = 0; ih < histogram.length; ih++) {
     normHisto[ih] = histogram[ih] / total;

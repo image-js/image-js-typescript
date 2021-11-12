@@ -6,7 +6,13 @@
  *
  */
 
-export default function intermodes(histogram) {
+/**
+ * Return a threshold for a histogram using Intermodes algorithm.
+ *
+ * @param histogram - Image histogram.
+ * @returns The threshold.
+ */
+export default function intermodes(histogram: number[]): number {
   const iHisto = histogram.slice();
   let iter = 0;
   while (!bimodalTest(iHisto)) {
@@ -37,7 +43,7 @@ export default function intermodes(histogram) {
   return Math.floor(tt / 2.0);
 }
 
-function bimodalTest(iHisto) {
+function bimodalTest(iHisto: number[]): boolean {
   let b = false;
   let modes = 0;
 

@@ -7,7 +7,14 @@
  * @returns {number} - the threshold
  */
 
-export default function minError(histogram, total) {
+/**
+ * Return a threshold for a histogram using Li algorithm.
+ *
+ * @param histogram - Image histogram.
+ * @param total - Number of pixels in the image.
+ * @returns The threshold.
+ */
+export default function minError(histogram: number[], total: number): number {
   let threshold;
   let Tprev = -2;
   let mu, nu, p, q, sigma2, tau2, w0, w1, w2, sqterm, temp;
@@ -67,7 +74,7 @@ export default function minError(histogram, total) {
 
 // aux func
 
-function sumA(y, j) {
+function sumA(y: number[], j: number): number {
   let x = 0;
   for (let i = 0; i <= j; i++) {
     x += y[i];
@@ -75,7 +82,7 @@ function sumA(y, j) {
   return x;
 }
 
-function sumB(y, j) {
+function sumB(y: number[], j: number): number {
   let x = 0;
   for (let i = 0; i <= j; i++) {
     x += i * y[i];
@@ -83,7 +90,7 @@ function sumB(y, j) {
   return x;
 }
 
-function sumC(y, j) {
+function sumC(y: number[], j: number): number {
   let x = 0;
   for (let i = 0; i <= j; i++) {
     x += i * i * y[i];

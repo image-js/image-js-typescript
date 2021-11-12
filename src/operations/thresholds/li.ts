@@ -12,7 +12,14 @@
  * @returns {number} - the threshold
  */
 
-export default function li(histogram, total) {
+/**
+ * Return a threshold for a histogram using Li algorithm.
+ *
+ * @param histogram - Image histogram.
+ * @param total - Number of pixels in the image.
+ * @returns The threshold.
+ */
+export default function li(histogram: number[], total: number): number {
   let threshold;
   let sumBack; /* sum of the background pixels at a given threshold */
   let sumObj; /* sum of the object pixels at a given threshold */

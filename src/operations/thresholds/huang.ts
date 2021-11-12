@@ -1,11 +1,16 @@
 /*
- *
- * see http://rsb.info.nih.gov/ij/developer/source/ij/process/AutoThresholder.java.html.
+ * * see http://rsb.info.nih.gov/ij/developer/source/ij/process/AutoThresholder.java.html.
  * Huang: Implements Huang's fuzzy thresholding method: Huang, L-K & Wang, M-J J (1995),
  * "Image thresholding by minimizing the measure of fuzziness", Pattern Recognition 28(1): 41-51
- *
  */
-export default function huang(histogram: number[]) {
+
+/**
+ * Return a threshold for a histogram using Huang algorithm.
+ *
+ * @param histogram - Image histogram.
+ * @returns The threshold.
+ */
+export default function huang(histogram: number[]): number {
   /* Determine the first non-zero bin */
   let firstBin = 0;
   for (let ih = 0; ih < histogram.length; ih++) {

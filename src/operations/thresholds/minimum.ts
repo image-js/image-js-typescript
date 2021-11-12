@@ -5,7 +5,14 @@
 // Original Matlab code Copyright (C) 2004 Antti Niemisto
 // See http://www.cs.tut.fi/~ant/histthresh/ for an excellent slide presentation
 // and the original Matlab code
-export default function minimum(histogram) {
+
+/**
+ * Return a threshold for a histogram.
+ *
+ * @param histogram - Image histogram.
+ * @returns The threshold.
+ */
+export default function minimum(histogram: number[]): number {
   if (histogram.length < 2) {
     // validate that the histogram has at least two color values
     return 0;
@@ -28,10 +35,18 @@ export default function minimum(histogram) {
       return threshold;
     }
   }
-  threshold = minimumBetweenPeeks(histogramCopy, max);
+  for (let i = 1; i < max; i++) {
+    if (
+      histogramCopy[i - 1] > histogramCopy[i] &&
+      histogramCopy[i + 1] >= histogramCopy[i]
+    ) {
+      threshold = i;
+      break;
+    }
+  }
   return threshold;
 }
-function smoothed(histogram) {
+function smoothed(histogram: number[]): number[] {
   // Smooth with a 3 point running mean filter
   const auHistogram = new Array(histogram.length); // a copy of the histograma for the smoothing process
   for (let i = 1; i < histogram.length - 1; i++) {
@@ -42,20 +57,8 @@ function smoothed(histogram) {
     (histogram[histogram.length - 2] + histogram[histogram.length - 1]) / 3;
   return auHistogram;
 }
-function minimumBetweenPeeks(histogramBimodal, max) {
-  let threshold;
-  for (let i = 1; i < max; i++) {
-    if (
-      histogramBimodal[i - 1] > histogramBimodal[i] &&
-      histogramBimodal[i + 1] >= histogramBimodal[i]
-    ) {
-      threshold = i;
-      break;
-    }
-  }
-  return threshold;
-}
-function bimodalTest(histogram) {
+
+function bimodalTest(histogram: number[]): boolean {
   // It is responsible for determining if a histogram is bimodal
   const len = histogram.length;
   let isBimodal = false;
