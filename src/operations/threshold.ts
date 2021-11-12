@@ -2,8 +2,21 @@ import { IJS } from '../IJS';
 import { getOutputImage } from '../utils/getOutputImage';
 import { validateValue } from '../utils/validators';
 
+import huang from './thresholds/huang';
+import intermodes from './thresholds/intermodes';
+import isodata from './thresholds/isodata';
+import li from './thresholds/li';
+import maxEntropy from './thresholds/maxEntropy';
+import mean from './thresholds/mean';
+import minError from './thresholds/minError';
+import minimum from './thresholds/minimum';
+import moments from './thresholds/moments';
 import { otsu } from './thresholds/otsu';
+import percentile from './thresholds/percentile';
+import renyiEntropy from './thresholds/renyiEntropy';
+import shanbhag from './thresholds/shanbhag';
 import { triangle } from './thresholds/triangle';
+import yen from './thresholds/yen';
 
 // TODO: convert more algorithms to TS.
 export enum ThresholdAlgorithm {
@@ -59,10 +72,36 @@ export function computeThreshold(
   const histogram = image.histogram();
 
   switch (algorithm) {
+    case ThresholdAlgorithm.HUANG:
+      return huang(histogram);
+    case ThresholdAlgorithm.INTERMODES:
+      return intermodes(histogram);
+    case ThresholdAlgorithm.ISODATA:
+      return isodata(histogram);
+    case ThresholdAlgorithm.LI:
+      return li(histogram, image.size);
+    case ThresholdAlgorithm.MAX_ENTROPY:
+      return maxEntropy(histogram, image.size);
+    case ThresholdAlgorithm.MEAN:
+      return mean(histogram, image.size);
+    case ThresholdAlgorithm.MINIMUM:
+      return minimum(histogram);
+    case ThresholdAlgorithm.MIN_ERROR:
+      return minError(histogram, image.size);
+    case ThresholdAlgorithm.MOMENTS:
+      return moments(histogram, image.size);
     case ThresholdAlgorithm.OTSU:
       return otsu(histogram, image.size);
+    case ThresholdAlgorithm.PERCENTILE:
+      return percentile(histogram);
+    case ThresholdAlgorithm.RENYI_ENTROPY:
+      return renyiEntropy(histogram, image.size);
+    case ThresholdAlgorithm.SHANBHAG:
+      return shanbhag(histogram, image.size);
     case ThresholdAlgorithm.TRIANGLE:
       return triangle(histogram);
+    case ThresholdAlgorithm.YEN:
+      return yen(histogram, image.size);
     default:
       throw new RangeError(`unsupported threshold algorithm: ${algorithm}`);
   }
