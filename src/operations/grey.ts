@@ -55,10 +55,6 @@ export interface GreyOptions {
 export default function grey(image: IJS, options: GreyOptions = {}): IJS {
   let { algorithm = 'luma709', keepAlpha = false, mergeAlpha = true } = options;
 
-  if (typeof algorithm !== 'string' && typeof algorithm !== 'function') {
-    throw new TypeError('algorithm must be a string or a function');
-  }
-
   if (
     image.colorModel !== ImageColorModel.RGB &&
     image.colorModel !== ImageColorModel.RGBA

@@ -96,4 +96,20 @@ describe('Grey transform', () => {
       /cannot use out. Its colorModel property must be GREY. Found GREYA/,
     );
   });
+
+  it('wrong algorithm type', () => {
+    const image = testUtils.createRgbaImage([
+      [100, 150, 200, 255, 100, 150, 200, 0],
+    ]);
+
+    const out = testUtils.createGreyImage([[0, 0]]);
+    const result = image.grey({ out });
+    expect(result).toBe(out);
+    expect(out).toMatchImageData([[142, 0]]);
+
+    const wrongOut = testUtils.createGreyaImage([[0, 0, 0, 0]]);
+    expect(() => image.grey({ out: wrongOut })).toThrow(
+      /cannot use out. Its colorModel property must be GREY. Found GREYA/,
+    );
+  });
 });
