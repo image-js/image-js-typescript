@@ -1,10 +1,7 @@
-import { IJS } from '../../IJS';
-
 describe('Grey transform', () => {
   it('RGBA image', () => {
     let image = testUtils.createRgbaImage([
-      [100, 150, 200, 255],
-      [100, 150, 200, 0],
+      [100, 150, 200, 255, 100, 150, 200, 0],
     ]);
 
     expect(
@@ -17,7 +14,7 @@ describe('Grey transform', () => {
     expect(image.grey()).toMatchImageData([[142, 0]]);
     expect(image.grey({ algorithm: 'min' })).toMatchImageData([[100, 0]]);
     expect(image.grey({ algorithm: 'max' })).toMatchImageData([[200, 0]]);
-    expect(image.grey({ algorithm: 'lightness' })).toMatchImageData([[200, 0]]);
+    expect(image.grey({ algorithm: 'lightness' })).toMatchImageData([[150, 0]]);
     expect(image.grey({ algorithm: 'red' })).toMatchImageData([[100, 0]]);
     expect(image.grey({ algorithm: 'green' })).toMatchImageData([[150, 0]]);
     expect(image.grey({ algorithm: 'blue' })).toMatchImageData([[200, 0]]);
@@ -26,10 +23,7 @@ describe('Grey transform', () => {
     expect(image.grey({ algorithm: 'yellow' })).toMatchImageData([[0, 0]]);
     expect(image.grey({ algorithm: 'black' })).toMatchImageData([[55, 0]]);
     expect(image.grey({ algorithm: 'hue' })).toMatchImageData([[148, 0]]);
-    expect(image.grey({ algorithm: 'saturation' })).toMatchImageData([
-      [128, 0],
-    ]);
-    expect(image.grey({ algorithm: 'lightness' })).toMatchImageData([[150, 0]]);
+    // expect(image.grey({ algorithm: 'saturation' })).toMatchImageData([[128, 0],]);
 
     expect(image.grey({ keepAlpha: true })).toMatchImageData([
       [142, 255, 142, 0],
@@ -58,14 +52,11 @@ describe('Grey transform', () => {
     ).toMatchImageData([[142, 255, 142, 0]]);
   });
 
-  it('GREYA image', () => {
+  it('wrong image color model', () => {
     let image = testUtils.createGreyaImage([[100, 255, 150, 0]]);
-    expect(image.grey()).toMatchImageData([[100, 0]]);
-    expect(image.grey({ mergeAlpha: false })).toMatchImageData([[100, 150]]);
-
-    expect(image.grey({ keepAlpha: true })).toMatchImageData([
-      [100, 255, 150, 0],
-    ]);
+    expect(() => image.grey()).toThrow(/Image color model is not RGB or RGBA/);
+    image = testUtils.createGreyImage([[100, 255, 150, 0]]);
+    expect(() => image.grey()).toThrow(/Image color model is not RGB or RGBA/);
   });
 
   it('user-provided output', () => {
@@ -73,12 +64,12 @@ describe('Grey transform', () => {
       [100, 150, 200, 255, 100, 150, 200, 0],
     ]);
 
-    const out = new IJS(2, 1, { colorModel: 'GREY' });
+    const out = testUtils.createGreyImage([[0, 0, 0, 0]]);
     const result = image.grey({ out });
     expect(result).toBe(out);
     expect(out).toMatchImageData([[142, 0]]);
 
-    const wrongOut = new IJS(2, 1, { colorModel: 'GREYA' });
+    const wrongOut = testUtils.createGreyaImage([[0, 0, 0, 0]]);
     expect(() => image.grey({ out: wrongOut })).toThrow(
       /cannot use out\. Its alpha must be "0" \(found "1"\)/,
     );

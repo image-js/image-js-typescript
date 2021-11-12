@@ -5,18 +5,6 @@ import * as greyAlgorithms from './greyAlgorithms';
 
 export type GreyAlgorithms = keyof typeof greyAlgorithms;
 
-export type GreyAlgorithmCallback = (
-  red: number,
-  green: number,
-  blue: number,
-  image: IJS,
-) => number;
-
-export interface GreyOptions {
-  algorithm?: GreyAlgorithms | GreyAlgorithmCallback;
-  keepAlpha?: boolean;
-  mergeAlpha?: boolean;
-}
 /**
  * Call back that converts the RGB channels to grey. It is clamped afterwards.
  *
@@ -26,6 +14,31 @@ export interface GreyOptions {
  * @param {number} blue - value of the blue channel
  * @returns {number} value of the grey channel
  */
+export type GreyAlgorithmCallback = (
+  red: number,
+  green: number,
+  blue: number,
+  image: IJS,
+) => number;
+
+export interface GreyOptions {
+  /**
+   * Specify the grey algorithm to use.
+   */
+  algorithm?: GreyAlgorithms | GreyAlgorithmCallback;
+  /**
+   * Specify wether to keep an alpha channel in the new image or not.
+   */
+  keepAlpha?: boolean;
+  /**
+   * Specify wether to merge the alpha channel with the gray pixel or not.
+   */
+  mergeAlpha?: boolean;
+  /**
+   * Image to which to output.
+   */
+  out?: IJS;
+}
 
 /**
  * Convert the current image to grayscale.
@@ -36,7 +49,7 @@ export interface GreyOptions {
  *
  * @param image - Original image to convert to grey.
  * @param options - The grey conversion options.
- * @returns The grey image.
+ * @returns The resulting grey image.
  */
 export default function grey(image: IJS, options: GreyOptions = {}): IJS {
   let { algorithm = 'luma709', keepAlpha = false, mergeAlpha = true } = options;
@@ -89,11 +102,7 @@ export default function grey(image: IJS, options: GreyOptions = {}): IJS {
     } else {
       newValue = clamp(method(red, green, blue, image));
       if (keepAlpha) {
-        newImage.setValueByIndex(
-          i,
-          newImage.channels - 1,
-          image.getValueByIndex(1, image.channels - 1),
-        );
+        newImage.setValueByIndex(i, 1, image.getValueByIndex(i, 3));
       }
     }
     newImage.setValueByIndex(i, 0, newValue);
