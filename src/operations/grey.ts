@@ -80,9 +80,6 @@ export default function grey(image: IJS, options: GreyOptions = {}): IJS {
   } else {
     // eslint-disable-next-line import/namespace
     method = greyAlgorithms[algorithm];
-    if (!method) {
-      throw new Error(`unsupported grey algorithm: ${algorithm}`);
-    }
   }
 
   let clamp = getClamp(newImage);
