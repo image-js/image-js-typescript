@@ -1,5 +1,6 @@
 import { IJS, ImageColorModel } from '..';
 import { getClamp } from '../utils/clamp';
+import { getOutputImage } from '../utils/getOutputImage';
 
 import * as greyAlgorithms from './greyAlgorithms';
 
@@ -72,8 +73,9 @@ export default function grey(image: IJS, options: GreyOptions = {}): IJS {
   }
 
   let newColorModel = keepAlpha ? ImageColorModel.GREYA : ImageColorModel.GREY;
-  let newImage = IJS.createFrom(image, {
-    colorModel: newColorModel,
+
+  let newImage = getOutputImage(image, options, {
+    newParameters: { colorModel: newColorModel },
   });
 
   let method: GreyAlgorithmCallback;
