@@ -1,23 +1,18 @@
 import { IJS, ImageColorModel } from '../../IJS';
 
 test('invert an RGB image', () => {
-  const img = new IJS(1, 2, {
-    data: Uint8Array.from([0, 50, 127, 255, 250, 4]),
-  });
+  const img = testUtils.createRgbImage([[0, 50, 127, 255, 250, 4]]);
   const inverted = img.invert();
   expect(inverted).not.toBe(img);
-  expect(inverted).toMatchImageData([
-    [255, 205, 128],
-    [0, 5, 251],
-  ]);
+  expect(inverted).toMatchImageData([[255, 205, 128, 0, 5, 251]]);
 });
 
 test('invert a grey image with alpha', () => {
-  const img = new IJS(1, 2, {
-    colorModel: ImageColorModel.GREYA,
-    data: Uint8Array.from([0, 255, 255, 0]),
-  });
-  const inverted = img.invert();
+  const image = testUtils.createGreyaImage([
+    [0, 255],
+    [255, 0],
+  ]);
+  const inverted = image.invert();
   expect(inverted).toMatchImageData([
     [255, 0],
     [0, 255],
@@ -25,11 +20,10 @@ test('invert a grey image with alpha', () => {
 });
 
 test('invert 16-bit GREY image', () => {
-  const image = new IJS(2, 2, {
-    colorModel: ImageColorModel.GREY,
-    depth: 16,
-    data: Uint16Array.from([1, 2, 3, 4]),
-  });
+  const image = testUtils.createGreyImage([
+    [1, 2],
+    [3, 4],
+  ]);
 
   const inverted = image.invert();
   expect(inverted).not.toBe(image);
@@ -40,9 +34,10 @@ test('invert 16-bit GREY image', () => {
 });
 
 test('invert with out parameter', () => {
-  const image = new IJS(1, 2, {
-    data: Uint8Array.from([230, 83, 120, 100, 140, 13]),
-  });
+  const image = testUtils.createRgbImage([
+    [230, 83, 120],
+    [100, 140, 13],
+  ]);
 
   const out = new IJS(1, 2);
   const inverted = image.invert({ out });
@@ -54,12 +49,12 @@ test('invert with out parameter', () => {
 });
 
 test('invert with out parameter set to self', () => {
-  const img = new IJS(1, 2, {
-    colorModel: ImageColorModel.GREYA,
-    data: Uint8Array.from([0, 255, 255, 0]),
-  });
-  img.invert({ out: img });
-  expect(img).toMatchImageData([
+  const image = testUtils.createGreyaImage([
+    [0, 255],
+    [255, 0],
+  ]);
+  image.invert({ out: image });
+  expect(image).toMatchImageData([
     [255, 0],
     [0, 255],
   ]);
