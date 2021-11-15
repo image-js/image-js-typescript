@@ -88,16 +88,17 @@ export default function grey(image: IJS, options: GreyOptions = {}): IJS {
     const red = image.getValueByIndex(i, 0);
     const green = image.getValueByIndex(i, 1);
     const blue = image.getValueByIndex(i, 2);
-    const alpha = image.getValueByIndex(i, 3);
     let newValue;
     if (mergeAlpha) {
+      const alpha = image.getValueByIndex(i, 3);
       newValue = clamp(
         (method(red, green, blue, image) * alpha) / image.maxValue,
       );
     } else {
       newValue = clamp(method(red, green, blue, image));
       if (keepAlpha) {
-        newImage.setValueByIndex(i, 1, image.getValueByIndex(i, 3));
+        const alpha = image.getValueByIndex(i, 3);
+        newImage.setValueByIndex(i, 1, alpha);
       }
     }
     newImage.setValueByIndex(i, 0, newValue);
