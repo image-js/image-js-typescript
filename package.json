@@ -67,7 +67,6 @@
     "jpeg-js": "^0.4.3",
     "ml-convolution": "^2.0.0",
     "ml-matrix": "^6.8.0",
-    "num-sort": "^3.0.0",
     "tiff": "^5.0.2"
   }
 }
