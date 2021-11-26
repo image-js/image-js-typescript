@@ -13,6 +13,7 @@ export interface CopyToOptions {
  * @param source - The source image
  * @param target - The target image
  * @param options - copyTo options
+ * @returns The target with the source copied to it
  */
 export default function copyTo(
   source: IJS,
@@ -22,71 +23,70 @@ export default function copyTo(
   const { columnOffset = 0, rowOffset = 0 } = options;
 
   if (source.colorModel !== target.colorModel) {
-    throw new Error("Source and target aren't of the same color model.");
+    throw new Error('Source and target should have the same color model.');
   }
 
-  // todo: handle what happens if source is copied outside of target
+  const result = getOutputImage(target, options);
+  console.log({ result });
 
-  const newSource = getOutputImage(source, options);
-
-  if (newSource.alpha) {
-    for (let row = 0; row < newSource.height; row++) {
-      for (let column = 0; column < newSource.width; column++) {
-        let sourceAlpha = newSource.getValue(
-          row,
-          column,
-          newSource.channels - 1,
-        );
-        let targetAlpha = target.getValue(
-          row + rowOffset,
-          column + columnOffset,
-          newSource.channels - 1,
-        );
-        let newAlpha =
-          sourceAlpha + targetAlpha * (newSource.maxValue - targetAlpha);
-        target.setValue(
-          row + rowOffset,
-          column + columnOffset,
-          target.channels - 1,
-          newAlpha,
-        );
-        for (let channel = 0; channel < newSource.channels; channel++) {
-          let sourceChannel = newSource.getValue(row, column, channel);
-          let targetChannel = target.getValue(
-            row + rowOffset,
-            columnOffset + columnOffset,
-            channel,
+  if (source.alpha) {
+    for (let row = 0; row < target.height; row++) {
+      for (let column = 0; column < target.width; column++) {
+        if (row >= rowOffset && column >= columnOffset) {
+          let sourceAlpha = source.getValue(
+            row - rowOffset,
+            column - columnOffset,
+            source.channels - 1,
           );
+          let targetAlpha = target.getValue(row, column, source.channels - 1);
+          let newAlpha =
+            sourceAlpha + targetAlpha * (source.maxValue - targetAlpha);
 
-          let newChannel =
-            (sourceChannel * sourceAlpha +
-              targetChannel *
-                targetAlpha *
-                (newSource.maxValue - sourceAlpha)) /
-            targetAlpha;
-          target.setValue(
-            row + rowOffset,
-            column + columnOffset,
-            channel,
-            newChannel,
-          );
+          result.setValue(row, column, target.channels - 1, newAlpha);
+          for (let component = 0; component < source.components; component++) {
+            let sourceComponent = source.getValue(
+              row - rowOffset,
+              column - columnOffset,
+              component,
+            );
+            let targetComponent = target.getValue(row, column, component);
+
+            let newComponent =
+              (sourceComponent * sourceAlpha +
+                targetComponent *
+                  targetAlpha *
+                  (source.maxValue - sourceAlpha)) /
+              targetAlpha;
+            result.setValue(row, column, component, newComponent);
+          }
+        } else {
+          for (let channel = 0; channel < source.channels; channel++) {
+            let targetChannel = target.getValue(row, column, channel);
+            result.setValue(row, column, channel, targetChannel);
+          }
         }
       }
     }
   } else {
-    for (let row = 0; row < newSource.height; row++) {
-      for (let column = 0; column < newSource.width; column++) {
-        for (let channel = 0; channel < newSource.channels; channel++) {
-          let sourceChannel = newSource.getValue(row, column, channel);
-          target.setValue(
-            row + rowOffset,
-            column + columnOffset,
-            channel,
-            sourceChannel,
-          );
+    for (let row = 0; row < target.height; row++) {
+      for (let column = 0; column < target.width; column++) {
+        if (row >= rowOffset && column >= columnOffset) {
+          for (let component = 0; component < target.components; component++) {
+            let sourceComponent = source.getValue(
+              row - rowOffset,
+              column - columnOffset,
+              component,
+            );
+            result.setValue(row, column, component, sourceComponent);
+          }
+        } else {
+          for (let component = 0; component < source.components; component++) {
+            let targetComponent = target.getValue(row, column, component);
+            result.setValue(row, column, component, targetComponent);
+          }
         }
       }
     }
   }
-  return newSource;
+  return result;
 }
