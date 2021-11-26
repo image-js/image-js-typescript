@@ -26,7 +26,7 @@ export default function copyTo(
     throw new Error('Source and target should have the same color model.');
   }
 
-  const result = getOutputImage(target, options);
+  const result = getOutputImage(target, options, { clone: true });
   console.log({ result });
 
   if (source.alpha) {
@@ -39,8 +39,11 @@ export default function copyTo(
             source.channels - 1,
           );
           let targetAlpha = target.getValue(row, column, source.channels - 1);
+
           let newAlpha =
-            sourceAlpha + targetAlpha * (source.maxValue - targetAlpha);
+            sourceAlpha + targetAlpha * (1 - sourceAlpha / source.maxValue);
+
+          console.log({ sourceAlpha, targetAlpha, newAlpha });
 
           result.setValue(row, column, target.channels - 1, newAlpha);
           for (let component = 0; component < source.components; component++) {
@@ -55,8 +58,13 @@ export default function copyTo(
               (sourceComponent * sourceAlpha +
                 targetComponent *
                   targetAlpha *
-                  (source.maxValue - sourceAlpha)) /
-              targetAlpha;
+                  (1 - sourceAlpha / source.maxValue)) /
+              newAlpha;
+
+            console.log(sourceComponent * sourceAlpha);
+            console.log(targetComponent * targetAlpha);
+            console.log(newAlpha);
+            console.log({ newComponent });
             result.setValue(row, column, component, newComponent);
           }
         } else {
