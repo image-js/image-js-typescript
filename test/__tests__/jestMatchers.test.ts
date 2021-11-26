@@ -15,7 +15,7 @@ describe('toMatchImage', () => {
   it('should throw if the same instance is passed', () => {
     const image = new IJS(1, 1);
     expect(() => expect(image).toMatchImage(image)).toThrow(
-      /Expected image instances to be the same/,
+      /Expected image instances to be different/,
     );
   });
 

@@ -29,7 +29,7 @@ export function toMatchImage(
   let error: string | null = null;
 
   if (received === expected) {
-    error = 'Expected image instances to be the same';
+    error = 'Expected image instances to be different';
   } else if (received.width !== expectedImage.width) {
     error = `Expected image width to be ${expectedImage.width}, but got ${received.width}`;
   } else if (received.height !== expectedImage.height) {
