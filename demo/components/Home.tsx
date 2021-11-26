@@ -13,7 +13,11 @@ function testTransform(image: IJS) {
     rowOffset: 200,
     columnOffset: 300,
   });
-  redSquare.copyTo(result, { out: result });
+  redSquare.copyTo(result, {
+    columnOffset: ((Date.now() / 10) >>> 0) % 500,
+    rowOffset: ((Date.now() / 10) >>> 0) % 500,
+    out: result,
+  });
   return result;
 }
 
