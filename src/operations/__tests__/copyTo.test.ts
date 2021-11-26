@@ -11,6 +11,14 @@ describe('Copy a source image to a target', () => {
     const result = source.copyTo(target);
     expect(result).toMatchImageData([[100, 255]]);
   });
+  it('GREYA image: alpha different from 255', () => {
+    let source = testUtils.createGreyaImage([[100, 128]]);
+    let target = testUtils.createGreyaImage([[50, 64]]);
+    const result = source.copyTo(target);
+    const alpha = 128 + 64 * (1 - 128 / 255);
+    const component = (100 * 128 + 50 * 64 * (1 - 128 / 255)) / alpha;
+    expect(result).toMatchImageData([[component, alpha]]);
+  });
   it('Bigger GREYA image', () => {
     let target = testUtils.createGreyaImage([[100, 0, 200, 0, 150, 0]]);
     let source = testUtils.createGreyaImage([[20, 255]]);
@@ -79,8 +87,9 @@ describe('Copy a source image to a target', () => {
     let source = testUtils.createGreyaImage([[100, 255]]);
     let target = testUtils.createGreyaImage([[50, 0]]);
     const result = source.copyTo(target, { out: target });
-
-    expect(target).toStrictEqual(result);
+    const copy = source.copyTo(target);
+    expect(target).toBe(result);
+    expect(copy).toMatchImage(target);
   });
   it('incompatible image types', () => {
     let source = testUtils.createGreyImage([[100, 255]]);
