@@ -86,8 +86,8 @@ describe('Copy a source image to a target', () => {
   it('testing out option', () => {
     let source = testUtils.createGreyaImage([[100, 255]]);
     let target = testUtils.createGreyaImage([[50, 0]]);
-    const result = source.copyTo(target, { out: target });
     const copy = source.copyTo(target);
+    const result = source.copyTo(target, { out: target });
     expect(target).toBe(result);
     expect(copy).toMatchImage(target);
   });
