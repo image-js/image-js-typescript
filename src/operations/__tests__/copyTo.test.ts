@@ -50,6 +50,17 @@ describe('Copy a source image to a target', () => {
       [200, 20],
     ]);
   });
+  it('Copy GREY image to itself', () => {
+    let target = testUtils.createGreyImage([
+      [100, 150],
+      [200, 250],
+    ]);
+    const result = target.copyTo(target, { rowOffset: 1, columnOffset: 1 });
+    expect(result).toMatchImageData([
+      [100, 150],
+      [200, 100],
+    ]);
+  });
   it('source image larger than target (should crop)', () => {
     let source = testUtils.createGreyImage([
       [100, 150],
