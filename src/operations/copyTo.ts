@@ -43,8 +43,6 @@ export default function copyTo(
           let newAlpha =
             sourceAlpha + targetAlpha * (1 - sourceAlpha / source.maxValue);
 
-          console.log({ sourceAlpha, targetAlpha, newAlpha });
-
           result.setValue(row, column, target.channels - 1, newAlpha);
           for (let component = 0; component < source.components; component++) {
             let sourceComponent = source.getValue(
@@ -61,10 +59,6 @@ export default function copyTo(
                   (1 - sourceAlpha / source.maxValue)) /
               newAlpha;
 
-            console.log(sourceComponent * sourceAlpha);
-            console.log(targetComponent * targetAlpha);
-            console.log(newAlpha);
-            console.log({ newComponent });
             result.setValue(row, column, component, newComponent);
           }
         } else {
