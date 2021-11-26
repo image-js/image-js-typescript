@@ -69,7 +69,7 @@ describe('Copy a source image to a target', () => {
     const result = source.copyTo(target, { rowOffset: -1, columnOffset: -1 });
     expect(result).toMatchImageData([[250]]);
   });
-  it('GGBA images', () => {
+  it('RGBA images', () => {
     let target = testUtils.createRgbaImage([
       [1, 2, 3, 255],
       [4, 5, 6, 255],

@@ -8,7 +8,7 @@ export interface CopyToOptions {
 }
 
 /**
- * Copy the image to a bigger one by specifying the location in the big image.
+ * Copy the image to another one by specifying the location in the target image.
  *
  * @param source - The source image
  * @param target - The target image
