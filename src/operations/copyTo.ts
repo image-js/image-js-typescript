@@ -27,65 +27,65 @@ export default function copyTo(
   }
 
   const result = getOutputImage(target, options, { clone: true });
-  console.log({ result });
-
   if (source.alpha) {
-    for (let row = 0; row < target.height; row++) {
-      for (let column = 0; column < target.width; column++) {
-        if (row >= rowOffset && column >= columnOffset) {
-          let sourceAlpha = source.getValue(
+    for (
+      let row = Math.max(rowOffset, 0);
+      row < Math.min(source.height + rowOffset, target.height);
+      row++
+    ) {
+      for (
+        let column = Math.max(columnOffset, 0);
+        column < Math.min(source.width + columnOffset, target.width);
+        column++
+      ) {
+        let sourceAlpha = source.getValue(
+          row - rowOffset,
+          column - columnOffset,
+          source.channels - 1,
+        );
+        let targetAlpha = target.getValue(row, column, source.channels - 1);
+
+        let newAlpha =
+          sourceAlpha + targetAlpha * (1 - sourceAlpha / source.maxValue);
+
+        result.setValue(row, column, target.channels - 1, newAlpha);
+        for (let component = 0; component < source.components; component++) {
+          let sourceComponent = source.getValue(
             row - rowOffset,
             column - columnOffset,
-            source.channels - 1,
+            component,
           );
-          let targetAlpha = target.getValue(row, column, source.channels - 1);
+          let targetComponent = target.getValue(row, column, component);
 
-          let newAlpha =
-            sourceAlpha + targetAlpha * (1 - sourceAlpha / source.maxValue);
+          let newComponent =
+            (sourceComponent * sourceAlpha +
+              targetComponent *
+                targetAlpha *
+                (1 - sourceAlpha / source.maxValue)) /
+            newAlpha;
 
-          result.setValue(row, column, target.channels - 1, newAlpha);
-          for (let component = 0; component < source.components; component++) {
-            let sourceComponent = source.getValue(
-              row - rowOffset,
-              column - columnOffset,
-              component,
-            );
-            let targetComponent = target.getValue(row, column, component);
-
-            let newComponent =
-              (sourceComponent * sourceAlpha +
-                targetComponent *
-                  targetAlpha *
-                  (1 - sourceAlpha / source.maxValue)) /
-              newAlpha;
-
-            result.setValue(row, column, component, newComponent);
-          }
-        } else {
-          for (let channel = 0; channel < source.channels; channel++) {
-            let targetChannel = target.getValue(row, column, channel);
-            result.setValue(row, column, channel, targetChannel);
-          }
+          result.setValue(row, column, component, newComponent);
         }
       }
     }
   } else {
-    for (let row = 0; row < target.height; row++) {
-      for (let column = 0; column < target.width; column++) {
-        if (row >= rowOffset && column >= columnOffset) {
-          for (let component = 0; component < target.components; component++) {
-            let sourceComponent = source.getValue(
-              row - rowOffset,
-              column - columnOffset,
-              component,
-            );
-            result.setValue(row, column, component, sourceComponent);
-          }
-        } else {
-          for (let component = 0; component < source.components; component++) {
-            let targetComponent = target.getValue(row, column, component);
-            result.setValue(row, column, component, targetComponent);
-          }
+    for (
+      let row = Math.max(rowOffset, 0);
+      row < Math.min(source.height + rowOffset, target.height);
+      row++
+    ) {
+      for (
+        let column = Math.max(columnOffset, 0);
+        column < Math.min(source.width + columnOffset, target.width);
+        column++
+      ) {
+        for (let component = 0; component < target.components; component++) {
+          let sourceComponent = source.getValue(
+            row - rowOffset,
+            column - columnOffset,
+            component,
+          );
+          result.setValue(row, column, component, sourceComponent);
         }
       }
     }

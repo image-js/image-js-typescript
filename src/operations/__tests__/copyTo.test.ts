@@ -11,9 +11,22 @@ describe('Copy a source image to a target', () => {
     const result = source.copyTo(target);
     expect(result).toMatchImageData([[100, 255]]);
   });
+  it('Bigger GREYA image', () => {
+    let target = testUtils.createGreyaImage([[100, 0, 200, 0, 150, 0]]);
+    let source = testUtils.createGreyaImage([[20, 255]]);
+    const result = source.copyTo(target);
+    expect(result).toMatchImageData([[20, 255, 200, 0, 150, 0]]);
+  });
+  it('Bigger GREYA image with offset outside target', () => {
+    let target = testUtils.createGreyaImage([[100, 0, 200, 0, 150, 0]]);
+    let source = testUtils.createGreyaImage([[20, 255]]);
+    const result = source.copyTo(target, { rowOffset: -1 });
+    expect(result).toMatchImageData([[100, 0, 200, 0, 150, 0]]);
+  });
   it('GREY image', () => {
     let source = testUtils.createGreyImage([[100, 150, 200, 250]]);
     let target = testUtils.createGreyImage([[20, 50]]);
+
     const result = source.copyTo(target);
     expect(result).toMatchImageData([[100, 150]]);
   });
@@ -47,6 +60,20 @@ describe('Copy a source image to a target', () => {
     let target = testUtils.createGreyImage([[20]]);
     const result = source.copyTo(target, { rowOffset: -1, columnOffset: -1 });
     expect(result).toMatchImageData([[250]]);
+  });
+  it('GGBA images', () => {
+    let target = testUtils.createRgbaImage([
+      [1, 2, 3, 255],
+      [4, 5, 6, 255],
+      [7, 8, 9, 0],
+    ]);
+    let source = testUtils.createRgbaImage([[3, 3, 3, 255]]);
+    const result = source.copyTo(target, { rowOffset: 1, columnOffset: 0 });
+    expect(result).toMatchImageData([
+      [1, 2, 3, 255],
+      [3, 3, 3, 255],
+      [7, 8, 9, 0],
+    ]);
   });
   it('testing out option', () => {
     let source = testUtils.createGreyaImage([[100, 255]]);
