@@ -18,7 +18,7 @@ export interface HypotenuseOptions {
  * @param options - Hypotenuse options.
  * @returns Hypotenuse of the two images.
  */
-export default function hypotenuse(
+export function hypotenuse(
   image: IJS,
   otherImage: IJS,
   options: HypotenuseOptions = {},
@@ -47,9 +47,9 @@ export default function hypotenuse(
     );
   }
 
-  let newImage = IJS.createFrom(image, { depth });
-
   validateChannels(channels, image);
+
+  let newImage = IJS.createFrom(image, { depth });
 
   for (const channel of channels) {
     for (let i = 0; i < image.size; i++) {

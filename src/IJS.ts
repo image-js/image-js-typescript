@@ -9,7 +9,9 @@ import {
   GaussianBlurOptions,
   subtractImage,
   SubtractImageOptions,
+  HypotenuseOptions,
 } from './filters';
+import { hypotenuse } from './filters/hypotenuse';
 import { invert, InvertOptions } from './filters/invert';
 import {
   bottomHat,
@@ -517,6 +519,17 @@ export class IJS {
    */
   public subtractImage(other: IJS, options?: SubtractImageOptions): IJS {
     return subtractImage(this, other, options);
+  }
+
+  /**
+   * Calculate a new image that is the hypotenuse between the current image and the other.
+   *
+   * @param other - Other image.
+   * @param options - Hypotenuse options.
+   * @returns Hypotenuse of the two images.
+   */
+  public hypotenuse(other: IJS, options?: HypotenuseOptions): IJS {
+    return hypotenuse(this, other, options);
   }
 
   // GEOMETRY

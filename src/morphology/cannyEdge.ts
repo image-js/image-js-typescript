@@ -32,10 +32,7 @@ const convOptions = {
  * @param options - Canny edge detection options.
  * @returns The processed image.
  */
-export default function cannyEdgeDetector(
-  image: IJS,
-  options: CannyEdgeOptions,
-): IJS {
+export function cannyEdgeDetector(image: IJS, options: CannyEdgeOptions): IJS {
   const {
     lowThreshold = 10,
     highThreshold = 30,
