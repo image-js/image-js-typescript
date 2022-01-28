@@ -1,6 +1,18 @@
 import { IJS } from '../IJS';
 
 /**
+ * Validate an array of channels.
+ *
+ * @param channels - Array of channels.
+ * @param image - The image being processed
+ */
+export function validateChannels(channels: number[], image: IJS): void {
+  for (const channel of channels) {
+    validateChannel(channel, image);
+  }
+}
+
+/**
  * Validates that a channel index passed by the user is within range and is an integer.
  *
  * @param channel - Channel index to validate.
