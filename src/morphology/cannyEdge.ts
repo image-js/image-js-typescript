@@ -1,4 +1,4 @@
-import { IJS, ImageColorModel } from '..';
+import { ColorDepth, IJS, ImageColorModel } from '..';
 import checkProcessable from '../utils/checkProcessable';
 
 export interface CannyEdgeOptions {
@@ -8,13 +8,13 @@ export interface CannyEdgeOptions {
   brightness: number;
 }
 
-const Gx = [
+const kernelX = [
   [-1, 0, +1],
   [-2, 0, +2],
   [-1, 0, +1],
 ];
 
-const Gy = [
+const kernelY = [
   [-1, -2, -1],
   [0, 0, 0],
   [+1, +2, +1],
@@ -44,7 +44,7 @@ export default function cannyEdgeDetector(
   } = options;
 
   checkProcessable(image, 'cannyEdge', {
-    bitDepth: 8,
+    bitDepth: ColorDepth.UINT8,
     channels: 1,
     components: 1,
   });
@@ -54,15 +54,14 @@ export default function cannyEdgeDetector(
 
   const gfOptions = {
     sigma: gaussianBlur,
-    radius: 3,
+    size: 7,
   };
 
-  const gf = image.gaussianBlur(gfOptions);
+  const blurred = image.gaussianBlur(gfOptions);
 
-  const gradientX = gf.convolution(Gy, convOptions);
-  const gradientY = gf.convolution(Gx, convOptions);
-
-  const G = gradientY.hypotenuse(gradientX);
+  const gradientX = blurred.directConvolution(kernelY, convOptions);
+  const gradientY = blurred.directConvolution(kernelX, convOptions);
+  const gradient = gradientY.hypotenuse(gradientX);
 
   const nms = new IJS(width, height, {
     colorModel: ImageColorModel.GREY,
@@ -83,10 +82,7 @@ export default function cannyEdgeDetector(
     for (let j = 1; j < height - 1; j++) {
       let dir =
         (Math.round(
-          Math.atan2(
-            gradientY.getValueXY(i, j, 0),
-            gradientX.getValueXY(i, j, 0),
-          ) *
+          Math.atan2(gradientY.getValue(i, j, 0), gradientX.getValue(i, j, 0)) *
             (5.0 / Math.PI),
         ) +
           5) %
@@ -95,36 +91,37 @@ export default function cannyEdgeDetector(
       if (
         !(
           (dir === 0 &&
-            (G.getValueXY(i, j, 0) <= G.getValueXY(i, j - 1, 0) ||
-              G.getValueXY(i, j, 0) <= G.getValueXY(i, j + 1, 0))) ||
+            (gradient.getValue(i, j, 0) <= gradient.getValue(i, j - 1, 0) ||
+              gradient.getValue(i, j, 0) <= gradient.getValue(i, j + 1, 0))) ||
           (dir === 1 &&
-            (G.getValueXY(i, j, 0) <= G.getValueXY(i - 1, j + 1, 0) ||
-              G.getValueXY(i, j, 0) <= G.getValueXY(i + 1, j - 1, 0))) ||
+            (gradient.getValue(i, j, 0) <= gradient.getValue(i - 1, j + 1, 0) ||
+              gradient.getValue(i, j, 0) <=
+                gradient.getValue(i + 1, j - 1, 0))) ||
           (dir === 2 &&
-            (G.getValueXY(i, j, 0) <= G.getValueXY(i - 1, j, 0) ||
-              G.getValueXY(i, j, 0) <= G.getValueXY(i + 1, j, 0))) ||
+            (gradient.getValue(i, j, 0) <= gradient.getValue(i - 1, j, 0) ||
+              gradient.getValue(i, j, 0) <= gradient.getValue(i + 1, j, 0))) ||
           (dir === 3 &&
-            (G.getValueXY(i, j, 0) <= G.getValueXY(i - 1, j - 1, 0) ||
-              G.getValueXY(i, j, 0) <= G.getValueXY(i + 1, j + 1, 0)))
+            (gradient.getValue(i, j, 0) <= gradient.getValue(i - 1, j - 1, 0) ||
+              gradient.getValue(i, j, 0) <= gradient.getValue(i + 1, j + 1, 0)))
         )
       ) {
-        nms.setValueXY(i, j, 0, G.getValueXY(i, j, 0));
+        nms.setValue(i, j, 0, gradient.getValue(i, j, 0));
       }
     }
   }
 
   for (let i = 0; i < width * height; ++i) {
-    let currentNms = nms.data[i];
+    let currentNms = nms.getValueByIndex(1, 0);
     let currentEdge = 0;
     if (currentNms > highThreshold) {
       currentEdge++;
-      finalImage.data[i] = brightness;
+      finalImage.setValueByIndex(i, 0, brightness);
     }
     if (currentNms > lowThreshold) {
       currentEdge++;
     }
 
-    edges.data[i] = currentEdge;
+    edges.setValueByIndex(i, 0, currentEdge);
   }
 
   // Hysteresis: first pass
