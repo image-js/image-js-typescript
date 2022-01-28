@@ -1,17 +1,12 @@
-import { IJS } from '..';
+import { IJS, ImageColorModel } from '..';
 import checkProcessable from '../utils/checkProcessable';
 
-export interface CannyOptions {
+export interface CannyEdgeOptions {
   lowThreshold: number;
-  hightThreshold: number;
+  highThreshold: number;
   gaussianBlur: number;
+  brightness: number;
 }
-
-const defaultOptions = {
-  lowThreshold: 10,
-  highThreshold: 30,
-  gaussianBlur: 1.1,
-};
 
 const Gx = [
   [-1, 0, +1],
@@ -31,48 +26,56 @@ const convOptions = {
 };
 
 /**
- * @param image
- * @param options
+ * Apply Canny edge detection to an image.
+ *
+ * @param image - Image to process.
+ * @param options - Canny edge detection options.
+ * @returns The processed image.
  */
-export default function cannyEdgeDetector(image: IJS, options: CannyOptions) {
+export default function cannyEdgeDetector(
+  image: IJS,
+  options: CannyEdgeOptions,
+): IJS {
+  const {
+    lowThreshold = 10,
+    highThreshold = 30,
+    gaussianBlur = 1.1,
+    brightness = image.maxValue,
+  } = options;
+
   checkProcessable(image, 'cannyEdge', {
     bitDepth: 8,
     channels: 1,
     components: 1,
   });
 
-  options = Object.assign({}, defaultOptions, options);
-
   const width = image.width;
   const height = image.height;
-  const brightness = image.maxValue;
 
   const gfOptions = {
-    sigma: options.gaussianBlur,
+    sigma: gaussianBlur,
     radius: 3,
   };
 
-  const gf = image.gaussianFilter(gfOptions);
+  const gf = image.gaussianBlur(gfOptions);
 
   const gradientX = gf.convolution(Gy, convOptions);
   const gradientY = gf.convolution(Gx, convOptions);
 
   const G = gradientY.hypotenuse(gradientX);
 
-  const Image = image.constructor;
-
-  const nms = new Image(width, height, {
-    kind: 'GREY',
-    bitDepth: 32,
+  const nms = new IJS(width, height, {
+    colorModel: ImageColorModel.GREY,
+    depth: 32,
   });
 
-  const edges = new Image(width, height, {
-    kind: 'GREY',
-    bitDepth: 32,
+  const edges = new IJS(width, height, {
+    colorModel: ImageColorModel.GREY,
+    depth: 32,
   });
 
-  const finalImage = new Image(width, height, {
-    kind: 'GREY',
+  const finalImage = new IJS(width, height, {
+    colorModel: ImageColorModel.GREY,
   });
 
   // Non-Maximum suppression
@@ -113,11 +116,11 @@ export default function cannyEdgeDetector(image: IJS, options: CannyOptions) {
   for (let i = 0; i < width * height; ++i) {
     let currentNms = nms.data[i];
     let currentEdge = 0;
-    if (currentNms > options.highThreshold) {
+    if (currentNms > highThreshold) {
       currentEdge++;
       finalImage.data[i] = brightness;
     }
-    if (currentNms > options.lowThreshold) {
+    if (currentNms > lowThreshold) {
       currentEdge++;
     }
 
@@ -128,15 +131,15 @@ export default function cannyEdgeDetector(image: IJS, options: CannyOptions) {
   let currentPixels = [];
   for (let i = 1; i < width - 1; ++i) {
     for (let j = 1; j < height - 1; ++j) {
-      if (edges.getValueXY(i, j, 0) !== 1) {
+      if (edges.getValue(i, j, 0) !== 1) {
         continue;
       }
 
       outer: for (let k = i - 1; k < i + 2; ++k) {
         for (let l = j - 1; l < j + 2; ++l) {
-          if (edges.getValueXY(k, l, 0) === 2) {
+          if (edges.getValue(k, l, 0) === 2) {
             currentPixels.push([i, j]);
-            finalImage.setValueXY(i, j, 0, brightness);
+            finalImage.setValue(i, j, 0, brightness);
             break outer;
           }
         }
@@ -147,7 +150,7 @@ export default function cannyEdgeDetector(image: IJS, options: CannyOptions) {
   // Hysteresis: second pass
   while (currentPixels.length > 0) {
     let newPixels = [];
-    for (let currentPixel of currentPixels.length()) {
+    for (let currentPixel of currentPixels) {
       for (let j = -1; j < 2; ++j) {
         for (let k = -1; k < 2; ++k) {
           if (j === 0 && k === 0) {
@@ -156,11 +159,11 @@ export default function cannyEdgeDetector(image: IJS, options: CannyOptions) {
           let row = currentPixel[0] + j;
           let col = currentPixel[1] + k;
           if (
-            edges.getValueXY(row, col, 0) === 1 &&
-            finalImage.getValueXY(row, col, 0) === 0
+            edges.getValue(row, col, 0) === 1 &&
+            finalImage.getValue(row, col, 0) === 0
           ) {
             newPixels.push([row, col]);
-            finalImage.setValueXY(row, col, 0, brightness);
+            finalImage.setValue(row, col, 0, brightness);
           }
         }
       }
