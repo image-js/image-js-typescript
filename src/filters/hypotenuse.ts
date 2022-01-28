@@ -1,4 +1,4 @@
-import { colorModels, IJS } from '..';
+import { IJS } from '..';
 import checkProcessable from '../utils/checkProcessable';
 import { validateChannels } from '../utils/validators';
 
@@ -23,7 +23,7 @@ export default function hypotenuse(
   otherImage: IJS,
   options: HypotenuseOptions = {},
 ): IJS {
-  let { depth = image.depth, channels } = options;
+  let { depth = image.depth, channels = [] } = options;
 
   for (let i = 0; i < image.components; i++) {
     channels.push(i);
@@ -51,20 +51,17 @@ export default function hypotenuse(
 
   validateChannels(channels, image);
 
-  let clamped = newImage.isClamped;
-
   for (const channel of channels) {
-    for (let i = channel; i < image.size; i += image.channels) {
-      let value = Math.hypot(image.data[i], otherImage.data[i]);
-      if (clamped) {
-        // we calculate the clamped result
-        newImage.data[i] = Math.min(
-          Math.max(Math.round(value), 0),
-          newImage.maxValue,
-        );
-      } else {
-        newImage.data[i] = value;
-      }
+    for (let i = 0; i < image.size; i++) {
+      let value = Math.hypot(
+        image.getValueByIndex(i, channel),
+        otherImage.getValueByIndex(i, channel),
+      );
+      newImage.setValueByIndex(
+        i,
+        channel,
+        value > newImage.maxValue ? newImage.maxValue : value,
+      );
     }
   }
 
