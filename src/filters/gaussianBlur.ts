@@ -5,7 +5,13 @@ import { separableConvolution } from './convolution';
 
 interface GaussianBlurBaseOptions {
   size: number;
+  /**
+   * Specify how borders must be handled.
+   */
   borderType?: BorderType;
+  /**
+   * Image to which the resulting image has to be put.
+   */
   out?: IJS;
 }
 
@@ -29,6 +35,13 @@ function getRadius(size: number): number {
   return (size - 1) / 2;
 }
 
+/**
+ * Apply a gaussian filter to an image.
+ *
+ * @param image - Image to blur.
+ * @param options - Gaussian blur options.
+ * @returns The blurred image.
+ */
 export function gaussianBlur(image: IJS, options: GaussianBlurOptions): IJS {
   if ('sigma' in options) {
     const { size, sigma } = options;

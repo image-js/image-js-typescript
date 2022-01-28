@@ -5,7 +5,7 @@ import { maskToOutputMask } from '../utils/getOutputImage';
 export interface ClearBorderOptions {
   allowCorners?: boolean;
   /**
-   * Image to which the inverted image has to be put.
+   * Image to which the resulting image has to be put.
    */
   out?: Mask;
 }
