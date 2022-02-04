@@ -65,14 +65,17 @@ export function directConvolution(
 }
 
 /**
- * @param image
- * @param kernel
- * @param options
+ * Compute direct convolution of an image and return an array with the raw values.
+ *
+ * @param image - Image to process.
+ * @param kernel - Kernel used for the convolution.
+ * @param options - Convolution options.
+ * @returns Array with the raw convoluted values.
  */
 export function rawDirectConvolution(
   image: IJS,
   kernel: number[][],
-  options: ConvolutionOptions,
+  options: ConvolutionOptions = {},
 ): Float64Array {
   const { borderType = BorderType.REFLECT_101, borderValue = 0 } = options;
   const interpolateBorder = getBorderInterpolation(borderType, borderValue);
@@ -80,9 +83,9 @@ export function rawDirectConvolution(
   let result = new Float64Array(image.size * image.channels);
 
   for (let channel = 0; channel < image.channels; channel++) {
-    for (let column = 0; column < image.width; column++) {
-      for (let row = 0; row < image.height; row++) {
-        let index = row * column * image.channels + channel;
+    for (let row = 0; row < image.height; row++) {
+      for (let column = 0; column < image.width; column++) {
+        let index = (row * image.width + column) * image.channels + channel;
         result[index] = computeConvolutionValue(
           column,
           row,
@@ -291,10 +294,6 @@ export function computeConvolutionValue(
   options: ComputeConvolutionValueOptions = {},
 ): number {
   let { returnRawValue = false, clamp } = options;
-
-  if (!returnRawValue && typeof clamp !== 'function') {
-    throw new Error('computeConvolutionValue: clamp function is undefined.');
-  }
 
   if (returnRawValue) {
     clamp = undefined;

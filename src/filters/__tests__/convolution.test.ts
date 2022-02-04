@@ -1,5 +1,6 @@
 import { Matrix } from 'ml-matrix';
 
+import { rawDirectConvolution } from '..';
 import { writeSync } from '../../save/write';
 import { getClamp } from '../../utils/clamp';
 import {
@@ -129,18 +130,39 @@ describe('computeConvolutionValue', () => {
       }),
     ).toBe(6.5);
   });
-  it('should throw if no clamp function', () => {
-    let image = testUtils.createGreyImage([[1, 2, 3, 4, 5, 6]]);
+});
+
+describe('rawDirectConvolution', () => {
+  it('3x3 image and kernel', () => {
+    let image = testUtils.createGreyImage([
+      [1, 1, 20],
+      [1, 1, 1],
+      [1, 1, 1],
+    ]);
     let kernel = [
       [1, 1, 1],
       [1, 1, 1],
       [1, 1, 1],
     ];
 
-    expect(() => {
-      computeConvolutionValue(0, 2, 0, image, kernel, (i) => {
-        return i;
-      });
-    }).toThrow('');
+    const expected = Float64Array.from([9, 28, 28, 9, 28, 28, 9, 9, 9]);
+    expect(rawDirectConvolution(image, kernel)).toStrictEqual(expected);
+  });
+  it('3x3 image and kernel with floats', () => {
+    let image = testUtils.createGreyImage([
+      [1, 1, 1],
+      [1, 1, 1],
+      [1, 1, 1],
+    ]);
+    let kernel = [
+      [1, 1, 1],
+      [1, 0.5, 1],
+      [1, 1, 1],
+    ];
+
+    const expected = Float64Array.from([
+      8.5, 8.5, 8.5, 8.5, 8.5, 8.5, 8.5, 8.5, 8.5,
+    ]);
+    expect(rawDirectConvolution(image, kernel)).toStrictEqual(expected);
   });
 });
