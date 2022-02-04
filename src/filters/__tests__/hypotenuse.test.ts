@@ -6,6 +6,14 @@ describe('hypotenuse', () => {
     const expected = testUtils.createGreyImage([[5, 13, 17, 25]]);
     expect(image.hypotenuse(otherImage)).toMatchImage(expected);
   });
+  it('function should be symmetrical', async () => {
+    const image = testUtils.load('opencv/test.png');
+    const otherImage = testUtils.load('opencv/testBlur.png');
+
+    expect(image.hypotenuse(otherImage)).toMatchImage(
+      otherImage.hypotenuse(image),
+    );
+  });
   it('test different size error', async () => {
     const image = testUtils.createGreyImage([[3, 8, 7]]);
     const otherImage = testUtils.createGreyImage([[4, 12, 15, 24]]);
