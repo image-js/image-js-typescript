@@ -1,5 +1,6 @@
-import { ColorDepth, IJS, ImageColorModel } from '..';
+import { IJS, ImageColorModel } from '..';
 import checkProcessable from '../utils/checkProcessable';
+import { getIndex } from '../utils/getIndex';
 import { getOutputImage } from '../utils/getOutputImage';
 
 export interface CannyEdgeOptions {
@@ -40,7 +41,7 @@ export function cannyEdgeDetector(
     brightness = image.maxValue,
   } = options;
 
-  checkProcessable(image, 'cannyEdge', {
+  checkProcessable(image, 'cannyEdgeDetector', {
     colorModel: ImageColorModel.GREY,
   });
 
@@ -54,28 +55,28 @@ export function cannyEdgeDetector(
 
   const blurred = image.gaussianBlur(gfOptions);
 
-  const gradientX = blurred.directConvolution(kernelY);-
-  const gradientY = blurred.directConvolution(kernelX);
-  const gradient = gradientY.hypotenuse(gradientX);
+  const gradientX = blurred.rawDirectConvolution(kernelY);
+  const gradientY = blurred.rawDirectConvolution(kernelX);
 
-  const nms = new IJS(width, height, {
-    colorModel: ImageColorModel.GREY,
-    depth: 32,
-  });
+  let gradient = new Float64Array(image.size);
+  for (let i = 0; i < image.size; i++) {
+    gradient[i] = Math.hypot(gradientX[i]);
+  }
 
-  const edges = new IJS(width, height, {
-    colorModel: ImageColorModel.GREY,
-    depth: 32,
-  });
+  let nonMaxSuppression = new Float64Array(image.size);
+  let edges = new Float64Array(image.size);
 
   const finalImage = getOutputImage(image, options);
 
   // Non-Maximum suppression
-  for (let i = 1; i < width - 1; i++) {
-    for (let j = 1; j < height - 1; j++) {
+  for (let column = 1; column < width - 1; column++) {
+    for (let row = 1; row < height - 1; row++) {
       let dir =
         (Math.round(
-          Math.atan2(gradientY.getValue(i, j, 0), gradientX.getValue(i, j, 0)) *
+          Math.atan2(
+            gradientY[getIndex(row, column, 0, image)],
+            gradientX[getIndex(row, column, 0, image)],
+          ) *
             (5.0 / Math.PI),
         ) +
           5) %
@@ -84,27 +85,35 @@ export function cannyEdgeDetector(
       if (
         !(
           (dir === 0 &&
-            (gradient.getValue(i, j, 0) <= gradient.getValue(i, j - 1, 0) ||
-              gradient.getValue(i, j, 0) <= gradient.getValue(i, j + 1, 0))) ||
+            (gradient[getIndex(row, column, 0, image)] <=
+              gradient[getIndex(row - 1, column, 0, image)] ||
+              gradient[getIndex(row, column, 0, image)] <=
+                gradient[getIndex(row + 1, column, 0, image)])) ||
           (dir === 1 &&
-            (gradient.getValue(i, j, 0) <= gradient.getValue(i - 1, j + 1, 0) ||
-              gradient.getValue(i, j, 0) <=
-                gradient.getValue(i + 1, j - 1, 0))) ||
+            (gradient[getIndex(row, column, 0, image)] <=
+              gradient[getIndex(row + 1, column - 1, 0, image)] ||
+              gradient[getIndex(row, column, 0, image)] <=
+                gradient[getIndex(row - 1, column + 1, 0, image)])) ||
           (dir === 2 &&
-            (gradient.getValue(i, j, 0) <= gradient.getValue(i - 1, j, 0) ||
-              gradient.getValue(i, j, 0) <= gradient.getValue(i + 1, j, 0))) ||
+            (gradient[getIndex(row, column, 0, image)] <=
+              gradient[getIndex(row, column - 1, 0, image)] ||
+              gradient[getIndex(row, column, 0, image)] <=
+                gradient[getIndex(row, column + 1, 0, image)])) ||
           (dir === 3 &&
-            (gradient.getValue(i, j, 0) <= gradient.getValue(i - 1, j - 1, 0) ||
-              gradient.getValue(i, j, 0) <= gradient.getValue(i + 1, j + 1, 0)))
+            (gradient[getIndex(row, column, 0, image)] <=
+              gradient[getIndex(row - 1, column - 1, 0, image)] ||
+              gradient[getIndex(row, column, 0, image)] <=
+                gradient[getIndex(row + 1, column + 1, 0, image)]))
         )
       ) {
-        nms.setValue(i, j, 0, gradient.getValue(i, j, 0));
+        nonMaxSuppression[getIndex(row, column, 0, image)] =
+          gradient[getIndex(row, column, 0, image)];
       }
     }
   }
 
   for (let i = 0; i < width * height; ++i) {
-    let currentNms = nms.getValueByIndex(1, 0);
+    let currentNms = nonMaxSuppression[getIndex(1, 0, 0, image)];
     let currentEdge = 0;
     if (currentNms > highThreshold) {
       currentEdge++;
@@ -114,22 +123,26 @@ export function cannyEdgeDetector(
       currentEdge++;
     }
 
-    edges.setValueByIndex(i, 0, currentEdge);
+    edges[getIndex(i, 0, 0, image)] = currentEdge;
   }
 
   // Hysteresis: first pass
-  let currentPixels = [];
-  for (let i = 1; i < width - 1; ++i) {
-    for (let j = 1; j < height - 1; ++j) {
-      if (edges.getValue(i, j, 0) !== 1) {
+  let currentPixels: number[][] = [];
+  for (let column = 1; column < width - 1; ++column) {
+    for (let row = 1; row < height - 1; ++row) {
+      if (edges[getIndex(row, column, 0, image)] !== 1) {
         continue;
       }
 
-      outer: for (let k = i - 1; k < i + 2; ++k) {
-        for (let l = j - 1; l < j + 2; ++l) {
-          if (edges.getValue(k, l, 0) === 2) {
-            currentPixels.push([i, j]);
-            finalImage.setValue(i, j, 0, brightness);
+      outer: for (
+        let hystColumn = column - 1;
+        hystColumn < column + 2;
+        ++hystColumn
+      ) {
+        for (let hystRow = row - 1; hystRow < row + 2; ++hystRow) {
+          if (edges[getIndex(hystRow, hystColumn, 0, image)] === 2) {
+            currentPixels.push([column, row]);
+            finalImage.setValue(row, column, 0, brightness);
             break outer;
           }
         }
@@ -149,7 +162,8 @@ export function cannyEdgeDetector(
           let row = currentPixel[0] + j;
           let col = currentPixel[1] + k;
           if (
-            edges.getValue(row, col, 0) === 1 &&
+            // there could be an error here
+            edges[getIndex(row, col, 0, image)] === 1 &&
             finalImage.getValue(row, col, 0) === 0
           ) {
             newPixels.push([row, col]);

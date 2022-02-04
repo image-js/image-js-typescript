@@ -6,6 +6,7 @@ import { Matrix } from 'ml-matrix';
 
 import { IJS } from '../IJS';
 import { getClamp, ClampFunction } from '../utils/clamp';
+import { getIndex } from '../utils/getIndex';
 import { getOutputImage } from '../utils/getOutputImage';
 import {
   BorderType,
@@ -76,7 +77,7 @@ export function rawDirectConvolution(
   for (let channel = 0; channel < image.channels; channel++) {
     for (let row = 0; row < image.height; row++) {
       for (let column = 0; column < image.width; column++) {
-        let index = (row * image.width + column) * image.channels + channel;
+        let index = getIndex(row, column, channel, image);
         result[index] = computeConvolutionValue(
           column,
           row,

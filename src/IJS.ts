@@ -10,6 +10,7 @@ import {
   subtractImage,
   SubtractImageOptions,
   HypotenuseOptions,
+  rawDirectConvolution,
 } from './filters';
 import { hypotenuse } from './filters/hypotenuse';
 import { invert, InvertOptions } from './filters/invert';
@@ -488,6 +489,20 @@ export class IJS {
     options?: ConvolutionOptions,
   ): IJS {
     return directConvolution(this, kernel, options);
+  }
+
+  /**
+   * Compute direct convolution of an image and return an array with the raw values.
+   *
+   * @param kernel - Kernel used for the convolution.
+   * @param options - Convolution options.
+   * @returns Array with the raw convoluted values.
+   */
+  public rawDirectConvolution(
+    kernel: number[][],
+    options?: ConvolutionOptions,
+  ): Float64Array {
+    return rawDirectConvolution(this, kernel, options);
   }
 
   public separableConvolution(
