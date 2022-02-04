@@ -4,7 +4,6 @@ import {
 } from 'ml-convolution';
 import { Matrix } from 'ml-matrix';
 
-import { ImageDataArray } from '..';
 import { IJS } from '../IJS';
 import { getClamp, ClampFunction } from '../utils/clamp';
 import { getOutputImage } from '../utils/getOutputImage';
@@ -55,7 +54,7 @@ export function directConvolution(
             image,
             kernel,
             interpolateBorder,
-            clamp,
+            { clamp },
           ),
         );
       }
@@ -282,14 +281,14 @@ export interface ComputeConvolutionValueOptions {
  * @param options - Compute convolution value options.
  * @returns The convoluted value.
  */
-function computeConvolutionValue(
+export function computeConvolutionValue(
   column: number,
   row: number,
   channel: number,
   image: IJS,
   kernel: number[][],
   interpolateBorder: BorderInterpolationFunction,
-  options: ComputeConvolutionValueOptions,
+  options: ComputeConvolutionValueOptions = {},
 ): number {
   let { returnRawValue = false, clamp } = options;
 
