@@ -1,11 +1,13 @@
 import { ColorDepth, IJS, ImageColorModel } from '..';
 import checkProcessable from '../utils/checkProcessable';
+import { getOutputImage } from '../utils/getOutputImage';
 
 export interface CannyEdgeOptions {
-  lowThreshold: number;
-  highThreshold: number;
-  gaussianBlur: number;
-  brightness: number;
+  lowThreshold?: number;
+  highThreshold?: number;
+  gaussianBlur?: number;
+  brightness?: number;
+  out?: IJS;
 }
 
 const kernelX = [
@@ -20,11 +22,6 @@ const kernelY = [
   [+1, +2, +1],
 ];
 
-const convOptions = {
-  bitDepth: 32,
-  mode: 'periodic',
-};
-
 /**
  * Apply Canny edge detection to an image.
  *
@@ -32,7 +29,10 @@ const convOptions = {
  * @param options - Canny edge detection options.
  * @returns The processed image.
  */
-export function cannyEdgeDetector(image: IJS, options: CannyEdgeOptions): IJS {
+export function cannyEdgeDetector(
+  image: IJS,
+  options: CannyEdgeOptions = {},
+): IJS {
   const {
     lowThreshold = 10,
     highThreshold = 30,
@@ -41,9 +41,7 @@ export function cannyEdgeDetector(image: IJS, options: CannyEdgeOptions): IJS {
   } = options;
 
   checkProcessable(image, 'cannyEdge', {
-    bitDepth: ColorDepth.UINT8,
-    channels: 1,
-    components: 1,
+    colorModel: ImageColorModel.GREY,
   });
 
   const width = image.width;
@@ -56,8 +54,8 @@ export function cannyEdgeDetector(image: IJS, options: CannyEdgeOptions): IJS {
 
   const blurred = image.gaussianBlur(gfOptions);
 
-  const gradientX = blurred.directConvolution(kernelY, convOptions);
-  const gradientY = blurred.directConvolution(kernelX, convOptions);
+  const gradientX = blurred.directConvolution(kernelY);-
+  const gradientY = blurred.directConvolution(kernelX);
   const gradient = gradientY.hypotenuse(gradientX);
 
   const nms = new IJS(width, height, {
@@ -70,9 +68,7 @@ export function cannyEdgeDetector(image: IJS, options: CannyEdgeOptions): IJS {
     depth: 32,
   });
 
-  const finalImage = new IJS(width, height, {
-    colorModel: ImageColorModel.GREY,
-  });
+  const finalImage = getOutputImage(image, options);
 
   // Non-Maximum suppression
   for (let i = 1; i < width - 1; i++) {
