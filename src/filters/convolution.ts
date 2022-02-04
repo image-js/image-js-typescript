@@ -67,12 +67,14 @@ export function directConvolution(
 
 /**
  * @param image
+ * @param kernel
  * @param options
  */
 export function rawDirectConvolution(
   image: IJS,
+  kernel: number[][],
   options: ConvolutionOptions,
-): Float64Array[] {
+): Float64Array {
   const { borderType = BorderType.REFLECT_101, borderValue = 0 } = options;
   const interpolateBorder = getBorderInterpolation(borderType, borderValue);
 
@@ -81,19 +83,15 @@ export function rawDirectConvolution(
   for (let channel = 0; channel < image.channels; channel++) {
     for (let column = 0; column < image.width; column++) {
       for (let row = 0; row < image.height; row++) {
-        newImage.setValue(
-          row,
+        let index = row * column * image.channels + channel;
+        result[index] = computeConvolutionValue(
           column,
+          row,
           channel,
-          computeConvolutionValue(
-            column,
-            row,
-            channel,
-            image,
-            kernel,
-            interpolateBorder,
-            clamp,
-          ),
+          image,
+          kernel,
+          interpolateBorder,
+          { returnRawValue: true },
         );
       }
     }
@@ -199,7 +197,7 @@ export function separableConvolution(
             image,
             kernel,
             interpolateBorder,
-            clamp,
+            { clamp },
           ),
         );
         newImage.setValueByIndex(
@@ -212,7 +210,7 @@ export function separableConvolution(
             image,
             kernel,
             interpolateBorder,
-            clamp,
+            { clamp },
           ),
         );
       }
@@ -238,7 +236,7 @@ export function separableConvolution(
             image,
             kernel,
             interpolateBorder,
-            clamp,
+            { clamp },
           ),
         );
         newImage.setValueByIndex(
@@ -251,7 +249,7 @@ export function separableConvolution(
             image,
             kernel,
             interpolateBorder,
-            clamp,
+            { clamp },
           ),
         );
       }
@@ -265,7 +263,7 @@ export interface ComputeConvolutionValueOptions {
   /**
    * Specify wether the return value should not be clamped and rounded.
    */
-  returnRawValue: boolean;
+  returnRawValue?: boolean;
   /**
    * If the value has to be clamped, specify the clamping function.
    */
