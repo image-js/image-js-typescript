@@ -16,6 +16,8 @@ import { invert, InvertOptions } from './filters/invert';
 import {
   bottomHat,
   BottomHatOptions,
+  cannyEdgeDetector,
+  CannyEdgeOptions,
   close,
   CloseOptions,
   dilate,
@@ -616,6 +618,16 @@ export class IJS {
    */
   public morphologicalGradient(options?: MorphologicalGradientOptions): IJS {
     return morphologicalGradient(this, options);
+  }
+
+  /**
+   * Apply Canny edge detection to an image.
+   *
+   * @param options - Canny edge detection options.
+   * @returns The processed image.
+   */
+  public cannyEdgeDetector(options?: CannyEdgeOptions): IJS {
+    return cannyEdgeDetector(this, options);
   }
 }
 
