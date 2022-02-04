@@ -35,29 +35,20 @@ export function directConvolution(
   options: ConvolutionOptions = {},
 ): IJS {
   const { borderType = BorderType.REFLECT_101, borderValue = 0 } = options;
-  const interpolateBorder = getBorderInterpolation(borderType, borderValue);
+
+  const convolutedData = rawDirectConvolution(image, kernel, {
+    borderType,
+    borderValue,
+  });
 
   const newImage = getOutputImage(image, options);
   const clamp = getClamp(newImage);
 
-  for (let channel = 0; channel < image.channels; channel++) {
-    for (let column = 0; column < image.width; column++) {
-      for (let row = 0; row < image.height; row++) {
-        newImage.setValue(
-          row,
-          column,
-          channel,
-          computeConvolutionValue(
-            column,
-            row,
-            channel,
-            image,
-            kernel,
-            interpolateBorder,
-            { clamp },
-          ),
-        );
-      }
+  for (let i = 0; i < image.size; i++) {
+    for (let channel = 0; channel < image.channels; channel++) {
+      let dataIndex = i * image.channels + channel;
+      let newValue = round(clamp(convolutedData[dataIndex]));
+      newImage.setValueByIndex(i, channel, newValue);
     }
   }
 
