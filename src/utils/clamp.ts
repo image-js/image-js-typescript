@@ -3,7 +3,10 @@ import { IJS } from '../IJS';
 export type ClampFunction = (value: number) => number;
 
 /**
- * @param image
+ * Get the clamp function for an image (depends on the image bit depth)
+ *
+ * @param image - The image for which the clamp function is needed.
+ * @returns The clamp function.
  */
 export function getClamp(image: IJS): ClampFunction {
   if (image.maxValue === 255) {
@@ -14,6 +17,7 @@ export function getClamp(image: IJS): ClampFunction {
   }
   throw new Error(`unknown maxValue: ${image.maxValue}`);
 }
+
 /**
  * Clamp value for 8-bit images.
  *
