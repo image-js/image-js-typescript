@@ -5,10 +5,6 @@ import { separableConvolution } from './convolution';
 
 interface GaussianBlurBaseOptions {
   /**
-   * Size of the kernel
-   */
-  size: number;
-  /**
    * Specify how borders must be handled.
    */
   borderType?: BorderType;
@@ -19,6 +15,10 @@ interface GaussianBlurBaseOptions {
 }
 
 export interface GaussianBlurSigmaOptions extends GaussianBlurBaseOptions {
+  /**
+   * Size of the kernel
+   */
+  size?: number;
   /**
    * The standard deviation. Specifies the width of the gaussian function in the case where it is the same for x and y.
    */
@@ -34,6 +34,14 @@ export interface GaussianBlurXYOptions extends GaussianBlurBaseOptions {
    * The standard deviation for the y axis. Specifies the width of the gaussian function along y.
    */
   sigmaY: number;
+  /**
+   * Size of the X axis kernel
+   */
+  sizeX?: number;
+  /**
+   * Size of the Y axis kernel
+   */
+  sizeY?: number;
 }
 
 export type GaussianBlurOptions =
@@ -56,7 +64,7 @@ function getRadius(size: number): number {
  */
 export function gaussianBlur(image: IJS, options: GaussianBlurOptions): IJS {
   if ('sigma' in options) {
-    const { size, sigma } = options;
+    const { sigma, size = getSize(sigma) } = options;
     const radius = getRadius(size);
     const kernel = getKernel(radius, sigma);
     console.log({ kernel });
@@ -64,11 +72,18 @@ export function gaussianBlur(image: IJS, options: GaussianBlurOptions): IJS {
       borderType: options.borderType,
     });
   } else {
-    getRadius(options.size);
-    const { sigmaX, sigmaY } = options;
-    const radius = getRadius(options.size);
-    const kernelX = getKernel(radius, sigmaX);
-    const kernelY = getKernel(radius, sigmaY);
+    const {
+      sigmaX,
+      sigmaY,
+      sizeX = getSize(sigmaX),
+      sizeY = getSize(sigmaY),
+    } = options;
+
+    const radiusX = getRadius(sizeX);
+    const radiusY = getRadius(sizeY);
+
+    const kernelX = getKernel(radiusX, sigmaX);
+    const kernelY = getKernel(radiusY, sigmaY);
     return separableConvolution(image, kernelX, kernelY, {
       borderType: options.borderType,
     });
@@ -92,4 +107,8 @@ function getKernel(radius: number, sigma: number): number[] {
     kernel[i] /= sum;
   }
   return kernel;
+}
+
+function getSize(sigma: number): number {
+  return 2 * Math.ceil(2 * sigma) + 1;
 }

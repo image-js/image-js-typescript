@@ -13,6 +13,15 @@ describe('gaussianBlur', () => {
     const options = { size: 5, sigma: 1 };
 
     let result = image.gaussianBlur(options);
+    console.log(result);
+
+    expect(result).toMatchImageData([
+      [3, 7, 11, 7, 3],
+      [7, 15, 25, 15, 7],
+      [11, 25, 41, 25, 11],
+      [7, 15, 25, 15, 7],
+      [3, 7, 11, 7, 3],
+    ]);
 
     let sum = 0;
 
@@ -21,7 +30,7 @@ describe('gaussianBlur', () => {
         sum += result.getValue(i, j, 0);
       }
     }
-    // todo: this is expected to return 255!
+    // todo: this is expected to return 255! -> refer to #47
     expect(sum).toBe(313);
   });
 
