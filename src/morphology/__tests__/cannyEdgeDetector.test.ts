@@ -1,10 +1,10 @@
 describe('cannyEdgeDetector', () => {
   it('5x5 grey image', () => {
     const image = testUtils.createGreyImage([
-      [0, 0, 0, 0, 50, 0, 0],
-      [0, 0, 0, 50, 50, 50, 0],
-      [0, 0, 0, 50, 50, 50, 0],
-      [0, 0, 0, 50, 50, 50, 0],
+      [0, 0, 0, 0, 255, 0, 0],
+      [0, 0, 0, 250, 50, 50, 0],
+      [0, 0, 0, 250, 50, 50, 0],
+      [0, 0, 0, 250, 50, 50, 0],
       [0, 0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0, 0],
@@ -21,7 +21,7 @@ describe('cannyEdgeDetector', () => {
     ]);
 
     let result = image.cannyEdgeDetector();
-    console.log(result);
+    console.log({ cannyEgeResult: result });
 
     expect(result).toMatchMask(expected);
   });

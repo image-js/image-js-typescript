@@ -4,10 +4,23 @@ import { getIndex } from '../utils/getIndex';
 import { imageToOutputMask } from '../utils/getOutputImage';
 
 export interface CannyEdgeOptions {
+  /**
+   * Lower threshold of the gaussian blur (indicates the weak edges to discard).
+   */
   lowThreshold?: number;
+  /**
+   * Higher threshold of the gaussian blur (indicates the strong edges to keep).
+   */
   highThreshold?: number;
+  /**
+   * Standard deviation of the gaussian blur (sigma).
+   *
+   */
   gaussianBlur?: number;
-  out?: IJS;
+  /**
+   * Image to which the resulting image has to be put.
+   */
+  out?: Mask;
 }
 
 const kernelX = [
@@ -51,14 +64,17 @@ export function cannyEdgeDetector(
   }
 
   const blurred = image.gaussianBlur(gfOptions);
-
+  console.log({ blurred });
   const gradientX = blurred.rawDirectConvolution(kernelY);
+  console.log({ gradientX });
   const gradientY = blurred.rawDirectConvolution(kernelX);
-
+  console.log({ gradientY });
   let gradient = new Float64Array(image.size);
   for (let i = 0; i < image.size; i++) {
     gradient[i] = Math.hypot(gradientX[i]);
   }
+
+  console.log({ gradient });
 
   let nonMaxSuppression = new Float64Array(image.size);
   let edges = new Float64Array(image.size);
@@ -109,8 +125,11 @@ export function cannyEdgeDetector(
     }
   }
 
+  console.log({ nonMaxSuppression });
+
   for (let i = 0; i < width * height; ++i) {
-    let currentNms = nonMaxSuppression[getIndex(1, 0, 0, image)];
+    // a bug might be here
+    let currentNms = nonMaxSuppression[i];
     let currentEdge = 0;
     if (currentNms > highThreshold) {
       currentEdge++;
