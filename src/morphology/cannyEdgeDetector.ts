@@ -1,13 +1,12 @@
-import { IJS, ImageColorModel } from '..';
+import { IJS, ImageColorModel, Mask } from '..';
 import checkProcessable from '../utils/checkProcessable';
 import { getIndex } from '../utils/getIndex';
-import { getOutputImage } from '../utils/getOutputImage';
+import { imageToOutputMask } from '../utils/getOutputImage';
 
 export interface CannyEdgeOptions {
   lowThreshold?: number;
   highThreshold?: number;
   gaussianBlur?: number;
-  brightness?: number;
   out?: IJS;
 }
 
@@ -33,13 +32,8 @@ const kernelY = [
 export function cannyEdgeDetector(
   image: IJS,
   options: CannyEdgeOptions = {},
-): IJS {
-  const {
-    lowThreshold = 10,
-    highThreshold = 30,
-    gaussianBlur = 1.1,
-    brightness = image.maxValue,
-  } = options;
+): Mask {
+  const { lowThreshold = 10, highThreshold = 30, gaussianBlur = 1.1 } = options;
 
   checkProcessable(image, 'cannyEdgeDetector', {
     colorModel: ImageColorModel.GREY,
@@ -52,6 +46,9 @@ export function cannyEdgeDetector(
     sigma: gaussianBlur,
     size: 7,
   };
+  if (image.height < gfOptions.size || image.width < gfOptions.size) {
+    throw new Error('cannyEdge: image is too small to be processed');
+  }
 
   const blurred = image.gaussianBlur(gfOptions);
 
@@ -66,7 +63,7 @@ export function cannyEdgeDetector(
   let nonMaxSuppression = new Float64Array(image.size);
   let edges = new Float64Array(image.size);
 
-  const finalImage = getOutputImage(image, options);
+  const finalImage = imageToOutputMask(image, options);
 
   // Non-Maximum suppression
   for (let column = 1; column < width - 1; column++) {
@@ -117,7 +114,7 @@ export function cannyEdgeDetector(
     let currentEdge = 0;
     if (currentNms > highThreshold) {
       currentEdge++;
-      finalImage.setValueByIndex(i, 0, brightness);
+      finalImage.setValueByIndex(i, 0, 1);
     }
     if (currentNms > lowThreshold) {
       currentEdge++;
@@ -142,7 +139,7 @@ export function cannyEdgeDetector(
         for (let hystRow = row - 1; hystRow < row + 2; ++hystRow) {
           if (edges[getIndex(hystRow, hystColumn, 0, image)] === 2) {
             currentPixels.push([column, row]);
-            finalImage.setValue(row, column, 0, brightness);
+            finalImage.setValue(row, column, 0, 1);
             break outer;
           }
         }
@@ -167,7 +164,7 @@ export function cannyEdgeDetector(
             finalImage.getValue(row, col, 0) === 0
           ) {
             newPixels.push([row, col]);
-            finalImage.setValue(row, col, 0, brightness);
+            finalImage.setValue(row, col, 0, 1);
           }
         }
       }
