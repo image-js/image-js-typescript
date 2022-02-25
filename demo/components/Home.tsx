@@ -1,4 +1,4 @@
-import { IJS, ImageColorModel } from '../../src';
+import { convertBinaryToGrey, IJS, ImageColorModel } from '../../src';
 
 import CameraSelector from './CameraSelector';
 import CameraTransform from './CameraTransform';
@@ -22,8 +22,13 @@ function testTransform(image: IJS) {
   //   rowOffset: ((Date.now() / 10) >>> 0) % 500,
   //   out: result,
   // });
-
-  let result = image.cannyEdgeDetector();
+  let result = image.convertColor(ImageColorModel.GREY);
+  result = result.gaussianBlur({ size: 7, sigma: 4 });
+  const edges = result.cannyEdgeDetector({
+    lowThreshold: 0.04,
+    highThreshold: 0.06,
+  });
+  convertBinaryToGrey(edges, result);
   return result;
 }
 
