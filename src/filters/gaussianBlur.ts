@@ -4,6 +4,9 @@ import { BorderType } from '../utils/interpolateBorder';
 import { separableConvolution } from './convolution';
 
 interface GaussianBlurBaseOptions {
+  /**
+   * Size of the kernel
+   */
   size: number;
   /**
    * Specify how borders must be handled.
@@ -16,11 +19,20 @@ interface GaussianBlurBaseOptions {
 }
 
 export interface GaussianBlurSigmaOptions extends GaussianBlurBaseOptions {
+  /**
+   * The standard deviation. Specifies the width of the gaussian function in the case where it is the same for x and y.
+   */
   sigma: number;
 }
 
 export interface GaussianBlurXYOptions extends GaussianBlurBaseOptions {
+  /**
+   * The standard deviation for the x axis. Specifies the width of the gaussian function along x.
+   */
   sigmaX: number;
+  /**
+   * The standard deviation for the y axis. Specifies the width of the gaussian function along y.
+   */
   sigmaY: number;
 }
 
@@ -47,6 +59,7 @@ export function gaussianBlur(image: IJS, options: GaussianBlurOptions): IJS {
     const { size, sigma } = options;
     const radius = getRadius(size);
     const kernel = getKernel(radius, sigma);
+    console.log({ kernel });
     return separableConvolution(image, kernel, kernel, {
       borderType: options.borderType,
     });

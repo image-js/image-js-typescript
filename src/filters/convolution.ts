@@ -26,7 +26,7 @@ export interface ConvolutionOptions {
  * Apply a direct convolution on an image using the specified kernel. The convolution corresponds of a weighted average of the surrounding pixels, the weights being defined in the kernel.
  *
  * @param image - The image to process.
- * @param kernel - Kernel to use for the convolution. Should be a matrix with odd number of rows and columns.
+ * @param kernel - Kernel to use for the convolution. Should be a 2D matrix with odd number of rows and columns.
  * @param options - Convolution options.
  * @returns The convoluted image.
  */
@@ -60,7 +60,7 @@ export function directConvolution(
  * Compute direct convolution of an image and return an array with the raw values.
  *
  * @param image - Image to process.
- * @param kernel - Kernel used for the convolution.
+ * @param kernel - 2D kernel used for the convolution.
  * @param options - Convolution options.
  * @returns Array with the raw convoluted values.
  */
@@ -95,10 +95,13 @@ export function rawDirectConvolution(
 }
 
 /**
- * @param image
- * @param kernelX
- * @param kernelY
- * @param options
+ * Compute the separable convolution of an image.
+ *
+ * @param image - Image to convolute.
+ * @param kernelX - Kernel along x axis.
+ * @param kernelY - Kernel along y axis.
+ * @param options - Convolution options.
+ * @returns The convoluted image.
  */
 export function separableConvolution(
   image: IJS,
