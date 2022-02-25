@@ -1,4 +1,7 @@
+import Matrix from 'ml-matrix';
+
 import { IJS, ImageColorModel, Mask } from '..';
+import { GaussianBlurOptions } from '../filters';
 import checkProcessable from '../utils/checkProcessable';
 import { getIndex } from '../utils/getIndex';
 import { imageToOutputMask } from '../utils/getOutputImage';
@@ -9,14 +12,14 @@ export interface CannyEdgeOptions {
    */
   lowThreshold?: number;
   /**
-   * Higher threshold of the gaussian blur (indicates the strong edges to keep).
+   * Higher threshold of the gaussian blur (indicates the strong edges to keep). Value must be between 0 and 1.
    */
   highThreshold?: number;
   /**
-   * Standard deviation of the gaussian blur (sigma).
+   * Standard deviation of the gaussian blur (sigma). Value must be between 0 and 1.
    *
    */
-  gaussianBlur?: number;
+  gaussianBlurOptions?: GaussianBlurOptions;
   /**
    * Image to which the resulting image has to be put.
    */
@@ -46,7 +49,14 @@ export function cannyEdgeDetector(
   image: IJS,
   options: CannyEdgeOptions = {},
 ): Mask {
-  const { lowThreshold = 10, highThreshold = 30, gaussianBlur = 1.1 } = options;
+  const {
+    lowThreshold = 0.04,
+    highThreshold = 0.1,
+    gaussianBlurOptions = { sigma: 1 },
+  } = options;
+
+  const minValue = lowThreshold * image.maxValue;
+  const maxValue = highThreshold * image.maxValue;
 
   checkProcessable(image, 'cannyEdgeDetector', {
     colorModel: ImageColorModel.GREY,
@@ -55,26 +65,17 @@ export function cannyEdgeDetector(
   const width = image.width;
   const height = image.height;
 
-  const gfOptions = {
-    sigma: gaussianBlur,
-    size: 7,
-  };
-  if (image.height < gfOptions.size || image.width < gfOptions.size) {
-    throw new Error('cannyEdge: image is too small to be processed');
-  }
-
-  const blurred = image.gaussianBlur(gfOptions);
+  const blurred = image.gaussianBlur(gaussianBlurOptions);
   console.log({ blurred });
+
   const gradientX = blurred.rawDirectConvolution(kernelY);
-  console.log({ gradientX });
   const gradientY = blurred.rawDirectConvolution(kernelX);
-  console.log({ gradientY });
   let gradient = new Float64Array(image.size);
   for (let i = 0; i < image.size; i++) {
     gradient[i] = Math.hypot(gradientX[i]);
   }
 
-  console.log({ gradient });
+  printArray(gradient);
 
   let nonMaxSuppression = new Float64Array(image.size);
   let edges = new Float64Array(image.size);
@@ -84,35 +85,35 @@ export function cannyEdgeDetector(
   // Non-Maximum suppression
   for (let column = 1; column < width - 1; column++) {
     for (let row = 1; row < height - 1; row++) {
-      let dir =
+      let direction =
         (Math.round(
           Math.atan2(
             gradientY[getIndex(row, column, 0, image)],
             gradientX[getIndex(row, column, 0, image)],
           ) *
-            (5.0 / Math.PI),
+            (4 / Math.PI),
         ) +
-          5) %
-        5;
+          4) %
+        4;
 
       if (
         !(
-          (dir === 0 &&
+          (direction === 0 &&
             (gradient[getIndex(row, column, 0, image)] <=
               gradient[getIndex(row - 1, column, 0, image)] ||
               gradient[getIndex(row, column, 0, image)] <=
                 gradient[getIndex(row + 1, column, 0, image)])) ||
-          (dir === 1 &&
+          (direction === 1 &&
             (gradient[getIndex(row, column, 0, image)] <=
               gradient[getIndex(row + 1, column - 1, 0, image)] ||
               gradient[getIndex(row, column, 0, image)] <=
                 gradient[getIndex(row - 1, column + 1, 0, image)])) ||
-          (dir === 2 &&
+          (direction === 2 &&
             (gradient[getIndex(row, column, 0, image)] <=
               gradient[getIndex(row, column - 1, 0, image)] ||
               gradient[getIndex(row, column, 0, image)] <=
                 gradient[getIndex(row, column + 1, 0, image)])) ||
-          (dir === 3 &&
+          (direction === 3 &&
             (gradient[getIndex(row, column, 0, image)] <=
               gradient[getIndex(row - 1, column - 1, 0, image)] ||
               gradient[getIndex(row, column, 0, image)] <=
@@ -124,18 +125,17 @@ export function cannyEdgeDetector(
       }
     }
   }
-
-  console.log({ nonMaxSuppression });
+  printArray(nonMaxSuppression);
 
   for (let i = 0; i < width * height; ++i) {
     // a bug might be here
     let currentNms = nonMaxSuppression[i];
     let currentEdge = 0;
-    if (currentNms > highThreshold) {
+    if (currentNms > maxValue) {
       currentEdge++;
       finalImage.setValueByIndex(i, 0, 1);
     }
-    if (currentNms > lowThreshold) {
+    if (currentNms > minValue) {
       currentEdge++;
     }
 
@@ -176,14 +176,14 @@ export function cannyEdgeDetector(
             continue;
           }
           let row = currentPixel[0] + j;
-          let col = currentPixel[1] + k;
+          let column = currentPixel[1] + k;
           if (
             // there could be an error here
-            edges[getIndex(row, col, 0, image)] === 1 &&
-            finalImage.getValue(row, col, 0) === 0
+            edges[getIndex(row, column, 0, image)] === 1 &&
+            finalImage.getValue(row, column, 0) === 0
           ) {
-            newPixels.push([row, col]);
-            finalImage.setValue(row, col, 0, 1);
+            newPixels.push([row, column]);
+            finalImage.setValue(row, column, 0, 1);
           }
         }
       }
@@ -192,4 +192,10 @@ export function cannyEdgeDetector(
   }
 
   return finalImage;
+
+  function printArray(array: Float64Array): void {
+    // @ts-expect-error
+    const matrix = Matrix.from1DArray(height, width, array);
+    console.log(matrix);
+  }
 }
