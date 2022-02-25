@@ -1,4 +1,4 @@
-import Matrix from 'ml-matrix';
+import { Matrix } from 'ml-matrix';
 
 import { IJS, ImageColorModel, Mask } from '..';
 import { GaussianBlurOptions } from '../filters';
@@ -66,7 +66,6 @@ export function cannyEdgeDetector(
   const height = image.height;
 
   const blurred = image.gaussianBlur(gaussianBlurOptions);
-  console.log({ blurred });
 
   const gradientX = blurred.rawDirectConvolution(kernelY);
   const gradientY = blurred.rawDirectConvolution(kernelX);
@@ -74,8 +73,6 @@ export function cannyEdgeDetector(
   for (let i = 0; i < image.size; i++) {
     gradient[i] = Math.hypot(gradientX[i]);
   }
-
-  printArray(gradient);
 
   let nonMaxSuppression = new Float64Array(image.size);
   let edges = new Float64Array(image.size);
@@ -125,7 +122,6 @@ export function cannyEdgeDetector(
       }
     }
   }
-  printArray(nonMaxSuppression);
 
   for (let i = 0; i < width * height; ++i) {
     // a bug might be here
@@ -139,7 +135,7 @@ export function cannyEdgeDetector(
       currentEdge++;
     }
 
-    edges[getIndex(i, 0, 0, image)] = currentEdge;
+    edges[i] = currentEdge;
   }
 
   // Hysteresis: first pass
