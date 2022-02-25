@@ -67,7 +67,6 @@ export function gaussianBlur(image: IJS, options: GaussianBlurOptions): IJS {
     const { sigma, size = getSize(sigma) } = options;
     const radius = getRadius(size);
     const kernel = getKernel(radius, sigma);
-    console.log({ kernel });
     return separableConvolution(image, kernel, kernel, {
       borderType: options.borderType,
     });
