@@ -641,7 +641,7 @@ export class IJS {
    * @param options - Canny edge detection options.
    * @returns The processed image.
    */
-  public cannyEdgeDetector(options?: CannyEdgeOptions): IJS {
+  public cannyEdgeDetector(options?: CannyEdgeOptions): Mask {
     return cannyEdgeDetector(this, options);
   }
 }
