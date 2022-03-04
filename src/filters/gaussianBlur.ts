@@ -50,7 +50,9 @@ export type GaussianBlurOptions =
 
 function getRadius(size: number): number {
   if (size % 2 !== 1 || size < 0) {
-    throw new Error('gaussian blur size must be positive and odd');
+    throw new Error(
+      'gaussianBlur: gaussian blur size must be positive and odd',
+    );
   }
   return (size - 1) / 2;
 }
