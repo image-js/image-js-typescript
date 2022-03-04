@@ -1,5 +1,5 @@
 import { getDirection } from '..';
-import { ImageColorModel, writeSync } from '../..';
+import { ImageColorModel } from '../..';
 
 describe('cannyEdgeDetector', () => {
   it('5x5 grey image with dot', () => {
