@@ -1,11 +1,17 @@
-import { convertBinaryToGrey, IJS, ImageColorModel } from '../../src';
+import {
+  ColorDepth,
+  convertBinaryToGrey,
+  convertColor,
+  IJS,
+  ImageColorModel,
+} from '../../src';
 
 import CameraSelector from './CameraSelector';
 import CameraTransform from './CameraTransform';
 import Container from './Container';
 
 function testTransform(image: IJS) {
-  return testCannyEdge(image);
+  return testCannyEdgeOverlay(image);
 }
 
 export default function Home() {
@@ -42,9 +48,21 @@ function testCannyEdge(image: IJS): IJS {
   let result = image.convertColor(ImageColorModel.GREY);
   result = result.gaussianBlur({ size: 7, sigma: 4 });
   const edges = result.cannyEdgeDetector({
-    lowThreshold: 0.02,
+    lowThreshold: 0.08,
     highThreshold: 0.1,
   });
   convertBinaryToGrey(edges, result);
   return result;
+}
+function testCannyEdgeOverlay(image: IJS): IJS {
+  let result = image.convertColor(ImageColorModel.GREY);
+  const edges = result.cannyEdgeDetector({
+    lowThreshold: 0.08,
+    highThreshold: 0.1,
+  });
+  let greyEdges = new IJS(image.width, image.height);
+  convertBinaryToGrey(edges, greyEdges);
+  let greyImage = convertColor(image, ImageColorModel.GREY);
+  greyEdges.copyTo(greyImage);
+  return greyImage;
 }
