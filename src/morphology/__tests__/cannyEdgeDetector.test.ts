@@ -1,12 +1,13 @@
 import { getDirection } from '..';
+import { ImageColorModel } from '../..';
 
 describe('cannyEdgeDetector', () => {
-  it('5x5 grey image', () => {
+  it('5x5 grey image with dot', () => {
     const image = testUtils.createGreyImage([
       [0, 0, 0, 0, 0],
-      [0, 50, 50, 50, 0],
-      [0, 50, 0, 50, 0],
-      [0, 50, 50, 50, 0],
+      [0, 0, 0, 0, 0],
+      [0, 0, 250, 0, 0],
+      [0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0],
     ]);
 
@@ -19,12 +20,71 @@ describe('cannyEdgeDetector', () => {
     ]);
 
     let result = image.cannyEdgeDetector({
-      lowThreshold: 0.4,
-      highThreshold: 0.8,
+      lowThreshold: 0.08,
+      highThreshold: 0.1,
+      hysteresis: false,
+      gaussianBlurOptions: { sigma: 1, size: 1 },
     });
-    console.log({ cannyEdgeResult: result });
 
     expect(result).toMatchMask(expected);
+  });
+  it('5x5 grey image with circle', () => {
+    const image = testUtils.createGreyImage([
+      [0, 0, 0, 0, 0],
+      [0, 200, 200, 200, 0],
+      [0, 200, 0, 200, 0],
+      [0, 200, 200, 200, 0],
+      [0, 0, 0, 0, 0],
+    ]);
+
+    const expected = testUtils.createMask([
+      [0, 0, 0, 0, 0],
+      [0, 1, 1, 1, 0],
+      [0, 1, 0, 1, 0],
+      [0, 1, 1, 1, 0],
+      [0, 0, 0, 0, 0],
+    ]);
+
+    let result = image.cannyEdgeDetector({
+      lowThreshold: 0.08,
+      highThreshold: 0.1,
+      hysteresis: false,
+      gaussianBlurOptions: { sigma: 1, size: 1 },
+    });
+
+    expect(result).toMatchMask(expected);
+  });
+
+  it('5x5 grey image with filled circle', () => {
+    const image = testUtils.createGreyImage([
+      [0, 0, 0, 0, 0],
+      [0, 200, 200, 200, 0],
+      [0, 200, 200, 200, 0],
+      [0, 200, 200, 200, 0],
+      [0, 0, 0, 0, 0],
+    ]);
+
+    const expected = testUtils.createMask([
+      [0, 0, 0, 0, 0],
+      [0, 1, 1, 1, 0],
+      [0, 1, 0, 1, 0],
+      [0, 1, 1, 1, 0],
+      [0, 0, 0, 0, 0],
+    ]);
+
+    let result = image.cannyEdgeDetector({
+      lowThreshold: 0.08,
+      highThreshold: 0.1,
+      hysteresis: false,
+      gaussianBlurOptions: { sigma: 1, size: 1 },
+    });
+    expect(result).toMatchMask(expected);
+  });
+  it('snapshot of an image', () => {
+    const image = testUtils
+      .load('various/alphabet.jpg')
+      .convertColor(ImageColorModel.GREY);
+    expect(image.cannyEdgeDetector()).toMatchSnapshot();
   });
 });
 

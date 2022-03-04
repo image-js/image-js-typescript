@@ -72,6 +72,7 @@ export function cannyEdgeDetector(
 
   const gradientX = blurred.rawDirectConvolution(kernelY);
   const gradientY = blurred.rawDirectConvolution(kernelX);
+
   let gradient = new Float64Array(image.size);
   for (let i = 0; i < image.size; i++) {
     gradient[i] = Math.hypot(gradientX[i], gradientY[i]);
@@ -88,7 +89,6 @@ export function cannyEdgeDetector(
       const currentGradientX = gradientX[getIndex(row, column, 0, image)];
       const currentGradientY = gradientY[getIndex(row, column, 0, image)];
       let direction = getDirection(currentGradientX, currentGradientY);
-
       const currentGradient = gradient[getIndex(row, column, 0, image)];
       if (
         // horizontal
@@ -183,6 +183,16 @@ export function cannyEdgeDetector(
   }
 
   return finalImage;
+
+  /* Function for debug
+  import { Matrix } from 'ml-matrix';
+
+  function printArray(array: Float64Array): void {
+    // @ts-expect-error: only for debug
+    const matrix = Matrix.from1DArray(height, width, array);
+    console.log(matrix);
+  }
+  */
 }
 
 /**
