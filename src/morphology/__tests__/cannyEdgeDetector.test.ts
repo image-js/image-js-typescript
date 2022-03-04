@@ -80,11 +80,14 @@ describe('cannyEdgeDetector', () => {
     });
     expect(result).toMatchMask(expected);
   });
-  it('snapshot of an image', () => {
+  it('compare alphabet image to expected', () => {
     const image = testUtils
       .load('various/alphabet.jpg')
       .convertColor(ImageColorModel.GREY);
-    expect(image.cannyEdgeDetector()).toMatchSnapshot();
+    const expected = testUtils.load('various/alphabetCannyEdges.png');
+    expect(
+      image.cannyEdgeDetector().convertColor(ImageColorModel.GREY),
+    ).toMatchImage(expected);
   });
 });
 
