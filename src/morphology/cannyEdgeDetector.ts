@@ -1,5 +1,3 @@
-import { Matrix } from 'ml-matrix';
-
 import { IJS, ImageColorModel, Mask } from '..';
 import { GaussianBlurOptions } from '../filters';
 import checkProcessable from '../utils/checkProcessable';
@@ -20,6 +18,10 @@ export interface CannyEdgeOptions {
    *
    */
   gaussianBlurOptions?: GaussianBlurOptions;
+  /**
+   * Enable/ disable hysteresis steps.
+   */
+  hysteresis?: boolean;
   /**
    * Image to which the resulting image has to be put.
    */
@@ -50,6 +52,7 @@ export function cannyEdgeDetector(
   options: CannyEdgeOptions = {},
 ): Mask {
   const {
+    hysteresis = true,
     lowThreshold = 0.04,
     highThreshold = 0.1,
     gaussianBlurOptions = { sigma: 1 },
@@ -99,7 +102,6 @@ export function cannyEdgeDetector(
           currentGradient >=
             gradient[getIndex(row + 1, column + 1, 0, image)]) ||
         // vertical
-
         (direction === 2 &&
           currentGradient >= gradient[getIndex(row, column - 1, 0, image)] &&
           currentGradient >= gradient[getIndex(row, column + 1, 0, image)]) ||
@@ -128,63 +130,59 @@ export function cannyEdgeDetector(
 
     edges[i] = currentEdge;
   }
-  /*
+
   // Hysteresis: first pass
-  let currentPixels: number[][] = [];
-  for (let column = 1; column < width - 1; ++column) {
-    for (let row = 1; row < height - 1; ++row) {
-      if (edges[getIndex(row, column, 0, image)] !== 1) {
-        continue;
-      }
+  if (hysteresis) {
+    let currentPixels: number[][] = [];
+    for (let column = 1; column < width - 1; ++column) {
+      for (let row = 1; row < height - 1; ++row) {
+        if (edges[getIndex(row, column, 0, image)] !== 1) {
+          continue;
+        }
 
-      outer: for (
-        let hystColumn = column - 1;
-        hystColumn < column + 2;
-        ++hystColumn
-      ) {
-        for (let hystRow = row - 1; hystRow < row + 2; ++hystRow) {
-          if (edges[getIndex(hystRow, hystColumn, 0, image)] === 2) {
-            currentPixels.push([column, row]);
-            finalImage.setValue(row, column, 0, 1);
-            break outer;
+        outer: for (
+          let hystColumn = column - 1;
+          hystColumn < column + 2;
+          ++hystColumn
+        ) {
+          for (let hystRow = row - 1; hystRow < row + 2; ++hystRow) {
+            if (edges[getIndex(hystRow, hystColumn, 0, image)] === 2) {
+              currentPixels.push([column, row]);
+              finalImage.setValue(row, column, 0, 1);
+              break outer;
+            }
           }
         }
       }
     }
-  }
 
-  // Hysteresis: second pass
-  while (currentPixels.length > 0) {
-    let newPixels = [];
-    for (let currentPixel of currentPixels) {
-      for (let j = -1; j < 2; ++j) {
-        for (let k = -1; k < 2; ++k) {
-          if (j === 0 && k === 0) {
-            continue;
-          }
-          let row = currentPixel[0] + j;
-          let column = currentPixel[1] + k;
-          if (
-            // there could be an error here
-            edges[getIndex(row, column, 0, image)] === 1 &&
-            finalImage.getValue(row, column, 0) === 0
-          ) {
-            newPixels.push([row, column]);
-            finalImage.setValue(row, column, 0, 1);
+    // Hysteresis: second pass
+    while (currentPixels.length > 0) {
+      let newPixels = [];
+      for (let currentPixel of currentPixels) {
+        for (let j = -1; j < 2; ++j) {
+          for (let k = -1; k < 2; ++k) {
+            if (j === 0 && k === 0) {
+              continue;
+            }
+            let row = currentPixel[0] + j;
+            let column = currentPixel[1] + k;
+            if (
+              // there could be an error here
+              edges[getIndex(row, column, 0, image)] === 1 &&
+              finalImage.getValue(row, column, 0) === 0
+            ) {
+              newPixels.push([row, column]);
+              finalImage.setValue(row, column, 0, 1);
+            }
           }
         }
       }
+      currentPixels = newPixels;
     }
-    currentPixels = newPixels;
   }
-*/
+
   return finalImage;
-
-  function printArray(array: Float64Array): void {
-    // @ts-expect-error
-    const matrix = Matrix.from1DArray(height, width, array);
-    console.log(matrix);
-  }
 }
 
 /**
