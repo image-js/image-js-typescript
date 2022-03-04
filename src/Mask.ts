@@ -1,6 +1,10 @@
 import {
+  and,
+  AndOptions,
   invert,
   InvertOptions,
+  or,
+  OrOptions,
   subtractImage,
   SubtractImageOptions,
 } from './filters';
@@ -14,6 +18,8 @@ import {
   dilate,
   DilateOptions,
   ErodeOptions,
+  floodFill,
+  FloodFillOptions,
   morphologicalGradient,
   MorphologicalGradientOptions,
   open,
@@ -327,6 +333,26 @@ export class Mask {
   public subtractImage(other: Mask, options?: SubtractImageOptions): Mask {
     return subtractImage(this, other, options);
   }
+  /**
+   * Perform an AND operation on two masks.
+   *
+   * @param other - Second mask.
+   * @param options - And options.
+   * @returns AND of the two masks.
+   */
+  public and(other: Mask, options?: AndOptions): Mask {
+    return and(this, other, options);
+  }
+  /**
+   * Perform an OR operation on two masks.
+   *
+   * @param other - Second mask.
+   * @param options - And options.
+   * @returns OR of the two masks.
+   */
+  public or(other: Mask, options?: OrOptions): Mask {
+    return or(this, other, options);
+  }
 
   // MORPHOLOGY
   /**
@@ -407,6 +433,15 @@ export class Mask {
    */
   public clearBorder(options?: ClearBorderOptions): Mask {
     return clearBorder(this, options);
+  }
+  /**
+   * Fill holes in regions of interest.
+   *
+   * @param options - Flood fill options.
+   * @returns The filled mask.
+   */
+  public floodFill(options?: FloodFillOptions): Mask {
+    return floodFill(this, options);
   }
 }
 

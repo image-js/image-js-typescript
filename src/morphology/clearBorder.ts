@@ -3,6 +3,9 @@ import { borderIterator } from '../utils/borderIterator';
 import { maskToOutputMask } from '../utils/getOutputImage';
 
 export interface ClearBorderOptions {
+  /**
+   * Consider pixels connected by corners?
+   */
   allowCorners?: boolean;
   /**
    * Image to which the resulting image has to be put.
@@ -49,7 +52,7 @@ export function clearBorder(
     newImage.setBitByIndex(currentPixel, 0);
     if (to - from > MAX_ARRAY) {
       throw new Error(
-        'clearBorder could not process image, overflow in the data processing array.',
+        'clearBorder: could not process image, overflow in the data processing array.',
       );
     }
 

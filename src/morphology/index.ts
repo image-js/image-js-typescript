@@ -7,3 +7,4 @@ export * from './bottomHat';
 export * from './morphologicalGradient';
 export * from './clearBorder';
 export * from './cannyEdgeDetector';
+export * from './floodFill';
