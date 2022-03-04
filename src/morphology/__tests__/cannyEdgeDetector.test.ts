@@ -1,5 +1,5 @@
 import { getDirection } from '..';
-import { ImageColorModel } from '../..';
+import { ImageColorModel, writeSync } from '../..';
 
 describe('cannyEdgeDetector', () => {
   it('5x5 grey image with dot', () => {
@@ -75,7 +75,7 @@ describe('cannyEdgeDetector', () => {
     let result = image.cannyEdgeDetector({
       lowThreshold: 0.08,
       highThreshold: 0.1,
-      hysteresis: false,
+      hysteresis: true,
       gaussianBlurOptions: { sigma: 1, size: 1 },
     });
     expect(result).toMatchMask(expected);
@@ -85,6 +85,14 @@ describe('cannyEdgeDetector', () => {
       .load('various/alphabet.jpg')
       .convertColor(ImageColorModel.GREY);
     const expected = testUtils.load('various/alphabetCannyEdges.png');
+    expect(
+      image.cannyEdgeDetector().convertColor(ImageColorModel.GREY),
+    ).toMatchImage(expected);
+  });
+  it('compare grey image to expected', () => {
+    const image = testUtils.load('various/grayscale_by_zimmyrose.png');
+
+    const expected = testUtils.load('various/grayscaleCannyEdge.png');
     expect(
       image.cannyEdgeDetector().convertColor(ImageColorModel.GREY),
     ).toMatchImage(expected);

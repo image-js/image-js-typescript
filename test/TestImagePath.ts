@@ -32,4 +32,5 @@ export type TestImagePath =
   | 'opencv/testTranslation.png'
   | 'various/grayscale_by_zimmyrose.png'
   | 'various/alphabet.jpg'
-  | 'various/alphabetCannyEdges.png';
+  | 'various/alphabetCannyEdges.png'
+  | 'various/grayscaleCannyEdge.png';

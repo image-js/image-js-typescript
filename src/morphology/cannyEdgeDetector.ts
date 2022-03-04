@@ -136,6 +136,7 @@ export function cannyEdgeDetector(
     let currentPixels: number[][] = [];
     for (let column = 1; column < width - 1; ++column) {
       for (let row = 1; row < height - 1; ++row) {
+        const currentEdgePixel = edges[getIndex(row, column, 0, image)];
         if (edges[getIndex(row, column, 0, image)] !== 1) {
           continue;
         }
