@@ -71,7 +71,7 @@ export function cannyEdgeDetector(
   const gradientY = blurred.rawDirectConvolution(kernelX);
   let gradient = new Float64Array(image.size);
   for (let i = 0; i < image.size; i++) {
-    gradient[i] = Math.hypot(gradientX[i]);
+    gradient[i] = Math.hypot(gradientX[i], gradientY[i]);
   }
 
   let nonMaxSuppression = new Float64Array(image.size);
@@ -82,54 +82,45 @@ export function cannyEdgeDetector(
   // Non-Maximum suppression
   for (let column = 1; column < width - 1; column++) {
     for (let row = 1; row < height - 1; row++) {
-      let direction =
-        (Math.round(
-          Math.atan2(
-            gradientY[getIndex(row, column, 0, image)],
-            gradientX[getIndex(row, column, 0, image)],
-          ) *
-            (4 / Math.PI),
-        ) +
-          4) %
-        4;
+      const currentGradientX = gradientX[getIndex(row, column, 0, image)];
+      const currentGradientY = gradientY[getIndex(row, column, 0, image)];
+      let direction = getDirection(currentGradientX, currentGradientY);
 
+      const currentGradient = gradient[getIndex(row, column, 0, image)];
       if (
-        !(
-          (direction === 0 &&
-            (gradient[getIndex(row, column, 0, image)] <=
-              gradient[getIndex(row - 1, column, 0, image)] ||
-              gradient[getIndex(row, column, 0, image)] <=
-                gradient[getIndex(row + 1, column, 0, image)])) ||
-          (direction === 1 &&
-            (gradient[getIndex(row, column, 0, image)] <=
-              gradient[getIndex(row + 1, column - 1, 0, image)] ||
-              gradient[getIndex(row, column, 0, image)] <=
-                gradient[getIndex(row - 1, column + 1, 0, image)])) ||
-          (direction === 2 &&
-            (gradient[getIndex(row, column, 0, image)] <=
-              gradient[getIndex(row, column - 1, 0, image)] ||
-              gradient[getIndex(row, column, 0, image)] <=
-                gradient[getIndex(row, column + 1, 0, image)])) ||
-          (direction === 3 &&
-            (gradient[getIndex(row, column, 0, image)] <=
-              gradient[getIndex(row - 1, column - 1, 0, image)] ||
-              gradient[getIndex(row, column, 0, image)] <=
-                gradient[getIndex(row + 1, column + 1, 0, image)]))
-        )
+        // horizontal
+        (direction === 0 &&
+          currentGradient >= gradient[getIndex(row - 1, column, 0, image)] &&
+          currentGradient >= gradient[getIndex(row + 1, column, 0, image)]) ||
+        // upward slope
+        (direction === 1 &&
+          currentGradient >=
+            gradient[getIndex(row - 1, column - 1, 0, image)] &&
+          currentGradient >=
+            gradient[getIndex(row + 1, column + 1, 0, image)]) ||
+        // vertical
+
+        (direction === 2 &&
+          currentGradient >= gradient[getIndex(row, column - 1, 0, image)] &&
+          currentGradient >= gradient[getIndex(row, column + 1, 0, image)]) ||
+        // downward slope
+        (direction === 3 &&
+          currentGradient >=
+            gradient[getIndex(row + 1, column - 1, 0, image)] &&
+          currentGradient >= gradient[getIndex(row - 1, column + 1, 0, image)])
       ) {
-        nonMaxSuppression[getIndex(row, column, 0, image)] =
-          gradient[getIndex(row, column, 0, image)];
+        // pixels to remove from the final image
+        nonMaxSuppression[getIndex(row, column, 0, image)] = currentGradient;
       }
     }
   }
 
   for (let i = 0; i < width * height; ++i) {
-    // a bug might be here
     let currentNms = nonMaxSuppression[i];
     let currentEdge = 0;
     if (currentNms > maxValue) {
       currentEdge++;
-      finalImage.setValueByIndex(i, 0, 1);
+      finalImage.setBitByIndex(i, 1);
     }
     if (currentNms > minValue) {
       currentEdge++;
@@ -137,7 +128,7 @@ export function cannyEdgeDetector(
 
     edges[i] = currentEdge;
   }
-
+  /*
   // Hysteresis: first pass
   let currentPixels: number[][] = [];
   for (let column = 1; column < width - 1; ++column) {
@@ -186,7 +177,7 @@ export function cannyEdgeDetector(
     }
     currentPixels = newPixels;
   }
-
+*/
   return finalImage;
 
   function printArray(array: Float64Array): void {
@@ -194,4 +185,15 @@ export function cannyEdgeDetector(
     const matrix = Matrix.from1DArray(height, width, array);
     console.log(matrix);
   }
+}
+
+/**
+ * Return a 0 to 3 value indicating the four main directions (horizontal, upward diagonal, vertical, downward diagonal).
+ *
+ * @param x - The x coordinate
+ * @param y - The y coordinate
+ * @returns The direction as a 0 to 4 value.
+ */
+export function getDirection(x: number, y: number): number {
+  return (Math.round(Math.atan2(y, x) * (4 / Math.PI)) + 4) % 4;
 }
