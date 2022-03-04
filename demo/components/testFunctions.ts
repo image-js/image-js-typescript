@@ -1,9 +1,4 @@
-import {
-  convertBinaryToGrey,
-  convertColor,
-  IJS,
-  ImageColorModel,
-} from '../../src';
+import { convertBinaryToGrey, IJS, ImageColorModel } from '../../src';
 
 export function testCopyTo(image: IJS): IJS {
   let result = image.copyTo(image, {
@@ -42,9 +37,16 @@ export function testCannyEdgeOverlay(image: IJS): IJS {
     lowThreshold: 0.08,
     highThreshold: 0.1,
   });
-  let greyEdges = new IJS(image.width, image.height);
-  convertBinaryToGrey(edges, greyEdges);
-  let greyImage = convertColor(image, ImageColorModel.GREY);
-  greyEdges.copyTo(greyImage);
-  return greyImage;
+  let greyEdges = edges.convertColor(ImageColorModel.GREY);
+  greyEdges = greyEdges.convertColor(ImageColorModel.RGBA);
+  greyEdges = greyEdges.invert();
+  for (let row = 0; row < image.height; row++) {
+    for (let column = 0; column < image.width; column++) {
+      if (greyEdges.getValue(row, column, 0) === greyEdges.maxValue) {
+        greyEdges.setValue(row, column, 3, 0);
+      }
+    }
+  }
+  result = greyEdges.copyTo(image);
+  return result;
 }

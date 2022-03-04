@@ -3,10 +3,10 @@ import { IJS } from '../../src';
 import CameraSelector from './CameraSelector';
 import CameraTransform from './CameraTransform';
 import Container from './Container';
-import { testCannyEdge } from './testFunctions';
+import { testCannyEdgeOverlay } from './testFunctions';
 
 function testTransform(image: IJS) {
-  return testCannyEdge(image);
+  return testCannyEdgeOverlay(image);
 }
 
 export default function Home() {
