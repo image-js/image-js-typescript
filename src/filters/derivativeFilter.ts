@@ -33,13 +33,15 @@ export interface DerivativeFilterOptions {
  */
 export function derivativeFilter(
   image: IJS,
-  options: DerivativeFilterOptions,
+  options: DerivativeFilterOptions = {},
 ): IJS {
   const { filter = DerivativeFilters.SOBEL } = options;
   let kernelX = SOBEL_X;
   let kernelY = SOBEL_Y;
 
   switch (filter) {
+    case DerivativeFilters.SOBEL:
+      break;
     case DerivativeFilters.SCHARR:
       kernelX = SCHARR_X;
       kernelY = SCHARR_Y;

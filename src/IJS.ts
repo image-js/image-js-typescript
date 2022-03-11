@@ -580,7 +580,7 @@ export class IJS {
    * @param options - Derivative filter options.
    * @returns The processed image.
    */
-  public derivativeFilter(options: DerivativeFilterOptions): IJS {
+  public derivativeFilter(options?: DerivativeFilterOptions): IJS {
     return derivativeFilter(this, options);
   }
 
