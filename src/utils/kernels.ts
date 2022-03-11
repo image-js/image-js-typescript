@@ -34,6 +34,28 @@ export const SCHARR_Y = [
   [-3, -10, -3],
 ];
 
+export const PREWITT_X = [
+  [1, 0, -1],
+  [1, 0, -1],
+  [1, 0, -1],
+];
+
+export const PREWITT_Y = [
+  [1, 1, 1],
+  [0, 0, 0],
+  [-1, -1, -1],
+];
+
+export const ROBERTS_X = [
+  [0, 1],
+  [-1, 0],
+];
+
+export const ROBERTS_Y = [
+  [1, 0],
+  [0, -1],
+];
+
 export const SECOND_DERIVATIVE = [
   [-1, -2, 0, 2, 1],
   [-2, -4, 0, 4, 2],
