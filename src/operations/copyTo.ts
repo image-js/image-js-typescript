@@ -23,10 +23,10 @@ export interface CopyToOptions {
 /**
  * Copy the image to another one by specifying the location in the target image.
  *
- * @param source - The source image
- * @param target - The target image
- * @param options - copyTo options
- * @returns The target with the source copied to it
+ * @param source - The source image.
+ * @param target - The target image.
+ * @param options - copyTo options.
+ * @returns The target with the source copied to it.
  */
 export default function copyTo(
   source: IJS,

@@ -48,6 +48,8 @@ import {
   ResizeOptions,
   rotate,
   RotateOptions,
+  threshold,
+  ThresholdOptions,
   transform,
   TransformOptions,
 } from '.';
@@ -478,6 +480,9 @@ export class IJS {
     return copyTo(this, target, options);
   }
 
+  public threshold(options: ThresholdOptions = {}): Mask {
+    return threshold(this, options);
+  }
   // FILTERS
 
   public blur(options: BlurOptions): IJS {
