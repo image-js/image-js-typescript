@@ -2,8 +2,21 @@ import { IJS } from '..';
 import { getOutputImage } from '../utils/getOutputImage';
 
 export interface CopyToOptions {
+  /**
+   * X offset for the copy, the top left corner of the target image is the reference.
+   *
+   * @default 0
+   */
   columnOffset?: number;
+  /**
+   * Y offset for the copy, the top left corner of the target image is the reference.
+   *
+   * @default 0
+   */
   rowOffset?: number;
+  /**
+   * Image to which to output.
+   */
   out?: IJS;
 }
 

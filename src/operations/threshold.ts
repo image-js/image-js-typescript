@@ -38,6 +38,9 @@ export enum ThresholdAlgorithm {
 }
 
 interface ThresholdOptionsBase {
+  /**
+   * Image to which to output.
+   */
   out?: Mask;
 }
 
