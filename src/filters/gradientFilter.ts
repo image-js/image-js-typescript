@@ -1,67 +1,103 @@
-import convolution from '../operator/convolution';
+import { ColorDepth, IJS, ImageColorModel } from '..';
+import checkProcessable from '../utils/checkProcessable';
+import { BorderType } from '../utils/interpolateBorder';
+
+export interface GradientFilterBaseOptions {
+  /**
+   * Specify how the borders should be handled.
+   *
+   * @default BorderType.REPLICATE
+   */
+  borderType?: BorderType;
+  /**
+   * Value of the border if BorderType is CONSTANT.
+   *
+   * @default 0
+   */
+  borderValue?: number;
+  /**
+   * Specify the bitDepth of the resulting image.
+   *
+   * @default image.bitDepth
+   */
+  bitDepth?: ColorDepth;
+}
+
+export interface GradientFilterXOptions extends GradientFilterBaseOptions {
+  /**
+   * Kernel along x axis.
+   */
+  kernelX: number[][];
+}
+export interface GradientFilterYOptions extends GradientFilterBaseOptions {
+  /**
+   * Kernel along y axis.
+   */
+  kernelY: number[][];
+}
+
+export interface GradientFilterXYOptions extends GradientFilterBaseOptions {
+  /**
+   * Kernel along x axis.
+   */
+  kernelX: number[][];
+  /**
+   * Kernel along y axis.
+   */
+  kernelY: number[][];
+}
+
+export type GradientFilterOptions =
+  | GradientFilterXOptions
+  | GradientFilterYOptions
+  | GradientFilterXYOptions;
 
 /**
- * Direction of a gradient filter
- * @typedef {('x'|'y'|'xy')} GradientDirection
+ * Apply a gradient filter to an image.
+ *
+ * @param image - The image to process.
+ * @param options - Gradient filter options.
+ * @returns The gradient image.
  */
+export function gradientFilter(
+  image: IJS,
+  options: GradientFilterOptions,
+): IJS {
+  const { borderType = BorderType.REPLICATE, borderValue = 0 } = options;
 
-/**
- * @memberof Image
- * @instance
- * @param {object} [options]
- * @param {GradientDirection} [options.direction]
- * @param {Array<Array<number>>} [options.kernelX]
- * @param {Array<Array<number>>} [options.kernelY]
- * @param {string} [options.border='copy']
- * @param {*} [options.channels]
- * @param {number} [options.bitDepth=this.bitDepth] Specify the bitDepth of the resulting image
- * @return {Image}
- */
-export default function gradientFilter(options = {}) {
-  let {
-    direction = 'xy',
-    border = 'copy',
-    kernelX,
-    kernelY,
-    channels,
-    bitDepth = this.bitDepth,
-  } = options;
-
-  this.checkProcessable('gradientFilter', {
+  checkProcessable(image, 'gradientFilter', {
     bitDepth: [8, 16],
+    colorModel: ImageColorModel.GREY,
   });
 
-  switch (direction) {
-    case 'x':
-      if (!kernelX) throw new Error('kernelX option is missing');
-      return convolution.call(this, kernelX, {
-        channels: channels,
-        border: border,
-        bitDepth,
-      });
-    case 'y':
-      if (!kernelY) throw new Error('kernelY option is missing');
-      return convolution.call(this, kernelY, {
-        channels: channels,
-        border: border,
-        bitDepth,
-      });
-    case 'xy': {
-      if (!kernelX) throw new Error('kernelX option is missing');
-      if (!kernelY) throw new Error('kernelY option is missing');
-      const gX = convolution.call(this, kernelX, {
-        channels: channels,
-        border: border,
-        bitDepth: 32,
-      });
-      const gY = convolution.call(this, kernelY, {
-        channels: channels,
-        border: border,
-        bitDepth: 32,
-      });
-      return gX.hypotenuse(gY, { bitDepth, channels: channels });
+  if ('kernelX' in options && 'kernelY' in options) {
+    const { kernelX, kernelY } = options;
+    const gradientX = image.rawDirectConvolution(kernelX, {
+      borderType,
+      borderValue,
+    });
+
+    const gradientY = image.rawDirectConvolution(kernelY, {
+      borderType,
+      borderValue,
+    });
+
+    let gradient = new IJS(image.width, image.height);
+    for (let i = 0; i < image.size; i++) {
+      gradient.setValueByIndex(i, 0, Math.hypot(gradientX[i], gradientY[i]));
     }
-    default:
-      throw new Error(`Unknown parameter direction: ${direction}`);
+    return gradient;
+  } else if ('kernelX' in options) {
+    return image.directConvolution(options.kernelX, {
+      borderType,
+      borderValue,
+    });
+  } else if ('kernelY' in options) {
+    return image.directConvolution(options.kernelY, {
+      borderType,
+      borderValue,
+    });
+  } else {
+    throw new Error(`kernelX and KernelY are not defined`);
   }
 }
