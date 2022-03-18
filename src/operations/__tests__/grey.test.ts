@@ -24,7 +24,7 @@ describe('Grey transform', () => {
     expect(image.grey({ algorithm: 'black' })).toMatchImageData([[55, 0]]);
     expect(image.grey({ algorithm: 'hue' })).toMatchImageData([[148, 0]]);
     expect(image.grey({ algorithm: 'saturation' })).toMatchImageData([
-      [127, 0],
+      [128, 0],
     ]);
 
     expect(image.grey({ keepAlpha: true })).toMatchImageData([
