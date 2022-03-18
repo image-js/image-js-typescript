@@ -5,6 +5,7 @@ import { maskToOutputMask } from '../utils/getOutputImage';
 export interface ClearBorderOptions {
   /**
    * Consider pixels connected by corners?
+   *
    * @default false
    */
   allowCorners?: boolean;
