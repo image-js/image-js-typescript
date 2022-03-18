@@ -1,5 +1,4 @@
 import { Mask } from '..';
-import RoiMap from '../RoiMap';
 
 import { RoiManager } from './RoiManager';
 import { RoiMapManager } from './RoiMapManager';
@@ -165,6 +164,9 @@ export function fromMask(mask: Mask, options: FromMaskOptions): RoiManager {
       }
     }
   }
-  return new RoiMap(mask, data);
-  //   return new RoiMapManager();
+  return new RoiMapManager({
+    width: mask.width,
+    height: mask.height,
+    data,
+  });
 }
