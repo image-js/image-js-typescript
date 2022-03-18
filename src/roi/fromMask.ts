@@ -1,6 +1,5 @@
 import { Mask } from '..';
 
-import { RoiManager } from './RoiManager';
 import { RoiMapManager } from './RoiMapManager';
 
 export interface FromMaskOptions {
@@ -19,7 +18,10 @@ export interface FromMaskOptions {
  * @param options - fromMask options
  * @returns The corresponding ROI manager.
  */
-export function fromMask(mask: Mask, options: FromMaskOptions): RoiManager {
+export function fromMask(
+  mask: Mask,
+  options: FromMaskOptions = {},
+): RoiMapManager {
   const { allowCorners = false } = options;
 
   const MAX_ARRAY = 0x00ffff; // 65535 should be enough for most of the cases
