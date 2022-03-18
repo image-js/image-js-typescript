@@ -2,12 +2,90 @@ import { fromMask } from '..';
 import { Mask } from '../..';
 
 describe('fromMask', () => {
-  it('3x3 mask', () => {
+  it('3x3 mask, cross', () => {
     const mask = testUtils.createMask([
+      [0, 1, 0],
       [1, 1, 1],
-      [1, 1, 1],
-      [1, 1, 1],
+      [0, 1, 0],
     ]);
+    const expected = [
+      [-1, 1, -3],
+      [1, 1, 1],
+      [-2, 1, -4],
+    ];
+
+    expect(fromMask(mask).getMapMatrix()).toStrictEqual(expected);
+  });
+  it('3x3 mask, stripes', () => {
+    const mask = testUtils.createMask([
+      [0, 1, 0],
+      [0, 1, 0],
+      [0, 1, 0],
+    ]);
+    const expected = [
+      [-1, 1, -2],
+      [-1, 1, -2],
+      [-1, 1, -2],
+    ];
+
+    expect(fromMask(mask).getMapMatrix()).toStrictEqual(expected);
+  });
+  it('5x5 mask, ring', () => {
+    const mask = testUtils.createMask([
+      [0, 0, 0, 0, 0],
+      [0, 1, 1, 1, 0],
+      [0, 1, 0, 1, 0],
+      [0, 1, 1, 1, 0],
+      [0, 0, 0, 0, 0],
+    ]);
+    const expected = [
+      [-1, -1, -1, -1, -1],
+      [-1, 1, 1, 1, -1],
+      [-1, 1, -2, 1, -1],
+      [-1, 1, 1, 1, -1],
+      [-1, -1, -1, -1, -1],
+    ];
+
+    expect(fromMask(mask).getMapMatrix()).toStrictEqual(expected);
+  });
+  it('5x5 mask, test left connection', () => {
+    const mask = testUtils.createMask([
+      [0, 0, 1, 0, 0],
+      [0, 0, 1, 1, 0],
+      [0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0],
+    ]);
+    const expected = [
+      [-1, -1, 1, -1, -1],
+      [-1, -1, 1, 1, -1],
+      [-1, -1, -1, -1, -1],
+      [-1, -1, -1, -1, -1],
+      [-1, -1, -1, -1, -1],
+    ];
+
+    expect(fromMask(mask).getMapMatrix()).toStrictEqual(expected);
+  });
+
+  it('5x5 mask, test top-left connection', () => {
+    const mask = testUtils.createMask([
+      [0, 0, 0, 0, 0],
+      [0, 1, 1, 1, 0],
+      [0, 0, 0, 1, 0],
+      [0, 1, 0, 1, 0],
+      [0, 0, 1, 1, 0],
+    ]);
+    const expected = [
+      [-1, -1, -1, -1, -1],
+      [-1, 1, 1, 1, -1],
+      [-1, -1, -1, 1, -1],
+      [-1, 1, -1, 1, -1],
+      [-1, -1, 1, 1, -1],
+    ];
+
+    expect(fromMask(mask, { allowCorners: true }).getMapMatrix()).toStrictEqual(
+      expected,
+    );
   });
 
   it('6x6 mask, allowCorners false', () => {
