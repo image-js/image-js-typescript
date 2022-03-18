@@ -4,6 +4,8 @@ import {
   IJS,
   ImageColorModel,
 } from '../../src';
+import { fromMask } from '../../src/roi';
+import { colorRois } from '../../src/roi/colorRois';
 
 export function testCopyTo(image: IJS): IJS {
   let result = image.copyTo(image, {
@@ -59,4 +61,13 @@ export function testCannyEdgeOverlay(image: IJS): IJS {
 export function testDerivativeFilter(image: IJS): IJS {
   image = image.convertColor(ImageColorModel.GREY);
   return image.derivativeFilter({ filter: DerivativeFilters.PREWITT });
+}
+
+export function testColorRois(image: IJS): IJS {
+  const grey = image.convertColor(ImageColorModel.GREY);
+  const mask = grey.threshold();
+
+  const roiMapManager = fromMask(mask);
+
+  return colorRois(roiMapManager);
 }
