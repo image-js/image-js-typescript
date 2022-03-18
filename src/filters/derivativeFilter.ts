@@ -1,9 +1,8 @@
-import { IJS } from '..';
+import { ColorDepth, IJS } from '..';
+import { BorderType } from '../utils/interpolateBorder';
 import {
   PREWITT_X,
   PREWITT_Y,
-  ROBERTS_X,
-  ROBERTS_Y,
   SCHARR_X,
   SCHARR_Y,
   SOBEL_X,
@@ -14,7 +13,9 @@ export enum DerivativeFilters {
   SOBEL = 'SOBEL',
   SCHARR = 'SCHARR',
   PREWITT = 'PREWITT',
-  ROBERTS = 'ROBERTS',
+  // todo: handle even sized kernels to implement Roberts' filter
+  // for 2x2 matrices, the current pixel corresponds to the top-left
+  //  ROBERTS = 'ROBERTS',
 }
 
 export interface DerivativeFilterOptions {
@@ -22,6 +23,24 @@ export interface DerivativeFilterOptions {
    * Algorithm to use for the derivative filter.
    */
   filter?: DerivativeFilters;
+  /**
+   * Specify how the borders should be handled.
+   *
+   * @default BorderType.REPLICATE
+   */
+  borderType?: BorderType;
+  /**
+   * Value of the border if BorderType is CONSTANT.
+   *
+   * @default 0
+   */
+  borderValue?: number;
+  /**
+   * Specify the bitDepth of the resulting image.
+   *
+   * @default image.bitDepth
+   */
+  bitDepth?: ColorDepth;
 }
 
 /**
@@ -50,13 +69,9 @@ export function derivativeFilter(
       kernelX = PREWITT_X;
       kernelY = PREWITT_Y;
       break;
-    case DerivativeFilters.ROBERTS:
-      kernelX = ROBERTS_X;
-      kernelY = ROBERTS_Y;
-      break;
     default:
       throw new Error('derivativeFilter: unrecognised derivative filter.');
   }
 
-  return image.gradientFilter({ kernelX, kernelY });
+  return image.gradientFilter({ kernelX, kernelY, ...options });
 }
