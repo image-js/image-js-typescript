@@ -32,125 +32,126 @@ export function fromMask(mask: Mask, options: FromMaskOptions): RoiManager {
   let positiveID = 0;
   let negativeID = 0;
 
-  let xToProcess = new Uint16Array(MAX_ARRAY + 1); // assign dynamically ????
-  let yToProcess = new Uint16Array(MAX_ARRAY + 1); // mask +1 is of course mandatory !!!
+  let columnToProcess = new Uint16Array(MAX_ARRAY + 1); // assign dynamically ????
+  let rowToProcess = new Uint16Array(MAX_ARRAY + 1); // mask +1 is of course mandatory !!!
 
-  for (let x = 0; x < mask.width; x++) {
-    for (let y = 0; y < mask.height; y++) {
-      if (data[y * mask.width + x] === 0) {
+  for (let column = 0; column < mask.width; column++) {
+    for (let row = 0; row < mask.height; row++) {
+      if (data[row * mask.width + column] === 0) {
         // need to process the whole surface
-        analyseSurface(x, y);
+        analyseSurface(column, row);
       }
     }
   }
-
-  function analyseSurface(x, y) {
+  // x column
+  // y row
+  function analyseSurface(column: number, row: number) {
     let from = 0;
     let to = 0;
-    let targetState = mask.getBitXY(x, y);
+    let targetState = mask.getBit(row, column);
     let id = targetState ? ++positiveID : --negativeID;
     if (positiveID > 32767 || negativeID < -32768) {
       throw new Error('Too many regions of interest');
     }
-    xToProcess[0] = x;
-    yToProcess[0] = y;
+    columnToProcess[0] = column;
+    rowToProcess[0] = row;
     while (from <= to) {
-      let currentX = xToProcess[from & MAX_ARRAY];
-      let currentY = yToProcess[from & MAX_ARRAY];
-      data[currentY * mask.width + currentX] = id;
+      let currentColumn = columnToProcess[from & MAX_ARRAY];
+      let currentRow = rowToProcess[from & MAX_ARRAY];
+      data[currentRow * mask.width + currentColumn] = id;
       // need to check all around mask pixel
       if (
-        currentX > 0 &&
-        data[currentY * mask.width + currentX - 1] === 0 &&
-        mask.getBitXY(currentX - 1, currentY) === targetState
+        currentColumn > 0 &&
+        data[currentRow * mask.width + currentColumn - 1] === 0 &&
+        mask.getBit(currentRow, currentColumn - 1) === targetState
       ) {
         // LEFT
         to++;
-        xToProcess[to & MAX_ARRAY] = currentX - 1;
-        yToProcess[to & MAX_ARRAY] = currentY;
-        data[currentY * mask.width + currentX - 1] = -32768;
+        columnToProcess[to & MAX_ARRAY] = currentColumn - 1;
+        rowToProcess[to & MAX_ARRAY] = currentRow;
+        data[currentRow * mask.width + currentColumn - 1] = -32768;
       }
       if (
-        currentY > 0 &&
-        data[(currentY - 1) * mask.width + currentX] === 0 &&
-        mask.getBitXY(currentX, currentY - 1) === targetState
+        currentRow > 0 &&
+        data[(currentRow - 1) * mask.width + currentColumn] === 0 &&
+        mask.getBit(currentRow - 1, currentColumn) === targetState
       ) {
         // TOP
         to++;
-        xToProcess[to & MAX_ARRAY] = currentX;
-        yToProcess[to & MAX_ARRAY] = currentY - 1;
-        data[(currentY - 1) * mask.width + currentX] = -32768;
+        columnToProcess[to & MAX_ARRAY] = currentColumn;
+        rowToProcess[to & MAX_ARRAY] = currentRow - 1;
+        data[(currentRow - 1) * mask.width + currentColumn] = -32768;
       }
       if (
-        currentX < mask.width - 1 &&
-        data[currentY * mask.width + currentX + 1] === 0 &&
-        mask.getBitXY(currentX + 1, currentY) === targetState
+        currentColumn < mask.width - 1 &&
+        data[currentRow * mask.width + currentColumn + 1] === 0 &&
+        mask.getBit(currentRow, currentColumn + 1) === targetState
       ) {
         // RIGHT
         to++;
-        xToProcess[to & MAX_ARRAY] = currentX + 1;
-        yToProcess[to & MAX_ARRAY] = currentY;
-        data[currentY * mask.width + currentX + 1] = -32768;
+        columnToProcess[to & MAX_ARRAY] = currentColumn + 1;
+        rowToProcess[to & MAX_ARRAY] = currentRow;
+        data[currentRow * mask.width + currentColumn + 1] = -32768;
       }
       if (
-        currentY < mask.height - 1 &&
-        data[(currentY + 1) * mask.width + currentX] === 0 &&
-        mask.getBitXY(currentX, currentY + 1) === targetState
+        currentRow < mask.height - 1 &&
+        data[(currentRow + 1) * mask.width + currentColumn] === 0 &&
+        mask.getBit(currentRow + 1, currentColumn) === targetState
       ) {
         // BOTTOM
         to++;
-        xToProcess[to & MAX_ARRAY] = currentX;
-        yToProcess[to & MAX_ARRAY] = currentY + 1;
-        data[(currentY + 1) * mask.width + currentX] = -32768;
+        columnToProcess[to & MAX_ARRAY] = currentColumn;
+        rowToProcess[to & MAX_ARRAY] = currentRow + 1;
+        data[(currentRow + 1) * mask.width + currentColumn] = -32768;
       }
       if (allowCorners) {
         if (
-          currentX > 0 &&
-          currentY > 0 &&
-          data[(currentY - 1) * mask.width + currentX - 1] === 0 &&
-          mask.getBitXY(currentX - 1, currentY - 1) === targetState
+          currentColumn > 0 &&
+          currentRow > 0 &&
+          data[(currentRow - 1) * mask.width + currentColumn - 1] === 0 &&
+          mask.getBit(currentRow - 1, currentColumn - 1) === targetState
         ) {
           // TOP LEFT
           to++;
-          xToProcess[to & MAX_ARRAY] = currentX - 1;
-          yToProcess[to & MAX_ARRAY] = currentY - 1;
-          data[(currentY - 1) * mask.width + currentX - 1] = -32768;
+          columnToProcess[to & MAX_ARRAY] = currentColumn - 1;
+          rowToProcess[to & MAX_ARRAY] = currentRow - 1;
+          data[(currentRow - 1) * mask.width + currentColumn - 1] = -32768;
         }
         if (
-          currentX < mask.width - 1 &&
-          currentY > 0 &&
-          data[(currentY - 1) * mask.width + currentX + 1] === 0 &&
-          mask.getBitXY(currentX + 1, currentY - 1) === targetState
+          currentColumn < mask.width - 1 &&
+          currentRow > 0 &&
+          data[(currentRow - 1) * mask.width + currentColumn + 1] === 0 &&
+          mask.getBit(currentRow - 1, currentColumn + 1) === targetState
         ) {
           // TOP RIGHT
           to++;
-          xToProcess[to & MAX_ARRAY] = currentX + 1;
-          yToProcess[to & MAX_ARRAY] = currentY - 1;
-          data[(currentY - 1) * mask.width + currentX + 1] = -32768;
+          columnToProcess[to & MAX_ARRAY] = currentColumn + 1;
+          rowToProcess[to & MAX_ARRAY] = currentRow - 1;
+          data[(currentRow - 1) * mask.width + currentColumn + 1] = -32768;
         }
         if (
-          currentX > 0 &&
-          currentY < mask.height - 1 &&
-          data[(currentY + 1) * mask.width + currentX - 1] === 0 &&
-          mask.getBitXY(currentX - 1, currentY + 1) === targetState
+          currentColumn > 0 &&
+          currentRow < mask.height - 1 &&
+          data[(currentRow + 1) * mask.width + currentColumn - 1] === 0 &&
+          mask.getBit(currentRow + 1, currentColumn - 1) === targetState
         ) {
           // BOTTOM LEFT
           to++;
-          xToProcess[to & MAX_ARRAY] = currentX - 1;
-          yToProcess[to & MAX_ARRAY] = currentY + 1;
-          data[(currentY + 1) * mask.width + currentX - 1] = -32768;
+          columnToProcess[to & MAX_ARRAY] = currentColumn - 1;
+          rowToProcess[to & MAX_ARRAY] = currentRow + 1;
+          data[(currentRow + 1) * mask.width + currentColumn - 1] = -32768;
         }
         if (
-          currentX < mask.width - 1 &&
-          currentY < mask.height - 1 &&
-          data[(currentY + 1) * mask.width + currentX + 1] === 0 &&
-          mask.getBitXY(currentX + 1, currentY + 1) === targetState
+          currentColumn < mask.width - 1 &&
+          currentRow < mask.height - 1 &&
+          data[(currentRow + 1) * mask.width + currentColumn + 1] === 0 &&
+          mask.getBit(currentRow + 1, currentColumn + 1) === targetState
         ) {
           // BOTTOM RIGHT
           to++;
-          xToProcess[to & MAX_ARRAY] = currentX + 1;
-          yToProcess[to & MAX_ARRAY] = currentY + 1;
-          data[(currentY + 1) * mask.width + currentX + 1] = -32768;
+          columnToProcess[to & MAX_ARRAY] = currentColumn + 1;
+          rowToProcess[to & MAX_ARRAY] = currentRow + 1;
+          data[(currentRow + 1) * mask.width + currentColumn + 1] = -32768;
         }
       }
 
