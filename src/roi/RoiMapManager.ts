@@ -1,3 +1,5 @@
+import { Matrix } from 'ml-matrix';
+
 import { Roi, RoiManager } from './RoiManager';
 
 export interface RoiMap {
@@ -14,5 +16,13 @@ export class RoiMapManager implements RoiManager {
 
   public getRois(): Roi[] {
     return [];
+  }
+
+  public getMapMatrix(): number[][] {
+    return Matrix.from1DArray(
+      this.map.height,
+      this.map.width,
+      this.map.data,
+    ).to2DArray();
   }
 }
