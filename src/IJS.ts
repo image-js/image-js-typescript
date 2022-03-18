@@ -302,7 +302,8 @@ export class IJS {
     channel: number,
     value: number,
   ): void {
-    this.data[(row * this.width + column) * this.channels + channel] = value;
+    this.data[(row * this.width + column) * this.channels + channel] =
+      Math.round(value);
   }
 
   /**
@@ -323,7 +324,7 @@ export class IJS {
    * @param value - Value to set.
    */
   public setValueByIndex(index: number, channel: number, value: number): void {
-    this.data[index * this.channels + channel] = value;
+    this.data[index * this.channels + channel] = Math.round(value);
   }
 
   /**
