@@ -17,7 +17,7 @@ describe('Copy a source image to a target', () => {
     const result = source.copyTo(target);
     const alpha = 128 + 64 * (1 - 128 / 255);
     const component = (100 * 128 + 50 * 64 * (1 - 128 / 255)) / alpha;
-    expect(result).toMatchImageData([[component, alpha + 1]]);
+    expect(result).toMatchImageData([[component, alpha]]);
   });
   it('Bigger GREYA image', () => {
     let target = testUtils.createGreyaImage([[100, 0, 200, 0, 150, 0]]);

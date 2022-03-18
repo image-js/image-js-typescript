@@ -49,7 +49,7 @@ describe('gradientFilter', () => {
     });
     expect(result).toMatchImageData([
       [1, 1, 1],
-      [1, 3, 2],
+      [1, 2, 2],
       [1, 2, 2],
     ]);
   });

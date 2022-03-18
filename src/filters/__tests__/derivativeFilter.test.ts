@@ -38,9 +38,9 @@ describe('derivativeFilter', () => {
     });
 
     expect(result).toMatchImageData([
-      [3, 3, 3],
+      [2, 3, 2],
       [3, 0, 3],
-      [3, 3, 3],
+      [2, 3, 2],
     ]);
   });
 });
