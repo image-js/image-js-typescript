@@ -85,6 +85,7 @@ export function gradientFilter(
     let gradient = new IJS(image.width, image.height, {
       colorModel: ImageColorModel.GREY,
     });
+
     for (let i = 0; i < image.size; i++) {
       gradient.setValueByIndex(i, 0, Math.hypot(gradientX[i], gradientY[i]));
     }
