@@ -1,4 +1,4 @@
-import { rgbToNumber } from '../../rgbToNumber';
+import { rgbToNumber } from '../rgbToNumber';
 
 describe('rgbToNumber', () => {
   it('white', () => {
