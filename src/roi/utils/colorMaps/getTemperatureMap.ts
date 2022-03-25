@@ -39,18 +39,24 @@ export function getTemperatureMap(
   const { roiKind = RoiKind.BW, whiteHue = 0, blackHue = 240 } = options;
 
   let colorMap = new Uint32Array(2 ** 16);
-  const negativeStep = 128 / nbNegative;
+
+  const range = 255 - 63;
+  const negativeStep = range / nbNegative;
+  const positiveStep = range / nbPositive;
+
   // negative values
+  let counter = 0;
   if (roiKind === RoiKind.BW || roiKind === RoiKind.BLACK) {
     for (let i = 2 ** 15 - nbNegative; i < 2 ** 15; i++) {
-      const hsv = [whiteHue, 127 + i * negativeStep, 255];
+      const hsv = [blackHue, 255 - counter++ * negativeStep, 255];
       colorMap[i] = rgbToNumber(hsvToRgb(hsv));
     }
   }
   // positive values
+  counter = 0;
   if (roiKind === RoiKind.BW || roiKind === RoiKind.WHITE) {
     for (let i = 2 ** 15 + 1; i < 2 ** 15 + 1 + nbPositive; i++) {
-      const hsv = [blackHue, 127 + i * negativeStep, 255];
+      const hsv = [whiteHue, 255 - counter++ * positiveStep, 255];
       colorMap[i] = rgbToNumber(hsvToRgb(hsv));
     }
   }
