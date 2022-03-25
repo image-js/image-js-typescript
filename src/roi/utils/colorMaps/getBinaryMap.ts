@@ -8,6 +8,14 @@ import { rgbToNumber } from '../rgbToNumber';
 
 export interface GetBinaryMapOptions {
   /**
+   * Number of black ROIs
+   */
+  nbNegative: number;
+  /**
+   * Number of white ID ROIs
+   */
+  nbPositive: number;
+  /**
    * Specify which ROIs to colour.
    *
    * @default RoiKind.BW
@@ -30,17 +38,17 @@ export interface GetBinaryMapOptions {
 /**
  * Return a map where ROIs are red (negative) or green (positive) depending on the ROI index.
  *
- * @param nbNegative - Number of negative indexes in the roiMap.
- * @param nbPositive - Number of positive indexes in the roiMap.
  * @param options - Color maps options.
  * @returns The colored map.
  */
-export function getBinaryMap(
-  nbNegative: number,
-  nbPositive: number,
-  options: GetBinaryMapOptions = {},
-): Uint32Array {
-  const { whiteHue = 120, blackHue = 0, roiKind = RoiKind.BW } = options;
+export function getBinaryMap(options: GetBinaryMapOptions): Uint32Array {
+  const {
+    nbNegative,
+    nbPositive,
+    whiteHue = 120,
+    blackHue = 0,
+    roiKind = RoiKind.BW,
+  } = options;
 
   let colorMap = new Uint32Array(2 ** 16);
 

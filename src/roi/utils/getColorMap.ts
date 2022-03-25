@@ -1,12 +1,10 @@
+import { RoiKind } from '../RoiManager';
 import { ColorMode } from '../colorRois';
 
-import { getBinaryMap, GetBinaryMapOptions } from './colorMaps/getBinaryMap';
-import {
-  getTemperatureMap,
-  GetTemperatureMapOptions,
-} from './colorMaps/getTemperatureMap';
+import { getBinaryMap } from './colorMaps/getBinaryMap';
+import { getRainbowMap } from './colorMaps/getRainbowMap';
+import { getTemperatureMap } from './colorMaps/getTemperatureMap';
 
-export type ModeOptions = GetTemperatureMapOptions | GetBinaryMapOptions;
 export interface GetColorMapOptions {
   /**
    * Number of black ROIs
@@ -22,10 +20,13 @@ export interface GetColorMapOptions {
    * @default ColorMode.BINARY
    */
   mode?: ColorMode;
+
   /**
-   * Options related to the color mode.
+   * Specify which ROIs to colour.
+   *
+   * @default RoiKind.BW
    */
-  modeOptions: ModeOptions;
+  roiKind?: RoiKind;
 }
 
 /**
@@ -35,17 +36,14 @@ export interface GetColorMapOptions {
  * @returns The color map.
  */
 export function getColorMap(options: GetColorMapOptions): Uint32Array {
-  const {
-    mode = ColorMode.BINARY,
-    modeOptions,
-    nbNegative,
-    nbPositive,
-  } = options;
+  const { mode = ColorMode.BINARY } = options;
   switch (mode) {
     case ColorMode.BINARY:
-      return getBinaryMap(nbNegative, nbPositive, modeOptions);
+      return getBinaryMap(options);
     case ColorMode.TEMPERATURE:
-      return getTemperatureMap(nbNegative, nbPositive, modeOptions);
+      return getTemperatureMap(options);
+    case ColorMode.RAINBOW:
+      return getRainbowMap(options);
     default:
       throw new Error('getColorMap: unknown color mode');
   }

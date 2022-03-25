@@ -2,7 +2,7 @@ import { IJS, ImageColorModel } from '..';
 
 import { getColorMap } from './utils/getColorMap';
 
-import { RoiMapManager } from '.';
+import { RoiKind, RoiMapManager } from '.';
 
 export enum ColorMode {
   /**
@@ -26,6 +26,12 @@ export interface ColorRoisOptions {
    * @default ColorMode.BINARY
    */
   mode?: ColorMode;
+  /**
+   * Specify which ROIs to colour.
+   *
+   * @default RoiKind.BW
+   */
+  roiKind?: RoiKind;
 }
 
 /**
@@ -39,13 +45,14 @@ export function colorRois(
   roiMapManager: RoiMapManager,
   options: ColorRoisOptions = {},
 ): IJS {
-  const { mode = ColorMode.BINARY } = options;
+  const { roiKind = RoiKind.BW, mode = ColorMode.BINARY } = options;
 
   let image = new IJS(roiMapManager.map.width, roiMapManager.map.height, {
     colorModel: ImageColorModel.RGBA,
   });
 
   const colorMap = getColorMap({
+    roiKind,
     mode,
     nbNegative: roiMapManager.map.nbNegative,
     nbPositive: roiMapManager.map.nbPositive,
