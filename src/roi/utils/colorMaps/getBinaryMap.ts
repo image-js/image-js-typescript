@@ -47,15 +47,14 @@ export function getBinaryMap(
   // negative values
   if (roiKind === RoiKind.BW || roiKind === RoiKind.BLACK) {
     for (let i = 2 ** 15 - nbNegative; i < 2 ** 15; i++) {
-      const hsv = [whiteHue, 255, 255];
-      console.log(hsvToRgb(hsv));
+      const hsv = [blackHue, 255, 255];
       colorMap[i] = rgbToNumber(hsvToRgb(hsv));
     }
   }
   if (roiKind === RoiKind.BW || roiKind === RoiKind.WHITE) {
     // positive values
     for (let i = 2 ** 15 + 1; i < 2 ** 15 + 1 + nbPositive; i++) {
-      const hsv = [blackHue, 255, 255];
+      const hsv = [whiteHue, 255, 255];
       colorMap[i] = rgbToNumber(hsvToRgb(hsv));
     }
   }
