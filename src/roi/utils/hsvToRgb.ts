@@ -18,10 +18,7 @@ export interface RgbColor {
  * @param hsv - The HSV color.
  * @returns The RGB color.
  */
-export function hsvToRgb(hsv: Uint8Array): Uint8Array {
-  if (hsv.length !== 3) {
-    throw new Error('hsvToRgb: hsv color does not have 3 elements.');
-  }
+export function hsvToRgb(hsv: number[]): Uint8Array {
   const h = hsv[0];
   const s = hsv[1] / 255;
   const v = hsv[2] / 255;
