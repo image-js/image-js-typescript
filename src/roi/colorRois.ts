@@ -54,7 +54,7 @@ export function colorRois(
   let data32 = new Uint32Array(image.getRawImage().data.buffer);
 
   for (let index = 0; index < image.size; index++) {
-    data32[index] = colorMap[roiMapManager.map.data[index]];
+    data32[index] = colorMap[roiMapManager.map.data[index] + 2 ** 15];
   }
 
   return image;
