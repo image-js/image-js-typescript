@@ -108,7 +108,7 @@ describe('fromMask', () => {
 
     const roiMapManager = fromMask(mask);
     expect(roiMapManager.getMapMatrix()).toStrictEqual(expected);
-    expect(roiMapManager.map.nbNegative).toBe(-4);
+    expect(roiMapManager.map.nbNegative).toBe(4);
     expect(roiMapManager.map.nbPositive).toBe(7);
   });
 
