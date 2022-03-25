@@ -25,4 +25,12 @@ describe('hsvToRgb', () => {
     const rgb = new Uint8Array([255, 0, 42]);
     expect(hsvToRgb([350, 255, 255])).toStrictEqual(rgb);
   });
+  it('other random color', () => {
+    const rgb = new Uint8Array([0, 127, 255]);
+    expect(hsvToRgb([210, 255, 255])).toStrictEqual(rgb);
+  });
+  it('yet another random color', () => {
+    const rgb = new Uint8Array([127, 255, 0]);
+    expect(hsvToRgb([90, 255, 255])).toStrictEqual(rgb);
+  });
 });
