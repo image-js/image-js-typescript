@@ -5,7 +5,7 @@ import {
   ImageColorModel,
 } from '../../src';
 import { fromMask } from '../../src/roi';
-import { colorRois } from '../../src/roi/colorRois';
+import { ColorMode, colorRois } from '../../src/roi/colorRois';
 
 export function testCopyTo(image: IJS): IJS {
   let result = image.copyTo(image, {
@@ -69,5 +69,5 @@ export function testColorRois(image: IJS): IJS {
 
   const roiMapManager = fromMask(mask);
 
-  return colorRois(roiMapManager);
+  return colorRois(roiMapManager, { mode: ColorMode.TEMPERATURE });
 }
