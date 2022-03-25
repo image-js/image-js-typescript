@@ -170,7 +170,7 @@ export function fromMask(
     width: mask.width,
     height: mask.height,
     data,
-    nbNegative: negativeID,
+    nbNegative: Math.abs(negativeID),
     nbPositive: positiveID,
   });
 }
