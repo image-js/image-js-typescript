@@ -2,7 +2,7 @@ import { RoiKind } from '../../RoiManager';
 import { hsvToRgb } from '../hsvToRgb';
 import { rgbToNumber } from '../rgbToNumber';
 
-export interface GetTemperatureMapOptions {
+export interface GetRainbowMapOptions {
   /**
    * Number of black ROIs
    */
@@ -22,57 +22,47 @@ export interface GetTemperatureMapOptions {
    * @default RoiKind.BW
    */
   roiKind?: RoiKind;
-  /**
-   * Hue of white ROIs
-   *
-   * @default 0
-   */
-  whiteHue?: number;
-  /**
-   * Hue of black ROIs
-   *
-   * @default 240
-   */
-  blackHue?: number;
 }
 
 /**
- * Return a map where ROIs are different shades of red (positive) or blue (negative) depending on the ROI index.
+ * Return a map where ROIs are all different hues.
  *
  * @param options - Get temperature map options
  * @returns The colored map.
  */
-export function getTemperatureMap(
-  options: GetTemperatureMapOptions,
-): Uint32Array {
-  const {
-    nbNegative,
-    nbPositive,
-    roiKind = RoiKind.BW,
-    whiteHue = 0,
-    blackHue = 240,
-  } = options;
+export function getRainbowMap(options: GetRainbowMapOptions): Uint32Array {
+  const { nbNegative, nbPositive, roiKind = RoiKind.BW } = options;
 
   let colorMap = new Uint32Array(2 ** 16);
 
-  const range = 255 - 63;
-  const negativeStep = range / nbNegative;
-  const positiveStep = range / nbPositive;
+  const hueRange = 360;
+
+  let step: number;
+  if (roiKind === RoiKind.BW) {
+    step = hueRange / (nbNegative + nbPositive);
+  } else if (roiKind === RoiKind.BLACK) {
+    step = hueRange / nbNegative;
+  } else if (roiKind === RoiKind.WHITE) {
+    step = hueRange / nbPositive;
+  } else {
+    throw new Error('getRainbowMap: unrecognised ROI kind');
+  }
 
   // negative values
-  let counter = 0;
+  let hue = 0;
   if (roiKind === RoiKind.BW || roiKind === RoiKind.BLACK) {
     for (let i = 2 ** 15 - nbNegative; i < 2 ** 15; i++) {
-      const hsv = [blackHue, 255 - counter++ * negativeStep, 255];
+      const hsv = [hue, 255, 255];
       colorMap[i] = rgbToNumber(hsvToRgb(hsv));
+      hue += step;
     }
   }
   // positive values
-  counter = 0;
   if (roiKind === RoiKind.BW || roiKind === RoiKind.WHITE) {
     for (let i = 2 ** 15 + 1; i < 2 ** 15 + 1 + nbPositive; i++) {
-      const hsv = [whiteHue, 255 - counter++ * positiveStep, 255];
+      const hsv = [hue, 255, 255];
       colorMap[i] = rgbToNumber(hsvToRgb(hsv));
+      hue += step;
     }
   }
   return colorMap;
