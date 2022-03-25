@@ -2,7 +2,7 @@ import { getTemperatureMap } from '../getTemperatureMap';
 
 describe('getTemperatureMap', () => {
   it('1 negative and 1 positive ROIs', () => {
-    const colorMap = getTemperatureMap(1, 1);
+    const colorMap = getTemperatureMap({ nbNegative: 1, nbPositive: 1 });
 
     // console.log(colorMap.slice(32768 - 10, 32768 + 10));
 

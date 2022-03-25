@@ -3,7 +3,10 @@ import { getBinaryMap } from '../getBinaryMap';
 
 describe('getBinaryMap', () => {
   it('roiKind BW', () => {
-    const colorMap = getBinaryMap(1, 1);
+    const colorMap = getBinaryMap({
+      nbNegative: 1,
+      nbPositive: 1,
+    });
 
     // console.log(colorMap.slice(32768 - 10, 32768 + 10));
 
@@ -13,7 +16,9 @@ describe('getBinaryMap', () => {
   });
 
   it('roiKind WHITE', () => {
-    const colorMap = getBinaryMap(1, 1, {
+    const colorMap = getBinaryMap({
+      nbNegative: 1,
+      nbPositive: 1,
       roiKind: RoiKind.WHITE,
     });
 
@@ -21,7 +26,9 @@ describe('getBinaryMap', () => {
     expect(colorMap[2 ** 15 + 1]).toBe(0xff00ff00);
   });
   it('roiKind BLACK', () => {
-    const colorMap = getBinaryMap(1, 1, {
+    const colorMap = getBinaryMap({
+      nbNegative: 1,
+      nbPositive: 1,
       roiKind: RoiKind.BLACK,
     });
 
@@ -29,7 +36,11 @@ describe('getBinaryMap', () => {
     expect(colorMap[2 ** 15 + 1]).toBe(0);
   });
   it('test other hue (blue)', () => {
-    const colorMap = getBinaryMap(1, 1, { whiteHue: 240 });
+    const colorMap = getBinaryMap({
+      nbNegative: 1,
+      nbPositive: 1,
+      whiteHue: 240,
+    });
 
     expect(colorMap[2 ** 15 + 1]).toBe(0xffff0000); // blue
   });
