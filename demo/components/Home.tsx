@@ -3,10 +3,10 @@ import { IJS } from '../../src';
 import CameraSelector from './CameraSelector';
 import CameraTransform from './CameraTransform';
 import Container from './Container';
-import { testDerivativeFilter } from './testFunctions';
+import { testCropBounce } from './testFunction/testCrop';
 
 function testTransform(image: IJS) {
-  return testDerivativeFilter(image);
+  return testCropBounce(image);
 }
 
 export default function Home() {
