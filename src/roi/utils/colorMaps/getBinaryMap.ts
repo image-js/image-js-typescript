@@ -1,5 +1,5 @@
 import { RoiKind } from '../../RoiManager';
-import { maxPossibleRois, maxRoiID } from '../constants';
+import { maxNumberRois, maxRoiId } from '../constants';
 import { hsvToRgb } from '../hsvToRgb';
 import { rgbToNumber } from '../rgbToNumber';
 
@@ -51,18 +51,18 @@ export function getBinaryMap(options: GetBinaryMapOptions): Uint32Array {
     roiKind = RoiKind.BW,
   } = options;
 
-  let colorMap = new Uint32Array(maxPossibleRois);
+  let colorMap = new Uint32Array(maxNumberRois);
 
   // negative values
   if (roiKind === RoiKind.BW || roiKind === RoiKind.BLACK) {
-    for (let i = maxRoiID - nbNegative; i; i++) {
+    for (let i = maxRoiId - nbNegative; i; i++) {
       const hsv = [blackHue, 255, 255];
       colorMap[i] = rgbToNumber(hsvToRgb(hsv));
     }
   }
   if (roiKind === RoiKind.BW || roiKind === RoiKind.WHITE) {
     // positive values
-    for (let i = maxRoiID + 1; i < maxRoiID + 1 + nbPositive; i++) {
+    for (let i = maxRoiId + 1; i < maxRoiId + 1 + nbPositive; i++) {
       const hsv = [whiteHue, 255, 255];
       colorMap[i] = rgbToNumber(hsvToRgb(hsv));
     }

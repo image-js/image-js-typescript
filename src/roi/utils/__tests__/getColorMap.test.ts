@@ -1,5 +1,5 @@
 import { RoiKind } from '../../RoiManager';
-import { ColorMode } from '../../colorRois';
+import { RoisColorMode } from '../../colorRois';
 import { getColorMap } from '../getColorMap';
 
 describe('getBinaryMap', () => {
@@ -8,8 +8,6 @@ describe('getBinaryMap', () => {
       nbNegative: 1,
       nbPositive: 1,
     });
-
-    // console.log(colorMap.slice(32768 - 10, 32768 + 10));
 
     expect(colorMap).toHaveLength(65536);
     expect(colorMap[2 ** 15 - 1]).toBe(0xff0000ff); // red
@@ -39,19 +37,17 @@ describe('getBinaryMap', () => {
 
   it('temperature, 1 negative and 1 positive ROIs', () => {
     const colorMap = getColorMap({
-      mode: ColorMode.SATURATION,
+      mode: RoisColorMode.SATURATION,
       nbNegative: 1,
       nbPositive: 1,
     });
-
-    // console.log(colorMap.slice(32768 - 10, 32768 + 10));
 
     expect(colorMap[2 ** 15 - 1]).toBe(0xffff0000); // blue
     expect(colorMap[2 ** 15 + 1]).toBe(0xff0000ff); // red
   });
   it('rainbow, 1 negative and 2 positive ROIs, WHITE', () => {
     const colorMap = getColorMap({
-      mode: ColorMode.RAINBOW,
+      mode: RoisColorMode.RAINBOW,
       nbNegative: 1,
       nbPositive: 2,
       roiKind: RoiKind.WHITE,
@@ -63,7 +59,7 @@ describe('getBinaryMap', () => {
   });
   it('rainbow, 1 negative and 2 positive ROIs, BLACK', () => {
     const colorMap = getColorMap({
-      mode: ColorMode.RAINBOW,
+      mode: RoisColorMode.RAINBOW,
       nbNegative: 1,
       nbPositive: 2,
       roiKind: RoiKind.BLACK,
@@ -75,7 +71,7 @@ describe('getBinaryMap', () => {
   });
   it('rainbow, 1 negative and 1 positive ROIs, BW', () => {
     const colorMap = getColorMap({
-      mode: ColorMode.RAINBOW,
+      mode: RoisColorMode.RAINBOW,
       nbNegative: 1,
       nbPositive: 1,
       roiKind: RoiKind.BW,

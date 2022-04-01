@@ -1,2 +1,2 @@
-export const maxPossibleRois = 2 ** 16;
-export const maxRoiID = maxPossibleRois / 2;
+export const maxNumberRois = 2 ** 16;
+export const maxRoiId = maxNumberRois / 2;

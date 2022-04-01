@@ -1,7 +1,7 @@
 import { Mask } from '..';
 
 import { RoiMapManager } from './RoiMapManager';
-import { maxPossibleRois, maxRoiID } from './utils/constants';
+import { maxNumberRois, maxRoiId } from './utils/constants';
 
 export interface FromMaskOptions {
   /**
@@ -25,20 +25,20 @@ export function fromMask(
 ): RoiMapManager {
   const { allowCorners = false } = options;
 
-  const MAX_ARRAY = maxPossibleRois - 1; // 65535 should be enough for most of the cases
+  const MAX_ARRAY = maxNumberRois - 1; // 65535 should be enough for most of the cases
 
-  const maxPositiveID = maxRoiID - 1;
-  const maxNegativeID = -maxRoiID;
+  const maxPositiveId = maxRoiId - 1;
+  const maxNegativeId = -maxRoiId;
 
   // based on a binary image we will create plenty of small images
-  let data = new Int16Array(mask.size); // maxValue: maxPositiveID, minValue: maxNegativeID
+  let data = new Int16Array(mask.size); // maxValue: maxPositiveId, minValue: maxNegativeId
 
   // split will always return an array of images
-  let positiveID = 0;
-  let negativeID = 0;
+  let positiveId = 0;
+  let negativeId = 0;
 
-  let columnToProcess = new Uint16Array(maxPossibleRois);
-  let rowToProcess = new Uint16Array(maxPossibleRois);
+  let columnToProcess = new Uint16Array(maxNumberRois);
+  let rowToProcess = new Uint16Array(maxNumberRois);
 
   for (let column = 0; column < mask.width; column++) {
     for (let row = 0; row < mask.height; row++) {
@@ -54,8 +54,8 @@ export function fromMask(
     let from = 0;
     let to = 0;
     let targetState = mask.getBit(row, column);
-    let id = targetState ? ++positiveID : --negativeID;
-    if (positiveID > maxPositiveID || negativeID < maxNegativeID) {
+    let id = targetState ? ++positiveId : --negativeId;
+    if (positiveId > maxPositiveId || negativeId < maxNegativeId) {
       throw new Error('Too many regions of interest');
     }
     columnToProcess[0] = column;
@@ -74,7 +74,7 @@ export function fromMask(
         to++;
         columnToProcess[to & MAX_ARRAY] = currentColumn - 1;
         rowToProcess[to & MAX_ARRAY] = currentRow;
-        data[currentRow * mask.width + currentColumn - 1] = maxNegativeID;
+        data[currentRow * mask.width + currentColumn - 1] = maxNegativeId;
       }
       if (
         currentRow > 0 &&
@@ -85,7 +85,7 @@ export function fromMask(
         to++;
         columnToProcess[to & MAX_ARRAY] = currentColumn;
         rowToProcess[to & MAX_ARRAY] = currentRow - 1;
-        data[(currentRow - 1) * mask.width + currentColumn] = maxNegativeID;
+        data[(currentRow - 1) * mask.width + currentColumn] = maxNegativeId;
       }
       if (
         currentColumn < mask.width - 1 &&
@@ -96,7 +96,7 @@ export function fromMask(
         to++;
         columnToProcess[to & MAX_ARRAY] = currentColumn + 1;
         rowToProcess[to & MAX_ARRAY] = currentRow;
-        data[currentRow * mask.width + currentColumn + 1] = maxNegativeID;
+        data[currentRow * mask.width + currentColumn + 1] = maxNegativeId;
       }
       if (
         currentRow < mask.height - 1 &&
@@ -107,7 +107,7 @@ export function fromMask(
         to++;
         columnToProcess[to & MAX_ARRAY] = currentColumn;
         rowToProcess[to & MAX_ARRAY] = currentRow + 1;
-        data[(currentRow + 1) * mask.width + currentColumn] = maxNegativeID;
+        data[(currentRow + 1) * mask.width + currentColumn] = maxNegativeId;
       }
       if (allowCorners) {
         if (
@@ -121,7 +121,7 @@ export function fromMask(
           columnToProcess[to & MAX_ARRAY] = currentColumn - 1;
           rowToProcess[to & MAX_ARRAY] = currentRow - 1;
           data[(currentRow - 1) * mask.width + currentColumn - 1] =
-            maxNegativeID;
+            maxNegativeId;
         }
         if (
           currentColumn < mask.width - 1 &&
@@ -134,7 +134,7 @@ export function fromMask(
           columnToProcess[to & MAX_ARRAY] = currentColumn + 1;
           rowToProcess[to & MAX_ARRAY] = currentRow - 1;
           data[(currentRow - 1) * mask.width + currentColumn + 1] =
-            maxNegativeID;
+            maxNegativeId;
         }
         if (
           currentColumn > 0 &&
@@ -147,7 +147,7 @@ export function fromMask(
           columnToProcess[to & MAX_ARRAY] = currentColumn - 1;
           rowToProcess[to & MAX_ARRAY] = currentRow + 1;
           data[(currentRow + 1) * mask.width + currentColumn - 1] =
-            maxNegativeID;
+            maxNegativeId;
         }
         if (
           currentColumn < mask.width - 1 &&
@@ -160,7 +160,7 @@ export function fromMask(
           columnToProcess[to & MAX_ARRAY] = currentColumn + 1;
           rowToProcess[to & MAX_ARRAY] = currentRow + 1;
           data[(currentRow + 1) * mask.width + currentColumn + 1] =
-            maxNegativeID;
+            maxNegativeId;
         }
       }
 
@@ -178,7 +178,7 @@ export function fromMask(
     width: mask.width,
     height: mask.height,
     data,
-    nbNegative: Math.abs(negativeID),
-    nbPositive: positiveID,
+    nbNegative: Math.abs(negativeId),
+    nbPositive: positiveId,
   });
 }
