@@ -63,21 +63,6 @@ describe('crop', () => {
     expect(result).toMatchImageData([[1, 1]]);
   });
 
-  it('non-integer arguments', () => {
-    const image = testUtils.createGreyImage([
-      [0, 1, 2, 3, 4],
-      [1, 1, 1, 1, 1],
-      [1, 2, 2, 2, 0],
-    ]);
-    let result = image.crop({
-      row: 1.2,
-      column: 0.7,
-      height: 1.1,
-      width: 2.8,
-    });
-    expect(result).toMatchImageData([[1, 1, 1]]);
-  });
-
   it('invalid argument ranges', () => {
     const image = new IJS(5, 5);
 

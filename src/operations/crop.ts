@@ -52,11 +52,6 @@ export default function crop(image: IJS, options: CropOptions = {}) {
     bitDepth: [8, 16],
   });
 
-  row = Math.round(row);
-  column = Math.round(column);
-  width = Math.round(width);
-  height = Math.round(height);
-
   if (row > image.height - 1 || column > image.width - 1) {
     throw new Error(
       `crop: origin (row:${row}, column:${column}) out of range (${
