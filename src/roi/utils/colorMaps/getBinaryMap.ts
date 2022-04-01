@@ -55,7 +55,7 @@ export function getBinaryMap(options: GetBinaryMapOptions): Uint32Array {
 
   // negative values
   if (roiKind === RoiKind.BW || roiKind === RoiKind.BLACK) {
-    for (let i = maxRoiId - nbNegative; i; i++) {
+    for (let i = maxRoiId - nbNegative; i < maxRoiId; i++) {
       const hsv = [blackHue, 255, 255];
       colorMap[i] = rgbToNumber(hsvToRgb(hsv));
     }

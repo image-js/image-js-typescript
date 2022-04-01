@@ -37,6 +37,7 @@ export interface GetColorMapOptions {
  */
 export function getColorMap(options: GetColorMapOptions): Uint32Array {
   const { mode = RoisColorMode.BINARY } = options;
+
   switch (mode) {
     case RoisColorMode.BINARY:
       return getBinaryMap(options);
