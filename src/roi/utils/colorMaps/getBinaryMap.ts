@@ -1,8 +1,9 @@
 import { RoiKind } from '../../RoiManager';
+import { maxPossibleRois, maxRoiID } from '../constants';
 import { hsvToRgb } from '../hsvToRgb';
 import { rgbToNumber } from '../rgbToNumber';
 
-// warning: the values in a uint32 array are flipped!! e.g. [0,0,0,1] becomes 0x80000000
+// warning: the values in a uint32 array are flipped!! e.g. [0,0,0,1] becomes 0x01000000
 // the bits values are therefore in the following order: ABGR
 // index 32768 corresponds to the middle of the array
 
@@ -50,18 +51,18 @@ export function getBinaryMap(options: GetBinaryMapOptions): Uint32Array {
     roiKind = RoiKind.BW,
   } = options;
 
-  let colorMap = new Uint32Array(2 ** 16);
+  let colorMap = new Uint32Array(maxPossibleRois);
 
   // negative values
   if (roiKind === RoiKind.BW || roiKind === RoiKind.BLACK) {
-    for (let i = 2 ** 15 - nbNegative; i < 2 ** 15; i++) {
+    for (let i = maxRoiID - nbNegative; i; i++) {
       const hsv = [blackHue, 255, 255];
       colorMap[i] = rgbToNumber(hsvToRgb(hsv));
     }
   }
   if (roiKind === RoiKind.BW || roiKind === RoiKind.WHITE) {
     // positive values
-    for (let i = 2 ** 15 + 1; i < 2 ** 15 + 1 + nbPositive; i++) {
+    for (let i = maxRoiID + 1; i < maxRoiID + 1 + nbPositive; i++) {
       const hsv = [whiteHue, 255, 255];
       colorMap[i] = rgbToNumber(hsvToRgb(hsv));
     }

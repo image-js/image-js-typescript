@@ -1,4 +1,5 @@
 import { RoiKind } from '../../RoiManager';
+import { maxPossibleRois, maxRoiID } from '../constants';
 import { hsvToRgb } from '../hsvToRgb';
 import { rgbToNumber } from '../rgbToNumber';
 
@@ -33,7 +34,7 @@ export interface GetRainbowMapOptions {
 export function getRainbowMap(options: GetRainbowMapOptions): Uint32Array {
   const { nbNegative, nbPositive, roiKind = RoiKind.BW } = options;
 
-  let colorMap = new Uint32Array(2 ** 16);
+  let colorMap = new Uint32Array(maxPossibleRois);
 
   const hueRange = 360;
 
@@ -51,7 +52,7 @@ export function getRainbowMap(options: GetRainbowMapOptions): Uint32Array {
   // negative values
   let hue = 0;
   if (roiKind === RoiKind.BW || roiKind === RoiKind.BLACK) {
-    for (let i = 2 ** 15 - nbNegative; i < 2 ** 15; i++) {
+    for (let i = maxRoiID - nbNegative; i < maxRoiID; i++) {
       const hsv = [hue, 255, 255];
       colorMap[i] = rgbToNumber(hsvToRgb(hsv));
       hue += step;
@@ -59,7 +60,7 @@ export function getRainbowMap(options: GetRainbowMapOptions): Uint32Array {
   }
   // positive values
   if (roiKind === RoiKind.BW || roiKind === RoiKind.WHITE) {
-    for (let i = 2 ** 15 + 1; i < 2 ** 15 + 1 + nbPositive; i++) {
+    for (let i = maxRoiID + 1; i < maxRoiID + 1 + nbPositive; i++) {
       const hsv = [hue, 255, 255];
       colorMap[i] = rgbToNumber(hsvToRgb(hsv));
       hue += step;

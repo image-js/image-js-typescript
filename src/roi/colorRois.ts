@@ -4,7 +4,7 @@ import { getColorMap } from './utils/getColorMap';
 
 import { RoiKind, RoiMapManager } from '.';
 
-export enum ColorMode {
+export enum RoisColorMode {
   /**
    * Only two acceptable values: red or green
    */
@@ -25,7 +25,7 @@ export interface ColorRoisOptions {
    *
    * @default ColorMode.BINARY
    */
-  mode?: ColorMode;
+  mode?: RoisColorMode;
   /**
    * Specify which ROIs to colour.
    *
@@ -45,7 +45,7 @@ export function colorRois(
   roiMapManager: RoiMapManager,
   options: ColorRoisOptions = {},
 ): IJS {
-  const { roiKind = RoiKind.BW, mode = ColorMode.BINARY } = options;
+  const { roiKind = RoiKind.BW, mode = RoisColorMode.BINARY } = options;
 
   let image = new IJS(roiMapManager.map.width, roiMapManager.map.height, {
     colorModel: ImageColorModel.RGBA,
