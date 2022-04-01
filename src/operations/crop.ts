@@ -40,8 +40,8 @@ export interface CropOptions {
  *   column:100
  * });
  */
-export default function crop(image: IJS, options: CropOptions = {}) {
-  let {
+export function crop(image: IJS, options: CropOptions = {}) {
+  const {
     row = 0,
     column = 0,
     width = image.width - column,

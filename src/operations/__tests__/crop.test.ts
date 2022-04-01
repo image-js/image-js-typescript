@@ -8,10 +8,7 @@ describe('crop', () => {
       [1, 2, 2],
     ]);
 
-    let result = image.crop({
-      row: 0,
-      column: 0,
-    });
+    let result = image.crop();
     expect(result).toMatchImage(image);
   });
 

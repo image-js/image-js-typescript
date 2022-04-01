@@ -39,7 +39,7 @@ import {
 import { convertColor, ConvertColorOptions } from './operations/convertColor';
 import { convertDepth } from './operations/convertDepth';
 import copyTo, { CopyToOptions } from './operations/copyTo';
-import crop, { CropOptions } from './operations/crop';
+import { crop, CropOptions } from './operations/crop';
 import grey from './operations/grey';
 import { split } from './operations/split';
 import { ImageColorModel, colorModels } from './utils/colorModels';
