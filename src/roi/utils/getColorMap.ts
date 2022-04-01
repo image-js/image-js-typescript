@@ -3,7 +3,7 @@ import { ColorMode } from '../colorRois';
 
 import { getBinaryMap } from './colorMaps/getBinaryMap';
 import { getRainbowMap } from './colorMaps/getRainbowMap';
-import { getTemperatureMap } from './colorMaps/getTemperatureMap';
+import { getSaturationMap } from './colorMaps/getSaturationMap';
 
 export interface GetColorMapOptions {
   /**
@@ -40,8 +40,8 @@ export function getColorMap(options: GetColorMapOptions): Uint32Array {
   switch (mode) {
     case ColorMode.BINARY:
       return getBinaryMap(options);
-    case ColorMode.TEMPERATURE:
-      return getTemperatureMap(options);
+    case ColorMode.SATURATION:
+      return getSaturationMap(options);
     case ColorMode.RAINBOW:
       return getRainbowMap(options);
     default:

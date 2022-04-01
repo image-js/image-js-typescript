@@ -2,7 +2,7 @@ import { RoiKind } from '../../RoiManager';
 import { hsvToRgb } from '../hsvToRgb';
 import { rgbToNumber } from '../rgbToNumber';
 
-export interface GetTemperatureMapOptions {
+export interface GetSaturationMapOptions {
   /**
    * Number of black ROIs
    */
@@ -37,13 +37,13 @@ export interface GetTemperatureMapOptions {
 }
 
 /**
- * Return a map where ROIs are different shades of red (positive) or blue (negative) depending on the ROI index.
+ * Return a map where ROIs are different shades of red (positive) or blue (negative) depending on the ROI index. It it the saturation of the HSV color model that is varied.
  *
  * @param options - Get temperature map options
  * @returns The colored map.
  */
-export function getTemperatureMap(
-  options: GetTemperatureMapOptions,
+export function getSaturationMap(
+  options: GetSaturationMapOptions,
 ): Uint32Array {
   const {
     nbNegative,

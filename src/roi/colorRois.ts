@@ -12,7 +12,7 @@ export enum ColorMode {
   /**
    * Palette of reds and blues.
    */
-  TEMPERATURE = 'TEMPERATURE',
+  SATURATION = 'SATURATION',
   /**
    * All possible hues (gradient of colors).
    */

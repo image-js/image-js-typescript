@@ -39,7 +39,7 @@ describe('getBinaryMap', () => {
 
   it('temperature, 1 negative and 1 positive ROIs', () => {
     const colorMap = getColorMap({
-      mode: ColorMode.TEMPERATURE,
+      mode: ColorMode.SATURATION,
       nbNegative: 1,
       nbPositive: 1,
     });
