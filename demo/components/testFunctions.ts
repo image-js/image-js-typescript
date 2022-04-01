@@ -36,6 +36,7 @@ export function testCannyEdge(image: IJS): IJS {
   convertBinaryToGrey(edges, result);
   return result;
 }
+
 export function testCannyEdgeOverlay(image: IJS): IJS {
   let result = image.convertColor(ImageColorModel.GREY);
   const edges = result.cannyEdgeDetector({
