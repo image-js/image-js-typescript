@@ -57,7 +57,7 @@ export default function crop(image: IJS, options: CropOptions = {}) {
   width = Math.round(width);
   height = Math.round(height);
 
-  if (row > image.width - 1 || column > image.height - 1) {
+  if (row > image.height - 1 || column > image.width - 1) {
     throw new Error(
       `crop: origin (row:${row}, column:${column}) out of range (${
         image.width - 1
@@ -74,13 +74,13 @@ export default function crop(image: IJS, options: CropOptions = {}) {
       `crop: row and column (row:${row}, column:${column}) must be positive numbers`,
     );
   }
-  if (width > image.width - row || height > image.height - column) {
+  if (width > image.width - column || height > image.height - row) {
     throw new Error(
       `crop: (row:${row}, column: ${column}, width:${width}, height:${height}) size is out of range`,
     );
   }
 
-  let newImage = IJS.createFrom(image, {
+  const newImage = IJS.createFrom(image, {
     width,
     height,
   });
