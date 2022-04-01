@@ -1,4 +1,4 @@
-import { IJS } from '../../../src';
+import { DerivativeFilters, IJS, ImageColorModel } from '../../../src';
 // options
 const cropImageRatio = 2; // defines the size of the cropped image
 const interval = 2; // defines the speed
@@ -29,11 +29,18 @@ export function testCropBounce(image: IJS): IJS {
   column += columnInterval;
   row += rowInterval;
 
-  let cropped = image.crop({
+  const cropped = image.crop({
     column,
     row,
     width,
     height,
   });
-  return cropped;
+  const grey = cropped.grey();
+  const derivative = grey.derivativeFilter({
+    filter: DerivativeFilters.PREWITT,
+  });
+
+  const rgba = derivative.convertColor(ImageColorModel.RGBA);
+
+  return rgba.copyTo(image, { rowOffset: row, columnOffset: column });
 }
