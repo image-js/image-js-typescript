@@ -112,4 +112,10 @@ describe('floodFill', () => {
       [0, 0, 1, 0, 0],
     ]);
   });
+  it('larger image', () => {
+    const image = testUtils.load('various/alphabetCannyEdges.png');
+    const mask = image.threshold();
+    const flooded = mask.floodFill();
+    expect(flooded).toMatchSnapshot();
+  });
 });
