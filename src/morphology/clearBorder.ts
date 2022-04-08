@@ -16,7 +16,7 @@ export interface ClearBorderOptions {
 }
 
 const MAX_ARRAY = 65536; // 65536 should be enough for most of the cases
-const toProcess = new Uint16Array(MAX_ARRAY);
+const toProcess = new Uint32Array(MAX_ARRAY);
 
 /**
  * Set the pixels connected to the border of the mask to zero. You can chose to allow corner connection of not with the `allowCorners` option.
@@ -48,8 +48,6 @@ export function clearBorder(
       newMask.setBitByIndex(pixelIndex, 0);
     }
   }
-  console.log({ from, to });
-  console.log({ toProcess });
 
   // find pixels connected to the border pixels
   while (from < to) {
@@ -71,6 +69,7 @@ export function clearBorder(
 
     if (!bottomBorder) {
       const bottom = currentPixel + mask.width;
+
       addToProcess(bottom);
     }
     if (!leftBorder) {
