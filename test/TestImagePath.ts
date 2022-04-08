@@ -34,5 +34,4 @@ export type TestImagePath =
   | 'various/alphabet.jpg'
   | 'morphology/alphabetCannyEdge.png'
   | 'morphology/grayscaleCannyEdge.png'
-  | 'morphology/alphabetCannyEdge.png'
   | 'morphology/grayscaleClearBorder.png';
