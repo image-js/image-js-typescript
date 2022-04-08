@@ -1,5 +1,4 @@
-import { encodePng, Mask } from '../..';
-import { ImageColorModel } from '../../IJS';
+import { Mask } from '../..';
 
 describe('floodFill', () => {
   it('mask 5x5, default options', () => {
@@ -117,10 +116,6 @@ describe('floodFill', () => {
     const image = testUtils.load('morphology/alphabetCannyEdge.png');
     const mask = image.threshold();
     const flooded = mask.floodFill();
-    const png = Buffer.from(
-      encodePng(flooded.convertColor(ImageColorModel.GREY)),
-    );
-
-    expect(png).toMatchImageSnapshot();
+    expect(flooded).toMatchIJSSnapshot();
   });
 });
