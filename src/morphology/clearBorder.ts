@@ -21,53 +21,56 @@ const toProcess = new Uint16Array(MAX_ARRAY);
 /**
  * Set the pixels connected to the border of the mask to zero. You can chose to allow corner connection of not with the `allowCorners` option.
  *
- * @param image - The mask to process.
+ * @param mask - The mask to process.
  * @param options - Clear border options.
  * @returns The image with cleared borders.
  */
 export function clearBorder(
-  image: Mask,
+  mask: Mask,
   options: ClearBorderOptions = {},
 ): Mask {
   let { allowCorners = false } = options;
 
-  // toProcess.fill(0);
+  let newMask = maskToOutputMask(mask, options, { clone: true });
 
-  let newImage = maskToOutputMask(image, options, { clone: true });
+  let alreadyConsidered = Mask.createFrom(mask);
 
-  const maxValue = image.maxValue;
+  const maxValue = mask.maxValue;
 
   let from = 0;
   let to = 0;
 
   // find relevant border pixels
-  for (let pixelIndex of borderIterator(image)) {
-    if (newImage.getBitByIndex(pixelIndex) === maxValue) {
+  for (let pixelIndex of borderIterator(mask)) {
+    if (newMask.getBitByIndex(pixelIndex) === maxValue) {
       toProcess[to++ % MAX_ARRAY] = pixelIndex;
-      newImage.setBitByIndex(pixelIndex, 0);
+      alreadyConsidered.setBitByIndex(pixelIndex, 1);
+      newMask.setBitByIndex(pixelIndex, 0);
     }
   }
+  console.log({ from, to });
+  console.log({ toProcess });
 
   // find pixels connected to the border pixels
   while (from < to) {
-    const currentPixel = toProcess[from++ % MAX_ARRAY];
-    newImage.setBitByIndex(currentPixel, 0);
     if (to - from > MAX_ARRAY) {
       throw new Error(
         'clearBorder: could not process image, overflow in the data processing array.',
       );
     }
+    const currentPixel = toProcess[from++ % MAX_ARRAY];
+    newMask.setBitByIndex(currentPixel, 0);
 
     // check if pixel is on a border
-    const topBorder = currentPixel < image.width;
-    const leftBorder = currentPixel % image.width === 0;
-    const rightBorder = currentPixel % image.width === image.width - 1;
-    const bottomBorder = currentPixel > image.size - image.width;
+    const topBorder = currentPixel < mask.width;
+    const leftBorder = currentPixel % mask.width === 0;
+    const rightBorder = currentPixel % mask.width === mask.width - 1;
+    const bottomBorder = currentPixel > mask.size - mask.width;
 
     // check neighbours
 
     if (!bottomBorder) {
-      const bottom = currentPixel + image.width;
+      const bottom = currentPixel + mask.width;
       addToProcess(bottom);
     }
     if (!leftBorder) {
@@ -75,7 +78,7 @@ export function clearBorder(
       addToProcess(left);
     }
     if (!topBorder) {
-      const top = currentPixel - image.width;
+      const top = currentPixel - mask.width;
       addToProcess(top);
     }
     if (!rightBorder) {
@@ -85,32 +88,34 @@ export function clearBorder(
     if (allowCorners) {
       if (!topBorder) {
         if (!leftBorder) {
-          const topLeft = currentPixel - image.width - 1;
+          const topLeft = currentPixel - mask.width - 1;
           addToProcess(topLeft);
         }
         if (!rightBorder) {
-          const topRight = currentPixel - image.width + 1;
+          const topRight = currentPixel - mask.width + 1;
           addToProcess(topRight);
         }
       }
       if (!bottomBorder) {
         if (!leftBorder) {
-          const bottomLeft = currentPixel + image.width - 1;
+          const bottomLeft = currentPixel + mask.width - 1;
           addToProcess(bottomLeft);
         }
         if (!rightBorder) {
-          const bottomRight = currentPixel + image.width + 1;
+          const bottomRight = currentPixel + mask.width + 1;
           addToProcess(bottomRight);
         }
       }
     }
   }
 
-  return newImage;
+  return newMask;
 
   function addToProcess(pixel: number): void {
-    if (newImage.getBitByIndex(pixel) === image.maxValue) {
+    if (alreadyConsidered.getBitByIndex(pixel)) return;
+    if (newMask.getBitByIndex(pixel) === mask.maxValue) {
       toProcess[to++ % MAX_ARRAY] = pixel;
+      alreadyConsidered.setBitByIndex(pixel, 1);
     }
   }
 }
