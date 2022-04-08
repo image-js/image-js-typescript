@@ -32,5 +32,7 @@ export type TestImagePath =
   | 'opencv/testTranslation.png'
   | 'various/grayscale_by_zimmyrose.png'
   | 'various/alphabet.jpg'
-  | 'various/alphabetCannyEdges.png'
-  | 'various/grayscaleCannyEdge.png';
+  | 'morphology/alphabetCannyEdge.png'
+  | 'morphology/grayscaleCannyEdge.png'
+  | 'morphology/alphabetCannyEdge.png'
+  | 'morphology/grayscaleClearBorder.png';

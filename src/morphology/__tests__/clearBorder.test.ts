@@ -1,4 +1,4 @@
-import { Mask } from '../..';
+import { encodePng, ImageColorModel, Mask } from '../..';
 
 describe('clearBorder', () => {
   it('5x5 mask, without corners', () => {
@@ -159,6 +159,10 @@ describe('clearBorder', () => {
 
     const mask = image.threshold();
     const cleared = mask.clearBorder();
-    expect(cleared).toMatchSnapshot();
+    const png = Buffer.from(
+      encodePng(cleared.convertColor(ImageColorModel.GREY)),
+    );
+
+    expect(png).toMatchImageSnapshot();
   });
 });
