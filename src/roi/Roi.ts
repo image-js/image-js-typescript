@@ -1,7 +1,10 @@
+import { Mask } from '../Mask';
+
 import { RoiMap } from './RoiMapManager';
+import { getMask } from './getMask';
 
 export class Roi {
-  public map: RoiMap;
+  private map: RoiMap;
   public id: number;
   public row: number;
   public column: number;
@@ -18,6 +21,37 @@ export class Roi {
     this.height = 0;
     this.surface = 0;
   }
+
+  /**
+   * Get the ROI map of the original image.
+   *
+   * @returns The ROI map.
+   */
+  public getMap(): RoiMap {
+    return this.map;
+  }
+
+  /**
+   * Return the value at the given coordinates in an ROI map.
+   *
+   * @param row - Row of the value.
+   * @param column - Column of the value.
+   * @returns The value at the given coordinates.
+   */
+  public getMapValue(row: number, column: number) {
+    return this.map.data[this.map.width * row + column];
+  }
+
+  /**
+   * Return the value with the given index in an ROI map.
+   *
+   * @param index - Index of the value.
+   * @returns The value at the given coordinates.
+   */
+  public getMapValueByIndex(index: number): number {
+    return this.map.data[index];
+  }
+
   /**
    * Return the ratio between the width and the height of the bounding rectangle of the ROI.
    *
@@ -26,5 +60,13 @@ export class Roi {
   public getRatio(): number {
     return this.width / this.height;
   }
-  public getMask(): Mask {}
+
+  /**
+   * Generate a mask the size of the bounding rectangle of the ROI, where the pixels inside the ROI are set to true and the rest to false.
+   *
+   * @returns The ROI mask.
+   */
+  public getMask(): Mask {
+    return getMask(this);
+  }
 }
