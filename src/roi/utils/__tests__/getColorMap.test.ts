@@ -1,5 +1,4 @@
-import { RoiKind } from '../../RoiManager';
-import { RoisColorMode } from '../../colorRois';
+import { ColorRoiKind, RoisColorMode } from '../../colorRois';
 import { maxNumberRois, colorMapCenter } from '../constants';
 import { getColorMap } from '../getColorMap';
 
@@ -19,7 +18,7 @@ describe('getBinaryMap', () => {
     const colorMap = getColorMap({
       nbNegative: 1,
       nbPositive: 1,
-      roiKind: RoiKind.WHITE,
+      roiKind: ColorRoiKind.WHITE,
     });
 
     expect(colorMap[colorMapCenter - 1]).toBe(0);
@@ -29,7 +28,7 @@ describe('getBinaryMap', () => {
     const colorMap = getColorMap({
       nbNegative: 1,
       nbPositive: 1,
-      roiKind: RoiKind.BLACK,
+      roiKind: ColorRoiKind.BLACK,
     });
 
     expect(colorMap[colorMapCenter - 1]).toBe(0xff0000ff);
@@ -51,7 +50,7 @@ describe('getBinaryMap', () => {
       mode: RoisColorMode.RAINBOW,
       nbNegative: 1,
       nbPositive: 2,
-      roiKind: RoiKind.WHITE,
+      roiKind: ColorRoiKind.WHITE,
     });
 
     expect(colorMap[colorMapCenter - 1]).toBe(0); // transparent
@@ -63,7 +62,7 @@ describe('getBinaryMap', () => {
       mode: RoisColorMode.RAINBOW,
       nbNegative: 1,
       nbPositive: 2,
-      roiKind: RoiKind.BLACK,
+      roiKind: ColorRoiKind.BLACK,
     });
 
     expect(colorMap[colorMapCenter - 1]).toBe(0xff0000ff);
@@ -75,7 +74,7 @@ describe('getBinaryMap', () => {
       mode: RoisColorMode.RAINBOW,
       nbNegative: 1,
       nbPositive: 1,
-      roiKind: RoiKind.BW,
+      roiKind: ColorRoiKind.BW,
     });
 
     expect(colorMap[colorMapCenter - 1]).toBe(0xff0000ff);

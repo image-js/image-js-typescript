@@ -1,4 +1,4 @@
-import { RoiKind } from '../../RoiManager';
+import { ColorRoiKind } from '../../colorRois';
 import { maxNumberRois, colorMapCenter } from '../constants';
 import { hsvToRgb } from '../hsvToRgb';
 import { rgbToNumber } from '../rgbToNumber';
@@ -15,9 +15,9 @@ export interface GetRainbowMapOptions {
   /**
    * Specify which ROIs to colour.
    *
-   * @default RoiKind.BW
+   * @default ColorRoiKind.BW
    */
-  roiKind?: RoiKind;
+  roiKind?: ColorRoiKind;
 }
 
 /**
@@ -27,18 +27,18 @@ export interface GetRainbowMapOptions {
  * @returns The colored map.
  */
 export function getRainbowMap(options: GetRainbowMapOptions): Uint32Array {
-  const { nbNegative, nbPositive, roiKind = RoiKind.BW } = options;
+  const { nbNegative, nbPositive, roiKind = ColorRoiKind.BW } = options;
 
   let colorMap = new Uint32Array(maxNumberRois);
 
   const hueRange = 360;
 
   let step: number;
-  if (roiKind === RoiKind.BW) {
+  if (roiKind === ColorRoiKind.BW) {
     step = hueRange / (nbNegative + nbPositive);
-  } else if (roiKind === RoiKind.BLACK) {
+  } else if (roiKind === ColorRoiKind.BLACK) {
     step = hueRange / nbNegative;
-  } else if (roiKind === RoiKind.WHITE) {
+  } else if (roiKind === ColorRoiKind.WHITE) {
     step = hueRange / nbPositive;
   } else {
     throw new Error('getRainbowMap: unrecognised ROI kind');
@@ -46,7 +46,7 @@ export function getRainbowMap(options: GetRainbowMapOptions): Uint32Array {
 
   // negative values
   let hue = 0;
-  if (roiKind === RoiKind.BW || roiKind === RoiKind.BLACK) {
+  if (roiKind === ColorRoiKind.BW || roiKind === ColorRoiKind.BLACK) {
     for (let i = colorMapCenter - nbNegative; i < colorMapCenter; i++) {
       const hsv = [hue, 255, 255];
       colorMap[i] = rgbToNumber(hsvToRgb(hsv));
@@ -54,7 +54,7 @@ export function getRainbowMap(options: GetRainbowMapOptions): Uint32Array {
     }
   }
   // positive values
-  if (roiKind === RoiKind.BW || roiKind === RoiKind.WHITE) {
+  if (roiKind === ColorRoiKind.BW || roiKind === ColorRoiKind.WHITE) {
     for (let i = colorMapCenter + 1; i < colorMapCenter + 1 + nbPositive; i++) {
       const hsv = [hue, 255, 255];
       colorMap[i] = rgbToNumber(hsvToRgb(hsv));
