@@ -12,10 +12,10 @@ export class Roi {
   public constructor(map: RoiMap, id: number) {
     this.map = map;
     this.id = id;
-    this.minRow = Number.POSITIVE_INFINITY;
-    this.minColumn = Number.NEGATIVE_INFINITY;
-    this.maxRow = Number.POSITIVE_INFINITY;
-    this.maxColumn = Number.NEGATIVE_INFINITY;
+    this.minRow = map.height;
+    this.minColumn = map.width;
+    this.maxRow = -1;
+    this.maxColumn = -1;
     this.surface = 0;
   }
 

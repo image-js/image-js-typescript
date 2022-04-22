@@ -1,3 +1,5 @@
+import { Roi } from './Roi';
+
 export enum RoiKind {
   BLACK = 'BLACK',
   WHITE = 'WHITE',
@@ -25,10 +27,7 @@ export interface GetRoisOptions {
   kind?: RoiKind;
 }
 
-export interface Roi {
-  getSurface(): number;
-}
-
 export interface RoiManager {
   getRois(options: GetRoisOptions): Roi[];
+  computeRois(): void;
 }
