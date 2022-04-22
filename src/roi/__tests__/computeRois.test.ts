@@ -3,7 +3,7 @@ import { Roi } from '../Roi';
 import { computeRois } from '../computeRois';
 
 describe('computeRois', () => {
-  it('1x1 mask', () => {
+  it('1x2 mask', () => {
     const mask = testUtils.createMask([[1, 0]]);
     const roiMapManager = fromMask(mask);
     computeRois(roiMapManager);
@@ -27,5 +27,19 @@ describe('computeRois', () => {
 
     expect(roiMapManager.blackRois).toHaveLength(1);
     expect(roiMapManager.blackRois).toStrictEqual([blackRoi]);
+  });
+  it('3x3 mask', () => {
+    const mask = testUtils.createMask([
+      [1, 1, 1],
+      [1, 0, 0],
+      [0, 0, 1],
+    ]);
+    const roiMapManager = fromMask(mask);
+    computeRois(roiMapManager);
+    expect(roiMapManager.whiteRois).toHaveLength(2);
+    expect(roiMapManager.blackRois).toHaveLength(1);
+
+    expect(roiMapManager.whiteRois).toMatchSnapshot();
+    expect(roiMapManager.blackRois).toMatchSnapshot();
   });
 });
