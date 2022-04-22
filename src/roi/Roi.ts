@@ -18,8 +18,4 @@ export class Roi {
     this.maxColumn = -1;
     this.surface = 0;
   }
-
-  public getSurface(): number {
-    return (this.maxRow - this.minRow) * (this.maxColumn - this.minColumn);
-  }
 }

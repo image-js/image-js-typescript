@@ -15,19 +15,20 @@ export function computeRois(roiMapManager: RoiMapManager): void {
   roiMapManager.blackRois = new Array(map.nbNegative);
 
   for (let i = 1; i <= map.nbPositive; i++) {
-    roiMapManager.whiteRois.push(new Roi(map, i));
+    roiMapManager.whiteRois[i - 1] = new Roi(map, i);
   }
   for (let i = 1; i <= map.nbNegative; i++) {
-    roiMapManager.blackRois.push(new Roi(map, -i));
+    roiMapManager.blackRois[i - 1] = new Roi(map, -i);
   }
   for (let row = 0; row < map.height; row++) {
     for (let column = 0; column < map.width; column++) {
       let currentIndex = map.data[getRoiMapIndex(row, column, map)];
+
       let currentRoi;
       if (currentIndex < 0) {
-        currentRoi = roiMapManager.blackRois[-currentIndex];
+        currentRoi = roiMapManager.blackRois[-currentIndex - 1];
       } else {
-        currentRoi = roiMapManager.whiteRois[currentIndex];
+        currentRoi = roiMapManager.whiteRois[currentIndex - 1];
       }
 
       currentRoi.surface++;
