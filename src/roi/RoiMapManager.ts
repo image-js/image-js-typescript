@@ -1,8 +1,12 @@
 import { Matrix } from 'ml-matrix';
 
 import { Roi } from './Roi';
-import { GetRoisOptions, RoiManager } from './RoiManager';
 import { computeRois } from './computeRois';
+import { getRois, GetRoisOptions } from './getRois';
+
+export interface RoiManager {
+  getRois(options: GetRoisOptions): Roi[];
+}
 
 export interface RoiMap {
   /**
@@ -30,7 +34,7 @@ export interface RoiMap {
   nbNegative: number;
 }
 export class RoiMapManager implements RoiManager {
-  public map: RoiMap;
+  private map: RoiMap;
   public whiteRois: Roi[];
   public blackRois: Roi[];
 
@@ -38,6 +42,14 @@ export class RoiMapManager implements RoiManager {
     this.map = map;
     this.whiteRois = [];
     this.blackRois = [];
+  }
+  /**
+   *Return the ROI map of the RoiMapManager.
+   *
+   * @returns - The ROI map.
+   */
+  public getMap(): RoiMap {
+    return this.map;
   }
 
   /**
@@ -59,5 +71,7 @@ export class RoiMapManager implements RoiManager {
     computeRois(this);
   }
 
-  public getRois(options: GetRoisOptions): Roi[] {}
+  public getRois(options: GetRoisOptions): Roi[] {
+    return getRois(this, options);
+  }
 }

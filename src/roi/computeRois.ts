@@ -9,19 +9,20 @@ import { RoiMapManager } from './RoiMapManager';
  * @param roiMapManager - Roi map manager to use
  */
 export function computeRois(roiMapManager: RoiMapManager): void {
-  roiMapManager.whiteRois = new Array(roiMapManager.map.nbPositive);
-  roiMapManager.blackRois = new Array(roiMapManager.map.nbNegative);
+  const map = roiMapManager.getMap();
 
-  for (let i = 1; i <= roiMapManager.map.nbPositive; i++) {
-    roiMapManager.whiteRois.push(new Roi(roiMapManager.map, i));
+  roiMapManager.whiteRois = new Array(map.nbPositive);
+  roiMapManager.blackRois = new Array(map.nbNegative);
+
+  for (let i = 1; i <= map.nbPositive; i++) {
+    roiMapManager.whiteRois.push(new Roi(map, i));
   }
-  for (let i = 1; i <= roiMapManager.map.nbNegative; i++) {
-    roiMapManager.blackRois.push(new Roi(roiMapManager.map, -i));
+  for (let i = 1; i <= map.nbNegative; i++) {
+    roiMapManager.blackRois.push(new Roi(map, -i));
   }
-  for (let row = 0; row < roiMapManager.map.height; row++) {
-    for (let column = 0; column < roiMapManager.map.width; column++) {
-      let currentIndex =
-        roiMapManager.map.data[getRoiMapIndex(row, column, roiMapManager.map)];
+  for (let row = 0; row < map.height; row++) {
+    for (let column = 0; column < map.width; column++) {
+      let currentIndex = map.data[getRoiMapIndex(row, column, map)];
       let currentRoi;
       if (currentIndex < 0) {
         currentRoi = roiMapManager.blackRois[-currentIndex];
