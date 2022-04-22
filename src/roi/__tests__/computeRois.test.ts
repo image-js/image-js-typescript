@@ -9,20 +9,20 @@ describe('computeRois', () => {
     computeRois(roiMapManager);
 
     const whiteRoi = new Roi(roiMapManager.getMap(), 1);
-    whiteRoi.minRow = 0;
-    whiteRoi.minColumn = 0;
-    whiteRoi.maxRow = 0;
-    whiteRoi.maxColumn = 0;
+    whiteRoi.row = 0;
+    whiteRoi.column = 0;
+    whiteRoi.height = 1;
+    whiteRoi.width = 1;
     whiteRoi.surface = 1;
 
     expect(roiMapManager.whiteRois).toHaveLength(1);
     expect(roiMapManager.whiteRois).toStrictEqual([whiteRoi]);
 
     const blackRoi = new Roi(roiMapManager.getMap(), -1);
-    blackRoi.minRow = 0;
-    blackRoi.minColumn = 1;
-    blackRoi.maxRow = 0;
-    blackRoi.maxColumn = 1;
+    blackRoi.row = 0;
+    blackRoi.column = 1;
+    blackRoi.height = 1;
+    blackRoi.width = 1;
     blackRoi.surface = 1;
 
     expect(roiMapManager.blackRois).toHaveLength(1);

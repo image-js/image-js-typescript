@@ -9,10 +9,10 @@ describe('getRois', () => {
     const rois = getRois(roiMapManager);
 
     const roi = new Roi(roiMapManager.getMap(), 1);
-    roi.minRow = 0;
-    roi.minColumn = 0;
-    roi.maxRow = 0;
-    roi.maxColumn = 0;
+    roi.row = 0;
+    roi.column = 0;
+    roi.height = 0;
+    roi.width = 0;
     roi.surface = 1;
 
     expect(rois).toHaveLength(1);
