@@ -43,6 +43,7 @@ export class RoiMapManager implements RoiManager {
     this.whiteRois = [];
     this.blackRois = [];
   }
+
   /**
    *Return the ROI map of the RoiMapManager.
    *
@@ -50,6 +51,27 @@ export class RoiMapManager implements RoiManager {
    */
   public getMap(): RoiMap {
     return this.map;
+  }
+
+  /**
+   * Return the value of an ROI map at the given coordinates.
+   *
+   * @param row - Row of the value.
+   * @param column - Column of the value.
+   * @returns The value at the given coordinates.
+   */
+  public getValue(row: number, column: number) {
+    return this.map.data[this.map.width * row + column];
+  }
+
+  /**
+   * Return the value of an ROI map with the given index.
+   *
+   * @param index - Index of the value.
+   * @returns The value at the given coordinates.
+   */
+  public getValueByIndex(index: number): number {
+    return this.map.data[index];
   }
 
   /**
