@@ -4,7 +4,12 @@ import {
   IJS,
   ImageColorModel,
 } from '../../src';
-import { fromMask, RoiKind, RoisColorMode, colorRois } from '../../src/roi';
+import {
+  fromMask,
+  RoisColorMode,
+  colorRois,
+  ColorRoiKind,
+} from '../../src/roi';
 
 /**
  * Copy a black and a red square to the source image.
@@ -100,7 +105,7 @@ export function testColorRois(image: IJS): IJS {
   const roiMapManager = fromMask(mask);
 
   let colorImage = colorRois(roiMapManager, {
-    roiKind: RoiKind.WHITE,
+    roiKind: ColorRoiKind.WHITE,
     mode: RoisColorMode.RAINBOW,
   });
 
