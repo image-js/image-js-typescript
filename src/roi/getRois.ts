@@ -37,7 +37,7 @@ export interface GetRoisOptions {
  */
 export function getRois(
   roiMapManager: RoiMapManager,
-  options: GetRoisOptions,
+  options: GetRoisOptions = {},
 ): Roi[] {
   const {
     minSurface = 0,
