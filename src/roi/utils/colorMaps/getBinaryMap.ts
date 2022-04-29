@@ -1,4 +1,4 @@
-import { ColorRoiKind } from '../../colorRois';
+import { RoiKind } from '../../getRois';
 import { maxNumberRois, colorMapCenter } from '../constants';
 import { hsvToRgb } from '../hsvToRgb';
 import { rgbToNumber } from '../rgbToNumber';
@@ -19,9 +19,9 @@ export interface GetBinaryMapOptions {
   /**
    * Specify which ROIs to colour.
    *
-   * @default ColorRoiKind.BW
+   * @default RoiKind.BW
    */
-  roiKind?: ColorRoiKind;
+  roiKind?: RoiKind;
   /**
    * Hue of white ROIs
    *
@@ -48,19 +48,19 @@ export function getBinaryMap(options: GetBinaryMapOptions): Uint32Array {
     nbPositive,
     whiteHue = 120,
     blackHue = 0,
-    roiKind = ColorRoiKind.BW,
+    roiKind = RoiKind.BW,
   } = options;
 
   let colorMap = new Uint32Array(maxNumberRois);
 
   // negative values
-  if (roiKind === ColorRoiKind.BW || roiKind === ColorRoiKind.BLACK) {
+  if (roiKind === RoiKind.BW || roiKind === RoiKind.BLACK) {
     for (let i = colorMapCenter - nbNegative; i < colorMapCenter; i++) {
       const hsv = [blackHue, 255, 255];
       colorMap[i] = rgbToNumber(hsvToRgb(hsv));
     }
   }
-  if (roiKind === ColorRoiKind.BW || roiKind === ColorRoiKind.WHITE) {
+  if (roiKind === RoiKind.BW || roiKind === RoiKind.WHITE) {
     // positive values
     for (let i = colorMapCenter + 1; i < colorMapCenter + 1 + nbPositive; i++) {
       const hsv = [whiteHue, 255, 255];

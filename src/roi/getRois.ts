@@ -5,6 +5,7 @@ import { computeRois } from './computeRois';
 export enum RoiKind {
   BLACK = 'BLACK',
   WHITE = 'WHITE',
+  BW = 'BW',
 }
 
 export interface GetRoisOptions {
@@ -56,6 +57,8 @@ export function getRois(
     rois = roiMapManager.blackRois;
   } else if (kind === RoiKind.WHITE) {
     rois = roiMapManager.whiteRois;
+  } else if (kind === RoiKind.BW) {
+    rois = [...roiMapManager.whiteRois, ...roiMapManager.blackRois];
   } else {
     throw new Error('getRois: unknown ROI kind');
   }

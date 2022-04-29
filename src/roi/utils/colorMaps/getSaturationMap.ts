@@ -1,4 +1,4 @@
-import { ColorRoiKind } from '../../colorRois';
+import { RoiKind } from '../../getRois';
 import { maxNumberRois, colorMapCenter } from '../constants';
 import { hsvToRgb } from '../hsvToRgb';
 import { rgbToNumber } from '../rgbToNumber';
@@ -15,9 +15,9 @@ export interface GetSaturationMapOptions {
   /**
    * Specify which ROIs to colour.
    *
-   * @default ColorRoiKind.BW
+   * @default RoiKind.BW
    */
-  roiKind?: ColorRoiKind;
+  roiKind?: RoiKind;
   /**
    * Hue of white ROIs
    *
@@ -44,7 +44,7 @@ export function getSaturationMap(
   const {
     nbNegative,
     nbPositive,
-    roiKind = ColorRoiKind.BW,
+    roiKind = RoiKind.BW,
     whiteHue = 0,
     blackHue = 240,
   } = options;
@@ -57,7 +57,7 @@ export function getSaturationMap(
 
   // negative values
   let counter = 0;
-  if (roiKind === ColorRoiKind.BW || roiKind === ColorRoiKind.BLACK) {
+  if (roiKind === RoiKind.BW || roiKind === RoiKind.BLACK) {
     for (let i = colorMapCenter - nbNegative; i < colorMapCenter; i++) {
       const hsv = [blackHue, 255 - counter++ * negativeStep, 255];
       colorMap[i] = rgbToNumber(hsvToRgb(hsv));
@@ -65,7 +65,7 @@ export function getSaturationMap(
   }
   // positive values
   counter = 0;
-  if (roiKind === ColorRoiKind.BW || roiKind === ColorRoiKind.WHITE) {
+  if (roiKind === RoiKind.BW || roiKind === RoiKind.WHITE) {
     for (let i = colorMapCenter + 1; i < colorMapCenter + 1 + nbPositive; i++) {
       const hsv = [whiteHue, 255 - counter++ * positiveStep, 255];
       colorMap[i] = rgbToNumber(hsvToRgb(hsv));
