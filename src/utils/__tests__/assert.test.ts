@@ -12,4 +12,10 @@ describe('assert', () => {
       assert(variable === 2, 'Error message');
     }).toThrow('Error message');
   });
+  it('should throw default error message', () => {
+    const variable: number | undefined = 3;
+    expect(() => {
+      assert(variable === 2);
+    }).toThrow('unreachable');
+  });
 });
