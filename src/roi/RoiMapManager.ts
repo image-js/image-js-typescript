@@ -1,7 +1,6 @@
 import { Matrix } from 'ml-matrix';
 
 import { Roi } from './Roi';
-import { computeRois } from './computeRois';
 import { getRois, GetRoisOptions } from './getRois';
 
 export interface RoiManager {
