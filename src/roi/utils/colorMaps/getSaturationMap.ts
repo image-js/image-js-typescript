@@ -17,11 +17,6 @@ export interface GetSaturationMapOptions {
    *
    * @default ColorRoiKind.BW
    */
-  /**
-   * Specify which ROIs to colour.
-   *
-   * @default ColorRoiKind.BW
-   */
   roiKind?: ColorRoiKind;
   /**
    * Hue of white ROIs

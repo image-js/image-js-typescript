@@ -19,7 +19,7 @@ export interface GetBinaryMapOptions {
   /**
    * Specify which ROIs to colour.
    *
-   * @default BwRoiKind.BW
+   * @default ColorRoiKind.BW
    */
   roiKind?: ColorRoiKind;
   /**
