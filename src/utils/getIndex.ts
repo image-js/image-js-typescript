@@ -1,5 +1,4 @@
 import { IJS, Mask } from '..';
-import { RoiMap } from '../roi';
 
 export function getIndex(
   row: number,
@@ -24,20 +23,4 @@ export function getIndex(
   channel = 0,
 ): number {
   return (row * image.width + column) * image.channels + channel;
-}
-
-/**
- * Compute the current pixel index of an roiMap based on the value coordinates.
- *
- * @param row - Row of the value.
- * @param column - Column of the value.
- * @param roiMap - The ROI map.
- * @returns The value index.
- */
-export function getRoiMapIndex(
-  row: number,
-  column: number,
-  roiMap: RoiMap,
-): number {
-  return row * roiMap.width + column;
 }
