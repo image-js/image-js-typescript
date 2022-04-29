@@ -43,16 +43,6 @@ export class Roi {
   }
 
   /**
-   * Return the value with the given index in an ROI map.
-   *
-   * @param index - Index of the value.
-   * @returns The value at the given coordinates.
-   */
-  public getMapValueByIndex(index: number): number {
-    return this.map.data[index];
-  }
-
-  /**
    * Return the ratio between the width and the height of the bounding rectangle of the ROI.
    *
    * @returns The width by height ratio.
