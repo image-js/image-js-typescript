@@ -1,5 +1,3 @@
-import { getRoiMapIndex } from '../utils/getIndex';
-
 import { Roi } from './Roi';
 import { RoiMapManager } from './RoiMapManager';
 
@@ -41,9 +39,9 @@ export function computeRois(roiMapManager: RoiMapManager): void {
 
       let currentRoi;
       if (currentIndex < 0) {
-        currentRoi = whites[-currentIndex - 1];
+        currentRoi = blacks[-currentIndex - 1];
       } else {
-        currentRoi = blacks[currentIndex - 1];
+        currentRoi = whites[currentIndex - 1];
       }
 
       currentRoi.surface++;
@@ -66,10 +64,7 @@ export function computeRois(roiMapManager: RoiMapManager): void {
   roiMapManager.whiteRois = new Array(map.nbPositive);
   roiMapManager.blackRois = new Array(map.nbNegative);
 
-  console.log({ whites });
-
   for (let i = 0; i < map.nbPositive; i++) {
-    console.log(whites[i].minColumn);
     let whiteRoi = new Roi(map, i);
     whiteRoi.row = whites[i].minRow;
     whiteRoi.column = whites[i].minColumn;

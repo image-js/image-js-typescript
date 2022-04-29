@@ -3,7 +3,7 @@ import { Roi } from '../Roi';
 import { computeRois } from '../computeRois';
 
 describe('computeRois', () => {
-  it.only('1x2 mask', () => {
+  it('1x2 mask', () => {
     const mask = testUtils.createMask([[1, 0]]);
     const roiMapManager = fromMask(mask);
     computeRois(roiMapManager);
