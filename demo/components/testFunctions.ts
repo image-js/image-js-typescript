@@ -4,7 +4,8 @@ import {
   IJS,
   ImageColorModel,
 } from '../../src';
-import { fromMask, RoisColorMode, colorRois, RoiKind } from '../../src/roi';
+import { fromMask, RoisColorMode, colorRois } from '../../src/roi';
+import { RoiKind } from '../../src/roi/getRois';
 
 /**
  * Copy a black and a red square to the source image.

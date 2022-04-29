@@ -11,9 +11,9 @@ import { Roi } from './Roi';
 export function getMask(roi: Roi): Mask {
   let mask = new Mask(roi.width, roi.height);
 
-  for (let row = roi.row; row < roi.row + roi.height; row++) {
-    for (let column = roi.column; column < roi.column + roi.width; column++) {
-      if (roi.getMapValue(row, column) === roi.id) {
+  for (let row = 0; row < roi.height; row++) {
+    for (let column = 0; column < roi.width; column++) {
+      if (roi.getMapValue(roi.row + row, roi.column + column) === roi.id) {
         mask.setBit(row, column, 1);
       } else {
         mask.setBit(row, column, 0);
