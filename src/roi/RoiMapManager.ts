@@ -65,16 +65,6 @@ export class RoiMapManager implements RoiManager {
   }
 
   /**
-   * Return the value with the given index in an ROI map.
-   *
-   * @param index - Index of the value.
-   * @returns The value at the given coordinates.
-   */
-  public getMapValueByIndex(index: number): number {
-    return this.map.data[index];
-  }
-
-  /**
    * Returns the ROI map as a correct width and height matrix.
    *
    * @returns The ROI map matrix
@@ -86,14 +76,8 @@ export class RoiMapManager implements RoiManager {
       this.map.data,
     ).to2DArray();
   }
-  /**
-   * Generate an array of ROIs.
-   */
-  private computeRois(): void {
-    computeRois(this);
-  }
 
-  public getRois(options: GetRoisOptions): Roi[] {
+  public getRois(options: GetRoisOptions = {}): Roi[] {
     return getRois(this, options);
   }
 }
