@@ -4,13 +4,13 @@ import { assert } from '../utils/assert';
 
 export interface ExtractOptions {
   /**
-   * Specify from what row the image should be cropped.
+   * Specify the row of the top-left corner of the mask on the image.
    *
    * @default 0
    */
   row?: number;
   /**
-   * Specify from what colum the image should be cropped.
+   * Specify the column of the top-left corner of the mask on the image.
    *
    * @default 0
    */
@@ -18,7 +18,7 @@ export interface ExtractOptions {
 }
 
 /**
- * Extract the pixels of an image that as specified in a mask.
+ * Extract the pixels of an image, as specified in a mask.
  *
  * @param image - The image to process.
  * @param mask - The mask defining which pixels to keep.
@@ -33,7 +33,10 @@ export function extract(
   const { row = 0, column = 0 } = options;
 
   assert(
-    !(row >= image.height && column >= image.width),
+    row < image.height &&
+      column < image.width &&
+      row + mask.width > 0 &&
+      column + mask.height > 0,
     'extract: image and mask have no overlap',
   );
 

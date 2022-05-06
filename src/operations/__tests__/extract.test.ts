@@ -81,5 +81,8 @@ describe('extract', () => {
     expect(() => {
       image.extract(mask, { row: 4, column: 4 });
     }).toThrow('extract: image and mask have no overlap');
+    expect(() => {
+      image.extract(mask, { row: -2, column: 4 });
+    }).toThrow('extract: image and mask have no overlap');
   });
 });

@@ -503,7 +503,7 @@ export class IJS {
   }
 
   /**
-   * Extract the pixels of an image that as specified in a mask.
+   * Extract the pixels of an image, as specified in a mask.
    *
    * @param mask - The mask defining which pixels to keep.
    * @param options - Extract options.
