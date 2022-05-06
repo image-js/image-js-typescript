@@ -3,10 +3,10 @@ import { IJS } from '../../src';
 import CameraSelector from './CameraSelector';
 import CameraTransform from './CameraTransform';
 import Container from './Container';
-import { testLevel } from './testFunctions/testLevel';
+import { testExtract } from './testFunctions/testExtract';
 
 function testTransform(image: IJS) {
-  return testLevel(image);
+  return testExtract(image);
 }
 
 export default function Home() {
