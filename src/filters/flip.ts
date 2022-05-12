@@ -1,5 +1,6 @@
 import { IJS } from '../IJS';
 import { copyAlpha } from '../operations';
+import { copyData } from '../utils/copyData';
 import { getOutputImage } from '../utils/getOutputImage';
 
 import flipX from './flipX';
@@ -28,15 +29,16 @@ export interface FlipOptions {
  */
 export function flip(image: IJS, options: FlipOptions = {}): IJS {
   const { axis = 'horizontal' } = options;
-  const newImage = getOutputImage(image, options);
+  let newImage = getOutputImage(image, options);
+  copyData(image, newImage);
   if (image.alpha) {
     copyAlpha(image, newImage);
   }
   if (axis === 'horizontal') {
-    return flipX(image);
+    return flipX(newImage);
   } else if (axis === 'vertical') {
-    return flipY(image);
+    return flipY(newImage);
   } else {
-    return flipY(flipX(image));
+    return flipY(flipX(newImage));
   }
 }

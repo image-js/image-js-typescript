@@ -561,8 +561,8 @@ export class IJS {
   /**
    * Flip the image.
    *
-   * @param options - Flip options.
-   * @returns - The flipped image.
+   * @param options - Flip options
+   * @returns The flipped image.
    */
   public flip(options?: FlipOptions): IJS {
     return flip(this, options);
