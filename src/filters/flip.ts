@@ -29,9 +29,6 @@ export interface FlipOptions {
 export function flip(image: IJS, options: FlipOptions = {}): IJS {
   const { axis = 'horizontal' } = options;
   let newImage = getOutputImage(image, options, { clone: true });
-  if (image.alpha) {
-    copyAlpha(image, newImage);
-  }
   if (axis === 'horizontal') {
     return flipX(newImage);
   } else if (axis === 'vertical') {
