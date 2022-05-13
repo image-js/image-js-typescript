@@ -50,17 +50,16 @@ describe('flip', () => {
   });
 
   it('flip pixels vertically and horizontally', () => {
-    const out = new IJS(2, 2);
     const image = testUtils.createRgbImage([
       [1, 2, 3, 5, 6, 7],
       [9, 10, 11, 13, 14, 15],
     ]);
 
-    const expected = image.flip({ out });
+    const expected = image.flip({ axis: 'both' });
     expect(expected).toMatchImageData([
-      [5, 6, 7, 1, 2, 3],
       [13, 14, 15, 9, 10, 11],
+      [5, 6, 7, 1, 2, 3],
     ]);
-    expect(expected).toBe(out);
+    expect(expected).not.toBe(image);
   });
 });
