@@ -43,6 +43,7 @@ import { convertDepth } from './operations/convertDepth';
 import copyTo, { CopyToOptions } from './operations/copyTo';
 import { crop, CropOptions } from './operations/crop';
 import grey from './operations/grey';
+import { paintPolygon, PaintPolygonOptions } from './operations/paintPolygon';
 import {
   paintPolyline,
   PaintPolylineOptions,
@@ -472,6 +473,9 @@ export class IJS {
   // OPERATIONS
   public paintPolyline(points: Point[], options: PaintPolylineOptions): IJS {
     return paintPolyline(this, points, options);
+  }
+  public paintPolygon(points: Point[], options: PaintPolygonOptions): IJS {
+    return paintPolygon(this, points, options);
   }
   public split(): IJS[] {
     return split(this);
