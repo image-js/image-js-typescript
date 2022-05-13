@@ -68,8 +68,8 @@ export function paintPolyline(
       if (
         xPoint >= 0 &&
         yPoint >= 0 &&
-        xPoint < newImage.width &&
-        yPoint < newImage.height
+        xPoint < newImage.height &&
+        yPoint < newImage.width
       ) {
         for (let channel = 0; channel < numberChannels; channel++) {
           newImage.setValue(xPoint, yPoint, channel, color[channel]);
