@@ -52,6 +52,7 @@ export function paintPolyline(
   for (let i = 0; i < points.length - 1; i++) {
     const from = points[i];
     const to = points[i + 1];
+    // todo: use paintLine here
     const dx = to.row - from.row;
     const dy = to.column - from.column;
     const steps = Math.max(Math.abs(dx), Math.abs(dy));

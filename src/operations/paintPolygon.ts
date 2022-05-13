@@ -42,6 +42,7 @@ export function paintPolygon(
   for (let i = 0; i < points.length; i++) {
     const from = points[i];
     const to = points[i < points.length - 1 ? i + 1 : 0];
+    // todo: use paintLine here
     const dx = to.row - from.row;
     const dy = to.column - from.column;
     const steps = Math.max(Math.abs(dx), Math.abs(dy));
