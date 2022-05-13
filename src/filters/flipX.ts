@@ -13,11 +13,14 @@ export default function flipX(image: IJS): IJS {
   });
   for (let i = 0; i < image.height; i++) {
     for (let j = 0; j < Math.floor(image.width / 2); j++) {
-      const colCurrent = j;
-      const colOpposite = image.width - j - 1;
-      const tmp = image.getPixel(i, colCurrent);
-      image.setPixel(i, colCurrent, image.getPixel(i, colOpposite));
-      image.setPixel(i, colOpposite, tmp);
+      const currentCol = j;
+      const oppositeCol = image.width - j - 1;
+
+      for (let k = 0; k < image.channels; k++) {
+        const tmp = image.getValue(i, currentCol, k);
+        image.setValue(i, currentCol, k, image.getValue(i, oppositeCol, k));
+        image.setValue(i, oppositeCol, k, tmp);
+      }
     }
   }
 

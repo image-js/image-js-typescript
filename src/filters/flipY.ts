@@ -14,11 +14,14 @@ export default function flipY(image: IJS): IJS {
 
   for (let i = 0; i < Math.floor(image.height / 2); i++) {
     for (let j = 0; j < image.width; j++) {
-      const ligneCurrent = i;
-      const ligneOpposite = image.height - i - 1;
-      const tmp = image.getPixel(ligneCurrent, j);
-      image.setPixel(ligneCurrent, j, image.getPixel(ligneOpposite, j));
-      image.setPixel(ligneOpposite, j, tmp);
+      const currentRow = i;
+      const oppositeRow = image.height - i - 1;
+
+      for (let k = 0; k < image.channels; k++) {
+        const tmp = image.getValue(currentRow, j, k);
+        image.setValue(currentRow, j, k, image.getValue(oppositeRow, j, k));
+        image.setValue(oppositeRow, j, k, tmp);
+      }
     }
   }
 
