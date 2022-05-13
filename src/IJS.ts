@@ -43,6 +43,11 @@ import { convertDepth } from './operations/convertDepth';
 import copyTo, { CopyToOptions } from './operations/copyTo';
 import { crop, CropOptions } from './operations/crop';
 import grey from './operations/grey';
+import {
+  paintPolyline,
+  PaintPolylineOptions,
+  Point,
+} from './operations/paintPolyline';
 import { split } from './operations/split';
 import { ImageColorModel, colorModels } from './utils/colorModels';
 import { validateChannel, validateValue } from './utils/validators';
@@ -465,7 +470,9 @@ export class IJS {
   }
 
   // OPERATIONS
-
+  public paintPolyline(points: Point[], options: PaintPolylineOptions): IJS {
+    return paintPolyline(this, points, options);
+  }
   public split(): IJS[] {
     return split(this);
   }

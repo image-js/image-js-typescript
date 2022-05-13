@@ -42,14 +42,14 @@ export function paintPolyline(
   options: PaintPolylineOptions = {},
 ) {
   let newImage = getOutputImage(image, options, { clone: true });
-  const { color = [newImage.maxValue, 0, 0] } = options;
 
-  checkProcessable(newImage, 'paintPoints', {
+  const { color = [newImage.maxValue, 0, 0] } = options;
+  checkProcessable(newImage, 'paintPolyline', {
     bitDepth: [8, 16],
   });
 
   const numberChannels = Math.min(newImage.channels, color.length);
-  for (let i = 0; i < points.length - 2; i++) {
+  for (let i = 0; i < points.length - 1; i++) {
     const from = points[i];
     const to = points[i + 1];
     const dx = to.row - from.row;
