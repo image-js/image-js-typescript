@@ -1,5 +1,4 @@
 import { IJS } from '../IJS';
-import { copyAlpha } from '../operations';
 import { getOutputImage } from '../utils/getOutputImage';
 
 import flipX from './flipX';
