@@ -1,5 +1,6 @@
-import { IJS, ImageColorModel } from '../IJS';
+import { IJS } from '../IJS';
 import checkProcessable from '../utils/checkProcessable';
+import { getDefaultColor } from '../utils/getDefaultColor';
 import { getOutputImage } from '../utils/getOutputImage';
 
 export interface Point {
@@ -81,12 +82,4 @@ export function paintLine(
   }
 
   return newImage;
-}
-function getDefaultColor({ colorModel, maxValue }: IJS): number[] {
-  if (colorModel === ImageColorModel.BINARY) return [0];
-  if (colorModel === ImageColorModel.GREY) return [0];
-  if (colorModel === ImageColorModel.GREYA) return [0, maxValue];
-  if (colorModel === ImageColorModel.RGB) return [0, 0, 0];
-  if (colorModel === ImageColorModel.RGBA) return [0, 0, 0, maxValue];
-  throw new Error(`image color model ${colorModel} is not compatible`);
 }
