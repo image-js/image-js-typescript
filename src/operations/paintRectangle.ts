@@ -47,11 +47,30 @@ export function paintRectangle(
   checkProcessable(newImage, 'paintPoints', {
     bitDepth: [8, 16],
   });
+
   for (let i = position.column; i < position.column + width; i++) {
     if (i === position.column || i === position.column + width - 1) {
-      newImage.paintLine(i, position.column + height, { color });
+      newImage.paintLine(
+        { row: position.row, column: i },
+        { row: position.row + height - 1, column: i },
+        { color, out: newImage },
+      );
     } else {
-      newImage.paintLine(i, position.column + height, { color: fill });
+      if (position.row + 1 <= position.row + height - 2) {
+        newImage.paintLine(
+          { row: position.row + 1, column: i },
+          { row: position.row + height - 2, column: i },
+          { color: fill, out: newImage },
+        );
+        newImage.setPixel(position.row, i, color);
+        newImage.setPixel(position.row + height - 1, i, color);
+      } else {
+        newImage.paintLine(
+          { row: position.row, column: i },
+          { row: position.row + height - 1, column: i },
+          { color, out: newImage },
+        );
+      }
     }
   }
   return newImage;
