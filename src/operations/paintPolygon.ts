@@ -33,6 +33,7 @@ export function paintPolygon(
 ) {
   let newImage = getOutputImage(image, options, { clone: true });
 
+  // todo: fix default value
   const { color = [newImage.maxValue, 0, 0] } = options;
   checkProcessable(newImage, 'paintPolyline', {
     bitDepth: [8, 16],
