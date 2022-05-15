@@ -1,4 +1,4 @@
-import { IJS } from '../IJS';
+import { ColorDepth, IJS } from '../IJS';
 import checkProcessable from '../utils/checkProcessable';
 import { getOutputImage } from '../utils/getOutputImage';
 
@@ -16,18 +16,18 @@ export interface Point {
 }
 export interface PaintLineOptions {
   /**
-   * Array of 3 elements (R, G, B),or 4 elements (R, G, B, A) default is red.
+   * Array of N elements (e.g. R, G, B or G, A), N being the number of channels.
    *
-   * @default [image.maxValue, 0, 0]
+   * @default black
    */
-  color?: [number, number, number] | [number, number, number, number];
+  color?: number[];
   /**
    * Image to which the resulting image has to be put.
    */
   out?: IJS;
 }
 /**
- * Paint a polyline defined by an array of points.
+ * Paint a line defined by an array of points.
  *
  * @memberof Image
  * @instance
@@ -43,8 +43,8 @@ export function paintLine(
   to: Point,
   options: PaintLineOptions = {},
 ) {
-  let newImage = getOutputImage(image, options, { clone: true });
-  const { color = [newImage.maxValue, 0, 0] } = options;
+  const newImage = getOutputImage(image, options, { clone: true });
+  const { color = getDefaultColor(newImage) } = options;
 
   checkProcessable(newImage, 'paintPoints', {
     bitDepth: [8, 16],
@@ -68,8 +68,8 @@ export function paintLine(
     if (
       xPoint >= 0 &&
       yPoint >= 0 &&
-      xPoint < newImage.width &&
-      yPoint < newImage.height
+      xPoint < newImage.height &&
+      yPoint < newImage.width
     ) {
       for (let channel = 0; channel < numberChannels; channel++) {
         newImage.setValue(xPoint, yPoint, channel, color[channel]);
@@ -81,4 +81,10 @@ export function paintLine(
   }
 
   return newImage;
+}
+function getDefaultColor({ depth, maxValue }: IJS): number[] {
+  if (depth === ColorDepth.UINT1) return [0];
+  if (depth === ColorDepth.UINT8) return [0, 0, 0];
+  if (depth === ColorDepth.UINT16) return [0, 0, 0, maxValue];
+  throw new Error(`image depth ${depth} is not compatible`);
 }
