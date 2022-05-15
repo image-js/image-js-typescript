@@ -1,4 +1,4 @@
-import { ColorDepth, IJS } from '../IJS';
+import { IJS, ImageColorModel } from '../IJS';
 import checkProcessable from '../utils/checkProcessable';
 import { getOutputImage } from '../utils/getOutputImage';
 
@@ -82,9 +82,11 @@ export function paintLine(
 
   return newImage;
 }
-function getDefaultColor({ depth, maxValue }: IJS): number[] {
-  if (depth === ColorDepth.UINT1) return [0];
-  if (depth === ColorDepth.UINT8) return [0, 0, 0];
-  if (depth === ColorDepth.UINT16) return [0, 0, 0, maxValue];
-  throw new Error(`image depth ${depth} is not compatible`);
+function getDefaultColor({ colorModel, maxValue }: IJS): number[] {
+  if (colorModel === ImageColorModel.BINARY) return [0];
+  if (colorModel === ImageColorModel.GREY) return [0];
+  if (colorModel === ImageColorModel.GREYA) return [0, maxValue];
+  if (colorModel === ImageColorModel.RGB) return [0, 0, 0];
+  if (colorModel === ImageColorModel.RGBA) return [0, 0, 0, maxValue];
+  throw new Error(`image color model ${colorModel} is not compatible`);
 }
