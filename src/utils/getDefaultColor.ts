@@ -9,11 +9,18 @@ import { ImageColorModel } from './colorModels';
  * @returns Black color
  */
 export function getDefaultColor(image: IJS): number[] {
-  if (image.colorModel === ImageColorModel.GREY) return [0];
-  if (image.colorModel === ImageColorModel.GREYA) return [0, image.maxValue];
-  if (image.colorModel === ImageColorModel.RGB) return [0, 0, 0];
-  if (image.colorModel === ImageColorModel.RGBA) {
-    return [0, 0, 0, image.maxValue];
+  switch (image.colorModel) {
+    case ImageColorModel.GREY:
+      return [0];
+    case ImageColorModel.GREYA:
+      return [0, image.maxValue];
+    case ImageColorModel.RGB:
+      return [0, 0, 0];
+    case ImageColorModel.RGBA:
+      return [0, 0, 0, image.maxValue];
+    default:
+      throw new Error(
+        `image color model ${image.colorModel} is not compatible`,
+      );
   }
-  throw new Error(`image color model ${image.colorModel} is not compatible`);
 }
