@@ -72,5 +72,7 @@ export function paintPolygon(
       y = y + yIncrement;
     }
   }
+  //TODO :Scan Line fill polygone
+
   return newImage;
 }
