@@ -1,22 +1,23 @@
 import { IJS } from '../IJS';
 import checkProcessable from '../utils/checkProcessable';
+import { getDefaultColor } from '../utils/getDefaultColor';
 import { getOutputImage } from '../utils/getOutputImage';
 
 import { Point } from './paintLine';
 
 export interface PaintRectangleOptions {
   /**
-   * rectangle border color array of 3 elements (R, G, B),or 4 elements (R, G, B, A) default is red.
+   * Rectangle border color array of N elements (e.g. R, G, B or G, A), N being the number of channels.
    *
-   * @default [image.maxValue, 0, 0]
+   * @default black
    */
-  color?: [number, number, number] | [number, number, number, number];
+  color?: number[];
   /**
-   * rectangle fill color array of 3 elements (R, G, B),or 4 elements (R, G, B, A) default is red.
+   * rectangle fill color array of N elements (e.g. R, G, B or G, A), N being the number of channels.
    *
-   * @default [0, 0, 0]
+   * @default black
    */
-  fill?: [number, number, number] | [number, number, number, number];
+  fill?: number[];
   /**
    * Image to which the resulting image has to be put.
    */
@@ -42,7 +43,8 @@ export function paintRectangle(
   options: PaintRectangleOptions = {},
 ) {
   let newImage = getOutputImage(image, options, { clone: true });
-  const { color = [newImage.maxValue, 0, 0], fill = [0, 0, 0] } = options;
+  const { color = getDefaultColor(image), fill = getDefaultColor(image) } =
+    options;
 
   checkProcessable(newImage, 'paintPoints', {
     bitDepth: [8, 16],
