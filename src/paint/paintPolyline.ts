@@ -2,23 +2,13 @@ import { IJS } from '../IJS';
 import checkProcessable from '../utils/checkProcessable';
 import { getOutputImage } from '../utils/getOutputImage';
 
-export interface Point {
-  /**
-   * point row
-   *
-   */
-  row: number;
-  /**
-   * point column
-   *
-   */
-  column: number;
-}
+import { Point } from './paintLine';
+
 export interface PaintPolylineOptions {
   /**
-   * Array of 3 elements (R, G, B),or 4 elements (R, G, B, A) default is red.
+   * Array of N elements (e.g. R, G, B or G, A), N being the number of channels.
    *
-   * @default [image.maxValue, 0, 0]
+   * @default black
    */
   color?: [number, number, number] | [number, number, number, number];
   /**

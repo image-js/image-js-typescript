@@ -1,14 +1,15 @@
 import { IJS } from '../IJS';
 import checkProcessable from '../utils/checkProcessable';
+import { getDefaultColor } from '../utils/getDefaultColor';
 import { getOutputImage } from '../utils/getOutputImage';
 
-import { Point } from './paintPolyline';
+import { Point } from './paintLine';
 
 export interface PaintPolygonOptions {
   /**
-   * Array of 3 elements (R, G, B),or 4 elements (R, G, B, A) default is red.
+   * Array of N elements (e.g. R, G, B or G, A), N being the number of channels.
    *
-   * @default [image.maxValue, 0, 0]
+   * @default black
    */
   color?: [number, number, number] | [number, number, number, number];
   /**
@@ -33,8 +34,7 @@ export function paintPolygon(
 ) {
   let newImage = getOutputImage(image, options, { clone: true });
 
-  // todo: fix default value
-  const { color = [newImage.maxValue, 0, 0] } = options;
+  const { color = getDefaultColor(image) } = options;
   checkProcessable(newImage, 'paintPolyline', {
     bitDepth: [8, 16],
   });

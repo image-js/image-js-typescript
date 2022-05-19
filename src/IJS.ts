@@ -52,12 +52,14 @@ import {
   grey,
   split,
 } from './operations';
-import { PaintPolygonOptions, paintPolygon } from './operations/paintPolygon';
 import {
+  Point,
+  PaintLineOptions,
+  paintLine,
   PaintPolylineOptions,
   paintPolyline,
-} from './operations/paintPolyline';
-import { Point, PaintLineOptions, paintLine } from './paint';
+} from './paint';
+import { PaintPolygonOptions, paintPolygon } from './paint/paintPolygon';
 import { ImageColorModel, colorModels } from './utils/colorModels';
 import { validateChannel, validateValue } from './utils/validators';
 
