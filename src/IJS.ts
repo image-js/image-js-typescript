@@ -50,13 +50,15 @@ import {
   crop,
   CropOptions,
   grey,
-  paintLine,
-  PaintLineOptions,
-  Point,
   split,
-  paintRectangle,
-  PaintRectangleOptions,
 } from './operations';
+import {
+  Point,
+  PaintLineOptions,
+  paintLine,
+  PaintRectangleOptions,
+  paintRectangle,
+} from './paint';
 import { ImageColorModel, colorModels } from './utils/colorModels';
 import { validateChannel, validateValue } from './utils/validators';
 
@@ -476,14 +478,14 @@ export class IJS {
   public histogram(options?: HistogramOptions): Uint32Array {
     return histogram(this, options);
   }
-
+  // PAINT
+  public paintLine(from: Point, to: Point, options: PaintLineOptions): IJS {
+    return paintLine(this, from, to, options);
+  }
   // OPERATIONS
 
   public split(): IJS[] {
     return split(this);
-  }
-  public paintLine(from: Point, to: Point, options: PaintLineOptions): IJS {
-    return paintLine(this, from, to, options);
   }
   public paintRectangle(
     position: Point,
