@@ -1,5 +1,6 @@
 import { IJS } from '../IJS';
 import checkProcessable from '../utils/checkProcessable';
+import { getDefaultColor } from '../utils/getDefaultColor';
 import { getOutputImage } from '../utils/getOutputImage';
 
 import { Point } from './paintLine';
@@ -10,7 +11,7 @@ export interface PaintPolylineOptions {
    *
    * @default black
    */
-  color?: [number, number, number] | [number, number, number, number];
+  color?: number[];
   /**
    * Image to which the resulting image has to be put.
    */
@@ -33,8 +34,7 @@ export function paintPolyline(
 ) {
   let newImage = getOutputImage(image, options, { clone: true });
 
-  // todo: fix default value
-  const { color = [newImage.maxValue, 0, 0] } = options;
+  const { color = getDefaultColor(image) } = options;
   checkProcessable(newImage, 'paintPolyline', {
     bitDepth: [8, 16],
   });
@@ -43,7 +43,7 @@ export function paintPolyline(
   for (let i = 0; i < points.length - 1; i++) {
     const from = points[i];
     const to = points[i + 1];
-    // todo: use paintLine here
+
     const dx = to.row - from.row;
     const dy = to.column - from.column;
     const steps = Math.max(Math.abs(dx), Math.abs(dy));
