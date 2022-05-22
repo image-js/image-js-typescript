@@ -3,9 +3,9 @@ import checkProcessable from '../utils/checkProcessable';
 import { getDefaultColor } from '../utils/getDefaultColor';
 import { getOutputImage } from '../utils/getOutputImage';
 
-import { Point } from './paintLine';
+import { Point } from './drawLine';
 
-export interface PaintRectangleOptions {
+export interface DrawRectangleOptions {
   /**
    * Rectangle border color array of N elements (e.g. R, G, B or G, A), N being the number of channels.
    *
@@ -35,12 +35,12 @@ export interface PaintRectangleOptions {
  * @param options - Paint Line options.
  * @returns The original painted image
  */
-export function paintRectangle(
+export function drawRectangle(
   image: IJS,
   position: Point,
   width: number,
   height: number,
-  options: PaintRectangleOptions = {},
+  options: DrawRectangleOptions = {},
 ) {
   let newImage = getOutputImage(image, options, { clone: true });
   const { color = getDefaultColor(image), fill = getDefaultColor(image) } =
@@ -52,14 +52,14 @@ export function paintRectangle(
 
   for (let i = position.column; i < position.column + width; i++) {
     if (i === position.column || i === position.column + width - 1) {
-      newImage.paintLine(
+      newImage.drawLine(
         { row: position.row, column: i },
         { row: position.row + height - 1, column: i },
         { color, out: newImage },
       );
     } else {
       if (position.row + 1 <= position.row + height - 2) {
-        newImage.paintLine(
+        newImage.drawLine(
           { row: position.row + 1, column: i },
           { row: position.row + height - 2, column: i },
           { color: fill, out: newImage },
@@ -67,7 +67,7 @@ export function paintRectangle(
         newImage.setPixel(position.row, i, color);
         newImage.setPixel(position.row + height - 1, i, color);
       } else {
-        newImage.paintLine(
+        newImage.drawLine(
           { row: position.row, column: i },
           { row: position.row + height - 1, column: i },
           { color, out: newImage },

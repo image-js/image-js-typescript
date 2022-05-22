@@ -1,5 +1,12 @@
 import { Mask } from './Mask';
 import {
+  Point,
+  DrawLineOptions,
+  drawLine,
+  DrawRectangleOptions,
+  drawRectangle,
+} from './draw';
+import {
   BlurOptions,
   blur,
   ConvolutionOptions,
@@ -52,13 +59,6 @@ import {
   grey,
   split,
 } from './operations';
-import {
-  Point,
-  PaintLineOptions,
-  paintLine,
-  PaintRectangleOptions,
-  paintRectangle,
-} from './paint';
 import { ImageColorModel, colorModels } from './utils/colorModels';
 import { validateChannel, validateValue } from './utils/validators';
 
@@ -269,11 +269,11 @@ export class IJS {
   /**
    * Get all the channels of a pixel.
    *
-   * @param row - Row index.
    * @param column - Column index.
+   * @param row - Row index.
    * @returns Channels of the pixel.
    */
-  public getPixel(row: number, column: number): number[] {
+  public getPixel(column: number, row: number): number[] {
     const result = [];
     const start = (row * this.width + column) * this.channels;
     for (let i = 0; i < this.channels; i++) {
@@ -285,11 +285,11 @@ export class IJS {
   /**
    * Set all the channels of a pixel.
    *
-   * @param row - Row index.
    * @param column - Column index.
+   * @param row - Row index.
    * @param value - New channel values of the pixel to set.
    */
-  public setPixel(row: number, column: number, value: number[]): void {
+  public setPixel(column: number, row: number, value: number[]): void {
     const start = (row * this.width + column) * this.channels;
     for (let i = 0; i < this.channels; i++) {
       this.data[start + i] = value[i];
@@ -299,26 +299,26 @@ export class IJS {
   /**
    * Get the value of a specific pixel channel. Select pixel using coordinates.
    *
-   * @param row - Row index.
    * @param column - Column index.
+   * @param row - Row index.
    * @param channel - Channel index.
    * @returns Value of the specified channel of one pixel.
    */
-  public getValue(row: number, column: number, channel: number): number {
+  public getValue(column: number, row: number, channel: number): number {
     return this.data[(row * this.width + column) * this.channels + channel];
   }
 
   /**
    * Set the value of a specific pixel channel. Select pixel using coordinates.
    *
-   * @param row - Row index.
    * @param column - Column index.
+   * @param row - Row index.
    * @param channel - Channel index.
    * @param value - Value to set.
    */
   public setValue(
-    row: number,
     column: number,
+    row: number,
     channel: number,
     value: number,
   ): void {
@@ -478,22 +478,22 @@ export class IJS {
   public histogram(options?: HistogramOptions): Uint32Array {
     return histogram(this, options);
   }
-  // PAINT
-  public paintLine(from: Point, to: Point, options: PaintLineOptions): IJS {
-    return paintLine(this, from, to, options);
+  // DRAW
+  public drawLine(from: Point, to: Point, options: DrawLineOptions): IJS {
+    return drawLine(this, from, to, options);
+  }
+  public drawRectangle(
+    position: Point,
+    width: number,
+    height: number,
+    options: DrawRectangleOptions,
+  ): IJS {
+    return drawRectangle(this, position, width, height, options);
   }
   // OPERATIONS
 
   public split(): IJS[] {
     return split(this);
-  }
-  public paintRectangle(
-    position: Point,
-    width: number,
-    height: number,
-    options: PaintRectangleOptions,
-  ): IJS {
-    return paintRectangle(this, position, width, height, options);
   }
 
   public convertColor(
@@ -818,10 +818,12 @@ function printData(img: IJS): string {
 function printChannel(img: IJS, channel: number): string {
   const result = [];
   const padding = img.depth === 8 ? 3 : 5;
-  for (let i = 0; i < img.height; i++) {
+  for (let row = 0; row < img.height; row++) {
     const line = [];
-    for (let j = 0; j < img.width; j++) {
-      line.push(String(img.getValue(i, j, channel)).padStart(padding, ' '));
+    for (let column = 0; column < img.width; column++) {
+      line.push(
+        String(img.getValue(column, row, channel)).padStart(padding, ' '),
+      );
     }
     result.push(`[${line.join(' ')}]`);
   }

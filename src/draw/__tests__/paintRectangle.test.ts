@@ -11,7 +11,7 @@ describe('we check paintRectangle', () => {
     const start = { row: 0, column: 0 };
     const width = 2;
     const height = 2;
-    const expected = image.paintRectangle(start, width, height, {
+    const expected = image.drawRectangle(start, width, height, {
       color: [255, 0, 0],
     });
 
@@ -32,7 +32,7 @@ describe('we check paintRectangle', () => {
     const start = { row: 0, column: 0 };
     const width = 3;
     const height = 3;
-    const expected = image.paintRectangle(start, width, height, {
+    const expected = image.drawRectangle(start, width, height, {
       color: [255, 0, 0],
       fill: [0, 0, 0],
       out: image,
@@ -54,7 +54,7 @@ describe('we check paintRectangle', () => {
     const start = { row: 1, column: 0 };
     const width = 3;
     const height = 3;
-    const expected = image.paintRectangle(start, width, height, {
+    const expected = image.drawRectangle(start, width, height, {
       color: [255, 0, 0],
       fill: [0, 0, 0],
       out,
