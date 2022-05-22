@@ -67,4 +67,31 @@ describe('we check drawPolygon', () => {
     expect(expected).toBe(out);
     expect(expected).not.toBe(image);
   });
+  it.skip('drawPolygon in grey image', () => {
+    const image = testUtils.createGreyImage([
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+    ]);
+    const points = [
+      { row: 0, column: 0 },
+      { row: 0, column: 1 },
+      { row: 2, column: 3 },
+      { row: 2, column: 0 },
+    ];
+    const expected = image.drawPolygon(points, {
+      color: [1],
+      fill: [2],
+      filled: true,
+    });
+
+    expect(expected).toMatchImageData([
+      [1, 1, 0, 0],
+      [1, 2, 1, 0],
+      [1, 1, 1, 1],
+      [0, 0, 0, 0],
+    ]);
+    expect(expected).not.toBe(image);
+  });
 });

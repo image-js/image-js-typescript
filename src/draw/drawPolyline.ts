@@ -34,7 +34,7 @@ export function drawPolyline(
 
   const { color = getDefaultColor(image) } = options;
   checkProcessable(newImage, 'drawPolyline', {
-    bitDepth: [1, 8, 16],
+    bitDepth: [8, 16],
   });
 
   const numberChannels = Math.min(newImage.channels, color.length);

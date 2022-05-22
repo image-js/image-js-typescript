@@ -62,12 +62,11 @@ export function drawPolygon(
 
   let newImage = getOutputImage(image, options, { clone: true });
   checkProcessable(newImage, 'drawPolyline', {
-    bitDepth: [1, 8, 16],
+    bitDepth: [8, 16],
   });
   const filteredPoints = deleteDouble(points);
-  filteredPoints.push(filteredPoints[0]);
   if (filled === false) {
-    return newImage.drawPolyline(points, otherOptions);
+    return newImage.drawPolyline([...points, points[0]], otherOptions);
   } else {
     let matrixBinary: number[][] = [];
     for (let i = 0; i < newImage.height; i++) {
@@ -92,18 +91,14 @@ export function drawPolygon(
     for (let row = 0; row < newImage.height; row++) {
       for (let column = 0; column < newImage.width; column++) {
         if (matrixBinary[row][column] === 1) {
-          if (newImage.depth === 1) {
-            newImage.setValue(column, row, 0, fill[0]);
-          } else {
-            let numberChannels = Math.min(newImage.channels, fill.length);
-            for (let channel = 0; channel < numberChannels; channel++) {
-              newImage.setValue(column, row, channel, fill[channel]);
-            }
+          let numberChannels = Math.min(newImage.channels, fill.length);
+          for (let channel = 0; channel < numberChannels; channel++) {
+            newImage.setValue(column, row, channel, fill[channel]);
           }
         }
       }
     }
-    return newImage.drawPolyline(points, otherOptions);
+    return newImage.drawPolyline([...points, points[0]], otherOptions);
   }
 }
 /**
