@@ -24,7 +24,7 @@ export interface DrawRectangleOptions {
   out?: IJS;
 }
 /**
- * Paint a rectangle defined by position, width and height.
+ * Draw a rectangle defined by position, width and height.
  *
  * @memberof Image
  * @instance
@@ -32,8 +32,8 @@ export interface DrawRectangleOptions {
  * @param position - Rectangle position.
  * @param width - Rectangle width.
  * @param height - Rectangle height.
- * @param options - Paint Line options.
- * @returns The original painted image
+ * @param options - Draw rectangle options.
+ * @returns The original drew image
  */
 export function drawRectangle(
   image: IJS,
@@ -46,7 +46,7 @@ export function drawRectangle(
   const { color = getDefaultColor(image), fill = getDefaultColor(image) } =
     options;
 
-  checkProcessable(newImage, 'paintPoints', {
+  checkProcessable(newImage, 'drawRectangle', {
     bitDepth: [8, 16],
   });
 
