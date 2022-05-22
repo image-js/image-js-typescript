@@ -11,7 +11,7 @@ describe('we check paintPolyline', () => {
       { row: 1, column: 0 },
       { row: 2, column: 1 },
     ];
-    const expected = image.paintPolyline(points, { color: [255, 0, 0] });
+    const expected = image.drawPolyline(points, { color: [255, 0, 0] });
     expect(expected).toMatchImageData([
       [100, 150, 200, 100, 150, 0],
       [255, 0, 0, 3, 200, 0],
@@ -30,7 +30,7 @@ describe('we check paintPolyline', () => {
       { row: 1, column: 1 },
       { row: 0, column: 1 },
     ];
-    const expected = image.paintPolyline(points, {
+    const expected = image.drawPolyline(points, {
       color: [255, 0, 0],
       out: image,
     });
@@ -55,7 +55,7 @@ describe('we check paintPolyline', () => {
       { row: 1, column: 1 },
       { row: 2, column: 1 },
     ];
-    const expected = image.paintPolyline(points, {
+    const expected = image.drawPolyline(points, {
       color: [255, 0, 0],
       out,
     });

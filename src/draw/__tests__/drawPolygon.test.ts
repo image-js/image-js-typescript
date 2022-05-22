@@ -11,7 +11,7 @@ describe('we check drawPolygon', () => {
       { row: 0, column: 0 },
       { row: 1, column: 1 },
     ];
-    const expected = image.paintPolygon(points, { color: [255, 0, 0] });
+    const expected = image.drawPolygon(points, { color: [255, 0, 0] });
     expect(expected).toMatchImageData([
       [255, 0, 0, 100, 150, 0],
       [100, 200, 5, 255, 0, 0],
@@ -30,7 +30,7 @@ describe('we check drawPolygon', () => {
       { row: 1, column: 1 },
       { row: 2, column: 0 },
     ];
-    const expected = image.paintPolygon(points, {
+    const expected = image.drawPolygon(points, {
       color: [255, 0, 0],
       out: image,
     });
@@ -54,7 +54,7 @@ describe('we check drawPolygon', () => {
       { row: 1, column: 1 },
       { row: 2, column: 0 },
     ];
-    const expected = image.paintPolygon(points, {
+    const expected = image.drawPolygon(points, {
       color: [255, 0, 0],
       out,
     });

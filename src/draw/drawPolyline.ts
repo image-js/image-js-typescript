@@ -20,8 +20,6 @@ export interface DrawPolylineOptions {
 /**
  * Draw a polyline defined by an array of points.
  *
- * @memberof Image
- * @instance
  * @param image - Image to process.
  * @param points - Polyline array of points.
  * @param options - Draw polyline options.
@@ -36,7 +34,7 @@ export function drawPolyline(
 
   const { color = getDefaultColor(image) } = options;
   checkProcessable(newImage, 'drawPolyline', {
-    bitDepth: [8, 16],
+    bitDepth: [1, 8, 16],
   });
 
   const numberChannels = Math.min(newImage.channels, color.length);
@@ -44,32 +42,31 @@ export function drawPolyline(
     const from = points[i];
     const to = points[i + 1];
 
-    const dx = to.row - from.row;
-    const dy = to.column - from.column;
-    const steps = Math.max(Math.abs(dx), Math.abs(dy));
+    const dColumn = to.column - from.column;
+    const dRow = to.row - from.row;
+    const steps = Math.max(Math.abs(dColumn), Math.abs(dRow));
 
-    const xIncrement = dx / steps;
-    const yIncrement = dy / steps;
+    const columnIncrement = dColumn / steps;
+    const rowIncrement = dRow / steps;
 
-    let x = from.row;
-    let y = from.column;
+    let { row, column } = from;
 
-    for (let j = 0; j <= steps; j++) {
-      const xPoint = Math.round(x);
-      const yPoint = Math.round(y);
+    for (let step = 0; step <= steps; step++) {
+      const rowPoint = Math.round(row);
+      const columnPoint = Math.round(column);
       if (
-        xPoint >= 0 &&
-        yPoint >= 0 &&
-        xPoint < newImage.height &&
-        yPoint < newImage.width
+        columnPoint >= 0 &&
+        rowPoint >= 0 &&
+        columnPoint < newImage.width &&
+        rowPoint < newImage.height
       ) {
         for (let channel = 0; channel < numberChannels; channel++) {
-          newImage.setValue(xPoint, yPoint, channel, color[channel]);
+          newImage.setValue(columnPoint, rowPoint, channel, color[channel]);
         }
       }
 
-      x = x + xIncrement;
-      y = y + yIncrement;
+      row = row + rowIncrement;
+      column = column + columnIncrement;
     }
   }
   return newImage;
