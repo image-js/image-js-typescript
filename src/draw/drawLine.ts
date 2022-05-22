@@ -26,6 +26,10 @@ export interface DrawLineOptions {
    * Image to which the resulting image has to be put.
    */
   out?: IJS;
+  /**
+   * Enable low-level drawing.
+   */
+  low?: boolean;
 }
 /**
  * Paint a line defined by an array of points.
@@ -44,12 +48,15 @@ export function drawLine(
   to: Point,
   options: DrawLineOptions = {},
 ) {
-  const newImage = getOutputImage(image, options, { clone: true });
-  const { color = getDefaultColor(newImage) } = options;
+  let newImage = image;
+  const { color = getDefaultColor(newImage), low = false } = options;
 
-  checkProcessable(newImage, 'paintPoints', {
-    bitDepth: [8, 16],
-  });
+  if (!low) {
+    newImage = getOutputImage(image, options, { clone: true });
+    checkProcessable(newImage, 'paintPoints', {
+      bitDepth: [8, 16],
+    });
+  }
 
   const numberChannels = Math.min(newImage.channels, color.length);
 

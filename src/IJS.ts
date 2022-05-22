@@ -464,7 +464,7 @@ export class IJS {
       case ImageCoordinates.BOTTOM_RIGHT:
         return [this.width - 1, this.height - 1];
       default:
-        throw new Error(`Unknow image coordinates ${coordinates}`);
+        throw new Error(`Unknown image coordinates ${coordinates}`);
     }
   }
 

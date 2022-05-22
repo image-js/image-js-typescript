@@ -102,4 +102,24 @@ describe('we check drawline', () => {
     ]);
     expect(expected).not.toBe(image);
   });
+  it('draw low-level line', () => {
+    const image = testUtils.createGreyImage([
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+    ]);
+    const from = { row: 0, column: 1 };
+    const to = { row: 3, column: 2 };
+    image.drawLine(from, to, {
+      color: [1],
+      low: true,
+    });
+    expect(image).toMatchImageData([
+      [0, 1, 0, 0],
+      [0, 1, 0, 0],
+      [0, 0, 1, 0],
+      [0, 0, 1, 0],
+    ]);
+  });
 });
