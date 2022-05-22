@@ -64,15 +64,9 @@ export function drawRectangle(
           { row: position.row + height - 2, column: i },
           { color: fill, out: newImage },
         );
-        newImage.setPixel(position.row, i, color);
-        newImage.setPixel(position.row + height - 1, i, color);
-      } else {
-        newImage.drawLine(
-          { row: position.row, column: i },
-          { row: position.row + height - 1, column: i },
-          { color, out: newImage },
-        );
       }
+      newImage.setPixel(i, position.row, color);
+      newImage.setPixel(i, position.row + height - 1, color);
     }
   }
   return newImage;

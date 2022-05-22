@@ -24,9 +24,9 @@ describe('we check paintRectangle', () => {
   });
   it('paint rectangle with out parameter set to self', () => {
     const image = testUtils.createRgbImage([
-      [100, 150, 200, 100, 150, 0, 150, 200, 255],
-      [100, 200, 5, 3, 200, 0, 150, 200, 255],
-      [150, 200, 255, 6, 150, 0, 5, 3, 200],
+      [100, 100, 200, 100, 100, 100, 150, 200, 255],
+      [100, 100, 5, 3, 100, 100, 150, 200, 255],
+      [100, 100, 255, 6, 150, 5, 5, 3, 200],
     ]);
 
     const start = { row: 0, column: 0 };
@@ -34,12 +34,12 @@ describe('we check paintRectangle', () => {
     const height = 3;
     const expected = image.drawRectangle(start, width, height, {
       color: [255, 0, 0],
-      fill: [0, 0, 0],
+      fill: [0, 5, 2],
       out: image,
     });
     expect(expected).toMatchImageData([
       [255, 0, 0, 255, 0, 0, 255, 0, 0],
-      [255, 0, 0, 0, 0, 0, 255, 0, 0],
+      [255, 0, 0, 0, 5, 2, 255, 0, 0],
       [255, 0, 0, 255, 0, 0, 255, 0, 0],
     ]);
     expect(expected).toBe(image);
@@ -59,7 +59,6 @@ describe('we check paintRectangle', () => {
       fill: [0, 0, 0],
       out,
     });
-
     expect(expected).toMatchImageData([
       [100, 150, 200, 100, 150, 0],
       [255, 0, 0, 255, 0, 0],
