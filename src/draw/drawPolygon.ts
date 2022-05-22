@@ -75,10 +75,10 @@ export function drawPolygon(
         matrixBinary[i].push(0);
       }
     }
-    for (let point = 0; point < filteredPoints.length; point++) {
+    for (let i = 0; i < filteredPoints.length; i++) {
       const line = lineBetweenTwoPoints(
-        filteredPoints[point],
-        filteredPoints[(point + 1) % filteredPoints.length],
+        filteredPoints[i],
+        filteredPoints[(i + 1) % filteredPoints.length],
       );
       for (let row = 0; row < newImage.height; row++) {
         for (let column = 0; column < newImage.width; column++) {
@@ -108,7 +108,7 @@ export function drawPolygon(
  * @returns Cleaned polygon points array
  */
 function deleteDouble(points: Point[]): Point[] {
-  let finalPoints = [];
+  const finalPoints: Point[] = [];
   for (let i = 0; i < points.length; i++) {
     if (
       points[i].column === points[(i + 1) % points.length].column &&

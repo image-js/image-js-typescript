@@ -67,7 +67,24 @@ describe('we check drawPolygon', () => {
     expect(expected).toBe(out);
     expect(expected).not.toBe(image);
   });
-  it.skip('drawPolygon in grey image', () => {
+  it('drawPolygon with no points', () => {
+    const image = testUtils.createRgbImage([
+      [100, 150, 200, 100, 150, 0],
+      [100, 200, 5, 3, 200, 0],
+      [150, 200, 255, 6, 150, 0],
+    ]);
+    const expected = image.drawPolygon([], {
+      color: [255, 0, 0],
+    });
+
+    expect(expected).toMatchImageData([
+      [100, 150, 200, 100, 150, 0],
+      [100, 200, 5, 3, 200, 0],
+      [150, 200, 255, 6, 150, 0],
+    ]);
+    expect(expected).not.toBe(image);
+  });
+  it('drawPolygon in grey image', () => {
     const image = testUtils.createGreyImage([
       [0, 0, 0, 0],
       [0, 0, 0, 0],
@@ -76,21 +93,19 @@ describe('we check drawPolygon', () => {
     ]);
     const points = [
       { row: 0, column: 0 },
-      { row: 0, column: 1 },
-      { row: 2, column: 3 },
-      { row: 2, column: 0 },
+      { row: 3, column: 3 },
+      { row: 3, column: 0 },
     ];
     const expected = image.drawPolygon(points, {
       color: [1],
       fill: [2],
       filled: true,
     });
-
     expect(expected).toMatchImageData([
+      [1, 0, 0, 0],
       [1, 1, 0, 0],
       [1, 2, 1, 0],
       [1, 1, 1, 1],
-      [0, 0, 0, 0],
     ]);
     expect(expected).not.toBe(image);
   });
