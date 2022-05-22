@@ -3,9 +3,9 @@ import checkProcessable from '../utils/checkProcessable';
 import { getDefaultColor } from '../utils/getDefaultColor';
 import { getOutputImage } from '../utils/getOutputImage';
 
-import { Point } from './paintLine';
+import { Point } from './drawLine';
 
-export interface PaintPolygonOptions {
+export interface DrawPolylineOptions {
   /**
    * Array of N elements (e.g. R, G, B or G, A), N being the number of channels.
    *
@@ -18,31 +18,31 @@ export interface PaintPolygonOptions {
   out?: IJS;
 }
 /**
- * Paint a polygon defined by an array of points.
+ * Draw a polyline defined by an array of points.
  *
  * @memberof Image
  * @instance
  * @param image - Image to process.
- * @param points - Polygon points.
- * @param options - Paint Line options.
- * @returns The original painted image
+ * @param points - Polyline array of points.
+ * @param options - Draw polyline options.
+ * @returns The original drew image
  */
-export function paintPolygon(
+export function drawPolyline(
   image: IJS,
   points: Point[],
-  options: PaintPolygonOptions = {},
+  options: DrawPolylineOptions = {},
 ) {
   let newImage = getOutputImage(image, options, { clone: true });
 
   const { color = getDefaultColor(image) } = options;
-  checkProcessable(newImage, 'paintPolyline', {
+  checkProcessable(newImage, 'drawPolyline', {
     bitDepth: [8, 16],
   });
 
   const numberChannels = Math.min(newImage.channels, color.length);
-  for (let i = 0; i < points.length; i++) {
+  for (let i = 0; i < points.length - 1; i++) {
     const from = points[i];
-    const to = points[i < points.length - 1 ? i + 1 : 0];
+    const to = points[i + 1];
 
     const dx = to.row - from.row;
     const dy = to.column - from.column;
@@ -72,7 +72,5 @@ export function paintPolygon(
       y = y + yIncrement;
     }
   }
-  //TODO :Scan Line fill polygone
-
   return newImage;
 }

@@ -15,7 +15,7 @@ export interface Point {
    */
   column: number;
 }
-export interface PaintLineOptions {
+export interface DrawLineOptions {
   /**
    * Array of N elements (e.g. R, G, B or G, A), N being the number of channels.
    *
@@ -28,26 +28,26 @@ export interface PaintLineOptions {
   out?: IJS;
 }
 /**
- * Paint a line defined by an array of points.
+ * Draw a line defined by an array of points.
  *
  * @memberof Image
  * @instance
  * @param image - Image to process.
  * @param from - Line starting point.
  * @param to - Line ending point.
- * @param options - Paint Line options.
- * @returns The original painted image
+ * @param options - Draw Line options.
+ * @returns The original drew image
  */
-export function paintLine(
+export function drawLine(
   image: IJS,
   from: Point,
   to: Point,
-  options: PaintLineOptions = {},
+  options: DrawLineOptions = {},
 ) {
   const newImage = getOutputImage(image, options, { clone: true });
   const { color = getDefaultColor(newImage) } = options;
 
-  checkProcessable(newImage, 'paintPoints', {
+  checkProcessable(newImage, 'drawPoints', {
     bitDepth: [8, 16],
   });
 
@@ -73,7 +73,7 @@ export function paintLine(
       yPoint < newImage.width
     ) {
       for (let channel = 0; channel < numberChannels; channel++) {
-        newImage.setValue(xPoint, yPoint, channel, color[channel]);
+        newImage.setValue(yPoint, xPoint, channel, color[channel]);
       }
     }
 

@@ -1,7 +1,7 @@
 import { IJS } from '../../IJS';
 
-describe('we check paintPolygon', () => {
-  it('paint paintPolygon image', () => {
+describe('we check drawPolygon', () => {
+  it('drawPolygon in an image', () => {
     const image = testUtils.createRgbImage([
       [100, 150, 200, 100, 150, 0],
       [100, 200, 5, 3, 200, 0],
@@ -19,7 +19,7 @@ describe('we check paintPolygon', () => {
     ]);
     expect(expected).not.toBe(image);
   });
-  it('paint paintPolygon with out parameter set to self', () => {
+  it('drawPolygon with out parameter set to self', () => {
     const image = testUtils.createRgbImage([
       [100, 150, 200, 100, 150, 0],
       [100, 200, 5, 3, 200, 0],
@@ -42,7 +42,7 @@ describe('we check paintPolygon', () => {
     ]);
     expect(expected).toBe(image);
   });
-  it('paint paintPolygon with out parameter', () => {
+  it('drawPolygon with out parameter', () => {
     const out = new IJS(2, 3);
     const image = testUtils.createRgbImage([
       [100, 150, 200, 100, 150, 0],
