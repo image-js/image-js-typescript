@@ -1,3 +1,5 @@
+import { euclidean } from 'ml-distance-euclidean';
+
 import { IJS } from '../IJS';
 import checkProcessable from '../utils/checkProcessable';
 import { getDefaultColor } from '../utils/getDefaultColor';
@@ -69,8 +71,8 @@ export function drawCircle(
     let row = center.row;
     for (
       ;
-      distanceSquare(p1, { row, column }) +
-        distanceSquare(p2, { row, column }) <
+      euclidean([p1.column, p1.row], [row, column]) +
+        euclidean([p2.column, p2.row], [row, column]) <
       Math.pow(radius * 2, 2);
       row++
     ) {
@@ -87,8 +89,8 @@ export function drawCircle(
       }
     }
     if (
-      distanceSquare(p1, { row, column }) +
-        distanceSquare(p2, { row, column }) ===
+      euclidean([p1.column, p1.row], [row, column]) +
+        euclidean([p2.column, p2.row], [row, column]) ===
       Math.pow(radius * 2, 2)
     ) {
       for (let channel = 0; channel < numberChannels; channel++) {
@@ -113,7 +115,4 @@ export function drawCircle(
     }
   }
   return newImage;
-}
-function distanceSquare(p1: Point, p2: Point) {
-  return Math.pow(p1.row - p2.row, 2) + Math.pow(p1.column - p2.column, 2);
 }
