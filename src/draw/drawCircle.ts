@@ -1,4 +1,4 @@
-import { euclidean } from 'ml-distance-euclidean';
+import { squaredEuclidean } from 'ml-distance-euclidean';
 
 import { IJS } from '../IJS';
 import checkProcessable from '../utils/checkProcessable';
@@ -71,8 +71,8 @@ export function drawCircle(
     let row = center.row;
     for (
       ;
-      euclidean([p1.column, p1.row], [row, column]) +
-        euclidean([p2.column, p2.row], [row, column]) <
+      squaredEuclidean([p1.column, p1.row], [column, row]) +
+        squaredEuclidean([p2.column, p2.row], [column, row]) <
       Math.pow(radius * 2, 2);
       row++
     ) {
@@ -89,8 +89,8 @@ export function drawCircle(
       }
     }
     if (
-      euclidean([p1.column, p1.row], [row, column]) +
-        euclidean([p2.column, p2.row], [row, column]) ===
+      squaredEuclidean([p1.column, p1.row], [column, row]) +
+        squaredEuclidean([p2.column, p2.row], [column, row]) ===
       Math.pow(radius * 2, 2)
     ) {
       for (let channel = 0; channel < numberChannels; channel++) {
