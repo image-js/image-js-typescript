@@ -1,5 +1,11 @@
 import { Mask } from './Mask';
-import { Point, DrawLineOptions, drawLine } from './draw';
+import {
+  Point,
+  DrawLineOptions,
+  drawLine,
+  drawCircle,
+  DrawCircleOptions,
+} from './draw';
 import {
   BlurOptions,
   blur,
@@ -475,6 +481,13 @@ export class IJS {
   // PAINT
   public drawLine(from: Point, to: Point, options: DrawLineOptions): IJS {
     return drawLine(this, from, to, options);
+  }
+  public drawCircle(
+    center: Point,
+    radius: number,
+    options: DrawCircleOptions,
+  ): IJS {
+    return drawCircle(this, center, radius, options);
   }
   // OPERATIONS
 
