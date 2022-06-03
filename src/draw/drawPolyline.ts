@@ -7,7 +7,7 @@ import { Point } from './drawLine';
 
 export interface DrawPolylineOptions {
   /**
-   * Array of N elements (e.g. R, G, B or G, A), N being the number of channels.
+   * lines color - array of N elements (e.g. R, G, B or G, A), N being the number of channels.
    *
    * @default black
    */

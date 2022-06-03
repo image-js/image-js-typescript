@@ -4,6 +4,7 @@ import { getDefaultColor } from '../utils/getDefaultColor';
 import { getOutputImage } from '../utils/getOutputImage';
 
 import { Point } from './drawLine';
+import { DrawPolylineOptions } from './drawPolyline';
 
 export interface Line {
   /**
@@ -19,23 +20,13 @@ export interface Line {
    */
   vertical: boolean;
 }
-export interface DrawPolygonOptions {
+export interface DrawPolygonOptions extends DrawPolylineOptions {
   /**
-   * Array of N elements (e.g. R, G, B or G, A), N being the number of channels.
-   *
-   * @default black
-   */
-  color?: number[];
-  /**
-   * Array of N elements (e.g. R, G, B or G, A), N being the number of channels.
+   * fill color - array of N elements (e.g. R, G, B or G, A), N being the number of channels.
    *
    * @default black
    */
   fill?: number[];
-  /**
-   * Image to which the resulting image has to be put.
-   */
-  out?: IJS;
   /**
    * Fill polygon.
    */
