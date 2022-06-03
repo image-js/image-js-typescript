@@ -127,7 +127,7 @@ describe('we check drawCircle', () => {
     ]);
     expect(expected).not.toBe(image);
   });
-  it('canvas test', () => {
+  it('big image test', () => {
     const image = testUtils.createGreyImage([
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
