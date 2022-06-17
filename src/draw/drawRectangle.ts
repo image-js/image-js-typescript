@@ -11,7 +11,7 @@ export interface DrawRectangleOptions {
    *
    * @default "black"
    */
-  color?: number[];
+  color?: number[] | 'none';
   /**
    * Rectangle fill color array of N elements (e.g. R, G, B or G, A), N being the number of channels.
    *
@@ -47,7 +47,7 @@ export function drawRectangle(
   checkProcessable(newImage, 'drawRectangle', {
     bitDepth: [8, 16],
   });
-  if (color) {
+  if (color !== 'none') {
     for (let col = position.column; col < position.column + width; col++) {
       newImage.setPixel(col, position.row, color);
       newImage.setPixel(col, position.row + height - 1, color);
@@ -68,20 +68,18 @@ export function drawRectangle(
       }
     }
   }
-
-  // color undefined but fill is defined
-
-  // else if (fill) {
-  //   for (let row = position.row + 1; row < position.row + height - 1; row++) {
-  //     for (
-  //       let col = position.column + 1;
-  //       col < position.column + width - 1;
-  //       col++
-  //     ) {
-  //       newImage.setPixel(col, row, fill);
-  //       newImage.setPixel(col, row, fill);
-  //     }
-  //   }
-  // }
+  // color is none but fill is defined
+  else if (fill) {
+    for (let row = position.row + 1; row < position.row + height - 1; row++) {
+      for (
+        let col = position.column + 1;
+        col < position.column + width - 1;
+        col++
+      ) {
+        newImage.setPixel(col, row, fill);
+        newImage.setPixel(col, row, fill);
+      }
+    }
+  }
   return newImage;
 }

@@ -104,6 +104,29 @@ describe('we check drawRectangle', () => {
     ]);
     expect(expected).not.toBe(image);
   });
+  it('draw filled rectangle with no stroke', () => {
+    const image = testUtils.createGreyImage([
+      [1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1],
+    ]);
+    const expected = image.drawRectangle(start, image.width, image.height, {
+      color: 'none',
+      fill: [3],
+    });
+    expect(expected).toMatchImageData([
+      [1, 1, 1, 1, 1, 1],
+      [1, 3, 3, 3, 3, 1],
+      [1, 3, 3, 3, 3, 1],
+      [1, 3, 3, 3, 3, 1],
+      [1, 3, 3, 3, 3, 1],
+      [1, 1, 1, 1, 1, 1],
+    ]);
+    expect(expected).not.toBe(image);
+  });
   it('draw rectangle with no options', () => {
     const image = testUtils.createGreyImage([
       [1, 1, 1, 1, 1, 1],
