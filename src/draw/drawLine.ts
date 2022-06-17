@@ -19,7 +19,7 @@ export interface DrawLineOptions {
   /**
    * Array of N elements (e.g. R, G, B or G, A), N being the number of channels.
    *
-   * @defaultValue black
+   * @default black
    */
   color?: number[];
   /**
