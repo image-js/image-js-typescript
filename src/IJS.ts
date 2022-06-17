@@ -479,14 +479,14 @@ export class IJS {
     return histogram(this, options);
   }
   // DRAW
-  public drawLine(from: Point, to: Point, options: DrawLineOptions): IJS {
+  public drawLine(from: Point, to: Point, options: DrawLineOptions = {}): IJS {
     return drawLine(this, from, to, options);
   }
   public drawRectangle(
     position: Point,
     width: number,
     height: number,
-    options: DrawRectangleOptions,
+    options: DrawRectangleOptions = {},
   ): IJS {
     return drawRectangle(this, position, width, height, options);
   }

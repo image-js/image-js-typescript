@@ -67,4 +67,78 @@ describe('we check drawRectangle', () => {
     expect(expected).toBe(out);
     expect(expected).not.toBe(image);
   });
+  it('draw rectangle in grey image', () => {
+    const image = testUtils.createGreyImage([
+      [1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1],
+    ]);
+    const start = { row: 1, column: 1 };
+    const width = 4;
+    const height = 4;
+    const expected = image.drawRectangle(start, width, height, {
+      color: [2],
+    });
+    expect(expected).toMatchImageData([
+      [1, 1, 1, 1, 1, 1],
+      [1, 2, 2, 2, 2, 1],
+      [1, 2, 1, 1, 2, 1],
+      [1, 2, 1, 1, 2, 1],
+      [1, 2, 2, 2, 2, 1],
+      [1, 1, 1, 1, 1, 1],
+    ]);
+    expect(expected).not.toBe(image);
+  });
+  it('draw filled rectangle in grey image', () => {
+    const image = testUtils.createGreyImage([
+      [1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1],
+    ]);
+    const start = { row: 1, column: 1 };
+    const width = 4;
+    const height = 4;
+    const expected = image.drawRectangle(start, width, height, {
+      color: [2],
+      fill: [3],
+    });
+    expect(expected).toMatchImageData([
+      [1, 1, 1, 1, 1, 1],
+      [1, 2, 2, 2, 2, 1],
+      [1, 2, 3, 3, 2, 1],
+      [1, 2, 3, 3, 2, 1],
+      [1, 2, 2, 2, 2, 1],
+      [1, 1, 1, 1, 1, 1],
+    ]);
+    expect(expected).not.toBe(image);
+  });
+  it('draw rectangle with no options', () => {
+    const image = testUtils.createGreyImage([
+      [1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1],
+    ]);
+    const start = { row: 1, column: 1 };
+    const width = 4;
+    const height = 4;
+    const expected = image.drawRectangle(start, width, height);
+    expect(expected).toMatchImageData([
+      [1, 1, 1, 1, 1, 1],
+      [1, 0, 0, 0, 0, 1],
+      [1, 0, 1, 1, 0, 1],
+      [1, 0, 1, 1, 0, 1],
+      [1, 0, 0, 0, 0, 1],
+      [1, 1, 1, 1, 1, 1],
+    ]);
+    expect(expected).not.toBe(image);
+  });
 });

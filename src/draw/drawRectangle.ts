@@ -13,9 +13,8 @@ export interface DrawRectangleOptions {
    */
   color?: number[];
   /**
-   * rectangle fill color array of N elements (e.g. R, G, B or G, A), N being the number of channels.
+   * Rectangle fill color array of N elements (e.g. R, G, B or G, A), N being the number of channels.
    *
-   * @default black
    */
   fill?: number[];
   /**
@@ -42,31 +41,42 @@ export function drawRectangle(
   height: number,
   options: DrawRectangleOptions = {},
 ) {
-  let newImage = getOutputImage(image, options, { clone: true });
-  const { color = getDefaultColor(image), fill = getDefaultColor(image) } =
-    options;
+  const newImage = getOutputImage(image, options, { clone: true });
+  const { color = getDefaultColor(newImage), fill } = options;
 
   checkProcessable(newImage, 'drawRectangle', {
     bitDepth: [8, 16],
   });
+  if (color) {
+    for (let col = position.column; col < position.column + width; col++) {
+      newImage.setPixel(col, position.row, color);
+      newImage.setPixel(col, position.row + height - 1, color);
+    }
+    for (let row = position.row + 1; row < position.row + height - 1; row++) {
+      newImage.setPixel(position.column, row, color);
+      newImage.setPixel(position.column + width - 1, row, color);
 
-  for (let i = position.column; i < position.column + width; i++) {
-    if (i === position.column || i === position.column + width - 1) {
-      newImage.drawLine(
-        { row: position.row, column: i },
-        { row: position.row + height - 1, column: i },
-        { color, out: newImage },
-      );
-    } else {
-      if (position.row + 1 <= position.row + height - 2) {
-        newImage.drawLine(
-          { row: position.row + 1, column: i },
-          { row: position.row + height - 2, column: i },
-          { color: fill, out: newImage },
-        );
+      if (fill) {
+        for (
+          let col = position.column + 1;
+          col < position.column + width - 1;
+          col++
+        ) {
+          newImage.setPixel(col, row, fill);
+          newImage.setPixel(col, row, fill);
+        }
       }
-      newImage.setPixel(i, position.row, color);
-      newImage.setPixel(i, position.row + height - 1, color);
+    }
+  } else if (fill) {
+    for (let row = position.row + 1; row < position.row + height - 1; row++) {
+      for (
+        let col = position.column + 1;
+        col < position.column + width - 1;
+        col++
+      ) {
+        newImage.setPixel(col, row, fill);
+        newImage.setPixel(col, row, fill);
+      }
     }
   }
   return newImage;
