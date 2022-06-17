@@ -67,17 +67,21 @@ export function drawRectangle(
         }
       }
     }
-  } else if (fill) {
-    for (let row = position.row + 1; row < position.row + height - 1; row++) {
-      for (
-        let col = position.column + 1;
-        col < position.column + width - 1;
-        col++
-      ) {
-        newImage.setPixel(col, row, fill);
-        newImage.setPixel(col, row, fill);
-      }
-    }
   }
+
+  // color undefined but fill is defined
+
+  // else if (fill) {
+  //   for (let row = position.row + 1; row < position.row + height - 1; row++) {
+  //     for (
+  //       let col = position.column + 1;
+  //       col < position.column + width - 1;
+  //       col++
+  //     ) {
+  //       newImage.setPixel(col, row, fill);
+  //       newImage.setPixel(col, row, fill);
+  //     }
+  //   }
+  // }
   return newImage;
 }
