@@ -9,7 +9,7 @@ export interface DrawRectangleOptions {
   /**
    * Rectangle border color array of N elements (e.g. R, G, B or G, A), N being the number of channels.
    *
-   * @default black
+   * @defaultValue black
    */
   color?: number[];
   /**
