@@ -7,6 +7,8 @@ import {
   drawPolyline,
   DrawPolygonOptions,
   DrawPolylineOptions,
+  DrawRectangleOptions,
+  drawRectangle,
 } from './draw';
 import {
   BlurOptions,
@@ -59,6 +61,8 @@ import {
   crop,
   CropOptions,
   grey,
+  paintMask,
+  PaintMaskOptions,
   split,
 } from './operations';
 import { ImageColorModel, colorModels } from './utils/colorModels';
@@ -480,9 +484,17 @@ export class IJS {
   public histogram(options?: HistogramOptions): Uint32Array {
     return histogram(this, options);
   }
-  // PAINT
-  public drawLine(from: Point, to: Point, options: DrawLineOptions): IJS {
+  // DRAW
+  public drawLine(from: Point, to: Point, options: DrawLineOptions = {}): IJS {
     return drawLine(this, from, to, options);
+  }
+  public drawRectangle(
+    position: Point,
+    width: number,
+    height: number,
+    options: DrawRectangleOptions = {},
+  ): IJS {
+    return drawRectangle(this, position, width, height, options);
   }
   // OPERATIONS
   public drawPolyline(points: Point[], options: DrawPolylineOptions): IJS {
@@ -537,6 +549,17 @@ export class IJS {
    */
   public extract(mask: Mask, options?: ExtractOptions): IJS {
     return extract(this, mask, options);
+  }
+
+  /**
+   * Paint a mask onto an image and the given position and with the given color.
+   *
+   * @param mask - Mask to paint on the image.
+   * @param options - Paint mask options.
+   * @returns The painted image.
+   */
+  public paintMask(mask: Mask, options?: PaintMaskOptions): IJS {
+    return paintMask(this, mask, options);
   }
 
   // FILTERS
@@ -798,33 +821,22 @@ function createPixelArray(
  * @returns Formatted string containing the image data.
  */
 function printData(img: IJS): string {
-  const channels = [];
-  for (let c = 0; c < img.channels; c++) {
-    channels.push(`[${printChannel(img, c)}]`);
-  }
-  return `{
-    ${channels.join('\n\n    ')}
-  }`;
-}
-
-/**
- * Returns all values of a channel as a string.
- *
- * @param img - Input image.
- * @param channel - Specified channel.
- * @returns Formatted string with all values of a channel.
- */
-function printChannel(img: IJS, channel: number): string {
   const result = [];
   const padding = img.depth === 8 ? 3 : 5;
+
   for (let row = 0; row < img.height; row++) {
-    const line = [];
+    const currentRow = [];
     for (let column = 0; column < img.width; column++) {
-      line.push(
-        String(img.getValue(column, row, channel)).padStart(padding, ' '),
-      );
+      for (let channel = 0; channel < img.channels; channel++) {
+        currentRow.push(
+          String(img.getValue(column, row, channel)).padStart(padding, ' '),
+        );
+      }
     }
-    result.push(`[${line.join(' ')}]`);
+    result.push(`[${currentRow.join(' ')}]`);
   }
-  return result.join('\n     ');
+
+  return `{
+    ${`[\n     ${result.join('\n     ')}\n    ]`}
+  }`;
 }

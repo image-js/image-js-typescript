@@ -224,7 +224,13 @@ test('fill alpha should throw if no alpha', () => {
   );
 });
 
-test('check custom inspect', () => {
-  const mask = new IJS(1, 2);
-  expect(inspect(mask)).toMatchSnapshot();
+test('check custom inspect, RGB image', () => {
+  const image = new IJS(1, 2);
+
+  expect(inspect(image)).toMatchSnapshot();
+});
+test('check custom inspect, GREYA image', () => {
+  const image = new IJS(2, 2, { colorModel: ImageColorModel.GREYA });
+
+  expect(inspect(image)).toMatchSnapshot();
 });
