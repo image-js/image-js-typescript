@@ -1,11 +1,11 @@
-import { squaredEuclidean } from 'ml-distance-euclidean';
-
 import { IJS } from '../IJS';
 import checkProcessable from '../utils/checkProcessable';
 import { getDefaultColor } from '../utils/getDefaultColor';
 import { getOutputImage } from '../utils/getOutputImage';
 
 import { Point } from './drawLine';
+
+// Inspired by https://www.geeksforgeeks.org/bresenhams-circle-drawing-algorithm/
 
 export interface DrawCircleOptions {
   /**
@@ -15,15 +15,8 @@ export interface DrawCircleOptions {
    */
   color?: number[];
   /**
-   * Draw a filled circle.
-   *
-   * @default black
-   */
-  filled?: boolean;
-  /**
    * Circle fill color array of N elements (e.g. R, G, B or G, A), N being the number of channels.
    *
-   * @default black
    */
   fill?: number[];
 
@@ -50,69 +43,73 @@ export function drawCircle(
   options: DrawCircleOptions = {},
 ): IJS {
   const newImage = getOutputImage(image, options, { clone: true });
-  const {
-    color = getDefaultColor(newImage),
-    fill = getDefaultColor(newImage),
-    filled = false,
-  } = options;
-
+  const { color = getDefaultColor(newImage), fill } = options;
+  const { row: cRow, column: cColumn } = center;
   checkProcessable(newImage, 'paintPoints', {
     bitDepth: [8, 16],
   });
 
-  const numberChannels = Math.min(newImage.channels, color.length);
-  const p1 = { row: center.row, column: center.column - radius };
-  const p2 = { row: center.row, column: center.column + radius };
-  for (
-    let column = center.column - radius;
-    column <= center.column + radius;
-    column++
-  ) {
-    let row = center.row;
-    for (
-      ;
-      squaredEuclidean([p1.column, p1.row], [column, row]) +
-        squaredEuclidean([p2.column, p2.row], [column, row]) <
-      Math.pow(radius * 2, 2);
-      row++
-    ) {
-      if (filled) {
-        for (let channel = 0; channel < numberChannels; channel++) {
-          newImage.setValue(column, row, channel, fill[channel]);
-          newImage.setValue(
-            column,
-            2 * center.row - row, //  center.row - (row - center.row) (symmetric)
-            channel,
-            fill[channel],
-          );
-        }
-      }
+  /**
+   *
+   * Draw all other 7 pixels
+   * Present at symmetric position
+   *
+   * @param column - Position column.
+   * @param row - Position row.
+   */
+  function drawCircle(column: number, row: number) {
+    newImage.setPixel(column + cColumn, row + cRow, color);
+    newImage.setPixel(row + cColumn, column + cRow, color);
+    newImage.setPixel(-row + cColumn, column + cRow, color);
+    newImage.setPixel(column + cColumn, -row + cRow, color);
+    // if (column !== 0) {
+    newImage.setPixel(-column + cColumn, row + cRow, color);
+    newImage.setPixel(row + cColumn, -column + cRow, color);
+    newImage.setPixel(-row + cColumn, -column + cRow, color);
+    newImage.setPixel(-column + cColumn, -row + cRow, color);
+    // }
+    if (fill) {
+      fillCircle(column, row);
     }
-    if (
-      squaredEuclidean([p1.column, p1.row], [column, row]) +
-        squaredEuclidean([p2.column, p2.row], [column, row]) ===
-      Math.pow(radius * 2, 2)
-    ) {
-      for (let channel = 0; channel < numberChannels; channel++) {
-        newImage.setValue(column, row, channel, color[channel]);
-        newImage.setValue(
-          column,
-          2 * center.row - row, //  center.row - (row - center.row) (symmetric)
-          channel,
-          color[channel],
-        );
-      }
-    } else {
-      for (let channel = 0; channel < numberChannels; channel++) {
-        newImage.setValue(column, row - 1, channel, color[channel]);
-        newImage.setValue(
-          column,
-          2 * center.row - row + 1, //  center.row - (row - 1 - center.row) (symmetric)
-          channel,
-          color[channel],
-        );
+  }
+
+  /**
+   *
+   * Fill circle symmetrically
+   *
+   * @param column - Point column.
+   * @param row - Point row.
+   */
+  function fillCircle(column: number, row: number) {
+    if (fill) {
+      for (let i = column; i < row; i++) {
+        newImage.setPixel(column + cColumn, i + cRow, fill);
+        newImage.setPixel(column + cColumn, -i + cRow, fill);
+        newImage.setPixel(i + cColumn, column + cRow, fill);
+        newImage.setPixel(-i + cColumn, column + cRow, fill);
+        // if (column !== 0) {
+        newImage.setPixel(-column + cColumn, i + cRow, fill);
+        newImage.setPixel(-column + cColumn, -i + cRow, fill);
+        newImage.setPixel(i + cColumn, -column + cRow, fill);
+        newImage.setPixel(-i + cColumn, -column + cRow, fill);
+        // }
       }
     }
   }
+  let column = 0;
+  let row = radius;
+  let d = 3 - 2 * radius;
+  drawCircle(column, row);
+  while (row >= column) {
+    column++;
+    if (d > 0) {
+      row--;
+      d = d + 4 * (column - row) + 10;
+    } else {
+      d = d + 4 * column + 6;
+    }
+    drawCircle(column, row);
+  }
+
   return newImage;
 }

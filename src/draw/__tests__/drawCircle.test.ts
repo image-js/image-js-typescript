@@ -11,7 +11,6 @@ describe('we check drawCircle', () => {
     const center = { row: 1, column: 1 };
     const radius = 1;
     const expected = image.drawCircle(center, radius, { color: [255, 0, 0] });
-
     expect(expected).toMatchImageData([
       [100, 150, 200, 255, 0, 0, 0, 100, 150],
       [255, 0, 0, 3, 200, 0, 255, 0, 0],
@@ -30,7 +29,6 @@ describe('we check drawCircle', () => {
     const radius = 1;
     const expected = image.drawCircle(center, radius, {
       color: [255, 0, 0],
-      filled: true,
       fill: [1, 2, 3],
     });
     expect(expected).toMatchImageData([
@@ -95,11 +93,11 @@ describe('we check drawCircle', () => {
       color: [1],
     });
     expect(expected).toMatchImageData([
-      [0, 0, 0, 1, 0, 0],
-      [0, 0, 1, 0, 1, 0],
+      [0, 0, 1, 1, 1, 0],
       [0, 1, 0, 0, 0, 1],
-      [0, 0, 1, 0, 1, 0],
-      [0, 0, 0, 1, 0, 0],
+      [0, 1, 0, 0, 0, 1],
+      [0, 1, 0, 0, 0, 1],
+      [0, 0, 1, 1, 1, 0],
     ]);
     expect(expected).not.toBe(image);
   });
@@ -115,15 +113,14 @@ describe('we check drawCircle', () => {
     const radius = 2;
     const expected = image.drawCircle(center, radius, {
       color: [1],
-      filled: true,
       fill: [2],
     });
     expect(expected).toMatchImageData([
-      [0, 0, 0, 1, 0, 0],
-      [0, 0, 1, 2, 1, 0],
+      [0, 0, 1, 1, 1, 0],
       [0, 1, 2, 2, 2, 1],
-      [0, 0, 1, 2, 1, 0],
-      [0, 0, 0, 1, 0, 0],
+      [0, 1, 2, 2, 2, 1],
+      [0, 1, 2, 2, 2, 1],
+      [0, 0, 1, 1, 1, 0],
     ]);
     expect(expected).not.toBe(image);
   });
@@ -145,20 +142,19 @@ describe('we check drawCircle', () => {
     const radius = 4;
     const expected = image.drawCircle(center, radius, {
       color: [1],
-      filled: true,
       fill: [2],
     });
     expect(expected).toMatchImageData([
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 1, 1, 2, 1, 1, 0, 0, 0],
+      [0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0],
+      [0, 0, 0, 0, 1, 2, 2, 2, 1, 0, 0, 0],
       [0, 0, 0, 1, 2, 2, 2, 2, 2, 1, 0, 0],
-      [0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 0, 0],
       [0, 0, 1, 2, 2, 2, 2, 2, 2, 2, 1, 0],
-      [0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 0, 0],
+      [0, 0, 1, 2, 2, 2, 2, 2, 2, 2, 1, 0],
+      [0, 0, 1, 2, 2, 2, 2, 2, 2, 2, 1, 0],
       [0, 0, 0, 1, 2, 2, 2, 2, 2, 1, 0, 0],
-      [0, 0, 0, 0, 1, 1, 2, 1, 1, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 1, 2, 2, 2, 1, 0, 0, 0],
+      [0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     ]);
     expect(expected).not.toBe(image);
