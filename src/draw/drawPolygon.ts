@@ -1,6 +1,5 @@
 import { IJS } from '../IJS';
 import checkProcessable from '../utils/checkProcessable';
-import { getDefaultColor } from '../utils/getDefaultColor';
 import { getOutputImage } from '../utils/getOutputImage';
 
 import { Point } from './drawLine';
@@ -45,20 +44,15 @@ export function drawPolygon(
   points: Point[],
   options: DrawPolygonOptions = {},
 ) {
-  const {
-    fill = getDefaultColor(image),
-    filled = false,
-    ...otherOptions
-  } = options;
+  const { fill, ...otherOptions } = options;
 
   let newImage = getOutputImage(image, options, { clone: true });
   checkProcessable(newImage, 'drawPolyline', {
     bitDepth: [8, 16],
   });
   const filteredPoints = deleteDouble(points);
-  if (filled === false) {
-    return newImage.drawPolyline([...points, points[0]], otherOptions);
-  } else {
+  if (fill) {
+    const numberChannels = Math.min(newImage.channels, fill.length);
     let matrixBinary: number[][] = [];
     for (let i = 0; i < newImage.height; i++) {
       matrixBinary[i] = [];
@@ -82,15 +76,14 @@ export function drawPolygon(
     for (let row = 0; row < newImage.height; row++) {
       for (let column = 0; column < newImage.width; column++) {
         if (matrixBinary[row][column] === 1) {
-          let numberChannels = Math.min(newImage.channels, fill.length);
           for (let channel = 0; channel < numberChannels; channel++) {
             newImage.setValue(column, row, channel, fill[channel]);
           }
         }
       }
     }
-    return newImage.drawPolyline([...points, points[0]], otherOptions);
   }
+  return newImage.drawPolyline([...points, points[0]], otherOptions);
 }
 /**
  * Delete double in polygon points.
@@ -155,14 +148,12 @@ function isAtTheRightOfTheLine(
   height: number,
 ): boolean {
   const { row, column } = point;
-  if (line.vertical === true) {
+  if (line.vertical) {
     return line.b <= column;
+  } else if (line.a === 0) {
+    return false;
   } else {
-    if (line.a === 0) {
-      return false;
-    } else {
-      const xLine = (row - line.b) / line.a;
-      return xLine < column && xLine >= 0 && xLine <= height;
-    }
+    const xLine = (row - line.b) / line.a;
+    return xLine < column && xLine >= 0 && xLine <= height;
   }
 }
