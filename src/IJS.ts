@@ -1,10 +1,17 @@
+import { RgbColor } from 'colord';
+
 import { Mask } from './Mask';
+import { correctColor } from './correctColor';
 import {
   Point,
   DrawLineOptions,
   drawLine,
   drawCircle,
   DrawCircleOptions,
+  drawPolygon,
+  drawPolyline,
+  DrawPolygonOptions,
+  DrawPolylineOptions,
   DrawRectangleOptions,
   drawRectangle,
 } from './draw';
@@ -301,6 +308,34 @@ export class IJS {
   }
 
   /**
+   * Get all the channels of a pixel using its index.
+   *
+   * @param index - Index of the pixel.
+   * @returns Channels of the pixel.
+   */
+  public getPixelByIndex(index: number): number[] {
+    const result = [];
+    const start = index * this.channels;
+    for (let i = 0; i < this.channels; i++) {
+      result.push(this.data[start + i]);
+    }
+    return result;
+  }
+
+  /**
+   * Set all the channels of a pixel using its index.
+   *
+   * @param index - Index of the pixel.
+   * @param value - New channel values of the pixel to set.
+   */
+  public setPixelByIndex(index: number, value: number[]): void {
+    const start = index * this.channels;
+    for (let i = 0; i < this.channels; i++) {
+      this.data[start + i] = value[i];
+    }
+  }
+
+  /**
    * Get the value of a specific pixel channel. Select pixel using coordinates.
    *
    * @param column - Column index.
@@ -501,8 +536,13 @@ export class IJS {
   ): IJS {
     return drawRectangle(this, position, width, height, options);
   }
+  public drawPolyline(points: Point[], options: DrawPolylineOptions): IJS {
+    return drawPolyline(this, points, options);
+  }
+  public drawPolygon(points: Point[], options: DrawPolygonOptions): IJS {
+    return drawPolygon(this, points, options);
+  }
   // OPERATIONS
-
   public split(): IJS[] {
     return split(this);
   }
@@ -675,6 +715,20 @@ export class IJS {
    */
   public level(options?: LevelOptions): IJS {
     return level(this, options);
+  }
+
+  /**
+   * Correct the colors in an image using the reference colors.
+   *
+   * @param measuredColors - Colors from the image, which will be compared to the reference.
+   * @param referenceColors - Reference colors.
+   * @returns Image with the colors corrected.
+   */
+  public correctColor(
+    measuredColors: RgbColor[],
+    referenceColors: RgbColor[],
+  ): IJS {
+    return correctColor(this, measuredColors, referenceColors);
   }
 
   // GEOMETRY

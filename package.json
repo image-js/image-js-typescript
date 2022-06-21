@@ -39,11 +39,13 @@
     "jest": "$jest"
   },
   "dependencies": {
+    "colord": "^2.9.2",
     "fast-png": "^6.1.0",
     "image-type": "^4.1.0",
     "jpeg-js": "^0.4.3",
     "ml-convolution": "^2.0.0",
     "ml-matrix": "^6.10.0",
+    "ml-regression-multivariate-linear": "^2.0.4",
     "tiff": "^5.0.3"
   },
   "devDependencies": {
