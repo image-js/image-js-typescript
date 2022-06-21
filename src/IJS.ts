@@ -486,14 +486,13 @@ export class IJS {
   public drawLine(from: Point, to: Point, options: DrawLineOptions = {}): IJS {
     return drawLine(this, from, to, options);
   }
-<<<<<<< HEAD
   public drawCircle(
     center: Point,
     radius: number,
     options: DrawCircleOptions,
   ): IJS {
     return drawCircle(this, center, radius, options);
-=======
+  }
   public drawRectangle(
     position: Point,
     width: number,
@@ -501,7 +500,6 @@ export class IJS {
     options: DrawRectangleOptions = {},
   ): IJS {
     return drawRectangle(this, position, width, height, options);
->>>>>>> main
   }
   // OPERATIONS
 
