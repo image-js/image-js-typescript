@@ -496,13 +496,13 @@ export class IJS {
   ): IJS {
     return drawRectangle(this, position, width, height, options);
   }
-  // OPERATIONS
   public drawPolyline(points: Point[], options: DrawPolylineOptions): IJS {
     return drawPolyline(this, points, options);
   }
   public drawPolygon(points: Point[], options: DrawPolygonOptions): IJS {
     return drawPolygon(this, points, options);
   }
+  // OPERATIONS
   public split(): IJS[] {
     return split(this);
   }
