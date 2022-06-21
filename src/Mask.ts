@@ -31,9 +31,9 @@ import {
 } from './morphology';
 import { erode } from './morphology/erode';
 import { boolToNumber } from './utils/boolToNumber';
+import { Point } from './utils/types';
 
 import { ImageColorModel, ColorDepth, colorModels, IJS, convertColor } from '.';
-import { Point } from './utils/types';
 
 export type BitValue = 1 | 0 | boolean;
 

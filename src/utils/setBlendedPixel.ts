@@ -29,7 +29,6 @@ export function setBlendedPixel(
 
   if (!image.alpha) {
     image.setPixel(column, row, color);
-    return;
   } else {
     const sourceAlpha = color[color.length - 1];
 

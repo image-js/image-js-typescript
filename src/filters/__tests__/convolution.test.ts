@@ -53,9 +53,7 @@ describe('convolution functions', () => {
     const kernelX = Matrix.rowVector([2, 1, 2]);
     const kernel = kernelY.mmul(kernelX);
 
-    // @ts-ignore
     const normalizedKernel = kernel.mul(1 / kernel.sum());
-    // @ts-ignore
 
     const img1 = directConvolution(img, normalizedKernel.to2DArray());
     const img2 = separableConvolution(
