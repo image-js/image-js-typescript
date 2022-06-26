@@ -1,5 +1,7 @@
 import { IJS } from '../IJS';
+import { Mask } from '../Mask';
 
+import { assert } from './assert';
 import { getDefaultColor } from './getDefaultColor';
 
 export interface SetBlendedPixelOptions {
@@ -20,7 +22,7 @@ export interface SetBlendedPixelOptions {
  * @param options - Set blended pixel options.
  */
 export function setBlendedPixel(
-  image: IJS,
+  image: IJS | Mask,
   column: number,
   row: number,
   options: SetBlendedPixelOptions = {},
@@ -30,6 +32,8 @@ export function setBlendedPixel(
   if (!image.alpha) {
     image.setPixel(column, row, color);
   } else {
+    assert(image instanceof IJS);
+
     const sourceAlpha = color[color.length - 1];
 
     if (sourceAlpha === image.maxValue) {

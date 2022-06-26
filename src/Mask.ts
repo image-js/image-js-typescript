@@ -1,4 +1,15 @@
 import {
+  drawLineOnMask,
+  DrawLineOnMaskOptions,
+  drawPolygonOnMask,
+  DrawPolygonOnMaskOptions,
+  drawPolylineOnMask,
+  DrawPolylineOnMaskOptions,
+  drawRectangle,
+  DrawRectangleOptions,
+  Point,
+} from './draw';
+import {
   and,
   AndOptions,
   invert,
@@ -31,9 +42,17 @@ import {
 } from './morphology';
 import { erode } from './morphology/erode';
 import { boolToNumber } from './utils/boolToNumber';
-import { Point } from './utils/types';
+import { ArrayPoint } from './utils/types';
 
-import { ImageColorModel, ColorDepth, colorModels, IJS, convertColor } from '.';
+import {
+  ImageColorModel,
+  ColorDepth,
+  colorModels,
+  IJS,
+  convertColor,
+  CopyToOptions,
+  copyTo,
+} from '.';
 
 export type BitValue = 1 | 0 | boolean;
 
@@ -166,17 +185,63 @@ export class Mask {
   }
 
   /**
+   * Geta pixel of the mask.
+   *
+   * @param column - Column index.
+   * @param row - Row index.
+   * @returns The pixel.
+   */
+  public getPixel(column: number, row: number): number[] {
+    const result = [];
+    const index = row * this.width + column;
+    result.push(this.data[index]);
+    return result;
+  }
+
+  /**
+   * Set a pixel.
+   *
+   * @param column - Column index.
+   * @param row - Row index.
+   * @param value - The pixelvalue.
+   */
+  public setPixel(column: number, row: number, value: number[]): void {
+    const index = row * this.width + column;
+    this.data[index] = value[0];
+  }
+
+  /**
+   * Get a pixel using its index.
+   *
+   * @param index - Index of the pixel.
+   * @returns The pixel.
+   */
+  public getPixelByIndex(index: number): number[] {
+    return [this.data[index]];
+  }
+
+  /**
+   * Set a pixel using its index.
+   *
+   * @param index - Index of the pixel.
+   * @param value - Newvalue of the pixel to set.
+   */
+  public setPixelByIndex(index: number, value: number[]): void {
+    this.data[index] = value[0];
+  }
+
+  /**
    * Create a mask from an array of points.
    *
    * @param width - Width of the mask.
    * @param height - Height of the mask.
-   *  @param points - Reference Mask.
+   * @param points - Reference Mask.
    * @returns New mask.
    */
   public static fromPoints(
     width: number,
     height: number,
-    points: Point[],
+    points: ArrayPoint[],
   ): Mask {
     let mask = new Mask(width, height);
 
@@ -284,6 +349,7 @@ export class Mask {
     checkChannel(channel);
     return this.getBitByIndex(index);
   }
+
   /**
    * Set the value of a bit using index. Function exists for compatibility with IJS.
    *
@@ -477,6 +543,75 @@ export class Mask {
    */
   public solidFill(options?: SolidFillOptions): Mask {
     return solidFill(this, options);
+  }
+
+  // DRAW
+
+  /**
+   * Draw a line defined by two points onto a mask.
+   *
+   * @param from - Line starting point.
+   * @param to - Line ending point.
+   * @param options - Draw Line options.
+   * @returns The mask with the line drawing.
+   */
+  public drawLine(
+    from: Point,
+    to: Point,
+    options: DrawLineOnMaskOptions = {},
+  ): Mask {
+    return drawLineOnMask(this, from, to, options);
+  }
+
+  /**
+   * Draw a polyline defined by an array of points on a mask.
+   *
+   * @param points - Polyline array of points.
+   * @param options - Draw polyline options.
+   * @returns The mask with the polyline drawing.
+   */
+  public drawPolyline(
+    points: Point[],
+    options: DrawPolylineOnMaskOptions = {},
+  ): Mask {
+    return drawPolylineOnMask(this, points, options);
+  }
+
+  /**
+   * Draw a polygon defined by an array of points onto an mask.
+   *
+   * @param points - Polygon vertices.
+   * @param options - Draw Line options.
+   * @returns The mask with the polygon drawing.
+   */
+  public drawPolygon(
+    points: Point[],
+    options: DrawPolygonOnMaskOptions = {},
+  ): Mask {
+    return drawPolygonOnMask(this, points, options);
+  }
+
+  /**
+   * Draw a rectangle defined by position of the top-left corner, width and height.
+   *
+   * @param options - Draw rectangle options.
+   * @returns The image with the rectangle drawing.
+   */
+  public drawRectangle(options: DrawRectangleOptions<Mask> = {}): Mask {
+    return drawRectangle(this, options);
+  }
+
+  // OPERATIONS
+
+  /**
+   * Copy the mask to another one by specifying the location in the target mask.
+   *
+   * @param target - The target mask.
+   * @param options - copyTo options.
+   * @returns The target with the source copied to it.
+   */
+  public copyTo(target: Mask, options: CopyToOptions<Mask> = {}): Mask {
+    return copyTo(this, target, options);
   }
 }
 

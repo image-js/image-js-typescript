@@ -1,83 +1,128 @@
 import { IJS } from '../IJS';
+import { Mask } from '../Mask';
 import checkProcessable from '../utils/checkProcessable';
 import { getDefaultColor } from '../utils/getDefaultColor';
-import { getOutputImage } from '../utils/getOutputImage';
+import { getOutputImage, maskToOutputMask } from '../utils/getOutputImage';
 
-import { Point } from './drawLine';
-
-export interface DrawRectangleOptions {
+export interface DrawRectangleOptions<OutType> {
   /**
-   * Rectangle border color array of N elements (e.g. R, G, B or G, A), N being the number of channels.
+   * Row of the top-left corner of the rectangle.
    *
-   * @default "black"
+   * @default 0
    */
-  color?: number[] | 'none';
+  row?: number;
+  /**
+   * Column of the top-left corner of the rectangle.
+   *
+   * @default 0
+   */
+  column?: number;
+  /**
+   * Specify the width of the rectangle.
+   *
+   * @default image.width
+   */
+  width?: number;
+  /**
+   * Specify the width of the rectangle
+   *
+   * @default image.height
+   */
+  height?: number;
+  /**
+   * Color of the rectangle's border. Should be an array of N elements (e.g. R, G, B or G, A), N being the number of channels.
+   *
+   * @default black
+   */
+  strokeColor?: number[] | 'none';
   /**
    * Rectangle fill color array of N elements (e.g. R, G, B or G, A), N being the number of channels.
    *
    */
-  fill?: number[];
+  fillColor?: number[];
   /**
    * Image to which the resulting image has to be put.
    */
-  out?: IJS;
+  out?: OutType;
 }
-/**
- * Draw a rectangle defined by position, width and height.
- *
- * @memberof Image
- * @instance
- * @param image - Image to process.
- * @param position - Rectangle position.
- * @param width - Rectangle width.
- * @param height - Rectangle height.
- * @param options - Draw rectangle options.
- * @returns The original drew image
- */
+
 export function drawRectangle(
   image: IJS,
-  position: Point,
-  width: number,
-  height: number,
-  options: DrawRectangleOptions = {},
-) {
-  const newImage = getOutputImage(image, options, { clone: true });
-  const { color = getDefaultColor(newImage), fill } = options;
+  options?: DrawRectangleOptions<IJS>,
+): IJS;
+export function drawRectangle(
+  image: Mask,
+  options?: DrawRectangleOptions<Mask>,
+): Mask;
+/**
+ * Draw a rectangle defined by position of the top-left corner, width and height.
+ *
+ * @param image - Image to process.
+ * @param options - Draw rectangle options.
+ * @returns The image with the rectangle drawing.
+ */
+export function drawRectangle(
+  image: IJS | Mask,
+  options: DrawRectangleOptions<Mask | IJS> = {},
+): IJS | Mask {
+  const {
+    row = 0,
+    column = 0,
+    width = image.width,
+    height = image.height,
+    strokeColor: color = getDefaultColor(image),
+    fillColor: fill,
+  } = options;
 
-  checkProcessable(newImage, 'drawRectangle', {
-    bitDepth: [8, 16],
-  });
+  let newImage: IJS | Mask;
+  if (image instanceof IJS) {
+    checkProcessable(image, 'drawRectangle', {
+      bitDepth: [8, 16],
+    });
+    newImage = getOutputImage(image, options, { clone: true });
+  } else {
+    newImage = maskToOutputMask(image, options, { clone: true });
+  }
+
   if (color !== 'none') {
-    for (let col = position.column; col < position.column + width; col++) {
-      newImage.setPixel(col, position.row, color);
-      newImage.setPixel(col, position.row + height - 1, color);
+    for (
+      let currentColumn = column;
+      currentColumn < column + width;
+      currentColumn++
+    ) {
+      newImage.setPixel(currentColumn, row, color);
+      newImage.setPixel(currentColumn, row + height - 1, color);
     }
-    for (let row = position.row + 1; row < position.row + height - 1; row++) {
-      newImage.setPixel(position.column, row, color);
-      newImage.setPixel(position.column + width - 1, row, color);
+    for (
+      let currentRow = row + 1;
+      currentRow < row + height - 1;
+      currentRow++
+    ) {
+      newImage.setPixel(column, currentRow, color);
+      newImage.setPixel(column + width - 1, currentRow, color);
 
       if (fill) {
-        for (
-          let col = position.column + 1;
-          col < position.column + width - 1;
-          col++
-        ) {
-          newImage.setPixel(col, row, fill);
-          newImage.setPixel(col, row, fill);
+        for (let col = column + 1; col < column + width - 1; col++) {
+          newImage.setPixel(col, currentRow, fill);
+          newImage.setPixel(col, currentRow, fill);
         }
       }
     }
   }
   // color is none but fill is defined
   else if (fill) {
-    for (let row = position.row + 1; row < position.row + height - 1; row++) {
+    for (
+      let currentRow = row + 1;
+      currentRow < row + height - 1;
+      currentRow++
+    ) {
       for (
-        let col = position.column + 1;
-        col < position.column + width - 1;
-        col++
+        let currentColumn = column + 1;
+        currentColumn < column + width - 1;
+        currentColumn++
       ) {
-        newImage.setPixel(col, row, fill);
-        newImage.setPixel(col, row, fill);
+        newImage.setPixel(currentColumn, currentRow, fill);
+        newImage.setPixel(currentColumn, currentRow, fill);
       }
     }
   }

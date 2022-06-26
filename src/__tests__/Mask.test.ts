@@ -2,7 +2,7 @@ import util from 'util';
 
 import { ColorDepth, ImageColorModel } from '..';
 import { Mask } from '../Mask';
-import { Point } from '../utils/types';
+import { ArrayPoint } from '../utils/types';
 
 describe('create new masks', () => {
   it('should create a mask', () => {
@@ -80,6 +80,22 @@ describe('get and set value', () => {
   });
 });
 
+describe('get and set pixels', () => {
+  it('should get and set', () => {
+    const img = new Mask(10, 20);
+    expect(img.getPixel(5, 15)).toStrictEqual([0]);
+    img.setPixel(5, 15, [1]);
+    expect(img.getPixel(5, 15)).toStrictEqual([1]);
+  });
+
+  it('should get and set by index', () => {
+    const img = new Mask(10, 20);
+    expect(img.getPixelByIndex(5)).toStrictEqual([0]);
+    img.setPixelByIndex(5, [1]);
+    expect(img.getPixelByIndex(5)).toStrictEqual([1]);
+  });
+});
+
 test('fill with a value', () => {
   const mask = new Mask(2, 2);
   mask.fill(1);
@@ -97,7 +113,7 @@ test('createFrom', () => {
 });
 
 test('fromPoints', () => {
-  const points: Point[] = [[1, 1]];
+  const points: ArrayPoint[] = [[1, 1]];
   expect(Mask.fromPoints(5, 3, points)).toMatchMaskData([
     [0, 0, 0, 0, 0],
     [0, 1, 0, 0, 0],

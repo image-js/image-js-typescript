@@ -4,16 +4,14 @@ import { Mask } from './Mask';
 import { correctColor } from './correctColor';
 import {
   Point,
-  DrawLineOptions,
-  drawLine,
-  drawCircle,
-  DrawCircleOptions,
-  drawPolygon,
-  drawPolyline,
-  DrawPolygonOptions,
-  DrawPolylineOptions,
+  drawLineOnIjs,
+  drawPolygonOnIjs,
+  drawPolylineOnIjs,
+  DrawPolygonOnIjsOptions,
+  DrawPolylineOnIjsOptions,
   DrawRectangleOptions,
   drawRectangle,
+  DrawLineOnIjsOptions,
 } from './draw';
 import {
   BlurOptions,
@@ -514,33 +512,81 @@ export class IJS {
   }
 
   // COMPUTE
+
   public histogram(options?: HistogramOptions): Uint32Array {
     return histogram(this, options);
   }
+
   // DRAW
-  public drawLine(from: Point, to: Point, options: DrawLineOptions = {}): IJS {
-    return drawLine(this, from, to, options);
+
+  /**
+   * Draw a line defined by two points onto an image.
+   *
+   * @param from - Line starting point.
+   * @param to - Line ending point.
+   * @param options - Draw Line options.
+   * @returns The mask with the line drawing.
+   */
+  public drawLine(
+    from: Point,
+    to: Point,
+    options: DrawLineOnIjsOptions = {},
+  ): IJS {
+    return drawLineOnIjs(this, from, to, options);
   }
+
+  /**
+   * Draw a rectangle defined by position of the top-left corner, width and height.
+   *
+   * @param options - Draw rectangle options.
+   * @returns The image with the rectangle drawing.
+   */
+  public drawRectangle(options: DrawRectangleOptions<IJS> = {}): IJS {
+    return drawRectangle(this, options);
+  }
+
+  /**
+   * Draw a polyline defined by an array of points on an image.
+   *
+   * @param points - Polyline array of points.
+   * @param options - Draw polyline options.
+   * @returns The image with the polyline drawing.
+   */
+  public drawPolyline(
+    points: Point[],
+    options: DrawPolylineOnIjsOptions = {},
+  ): IJS {
+    return drawPolylineOnIjs(this, points, options);
+  }
+
+  /**
+   * Draw a polygon defined by an array of points onto an image.
+   *
+   * @param points - Polygon vertices.
+   * @param options - Draw Line options.
+   * @returns The image with the polygon drawing.
+   */
+  public drawPolygon(
+    points: Point[],
+    options: DrawPolygonOnIjsOptions = {},
+  ): IJS {
+    return drawPolygonOnIjs(this, points, options);
+  }
+
+  /**
+   * Draw a circle defined by center and radius onto an image.
+   *
+   * @param center - Circle center.
+   * @param radius - Circle radius
+   * @param options - Draw circle options.
+   * @returns The image with the circle drawing.
+   */
   public drawCircle(
     center: Point,
     radius: number,
-    options: DrawCircleOptions,
+    options: DrawCircleOnIjsOptions,
   ): IJS {
-    return drawCircle(this, center, radius, options);
-  }
-  public drawRectangle(
-    position: Point,
-    width: number,
-    height: number,
-    options: DrawRectangleOptions = {},
-  ): IJS {
-    return drawRectangle(this, position, width, height, options);
-  }
-  public drawPolyline(points: Point[], options: DrawPolylineOptions): IJS {
-    return drawPolyline(this, points, options);
-  }
-  public drawPolygon(points: Point[], options: DrawPolygonOptions): IJS {
-    return drawPolygon(this, points, options);
+    return drawCircleOnIjs(this, center, radius, options);
   }
   // OPERATIONS
   public split(): IJS[] {
@@ -562,7 +608,7 @@ export class IJS {
     return grey(this, options);
   }
 
-  public copyTo(target: IJS, options: CopyToOptions = {}): IJS {
+  public copyTo(target: IJS, options: CopyToOptions<IJS> = {}): IJS {
     return copyTo(this, target, options);
   }
 

@@ -3,60 +3,50 @@ import checkProcessable from '../utils/checkProcessable';
 import { getDefaultColor } from '../utils/getDefaultColor';
 import { getOutputImage } from '../utils/getOutputImage';
 
-export interface Point {
+import { getIncrements, Point } from './drawLineOnMask';
+
+export interface DrawLineOnIjsOptions {
   /**
-   * point row
+   * Color of the line. Should be an array of N elements (e.g. R, G, B or G, A), N being the number of channels.
    *
+   * @default 'black'
    */
-  row: number;
-  /**
-   * point column
-   *
-   */
-  column: number;
-}
-export interface DrawLineOptions {
-  /**
-   * Array of N elements (e.g. R, G, B or G, A), N being the number of channels.
-   *
-   * @default black
-   */
-  color?: number[];
+  strokeColor?: number[];
   /**
    * Image to which the resulting image has to be put.
    */
   out?: IJS;
 }
+
 /**
- * Draw a line defined by an array of points.
+ * Draw a line defined by two points onto an image.
  *
  * @param image - Image to process.
  * @param from - Line starting point.
  * @param to - Line ending point.
  * @param options - Draw Line options.
- * @returns The original drew image
+ * @returns The mask with the line drawing.
  */
-export function drawLine(
+export function drawLineOnIjs(
   image: IJS,
   from: Point,
   to: Point,
-  options: DrawLineOptions = {},
-) {
+  options: DrawLineOnIjsOptions = {},
+): IJS {
   const newImage = getOutputImage(image, options, { clone: true });
-  const { color = getDefaultColor(newImage) } = options;
+  const { strokeColor: color = getDefaultColor(newImage) } = options;
 
-  checkProcessable(newImage, 'drawPoints', {
+  checkProcessable(newImage, 'drawLine', {
     bitDepth: [8, 16],
   });
 
+  if (from.column === to.column && from.row === to.row) {
+    return newImage;
+  }
+
   const numberChannels = Math.min(newImage.channels, color.length);
 
-  const dRow = to.row - from.row;
-  const dColumn = to.column - from.column;
-  const steps = Math.max(Math.abs(dRow), Math.abs(dColumn));
-
-  const rowIncrement = dRow / steps;
-  const columnIncrement = dColumn / steps;
+  const { rowIncrement, columnIncrement, steps } = getIncrements(from, to);
 
   let { row, column } = from;
 
@@ -74,8 +64,8 @@ export function drawLine(
       }
     }
 
-    row = row + rowIncrement;
-    column = column + columnIncrement;
+    row += rowIncrement;
+    column += columnIncrement;
   }
 
   return newImage;
