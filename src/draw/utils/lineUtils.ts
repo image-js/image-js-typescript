@@ -49,9 +49,9 @@ export function isAtTheRightOfTheLine(
   if (line.vertical) {
     return line.b <= column;
   } else if (line.a === 0) {
-      return false;
-    } else {
-      const xLine = (row - line.b) / line.a;
-      return xLine < column && xLine >= 0 && xLine <= height;
-    }
+    return false;
+  } else {
+    const xLine = (row - line.b) / line.a;
+    return xLine < column && xLine >= 0 && xLine <= height;
+  }
 }
