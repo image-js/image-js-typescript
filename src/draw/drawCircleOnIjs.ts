@@ -3,11 +3,11 @@ import checkProcessable from '../utils/checkProcessable';
 import { getDefaultColor } from '../utils/getDefaultColor';
 import { getOutputImage } from '../utils/getOutputImage';
 
-import { Point } from './drawLine';
+import { Point } from './drawLineOnMask';
 
 // Inspired by https://www.geeksforgeeks.org/bresenhams-circle-drawing-algorithm/
 
-export interface DrawCircleOptions {
+export interface DrawCircleOnIjsOptions {
   /**
    * Circle border color array of N elements (e.g. R, G, B or G, A), N being the number of channels.
    *
@@ -36,11 +36,11 @@ export interface DrawCircleOptions {
  * @param options - Draw circle options.
  * @returns The original drawn image
  */
-export function drawCircle(
+export function drawCircleOnIjs(
   image: IJS,
   center: Point,
   radius: number,
-  options: DrawCircleOptions = {},
+  options: DrawCircleOnIjsOptions = {},
 ): IJS {
   const newImage = getOutputImage(image, options, { clone: true });
   const { color = getDefaultColor(newImage), fill } = options;

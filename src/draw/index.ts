@@ -1,4 +1,4 @@
-export * from './drawCircle';
+export * from './drawCircleOnIjs';
 export * from './drawLineOnIjs';
 export * from './drawLineOnMask';
 export * from './drawPolylineOnIjs';
