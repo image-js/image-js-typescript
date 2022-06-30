@@ -1,4 +1,4 @@
-import { IJS } from '../../IJS';
+import { IJS, ImageColorModel } from '../../IJS';
 import { drawPolygonOnIjs } from '../drawPolygonOnIjs';
 
 describe('drawPolygon on IJS', () => {
@@ -97,6 +97,7 @@ describe('drawPolygon on IJS', () => {
       strokeColor: [1],
       fillColor: [2],
     });
+
     expect(result).toMatchImageData([
       [1, 0, 0, 0],
       [1, 1, 0, 0],
@@ -127,6 +128,47 @@ describe('drawPolygon on IJS', () => {
       [1, 1, 1, 1],
     ]);
     expect(result).not.toBe(image);
+  });
+  it('3x3 image, tilted square, filled', () => {
+    const image = new IJS(3, 3, { colorModel: ImageColorModel.GREY });
+    const points = [
+      { column: 0, row: 1 },
+      { column: 1, row: 2 },
+      { column: 2, row: 1 },
+      { column: 1, row: 0 },
+    ];
+
+    const result = image.drawPolygon(points, {
+      fillColor: [6],
+      strokeColor: [3],
+    });
+
+    expect(result).toMatchImageData([
+      [0, 3, 0],
+      [3, 6, 3],
+      [0, 3, 0],
+    ]);
+  });
+  it('5x5 image, tilted square, filled', () => {
+    const image = new IJS(5, 5, { colorModel: ImageColorModel.GREY });
+    const points = [
+      { column: 0, row: 2 },
+      { column: 2, row: 4 },
+      { column: 4, row: 2 },
+      { column: 2, row: 0 },
+    ];
+
+    const result = image.drawPolygon(points, {
+      fillColor: [6],
+      strokeColor: [3],
+    });
+    expect(result).toMatchImageData([
+      [0, 0, 3, 0, 0],
+      [0, 3, 6, 3, 0],
+      [3, 6, 6, 6, 3],
+      [0, 3, 6, 3, 0],
+      [0, 0, 3, 0, 0],
+    ]);
   });
   it('should handle duplicate points', () => {
     const image = testUtils.createGreyImage([

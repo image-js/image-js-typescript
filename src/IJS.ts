@@ -3,7 +3,6 @@ import { RgbColor } from 'colord';
 import { Mask } from './Mask';
 import { correctColor } from './correctColor';
 import {
-  Point,
   drawLineOnIjs,
   drawPolygonOnIjs,
   drawPolylineOnIjs,
@@ -71,6 +70,7 @@ import {
   split,
 } from './operations';
 import { ImageColorModel, colorModels } from './utils/colorModels';
+import { Point } from './utils/types';
 import { validateChannel, validateValue } from './utils/validators';
 
 import {
@@ -92,7 +92,9 @@ import {
 export { ImageColorModel, colorModels };
 
 export type ImageDataArray = Uint8Array | Uint16Array | Uint8ClampedArray;
-
+/**
+ * Bit depth of the image (nb of bits that encode each value in the image).
+ */
 export enum ColorDepth {
   UINT1 = 1,
   UINT8 = 8,
@@ -479,13 +481,24 @@ export class IJS {
   public clone(): IJS {
     return IJS.createFrom(this, { data: this.data.slice() });
   }
-
+  /**
+   * Modify all the values of the image using the given callback.
+   *
+   * @param cb - Callback that modifies a given value-
+   */
   public changeEach(cb: (value: number) => number): void {
     for (let i = 0; i < this.data.length; i++) {
       this.data[i] = cb(this.data[i]);
     }
   }
 
+  /**
+   * Get the coordinates of a point in the image. The reference is the top-left corner.
+   *
+   * @param coordinates - The point for which you want the coordinates.
+   * @param round - Should the coordinates be rounded? This is useful when you want the center of the image.
+   * @returns Coordinates of the point in the format [x, y].
+   */
   public getCoordinates(
     coordinates: ImageCoordinates,
     round = false,
