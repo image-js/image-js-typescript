@@ -2,8 +2,7 @@ import { IJS } from '../IJS';
 import checkProcessable from '../utils/checkProcessable';
 import { getDefaultColor } from '../utils/getDefaultColor';
 import { getOutputImage } from '../utils/getOutputImage';
-
-import { Point } from './drawLineOnMask';
+import { Point } from '../utils/types';
 
 // Inspired by https://www.geeksforgeeks.org/bresenhams-circle-drawing-algorithm/
 
