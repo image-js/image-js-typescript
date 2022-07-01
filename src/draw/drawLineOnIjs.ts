@@ -4,8 +4,6 @@ import { getDefaultColor } from '../utils/getDefaultColor';
 import { getOutputImage } from '../utils/getOutputImage';
 import { Point } from '../utils/types';
 
-import { getIncrements } from './drawLineOnMask';
-
 export interface DrawLineOnIjsOptions {
   /**
    * Color of the line. Should be an array of N elements (e.g. R, G, B or G, A), N being the number of channels.
@@ -44,29 +42,36 @@ export function drawLineOnIjs(
   if (from.column === to.column && from.row === to.row) {
     return newImage;
   }
-
-  const numberChannels = Math.min(newImage.channels, color.length);
-
-  const { rowIncrement, columnIncrement, steps } = getIncrements(from, to);
-
   let { row, column } = from;
+  const { row: rowEnd, column: columnEnd } = to;
 
-  for (let step = 0; step <= steps; step++) {
-    const rowPoint = Math.round(row);
-    const columnPoint = Math.round(column);
-    if (
-      rowPoint >= 0 &&
-      columnPoint >= 0 &&
-      rowPoint < newImage.height &&
-      columnPoint < newImage.width
-    ) {
-      for (let channel = 0; channel < numberChannels; channel++) {
-        newImage.setValue(columnPoint, rowPoint, channel, color[channel]);
+  const dColumn = Math.abs(columnEnd - column);
+  const columnIncrement = column < columnEnd ? 1 : -1;
+  const dRow = -Math.abs(rowEnd - row);
+  const rowIncrement = row < rowEnd ? 1 : -1;
+  let err = dColumn + dRow;
+  let drawing = true;
+  let e2;
+
+  while (drawing) {
+    newImage.setPixel(column, row, color);
+    e2 = 2 * err;
+    if (e2 >= dRow) {
+      if (column === columnEnd) {
+        drawing = false;
+      } else {
+        err += dRow;
+        column += columnIncrement;
       }
     }
-
-    row += rowIncrement;
-    column += columnIncrement;
+    if (e2 <= dColumn) {
+      if (row === rowEnd) {
+        drawing = false;
+      } else {
+        err += dColumn;
+        row += rowIncrement;
+      }
+    }
   }
 
   return newImage;
