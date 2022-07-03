@@ -1,4 +1,6 @@
-import { IJS } from '../IJS';
+import { line, lineAA } from 'bresenham-zingl';
+
+import { IJS, ImageColorModel } from '../IJS';
 import checkProcessable from '../utils/checkProcessable';
 import { getDefaultColor } from '../utils/getDefaultColor';
 import { getOutputImage } from '../utils/getOutputImage';
@@ -42,37 +44,39 @@ export function drawLineOnIjs(
   if (from.column === to.column && from.row === to.row) {
     return newImage;
   }
-  let { row, column } = from;
-  const { row: rowEnd, column: columnEnd } = to;
 
-  const dColumn = Math.abs(columnEnd - column);
-  const columnIncrement = column < columnEnd ? 1 : -1;
-  const dRow = -Math.abs(rowEnd - row);
-  const rowIncrement = row < rowEnd ? 1 : -1;
-  let err = dColumn + dRow;
-  let drawing = true;
-  let e2;
-
-  while (drawing) {
-    newImage.setPixel(column, row, color);
-    e2 = 2 * err;
-    if (e2 >= dRow) {
-      if (column === columnEnd) {
-        drawing = false;
-      } else {
-        err += dRow;
-        column += columnIncrement;
-      }
-    }
-    if (e2 <= dColumn) {
-      if (row === rowEnd) {
-        drawing = false;
-      } else {
-        err += dColumn;
-        row += rowIncrement;
-      }
-    }
+  const numberChannels = Math.min(newImage.channels, color.length);
+  if (
+    [ImageColorModel.GREYA, ImageColorModel.RGBA].includes(image.colorModel)
+  ) {
+    lineAA(
+      from.column,
+      from.row,
+      to.column,
+      to.row,
+      (column: number, row: number, alpha: number) => {
+        for (let channel = 0; channel < numberChannels - 1; channel++) {
+          newImage.setValue(column, row, channel, color[channel]);
+        }
+        newImage.setValue(
+          column,
+          row,
+          numberChannels - 1,
+          alpha * color[numberChannels - 1],
+        );
+      },
+    );
   }
-
+  line(
+    from.column,
+    from.row,
+    to.column,
+    to.row,
+    (column: number, row: number) => {
+      for (let channel = 0; channel < numberChannels; channel++) {
+        newImage.setValue(column, row, channel, color[channel]);
+      }
+    },
+  );
   return newImage;
 }
