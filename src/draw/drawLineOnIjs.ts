@@ -1,6 +1,6 @@
-import { line, lineAA } from 'bresenham-zingl';
+import { line } from 'bresenham-zingl';
 
-import { IJS, ImageColorModel } from '../IJS';
+import { IJS } from '../IJS';
 import checkProcessable from '../utils/checkProcessable';
 import { getDefaultColor } from '../utils/getDefaultColor';
 import { getOutputImage } from '../utils/getOutputImage';
@@ -46,27 +46,7 @@ export function drawLineOnIjs(
   }
 
   const numberChannels = Math.min(newImage.channels, color.length);
-  if (
-    [ImageColorModel.GREYA, ImageColorModel.RGBA].includes(image.colorModel)
-  ) {
-    lineAA(
-      from.column,
-      from.row,
-      to.column,
-      to.row,
-      (column: number, row: number, alpha: number) => {
-        for (let channel = 0; channel < numberChannels - 1; channel++) {
-          newImage.setValue(column, row, channel, color[channel]);
-        }
-        newImage.setValue(
-          column,
-          row,
-          numberChannels - 1,
-          alpha * color[numberChannels - 1],
-        );
-      },
-    );
-  }
+
   line(
     from.column,
     from.row,
