@@ -158,6 +158,25 @@ describe('drawLine on IJS', () => {
 
     expect(result).toMatchImage(image);
   });
+  it('complicated line', () => {
+    const image = testUtils.createGreyImage([
+      [0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0],
+    ]);
+
+    const from = { column: 0, row: 2 };
+    const to = { column: 4, row: 0 };
+
+    const result = image.drawLine(from, to, {
+      strokeColor: [1],
+    });
+    expect(result).toMatchImageData([
+      [0, 0, 0, 1, 1],
+      [0, 1, 1, 0, 0],
+      [1, 0, 0, 0, 0],
+    ]);
+  });
   it('big image example', () => {
     const image = testUtils.createGreyImage([
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
