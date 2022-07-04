@@ -28,11 +28,6 @@ export function drawLineOnMask(
 ): Mask {
   const newMask = maskToOutputMask(mask, options, { clone: true });
 
-  if (from.column === to.column && from.row === to.row) {
-    newMask.setBit(from.column, from.row, 1);
-    return newMask;
-  }
-
   line(
     from.column,
     from.row,
