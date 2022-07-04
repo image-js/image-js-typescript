@@ -40,12 +40,14 @@ export function drawLineOnIjs(
   checkProcessable(newImage, 'drawLine', {
     bitDepth: [8, 16],
   });
+  const numberChannels = Math.min(newImage.channels, color.length);
 
   if (from.column === to.column && from.row === to.row) {
+    for (let channel = 0; channel < numberChannels; channel++) {
+      newImage.setValue(from.column, from.row, channel, color[channel]);
+    }
     return newImage;
   }
-
-  const numberChannels = Math.min(newImage.channels, color.length);
 
   line(
     from.column,

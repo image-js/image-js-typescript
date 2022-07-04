@@ -116,7 +116,13 @@ describe('drawLine on IJS', () => {
       strokeColor: [1],
     });
 
-    expect(result).toMatchImage(image);
+    expect(result).toMatchImageData([
+      [1, 1, 0, 0],
+      [1, 0, 0, 0],
+      [1, 0, 0, 0],
+      [1, 0, 0, 0],
+    ]);
+    expect(result).not.toBe(image);
   });
   it('point contains image.width and image.height', () => {
     const image = testUtils.createGreyImage([
