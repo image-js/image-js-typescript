@@ -101,6 +101,20 @@ describe('we check drawCircle', () => {
     ]);
     expect(expected).not.toBe(image);
   });
+  it('circle with radius<0', () => {
+    const image = testUtils.createGreyImage([
+      [0, 0, 0],
+      [0, 0, 0],
+      [0, 0, 0],
+    ]);
+    const center = { row: 1, column: 1 };
+    const radius = -1;
+    expect(() => {
+      image.drawCircle(center, radius, {
+        color: [1],
+      });
+    }).toThrow('Circle radius must be positive');
+  });
   it('draw grey filled circle, radius=0', () => {
     const image = testUtils.createGreyImage([
       [0, 0, 0],

@@ -50,7 +50,7 @@ export function drawCircleOnIjs(
   });
 
   if (radius < 0) {
-    throw Error('circle radius must be positive');
+    throw new Error('Circle radius must be positive');
   }
   if (radius === 0) {
     newImage.setPixel(center.column, center.row, color);
@@ -68,7 +68,7 @@ export function drawCircleOnIjs(
     circle(center.column, center.row, radius, (column: number, row: number) => {
       newImage.setPixel(column, row, color);
 
-      //todo: fill is not optimal we can fill symetrically
+      //todo: fill is not optimal we can fill symmetrically
       if (column - 1 > center.column) {
         newImage.drawLine(
           { row, column: column - 1 },
