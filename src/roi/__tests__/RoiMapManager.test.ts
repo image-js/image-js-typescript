@@ -27,7 +27,7 @@ describe('RoiMapManager', () => {
       [225, 250, 200],
     ]);
   });
-  it('getRoi', () => {
+  it('getRoiById', () => {
     const image = testUtils.createGreyImage([
       [1, 200, 0, 0, 0],
       [5, 0, 0, 200, 0],
@@ -44,5 +44,21 @@ describe('RoiMapManager', () => {
     roi = roiMapManager.getRoiById(-1);
 
     expect(roi.id).toBe(-1);
+  });
+
+  it('getRoisById', () => {
+    const image = testUtils.createGreyImage([
+      [1, 200, 0, 0, 0],
+      [5, 0, 0, 200, 0],
+      [0, 200, 225, 250, 200],
+      [200, 200, 0, 0, 0],
+    ]);
+
+    const mask = image.threshold({ threshold: 100 });
+    const roiMapManager = fromMask(mask);
+    let rois = roiMapManager.getRoisById([1, -1, -2]);
+    expect(rois[0].id).toBe(1);
+    expect(rois[2].id).toBe(-2);
+    expect(rois).toHaveLength(3);
   });
 });

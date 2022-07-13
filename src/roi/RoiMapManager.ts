@@ -94,4 +94,12 @@ export class RoiMapManager implements RoiManager {
       throw new Error('getRoi: ROI with input ID does not exist');
     }
   }
+
+  public getRoisById(ids: number[]): Roi[] {
+    const rois = new Array<Roi>(ids.length);
+    for (let i = 0; i < ids.length; i++) {
+      rois[i] = this.getRoiById(ids[i]);
+    }
+    return rois;
+  }
 }
