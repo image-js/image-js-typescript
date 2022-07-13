@@ -156,6 +156,6 @@ describe('getMask', () => {
     const roi = roiMapManager.getRois({ kind: RoiKind.WHITE })[0];
     const roiMask = roi.getMask();
 
-    expect(roiMask.origin).toStrictEqual({ column: 1, row: 0 });
+    expect(roiMask.origin).toStrictEqual(roi.origin);
   });
 });
