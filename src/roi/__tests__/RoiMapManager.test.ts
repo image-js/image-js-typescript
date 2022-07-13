@@ -27,4 +27,22 @@ describe('RoiMapManager', () => {
       [225, 250, 200],
     ]);
   });
+  it('getRoi', () => {
+    const image = testUtils.createGreyImage([
+      [1, 200, 0, 0, 0],
+      [5, 0, 0, 200, 0],
+      [0, 0, 225, 250, 200],
+      [0, 0, 0, 0, 0],
+    ]);
+
+    const mask = image.threshold({ threshold: 100 });
+    const roiMapManager = fromMask(mask);
+
+    let roi = roiMapManager.getRoiById(1);
+    expect(roi.id).toBe(1);
+
+    roi = roiMapManager.getRoiById(-1);
+
+    expect(roi.id).toBe(-1);
+  });
 });
