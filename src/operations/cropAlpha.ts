@@ -3,7 +3,7 @@ import checkProcessable from '../utils/checkProcessable';
 
 export interface CropAlphaOptions {
   /**
-   * Threshold above which rows and columns should be kept.
+   * Threshold from which rows and columns should be kept.
    */
   threshold?: number;
 }
