@@ -263,7 +263,7 @@ describe('drawPolygon on Mask', () => {
     ]);
     expect(result).not.toBe(mask);
   });
-  it('outside of image', () => {
+  it('outside of mask', () => {
     const mask = testUtils.createMask([
       [0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0],

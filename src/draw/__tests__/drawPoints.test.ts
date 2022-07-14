@@ -158,7 +158,7 @@ describe('drawPoints', () => {
     ]);
     expect(result).not.toBe(mask);
   });
-  it('points outside image', () => {
+  it('points outside mask', () => {
     const mask = testUtils.createMask([
       [0, 0, 0, 0],
       [0, 0, 0, 0],
