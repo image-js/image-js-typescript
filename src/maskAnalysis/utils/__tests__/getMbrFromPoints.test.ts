@@ -1,6 +1,6 @@
 import { toBeDeepCloseTo } from 'jest-matcher-deep-close-to';
 
-import { getAngle, getMbrFromPoints } from '../getMbrFromPoints';
+import { getMbrFromPoints } from '../getMbrFromPoints';
 
 expect.extend({ toBeDeepCloseTo });
 
@@ -180,36 +180,4 @@ test.each([
 ])('getMbrFromPoints (%s)', (_, inputPoints, expectedPoints) => {
   const result = getMbrFromPoints(inputPoints).corners;
   expect(result).toBeDeepCloseTo(expectedPoints);
-});
-
-test.each([
-  [
-    '-60 degrees',
-    { column: 0, row: 0 },
-    { column: 1, row: -Math.sqrt(3) },
-    -Math.PI / 3,
-  ],
-  ['-45 degrees', { column: 0, row: 0 }, { column: 1, row: -1 }, -Math.PI / 4],
-  [
-    '-30 degrees',
-    { column: 0, row: 0 },
-    { column: Math.sqrt(3), row: -1 },
-    -Math.PI / 6,
-  ],
-  [
-    '60 degrees',
-    { column: 0, row: 0 },
-    { column: 1, row: Math.sqrt(3) },
-    Math.PI / 3,
-  ],
-  ['45 degrees', { column: 0, row: 0 }, { column: 1, row: 1 }, Math.PI / 4],
-  [
-    '30 degrees',
-    { column: 0, row: 0 },
-    { column: Math.sqrt(3), row: 1 },
-    Math.PI / 6,
-  ],
-])('getAngle (%s)', (_, point1, point2, expectedAngle) => {
-  const result = getAngle(point1, point2);
-  expect(result).toBeCloseTo(expectedAngle);
 });
