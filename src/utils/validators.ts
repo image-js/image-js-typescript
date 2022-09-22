@@ -33,9 +33,9 @@ export function validateChannel(channel: number, image: Image): void {
  * @param image - Image from which the value comes.
  */
 export function validateValue(value: number, image: Image): void {
-  if (!Number.isInteger(value) || value > image.maxValue || value < 0) {
+  if (value > image.maxValue || value < 0) {
     throw new RangeError(
-      `invalid value: ${value}. It must be a positive integer smaller than ${
+      `invalid value: ${value}. It must be a positive value smaller than ${
         image.maxValue + 1
       }`,
     );

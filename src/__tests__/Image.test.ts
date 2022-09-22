@@ -210,14 +210,14 @@ test('fill with a color as RGBA array', () => {
 test('fill with out of range value', () => {
   const img = new Image(1, 1);
   expect(() => img.fill(256)).toThrow(
-    /invalid value: 256. It must be a positive integer smaller than 256/,
+    /invalid value: 256. It must be a positive value smaller than 256/,
   );
 });
 
 test('fill with out of range value in array', () => {
   const img = new Image(1, 1);
   expect(() => img.fill([0, -1, 2])).toThrow(
-    /invalid value: -1. It must be a positive integer smaller than 256/,
+    /invalid value: -1. It must be a positive value smaller than 256/,
   );
 });
 
