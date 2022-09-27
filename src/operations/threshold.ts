@@ -138,8 +138,8 @@ export function threshold(image: Image, options: ThresholdOptions = {}): Mask {
       !isNaN(Number(threshold.slice(0, threshold.length - 1)))
     ) {
       const percents = Number(threshold.slice(0, threshold.length - 1));
-      if (!(percents >= 0 && percents <= 100)) {
-        throw new Error(
+      if (percents < 0 || percents > 100) {
+        throw new RangeError(
           'threshold: threshold in percents is out of range 0 to 100',
         );
       }

@@ -198,6 +198,15 @@ test('fill with a constant color', () => {
   ]);
 });
 
+test('fill with a float value', () => {
+  const img = new Image(2, 2);
+  img.fill(10.7);
+  expect(img).toMatchImageData([
+    [10, 10, 10, 10, 10, 10],
+    [10, 10, 10, 10, 10, 10],
+  ]);
+});
+
 test('fill with a color as RGBA array', () => {
   const img = new Image(1, 2);
   img.fill([1, 2, 3]);
