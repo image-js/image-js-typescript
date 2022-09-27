@@ -27,7 +27,7 @@ export function validateChannel(channel: number, image: Image): void {
 }
 
 /**
- * Validates that a value passed by the user is within range and is an integer.
+ * Validates that a value passed by the user is positive and within range.
  *
  * @param value - Value to validate.
  * @param image - Image from which the value comes.
