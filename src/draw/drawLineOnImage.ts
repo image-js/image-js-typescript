@@ -1,4 +1,4 @@
-import { line } from 'bresenham-zingl';
+import { lineWidth } from 'bresenham-zingl';
 
 import { Image } from '../Image';
 import checkProcessable from '../utils/checkProcessable';
@@ -13,6 +13,12 @@ export interface DrawLineOnImageOptions {
    * @default 'black'
    */
   strokeColor?: number[];
+  /**
+   * Stroke width in pixels.
+   *
+   * @default 1
+   */
+  strokeWidth?: number;
   /**
    * Origin of the line relative to a parent image (top-left corner).
    *
@@ -44,17 +50,19 @@ export function drawLineOnImage(
   const {
     strokeColor: color = getDefaultColor(newImage),
     origin = { column: 0, row: 0 },
+    strokeWidth = 1,
   } = options;
 
   checkProcessable(newImage, 'drawLine', {
     bitDepth: [8, 16],
   });
 
-  line(
+  lineWidth(
     Math.round(origin.column + from.column),
     Math.round(origin.row + from.row),
     Math.round(origin.column + to.column),
     Math.round(origin.row + to.row),
+    strokeWidth,
     (column: number, row: number) => {
       newImage.setVisiblePixel(column, row, color);
     },

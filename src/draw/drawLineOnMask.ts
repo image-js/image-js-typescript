@@ -1,10 +1,16 @@
-import { line } from 'bresenham-zingl';
+import { lineWidth } from 'bresenham-zingl';
 
 import { Mask } from '../Mask';
 import { Point } from '../utils/geometry/points';
 import { maskToOutputMask } from '../utils/getOutputImage';
 
 export interface DrawLineOnMaskOptions {
+  /**
+   * Stroke width in pixels.
+   *
+   * @default 1
+   */
+  strokeWidth?: number;
   /**
    * Origin of the line relative to a parent image (top-left corner).
    *
@@ -32,13 +38,14 @@ export function drawLineOnMask(
   to: Point,
   options: DrawLineOnMaskOptions = {},
 ): Mask {
-  const { origin = { column: 0, row: 0 } } = options;
+  const { origin = { column: 0, row: 0 }, strokeWidth = 1 } = options;
   const newMask = maskToOutputMask(mask, options, { clone: true });
-  line(
+  lineWidth(
     Math.round(origin.column + from.column),
     Math.round(origin.row + from.row),
     Math.round(origin.column + to.column),
     Math.round(origin.row + to.row),
+    strokeWidth,
     (column: number, row: number) => {
       newMask.setVisiblePixel(column, row, [1]);
     },

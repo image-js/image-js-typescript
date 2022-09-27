@@ -12,6 +12,12 @@ export interface DrawPolylineOnImageOptions {
    */
   strokeColor?: number[];
   /**
+   * Stroke width in pixels.
+   *
+   * @default 1
+   */
+  strokeWidth?: number;
+  /**
    * Origin of the rectangle relative to a parent image (top-left corner).
    *
    * @default {row: 0, column: 0}
@@ -38,6 +44,7 @@ export function drawPolylineOnImage(
 ): Image {
   const {
     strokeColor: color = getDefaultColor(image),
+    strokeWidth = 1,
     origin = { column: 0, row: 0 },
   } = options;
 
@@ -50,7 +57,12 @@ export function drawPolylineOnImage(
     const from = points[i];
     const to = points[i + 1];
 
-    newImage.drawLine(from, to, { out: newImage, strokeColor: color, origin });
+    newImage.drawLine(from, to, {
+      out: newImage,
+      strokeColor: color,
+      strokeWidth,
+      origin,
+    });
   }
   return newImage;
 }

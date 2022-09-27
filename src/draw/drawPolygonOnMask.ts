@@ -10,6 +10,12 @@ import { deleteDuplicates } from './utils/deleteDuplicates';
 
 export interface DrawPolygonOnMaskOptions extends DrawPolylineOnMaskOptions {
   /**
+   * Stroke width in pixels.
+   *
+   * @default 1
+   */
+  strokeWidth?: number;
+  /**
    * Fill polygon.
    */
   filled?: boolean;
