@@ -1,4 +1,7 @@
 declare module 'bresenham-zingl' {
+  // The library is based on the Bresenham's line algorithm:
+  // https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
+
   type SetPixel = (x: number, y: number) => void;
   type SetPixelAlpha = (x: number, y: number, alpha: number) => void;
 
