@@ -15,6 +15,14 @@ Image processing and manipulation in JavaScript.
 
 Look at the [examples](./examples) directory for how the API is being designed.
 
+## Demo
+
+Run the following command to access some demo functions:
+
+```bash
+npm run demo
+```
+
 ## License
 
 [MIT](./LICENSE)

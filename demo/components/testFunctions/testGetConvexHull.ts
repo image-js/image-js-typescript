@@ -27,6 +27,7 @@ export function testGetConvexHull(image: Image): Image {
     result = result.drawPolygon(convexHull.points, {
       origin: roi.origin,
       strokeColor: [0, 255, 0, 255],
+      strokeWidth: 10,
     });
     return result;
   } else {
