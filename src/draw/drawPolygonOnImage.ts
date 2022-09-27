@@ -13,7 +13,7 @@ export interface DrawPolygonOnImageOptions extends DrawPolylineOnImageOptions {
   /**
    * Stroke width in pixels.
    *
-   * @default 1
+   * @default 0
    */
   strokeWidth?: number;
   /**
@@ -28,7 +28,12 @@ export interface DrawPolygonOnImageOptions extends DrawPolylineOnImageOptions {
    * @default {row: 0, column: 0}
    */
   origin?: Point;
+  /**
+   * Image to which the resulting image has to be put.
+   */
+  out?: Image;
 }
+
 /**
  * Draw a polygon defined by an array of points onto an image.
  *

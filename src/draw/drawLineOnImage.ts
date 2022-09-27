@@ -16,7 +16,7 @@ export interface DrawLineOnImageOptions {
   /**
    * Stroke width in pixels.
    *
-   * @default 1
+   * @default 0
    */
   strokeWidth?: number;
   /**
@@ -50,7 +50,7 @@ export function drawLineOnImage(
   const {
     strokeColor: color = getDefaultColor(newImage),
     origin = { column: 0, row: 0 },
-    strokeWidth = 1,
+    strokeWidth = 0,
   } = options;
 
   checkProcessable(newImage, 'drawLine', {

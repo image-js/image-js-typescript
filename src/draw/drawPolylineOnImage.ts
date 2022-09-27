@@ -14,7 +14,7 @@ export interface DrawPolylineOnImageOptions {
   /**
    * Stroke width in pixels.
    *
-   * @default 1
+   * @default 0
    */
   strokeWidth?: number;
   /**

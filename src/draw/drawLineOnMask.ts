@@ -8,7 +8,7 @@ export interface DrawLineOnMaskOptions {
   /**
    * Stroke width in pixels.
    *
-   * @default 1
+   * @default 0
    */
   strokeWidth?: number;
   /**
@@ -38,7 +38,7 @@ export function drawLineOnMask(
   to: Point,
   options: DrawLineOnMaskOptions = {},
 ): Mask {
-  const { origin = { column: 0, row: 0 }, strokeWidth = 1 } = options;
+  const { origin = { column: 0, row: 0 }, strokeWidth = 0 } = options;
   const newMask = maskToOutputMask(mask, options, { clone: true });
   lineWidth(
     Math.round(origin.column + from.column),
