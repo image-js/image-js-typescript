@@ -31,6 +31,12 @@ export interface DrawRectangleOptions<OutType> {
    */
   strokeColor?: number[] | 'none';
   /**
+   * Stroke width in pixels.
+   *
+   * @default 0
+   */
+  strokeWidth?: number;
+  /**
    * Rectangle fill color array of N elements (e.g. R, G, B or G, A), N being the number of channels.
    *
    */
@@ -64,12 +70,13 @@ export function drawRectangle(
     origin = { column: 0, row: 0 },
     width = image.width,
     height = image.height,
-    strokeColor: color = getDefaultColor(image),
+    strokeColor = getDefaultColor(image),
+    strokeWidth = 0,
     fillColor: fill,
   } = options;
   const { column, row } = origin;
 
-  let newImage: Image | Mask;
+  let newImage;
   if (image instanceof Image) {
     checkProcessable(image, 'drawRectangle', {
       bitDepth: [8, 16],
@@ -79,33 +86,7 @@ export function drawRectangle(
     newImage = maskToOutputMask(image, options, { clone: true });
   }
 
-  if (color !== 'none') {
-    for (
-      let currentColumn = column;
-      currentColumn < column + width;
-      currentColumn++
-    ) {
-      newImage.setVisiblePixel(currentColumn, row, color);
-      newImage.setVisiblePixel(currentColumn, row + height - 1, color);
-    }
-    for (
-      let currentRow = row + 1;
-      currentRow < row + height - 1;
-      currentRow++
-    ) {
-      newImage.setVisiblePixel(column, currentRow, color);
-      newImage.setVisiblePixel(column + width - 1, currentRow, color);
-
-      if (fill) {
-        for (let col = column + 1; col < column + width - 1; col++) {
-          newImage.setVisiblePixel(col, currentRow, fill);
-          newImage.setVisiblePixel(col, currentRow, fill);
-        }
-      }
-    }
-  }
-  // color is none but fill is defined
-  else if (fill) {
+  if (fill) {
     for (
       let currentRow = row + 1;
       currentRow < row + height - 1;
@@ -121,5 +102,21 @@ export function drawRectangle(
       }
     }
   }
+
+  if (strokeColor !== 'none') {
+    const points = [
+      { row: 0, column: 0 },
+      { row: 0, column: width - 1 },
+      { row: height - 1, column: width - 1 },
+      { row: height - 1, column: 0 },
+      { row: 0, column: 0 },
+    ];
+    newImage = newImage.drawPolygon(points, {
+      origin,
+      strokeColor,
+      strokeWidth,
+    });
+  }
+
   return newImage;
 }

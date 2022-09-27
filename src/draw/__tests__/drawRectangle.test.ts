@@ -58,6 +58,7 @@ test('out to other image', () => {
     fillColor: [1, 1, 1],
     out,
   });
+
   expect(result).toMatchImageData([
     [255, 0, 0, 255, 0, 0],
     [255, 0, 0, 255, 0, 0],
