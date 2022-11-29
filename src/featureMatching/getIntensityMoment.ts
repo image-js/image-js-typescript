@@ -24,21 +24,24 @@ export function getIntensityMoment(
   p: number,
   q: number,
   options: GetIntensityMomentOptions = {},
-) {
-  if (image.height % 2 || image.width % 2) {
+): number[] {
+  if (!(image.height % 2 && image.width % 2)) {
     throw new Error('getIntensityMoment: image dimensions should be odd');
   }
-  const { origin = { row: image.height / 2, column: image.width / 2 } } =
-    options;
+  const {
+    origin = { row: (image.height - 1) / 2, column: (image.width - 1) / 2 },
+  } = options;
 
-  let moment = 0;
+  let moment = new Array(image.channels).fill(0);
   for (let row = 0; row < image.height; row++) {
     for (let column = 0; column < image.width; column++) {
-      const xDistance = row - origin.row;
-      const yDistance = column - origin.column;
-      const intensity = image.getValue(row, column, 0);
+      for (let channel = 0; channel < image.channels; channel++) {
+        const xDistance = column - origin.column;
+        const yDistance = row - origin.row;
+        const intensity = image.getValue(column, row, channel);
 
-      moment += xDistance ** p * yDistance ** q * intensity;
+        moment[channel] += xDistance ** p * yDistance ** q * intensity;
+      }
     }
   }
   return moment;
