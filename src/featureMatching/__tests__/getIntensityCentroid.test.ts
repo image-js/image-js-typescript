@@ -13,7 +13,7 @@ test('3x3 image', () => {
     [2, 0, 2],
     [3, 0, 1],
   ]);
-  const result = image.getIntensityCentroid();
+  const result = getIntensityCentroid(image);
   expect(result).toStrictEqual([{ column: 0, row: 0 }]);
 });
 

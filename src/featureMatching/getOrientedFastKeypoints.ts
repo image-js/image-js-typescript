@@ -7,6 +7,7 @@ import {
   getFastKeypoints,
   GetFastKeypointsOptions,
 } from './getFastKeypoints';
+import { getIntensityCentroid } from './getIntensityCentroid';
 
 export interface GetOrientedFastKeypointsOptions
   extends GetFastKeypointsOptions {
@@ -66,7 +67,7 @@ export function getOrientedFastKeypoints(
       height: windowSize,
     });
 
-    const centroid = window.getIntensityCentroid()[0];
+    const centroid = getIntensityCentroid(window)[0];
     const angle = toDegrees(getAngle({ column: 0, row: 0 }, centroid));
     orientedFastKeypoints.push({ ...keypoint, angle });
   }
