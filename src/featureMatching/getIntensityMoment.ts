@@ -12,7 +12,7 @@ export interface GetIntensityMomentOptions {
 
 /**
  * Compute the pq order intensity moment of the image.
- *
+ * DOI: 10.1109/ICCV.2011.6126544
  * @param image - Image to process. Should have an odd number of rows and columns.
  * @param p - Order along x.
  * @param q - Order along y.

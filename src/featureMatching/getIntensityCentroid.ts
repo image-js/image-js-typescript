@@ -5,6 +5,7 @@ import { getIntensityMoment } from './getIntensityMoment';
 
 /**
  * Compute the intensity centroid of an image for each channel.
+ * DOI: 10.1109/ICCV.2011.6126544
  *
  * @param image - Image to process.
  * @returns The intensity centroid of each channel of the image.

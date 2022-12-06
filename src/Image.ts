@@ -18,7 +18,6 @@ import {
   DrawLineOnImageOptions,
 } from './draw';
 import { drawPoints, DrawPointsOptions } from './draw/drawPoints';
-import { getIntensityCentroid } from './featureMatching';
 import {
   BlurOptions,
   blur,
@@ -706,16 +705,6 @@ export class Image {
     options: DrawCircleOnImageOptions = {},
   ): Image {
     return drawCircleOnImage(this, center, radius, options);
-  }
-
-  // FEATURE MATCHING
-  /**
-   * Compute the intensity centroid of an image for each channel.
-   *
-   * @returns The intensity centroid of each channel of the image.
-   */
-  public getIntensityCentroid(): Point[] {
-    return getIntensityCentroid(this);
   }
 
   // OPERATIONS
