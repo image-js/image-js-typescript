@@ -14,7 +14,6 @@ test('3x3 image', () => {
     [3, 0, 1],
   ]);
   const result = image.getIntensityCentroid();
-  // should be the sum of all elements
   expect(result).toStrictEqual([{ column: 0, row: 0 }]);
 });
 
@@ -25,7 +24,6 @@ test('RGB image', () => {
     [3, 1, 1],
   ]);
   const result = getIntensityCentroid(image);
-  // should be the sum of all elements
   expect(result).toStrictEqual([
     { column: 0, row: 1 / 3 },
     { column: 0, row: 0 },

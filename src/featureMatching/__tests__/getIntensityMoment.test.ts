@@ -17,7 +17,6 @@ test('1D image, 00', () => {
 test('1D image, 10', () => {
   const image = testUtils.createGreyImage([[1, 2, 3, 4, 5]]);
   const result = getIntensityMoment(image, 1, 0);
-  // should be the sum of all elements
   expect(result).toStrictEqual([10]);
 });
 
@@ -28,7 +27,6 @@ test('3x3 image, 01', () => {
     [3, 0, 1],
   ]);
   const result = getIntensityMoment(image, 0, 1);
-  // should be the sum of all elements
   expect(result).toStrictEqual([0]);
 });
 
@@ -39,13 +37,11 @@ test('RGB image, 01', () => {
     [3, 0, 1],
   ]);
   const result = getIntensityMoment(image, 0, 1);
-  // should be the sum of all elements
   expect(result).toStrictEqual([2, 0, -2]);
 });
 
 test('image dimensions error', () => {
   const image = new Image(4, 4, { colorModel: ImageColorModel.GREY });
-  // should be the sum of all elements
   expect(() => getIntensityMoment(image, 0, 1)).toThrow(
     'getIntensityMoment: image dimensions should be odd',
   );
