@@ -5,8 +5,7 @@ import { getIntensityMoment } from './getIntensityMoment';
 
 /**
  * Compute the intensity centroid of an image for each channel.
- * The algorithm comes from the ORB article DOI: 10.1109/ICCV.2011.6126544,
- * but is also described on Wikipedia:
+ * Original article: @see {@link https://doi.org/10.1006/cviu.1998.0719}
  *
  * @see {@link https://en.wikipedia.org/wiki/Image_moment}
  * @param image - Image to process.
