@@ -7,3 +7,4 @@ export * from './drawPolygonOnImage';
 export * from './drawPolygonOnMask';
 export * from './drawRectangle';
 export * from './drawPoints';
+export * from './drawMarker';

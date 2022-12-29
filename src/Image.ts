@@ -18,6 +18,8 @@ import {
   DrawLineOnImageOptions,
   drawPoints,
   DrawPointsOptions,
+  drawMarker,
+  DrawMarkerOptions,
 } from './draw';
 import {
   BlurOptions,
@@ -727,6 +729,16 @@ export class Image {
     return drawCircleOnImage(this, center, radius, options);
   }
 
+  /**
+   * Draw a marker on the image.
+   *
+   * @param point - Marker center point.
+   * @param options - Draw marker options.
+   * @returns The image with the marker drawing.
+   */
+  public drawMarker(point: Point, options: DrawMarkerOptions = {}): Image {
+    return drawMarker(this, point, options);
+  }
   // OPERATIONS
   public split(): Image[] {
     return split(this);
