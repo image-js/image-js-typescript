@@ -16,8 +16,9 @@ import {
   DrawRectangleOptions,
   drawRectangle,
   DrawLineOnImageOptions,
+  drawPoints,
+  DrawPointsOptions,
 } from './draw';
-import { drawPoints, DrawPointsOptions } from './draw/drawPoints';
 import {
   BlurOptions,
   blur,

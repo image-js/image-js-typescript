@@ -6,3 +6,4 @@ export * from './drawPolylineOnMask';
 export * from './drawPolygonOnImage';
 export * from './drawPolygonOnMask';
 export * from './drawRectangle';
+export * from './drawPoints';
