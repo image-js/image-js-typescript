@@ -42,12 +42,13 @@ export interface DrawMarkerOptions {
  * @param image - Image to process.
  * @param point - Marker center point.
  * @param options - Draw marker options.
+ * @returns The image with the marker drawing.
  */
 export function drawMarker(
   image: Image,
   point: Point,
   options: DrawMarkerOptions,
-) {
+): Image {
   const newImage = getOutputImage(image, options, { clone: true });
   const {
     color = getDefaultColor(newImage),

@@ -20,6 +20,7 @@ import {
   DrawPointsOptions,
   drawMarker,
   DrawMarkerOptions,
+  drawMarkers,
 } from './draw';
 import {
   BlurOptions,
@@ -739,6 +740,18 @@ export class Image {
   public drawMarker(point: Point, options: DrawMarkerOptions = {}): Image {
     return drawMarker(this, point, options);
   }
+
+  /**
+   * Draw markers on the image.
+   *
+   * @param points - Markers center points.
+   * @param options - Draw marker options.
+   * @returns The image with the markers drawing.
+   */
+  public drawMarkers(points: Point[], options: DrawMarkerOptions = {}): Image {
+    return drawMarkers(this, points, options);
+  }
+
   // OPERATIONS
   public split(): Image[] {
     return split(this);
