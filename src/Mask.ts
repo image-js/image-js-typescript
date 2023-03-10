@@ -66,7 +66,7 @@ export interface MaskOptions {
   /**
    * Origin of the image relative to a parent image.
    *
-   * @default {row: 0, column: 0}
+   * @default {row: 0, column: 0 }
    */
   origin?: Point;
   /**
@@ -512,10 +512,14 @@ export class Mask {
    * Get the coordinates of the points on the border of a shape defined in a mask.
    *
    * @param options - Get border points options.
-   * @returns Array of boder points.
+   * @returns Array of border points.
    */
   public getBorderPoints(options?: GetBorderPointsOptions): Point[] {
     return getBorderPoints(this, options);
+  }
+
+  get ratio() {
+    return this.width / this.height;
   }
 
   /**
@@ -594,6 +598,98 @@ export class Mask {
    */
   public topHat(options?: TopHatOptions): Mask {
     return topHat(this, options);
+  }
+
+  get surface() {
+    let surface = 0;
+    for (let element of this.data) {
+      if (element === 1) {
+        surface++;
+      }
+    }
+    return surface;
+  }
+  get getData() {
+    return this.data;
+  }
+  get perimeter() {
+    let perimeter = 0;
+
+    for (let i = 0; i < this.height; i++) {
+      for (let j = 0; j < this.width; j++) {
+        let sides = 0;
+        if (this.data[i * this.height + j] === 0) {
+          continue;
+        } else {
+          if (j === this.height - 1) {
+            sides++;
+          } else if (this.data[i * this.height + j + 1] === 0) {
+            sides++;
+          }
+          if (j === 0) {
+            sides++;
+          } else if (this.data[i * this.height + j - 1] === 0) {
+            sides++;
+          }
+          if (i === 0) {
+            sides++;
+          } else if (this.data[(i - 1) * this.height + j] === 0) {
+            sides++;
+          }
+          if (i === this.width - 1) {
+            sides++;
+          } else if (this.data[(i + 1) * this.width + j] === 0) {
+            sides++;
+          }
+
+          switch (sides) {
+            case 0:
+              continue;
+            case 1:
+              perimeter++;
+              break;
+            case 2:
+              perimeter += 2 - (2 - Math.sqrt(2));
+              break;
+            case 3:
+              perimeter += 3 - 2 * (2 - Math.sqrt(2));
+              break;
+
+            default:
+              break;
+          }
+        }
+      }
+    }
+
+    return perimeter;
+  }
+
+  // get fillRatio() {
+  //   return this.surface / (this.surface + this.holesInfo.surface);
+  // }
+
+  // get ped() {
+  //   return this.perimeter / Math.PI;
+  // }
+
+  get eqpc() {
+    return 2 * Math.sqrt(this.surface / Math.PI);
+  }
+
+  get roundness(): number {
+    /*Slide 24 https://static.horiba.com/fileadmin/Horiba/Products/Scientific/Particle_Characterization/Webinars/Slides/TE011.pdf */
+    return (
+      (4 * this.surface) / (Math.PI * this.getFeret().maxDiameter.length ** 2)
+    );
+  }
+
+  // get sphericity() {
+  //   return (2 * Math.sqrt(this.surface * Math.PI)) / this.perimeter;
+  // }
+
+  get solidity() {
+    return this.surface / getConvexHull(this).surface;
   }
 
   /**
