@@ -1,13 +1,16 @@
 import { Mask } from '../Mask';
-import { GetBorderPointsOptions, ConvexHull } from '../maskAnalysis';
-import { monotoneChainConvexHull } from '../maskAnalysis/utils/monotoneChainConvexHull';
+import {
+  GetBorderPointsOptions,
+  getFeret,
+  Feret,
+  FeretDiameter,
+  getConvexHull,
+} from '../maskAnalysis';
 import { Point } from '../utils/geometry/points';
 
 import { RoiMap } from './RoiMapManager';
 import { getBorderPoints } from './getBorderPoints';
 import { getMask, GetMaskOptions } from './getMask';
-import { perimeter } from './utils/perimeter';
-import { surface } from './utils/surface';
 
 export class Roi {
   /**
@@ -38,11 +41,11 @@ export class Roi {
 
   private computed: {
     perimeter?: number;
-    borderIDs?: number[];
+    borderIDs: number[];
     perimeterInfo?: { one: number; two: number; three: number; four: number };
     BoxIDs?: number[];
     externalLengths?: number[];
-    borderLengths?: number[];
+    borderLengths: number[];
     box?: number;
     points?: number[][];
     holesInfo?: { number: number; surface: number };
@@ -52,15 +55,14 @@ export class Roi {
     ped?: number;
     externalIDs?: number[];
     roundness?: number;
-    convexHull?: { polyline: ConvexHull; surface: number; perimeter: number };
+    convexHull?: { polyline: Point[]; surface: number; perimeter: number };
     fillRatio?: number;
     internalIDs?: number[];
-    feretDiameters?;
+    feretDiameters?: Feret;
   };
-  public internalIDs;
-  public borderLengths;
-  public fillRatio: number;
-  public feretDiameters;
+  // public internalIDs:number[];
+
+  //public feretDiameters;
   public minX;
   public maxX;
   public minY;
@@ -73,12 +75,11 @@ export class Roi {
     this.width = 0;
     this.height = 0;
     this.surface = 0;
-    this.computed = {};
+    this.computed = { borderLengths: [], borderIDs: [] };
     this.minX = Number.POSITIVE_INFINITY;
     this.maxX = Number.NEGATIVE_INFINITY;
     this.minY = Number.POSITIVE_INFINITY;
     this.maxY = Number.NEGATIVE_INFINITY;
-    this.fillRatio = 0;
   }
 
   /**
@@ -120,6 +121,13 @@ export class Roi {
     return getMask(this, options);
   }
 
+  get ped() {
+    if (!this.computed.ped) {
+      this.computed.ped = this.perimeter / Math.PI;
+    }
+    return this.computed.ped;
+  }
+
   /**
    * Return an array with the coordinates of the pixels that are on the border of the ROI.
    * The points are defined as [column, row].
@@ -131,10 +139,17 @@ export class Roi {
     return getBorderPoints(this, options);
   }
 
-  _computeBorderIDs() {
+  _computeBorderIDs(): void {
     let borders = getBorders(this);
     this.computed.borderIDs = borders.ids;
     this.computed.borderLengths = borders.lengths;
+  }
+
+  get internalIDs() {
+    if (!this.computed.internalIDs) {
+      this.computed.internalIDs = getInternalIDs(this);
+    }
+    return this.computed.internalIDs;
   }
 
   get externalIDs(): number[] {
@@ -146,61 +161,6 @@ export class Roi {
     this.computed.externalIDs = externalIDs;
     return externalIDs;
   }
-
-  get convexHull() {
-    if (!this.computed.convexHull) {
-      const calculationPoints: Point[] | number[][] = [];
-      // slow approach, we check all the points
-      // for each point we take the 4 corners !!!!
-
-      for (let x = 0; x < this.width; x++) {
-        for (let y = 0; y < this.height; y++) {
-          if (
-            this.map.data[x + this.minX + (y + this.minY) * this.map.width] ===
-            this.id
-          ) {
-            // it also has to be on a border ...
-            if (x > 0 && x < this.width - 1 && y > 0 && y < this.height - 1) {
-              if (
-                this.map.data[
-                  x - 1 + this.minX + (y + this.minY) * this.map.width
-                ] !== this.id ||
-                this.map.data[
-                  x + 1 + this.minX + (y + this.minY) * this.map.width
-                ] !== this.id ||
-                this.map.data[
-                  x + this.minX + (y - 1 + this.minY) * this.map.width
-                ] !== this.id ||
-                this.map.data[
-                  x + this.minX + (y + 1 + this.minY) * this.map.width
-                ] !== this.id
-              ) {
-                calculationPoints.push([x, y]);
-                calculationPoints.push([x + 1, y]);
-                calculationPoints.push([x, y + 1]);
-                calculationPoints.push([x + 1, y + 1]);
-              }
-            } else {
-              calculationPoints.push([x, y]);
-              calculationPoints.push([x + 1, y]);
-              calculationPoints.push([x, y + 1]);
-              calculationPoints.push([x + 1, y + 1]);
-            }
-          }
-        }
-      }
-
-      const convexHull = monotoneChainConvexHull(calculationPoints);
-
-      this.computed.convexHull = {
-        polyline: convexHull,
-        surface: surface(convexHull),
-        perimeter: perimeter(convexHull),
-      };
-    }
-    return this.computed.convexHull;
-  }
-
   get externalLengths() {
     if (this.computed.externalLengths) {
       return this.computed.externalLengths;
@@ -214,6 +174,7 @@ export class Roi {
     }
     return this.computed.perimeterInfo;
   }
+
   get perimeter() {
     let info = this.perimeterInfo;
     let delta = 2 - Math.sqrt(2);
@@ -247,6 +208,14 @@ export class Roi {
     }
     return this.computed.boxIDs;
   }
+
+  get eqpc() {
+    if (!this.computed.eqpc) {
+      this.computed.eqpc = 2 * Math.sqrt(this.surface / Math.PI);
+    }
+    return this.computed.eqpc;
+  }
+
   get external() {
     if (!this.computed.external) {
       this.computed.external = getExternal(this);
@@ -262,8 +231,8 @@ export class Roi {
 
   getExternalIDs(): number[] {
     // take all the borders and remove the internal one ...
-    let borders = this.borderIDs;
-    let lengths = this.borderLengths;
+    let borders: number[] = this.borderIDs;
+    let lengths: number[] = this.borderLengths;
 
     const externalIDs = [];
     this.computed.externalLengths = [];
@@ -278,21 +247,7 @@ export class Roi {
     }
     return externalIDs;
   }
-
-  get eqpc() {
-    if (!this.computed.eqpc) {
-      this.computed.eqpc = 2 * Math.sqrt(this.surface / Math.PI);
-    }
-    return this.computed.eqpc;
-  }
-
-  get ped() {
-    if (!this.computed.ped) {
-      this.computed.ped = this.perimeter / Math.PI;
-    }
-    return this.computed.ped;
-  }
-
+  /////////////////
   get borderIDs() {
     if (this.computed.borderIDs) {
       return this.computed.borderIDs;
@@ -301,6 +256,14 @@ export class Roi {
     return this.computed.borderIDs;
   }
 
+  get borderLengths(): number[] {
+    if (this.computed.borderLengths) {
+      return this.computed.borderLengths;
+    }
+    this._computeBorderIDs();
+    return this.computed.borderLengths;
+  }
+  ///////////////////
   get box() {
     // points of the Roi that touch the rectangular shape
     if (!this.computed.box) {
@@ -309,17 +272,35 @@ export class Roi {
     return this.computed.box;
   }
 
+  get fillRatio() {
+    return this.surface / (this.surface + this.holesInfo.surface);
+  }
+
   get sphericity() {
     return (2 * Math.sqrt(this.surface * Math.PI)) / this.perimeter;
   }
 
-  // get solidity() {
-  //   return this.surface / this.convexHull.surface;
-  // }
+  get solidity() {
+    return this.surface / getConvexHull(this.getMask()).surface;
+  }
 
   get roundness() {
     /*Slide 24 https://static.horiba.com/fileadmin/Horiba/Products/Scientific/Particle_Characterization/Webinars/Slides/TE011.pdf */
-    return (4 * this.surface) / (Math.PI * this.feretDiameters.max ** 2);
+    return (
+      (4 * this.surface) /
+      (Math.PI * this.feretDiameters.maxDiameter.length ** 2)
+    );
+  }
+
+  get feretDiameters(): {
+    minDiameter: FeretDiameter;
+    maxDiameter: FeretDiameter;
+    aspectRatio: number;
+  } {
+    if (!this.computed.feretDiameters) {
+      this.computed.feretDiameters = getFeret(this.getMask());
+    }
+    return this.computed.feretDiameters;
   }
 
   // toJSON() {
@@ -490,29 +471,29 @@ function getInternalIDs(roi: Roi) {
   return internal;
 }
 
-function getBorder(roi: Roi) {
-  let total = 0;
-  let roiMap = roi.getMap();
-  let data = roiMap.data;
+// function getBorder(roi: Roi) {
+//   let total = 0;
+//   let roiMap = roi.getMap();
+//   let data = roiMap.data;
 
-  for (let x = 1; x < roi.width - 1; x++) {
-    for (let y = 1; y < roi.height - 1; y++) {
-      let target = (y + roi.minY) * roiMap.width + x + roi.minX;
-      if (data[target] === roi.id) {
-        // if a point around is not roi.id it is a border
-        if (
-          data[target - 1] !== roi.id ||
-          data[target + 1] !== roi.id ||
-          data[target - roiMap.width] !== roi.id ||
-          data[target + roiMap.width] !== roi.id
-        ) {
-          total++;
-        }
-      }
-    }
-  }
-  return total + roi.box;
-}
+//   for (let x = 1; x < roi.width - 1; x++) {
+//     for (let y = 1; y < roi.height - 1; y++) {
+//       let target = (y + roi.minY) * roiMap.width + x + roi.minX;
+//       if (data[target] === roi.id) {
+//         // if a point around is not roi.id it is a border
+//         if (
+//           data[target - 1] !== roi.id ||
+//           data[target + 1] !== roi.id ||
+//           data[target - roiMap.width] !== roi.id ||
+//           data[target + roiMap.width] !== roi.id
+//         ) {
+//           total++;
+//         }
+//       }
+//     }
+//   }
+//   return total + roi.box;
+// }
 
 function getBox(roi: Roi) {
   let total = 0;
@@ -547,8 +528,8 @@ function getBox(roi: Roi) {
   return total;
 }
 
-function getBoxIDs(roi: Roi) {
-  let surroundingIDs = new Set(); // allows to get a unique list without indexOf
+function getBoxIDs(roi: Roi): number[] {
+  let surroundingIDs = new Set<number>(); // allows to get a unique list without indexOf
 
   let roiMap = roi.getMap();
   let data = roiMap.data;
@@ -601,10 +582,11 @@ function getBoxIDs(roi: Roi) {
 
   return Array.from(surroundingIDs); // the selection takes the whole rectangle
 }
-function getBorders(roi: Roi) {
+
+function getBorders(roi: Roi): { ids: number[]; lengths: number[] } {
   let roiMap = roi.getMap();
   let data = roiMap.data;
-  let surroudingIDs = new Set(); // allows to get a unique list without indexOf
+  let surroudingIDs = new Set<number>(); // allows to get a unique list without indexOf
   let surroundingBorders = new Map();
   let visitedData = new Set();
   let dx = [+1, 0, -1, 0];
@@ -640,7 +622,7 @@ function getBorders(roi: Roi) {
       }
     }
   }
-  let newIds = Array.from(surroudingIDs);
+  let newIds: number[] = Array.from(surroudingIDs);
   let borderLengths = newIds.map((id) => {
     return surroundingBorders.get(id);
   });

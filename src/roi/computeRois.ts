@@ -14,22 +14,34 @@ export function computeRois(roiMapManager: RoiMapManager): void {
 
   for (let i = 0; i < map.nbPositive; i++) {
     whites[i] = {
+      borderLengths: [],
+      borderIDs: [],
       minRow: map.height,
       minColumn: map.width,
       maxRow: -1,
       maxColumn: -1,
       surface: 0,
       id: i + 1,
+      maxX: -Infinity,
+      maxY: -Infinity,
+      minX: Infinity,
+      minY: Infinity,
     };
   }
   for (let i = 0; i < map.nbNegative; i++) {
     blacks[i] = {
+      borderLengths: [],
+      borderIDs: [],
       minRow: map.height,
       minColumn: map.width,
       maxRow: -1,
       maxColumn: -1,
       surface: 0,
       id: -i - 1,
+      maxX: -Infinity,
+      maxY: -Infinity,
+      minX: Infinity,
+      minY: Infinity,
     };
   }
 
