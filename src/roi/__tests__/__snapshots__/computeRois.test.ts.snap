@@ -2,57 +2,95 @@
 
 exports[`3x3 mask 1`] = `
 [
-  Roi {
+  {
+    "aspectRatio": 0.554700196225229,
+    "eqpc": 2.256758334191025,
+    "feretDiameterMax": {
+      "angle": -33.690067525979785,
+      "length": 3.605551275463989,
+      "points": [
+        {
+          "column": 0,
+          "row": 2,
+        },
+        {
+          "column": 3,
+          "row": 0,
+        },
+      ],
+    },
+    "feretDiameterMin": {
+      "angle": 180,
+      "length": 1.9999999999999996,
+      "points": [
+        {
+          "column": 3,
+          "row": 0,
+        },
+        {
+          "column": 0,
+          "row": 2,
+        },
+      ],
+    },
+    "fillRatio": 1,
     "height": 2,
     "id": 1,
-    "map": {
-      "data": Int16Array [
-        1,
-        1,
-        1,
-        1,
-        -1,
-        -1,
-        -1,
-        -1,
-        2,
-      ],
-      "height": 3,
-      "nbNegative": 1,
-      "nbPositive": 2,
-      "width": 3,
-    },
-    "origin": {
-      "column": 0,
-      "row": 0,
-    },
+    "maxX": Infinity,
+    "maxY": Infinity,
+    "minX": 0,
+    "minY": 0,
+    "ped": 1.66878436041945,
+    "perimeter": 5.242640687119286,
+    "roundness": 0.39176601376466547,
+    "solidity": 0.8,
+    "sphericity": 1.352336699526467,
     "surface": 4,
     "width": 3,
   },
-  Roi {
+  {
+    "aspectRatio": 0.7071067811865475,
+    "eqpc": 1.1283791670955126,
+    "feretDiameterMax": {
+      "angle": 45.00000000000001,
+      "length": 1.4142135623730951,
+      "points": [
+        {
+          "column": 0,
+          "row": 0,
+        },
+        {
+          "column": 1,
+          "row": 1,
+        },
+      ],
+    },
+    "feretDiameterMin": {
+      "angle": 90,
+      "length": 1,
+      "points": [
+        {
+          "column": 0,
+          "row": 0,
+        },
+        {
+          "column": 1,
+          "row": 0,
+        },
+      ],
+    },
+    "fillRatio": 1,
     "height": 1,
     "id": 2,
-    "map": {
-      "data": Int16Array [
-        1,
-        1,
-        1,
-        1,
-        -1,
-        -1,
-        -1,
-        -1,
-        2,
-      ],
-      "height": 3,
-      "nbNegative": 1,
-      "nbPositive": 2,
-      "width": 3,
-    },
-    "origin": {
-      "column": 2,
-      "row": 2,
-    },
+    "maxX": Infinity,
+    "maxY": Infinity,
+    "minX": 0,
+    "minY": 0,
+    "ped": 0,
+    "perimeter": 0,
+    "roundness": 0.6366197723675812,
+    "solidity": 1,
+    "sphericity": Infinity,
     "surface": 1,
     "width": 1,
   },
@@ -61,30 +99,49 @@ exports[`3x3 mask 1`] = `
 
 exports[`3x3 mask 2`] = `
 [
-  Roi {
+  {
+    "aspectRatio": 0.5547001962252291,
+    "eqpc": 2.256758334191025,
+    "feretDiameterMax": {
+      "angle": -33.690067525979785,
+      "length": 3.605551275463989,
+      "points": [
+        {
+          "column": 0,
+          "row": 2,
+        },
+        {
+          "column": 3,
+          "row": 0,
+        },
+      ],
+    },
+    "feretDiameterMin": {
+      "angle": 0,
+      "length": 2,
+      "points": [
+        {
+          "column": 0,
+          "row": 2,
+        },
+        {
+          "column": 3,
+          "row": 0,
+        },
+      ],
+    },
+    "fillRatio": 1,
     "height": 2,
     "id": -1,
-    "map": {
-      "data": Int16Array [
-        1,
-        1,
-        1,
-        1,
-        -1,
-        -1,
-        -1,
-        -1,
-        2,
-      ],
-      "height": 3,
-      "nbNegative": 1,
-      "nbPositive": 2,
-      "width": 3,
-    },
-    "origin": {
-      "column": 0,
-      "row": 1,
-    },
+    "maxX": Infinity,
+    "maxY": Infinity,
+    "minX": 0,
+    "minY": 0,
+    "ped": 0.7684680442623437,
+    "perimeter": 2.414213562373095,
+    "roundness": 0.39176601376466547,
+    "solidity": 0.8,
+    "sphericity": 2.936697694901938,
     "surface": 4,
     "width": 3,
   },

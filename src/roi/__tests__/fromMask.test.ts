@@ -7,13 +7,11 @@ test('3x3 mask, cross', () => {
     [1, 1, 1],
     [0, 1, 0],
   ]);
-  console.log(mask);
   const expected = [
     [-1, 1, -3],
     [1, 1, 1],
     [-2, 1, -4],
   ];
-  console.log(fromMask(mask).getMapMatrix());
   expect(fromMask(mask).getMapMatrix()).toStrictEqual(expected);
 });
 

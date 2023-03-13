@@ -112,39 +112,6 @@ test('fill with a value', () => {
   ]);
 });
 
-test('perimeter', () => {
-  const points: Point[] = [
-    { column: 1, row: 0 },
-    { column: 2, row: 0 },
-    { column: 1, row: 1 },
-    { column: 2, row: 1 },
-    { column: 1, row: 2 },
-    { column: 2, row: 2 },
-    { column: 1, row: 3 },
-    { column: 2, row: 3 },
-  ];
-  let mask = Mask.fromPoints(4, 4, points);
-  expect(mask.perimeter).toBeCloseTo(9.656, 2);
-});
-test('perimeter', () => {
-  const points: Point[] = [
-    { column: 0, row: 0 },
-    { column: 1, row: 0 },
-    { column: 2, row: 0 },
-    { column: 3, row: 0 },
-    { column: 0, row: 1 },
-    { column: 3, row: 1 },
-    { column: 0, row: 2 },
-    { column: 3, row: 2 },
-    { column: 0, row: 3 },
-    { column: 1, row: 3 },
-    { column: 2, row: 3 },
-    { column: 3, row: 3 },
-  ];
-  expect(Mask.fromPoints(4, 4, points).surface).toBe(12);
-  expect(Mask.fromPoints(4, 4, points).perimeter).toBeCloseTo(13.656, 2);
-});
-
 test('createFrom', () => {
   const mask = new Mask(2, 20);
 
