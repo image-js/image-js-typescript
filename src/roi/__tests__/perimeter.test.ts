@@ -11,7 +11,7 @@ test('perimeter', () => {
   const rois = roiMapManager.getRois();
   expect(rois[0].perimeter).toBeCloseTo(9.656, 2);
 });
-test('perimeter', () => {
+test('perimeter with external borders', () => {
   const mask = testUtils.createMask([
     [0, 1, 1, 0],
     [0, 1, 1, 0],
@@ -22,7 +22,7 @@ test('perimeter', () => {
   const rois = fromMask(mask).getRois();
   expect(rois[0].perimeter).toBeCloseTo(9.656, 2);
 });
-test('perimeter', () => {
+test('perimeter with a hole in ROI', () => {
   const mask = testUtils.createMask([
     [0, 1, 1, 1],
     [0, 1, 0, 1],
@@ -33,7 +33,7 @@ test('perimeter', () => {
   const rois = fromMask(mask).getRois();
   expect(rois[0].perimeter).toBeCloseTo(9.656, 2);
 });
-test('perimeter', () => {
+test('perimeter of ROI surrounded by 4 external sides', () => {
   const mask = testUtils.createMask([
     [0, 1],
     [0, 0],

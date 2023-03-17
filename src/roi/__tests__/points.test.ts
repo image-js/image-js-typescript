@@ -1,6 +1,6 @@
 import { fromMask } from '..';
 
-test('soliditiy', () => {
+test('points 1st test', () => {
   const mask = testUtils.createMask([
     [0, 1, 1, 0],
     [0, 1, 1, 0],
@@ -21,7 +21,7 @@ test('soliditiy', () => {
   ]);
 });
 
-test('soliditiy', () => {
+test('points 2nd test', () => {
   const mask = testUtils.createMask([
     [0, 0, 1, 0],
     [0, 1, 1, 0],
