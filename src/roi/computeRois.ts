@@ -11,7 +11,6 @@ export function computeRois(roiMapManager: RoiMapManager): void {
 
   const whites = new Array(map.nbPositive);
   const blacks = new Array(map.nbNegative);
-
   for (let i = 0; i < map.nbPositive; i++) {
     whites[i] = {
       borderLengths: [],
@@ -22,12 +21,13 @@ export function computeRois(roiMapManager: RoiMapManager): void {
       maxColumn: -1,
       surface: 0,
       id: i + 1,
-      maxX: -Infinity,
-      maxY: -Infinity,
       minX: Infinity,
       minY: Infinity,
+      maxX: -Infinity,
+      maxY: -Infinity,
     };
   }
+
   for (let i = 0; i < map.nbNegative; i++) {
     blacks[i] = {
       borderLengths: [],
@@ -38,10 +38,10 @@ export function computeRois(roiMapManager: RoiMapManager): void {
       maxColumn: -1,
       surface: 0,
       id: -i - 1,
-      maxX: -Infinity,
-      maxY: -Infinity,
       minX: Infinity,
       minY: Infinity,
+      maxX: -Infinity,
+      maxY: -Infinity,
     };
   }
 
@@ -76,6 +76,36 @@ export function computeRois(roiMapManager: RoiMapManager): void {
   roiMapManager.whiteRois = new Array<Roi>(map.nbPositive);
   roiMapManager.blackRois = new Array<Roi>(map.nbNegative);
 
+  for (let i = 0; i < map.nbNegative; i++) {
+    let blackRoi = new Roi(map, -i);
+    blackRoi.origin = { row: blacks[i].minRow, column: blacks[i].minColumn };
+    blackRoi.width = blacks[i].maxColumn - blacks[i].minColumn + 1;
+    blackRoi.height = blacks[i].maxRow - blacks[i].minRow + 1;
+    blackRoi.surface = blacks[i].surface;
+    blackRoi.id = blacks[i].id;
+    for (let y = 0; y < map.height; y++) {
+      for (let x = 0; x < map.width; x++) {
+        let target = y * map.width + x;
+        if (map.data[target] === blackRoi.id) {
+          const roi = blackRoi;
+          if (x < roi.minX) {
+            roi.minX = x;
+          }
+          if (x > roi.maxX) {
+            roi.maxX = x;
+          }
+          if (y < roi.minY) {
+            roi.minY = y;
+          }
+          if (y > roi.maxY) {
+            roi.maxY = y;
+          }
+        }
+      }
+    }
+    roiMapManager.blackRois[i] = blackRoi;
+  }
+
   for (let i = 0; i < map.nbPositive; i++) {
     let whiteRoi = new Roi(map, i);
     whiteRoi.origin = { row: whites[i].minRow, column: whites[i].minColumn };
@@ -83,17 +113,26 @@ export function computeRois(roiMapManager: RoiMapManager): void {
     whiteRoi.height = whites[i].maxRow - whites[i].minRow + 1;
     whiteRoi.surface = whites[i].surface;
     whiteRoi.id = whites[i].id;
-
+    for (let y = 0; y < map.height; y++) {
+      for (let x = 0; x < map.width; x++) {
+        let target = y * map.width + x;
+        if (map.data[target] === whiteRoi.id) {
+          const roi = whiteRoi;
+          if (x < roi.minX) {
+            roi.minX = x;
+          }
+          if (x > roi.maxX) {
+            roi.maxX = x;
+          }
+          if (y < roi.minY) {
+            roi.minY = y;
+          }
+          if (y > roi.maxY) {
+            roi.maxY = y;
+          }
+        }
+      }
+    }
     roiMapManager.whiteRois[i] = whiteRoi;
-  }
-  for (let i = 0; i < map.nbNegative; i++) {
-    let blackRoi = new Roi(map, i);
-    blackRoi.origin = { row: blacks[i].minRow, column: blacks[i].minColumn };
-    blackRoi.width = blacks[i].maxColumn - blacks[i].minColumn + 1;
-    blackRoi.height = blacks[i].maxRow - blacks[i].minRow + 1;
-    blackRoi.surface = blacks[i].surface;
-    blackRoi.id = blacks[i].id;
-
-    roiMapManager.blackRois[i] = blackRoi;
   }
 }
