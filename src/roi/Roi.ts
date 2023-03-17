@@ -267,15 +267,22 @@ export class Roi {
     }
     return this.computed.box;
   }
-
+  /**
+   * Getter that calculates fill ratio of the ROI
+   */
   get fillRatio() {
     return this.surface / (this.surface + this.holesInfo.surface);
   }
-
+  /**
+   * Getter that calculates sphericity of the ROI
+   */
   get sphericity() {
     return (2 * Math.sqrt(this.surface * Math.PI)) / this.perimeter;
   }
 
+  /**
+   * Getter that calculates solidity of the ROI
+   */
   get solidity() {
     return this.surface / getConvexHull(this.getMask()).surface;
   }
@@ -298,7 +305,10 @@ export class Roi {
     }
     return this.computed.feretDiameters;
   }
-
+  /**
+   *
+   * @returns calculated properties as one object
+   */
   toJSON() {
     return {
       id: this.id,
@@ -329,6 +339,11 @@ export class Roi {
     };
   }
 }
+/**
+ *
+ * @param roi -ROI
+ * @returns object which tells how many pixels are exposed externally to how many sides
+ */
 function getPerimeterInfo(roi: Roi) {
   let roiMap = roi.getMap();
   let data = roiMap.data;
@@ -409,7 +424,11 @@ function getExternal(roi: Roi) {
   }
   return total + roi.box;
 }
-
+/**
+ *
+ * @param roi - ROI
+ * @returns the surface of holes in ROI
+ */
 function getHolesInfo(roi: Roi) {
   let surface = 0;
   let width = roi.getMap().width;
@@ -557,6 +576,11 @@ function getBoxIDs(roi: Roi): number[] {
   return Array.from(surroundingIDs); // the selection takes the whole rectangle
 }
 
+/**
+ *
+ * @param roi - ROI
+ * @returns borders' length and their IDs
+ */
 function getBorders(roi: Roi): { ids: number[]; lengths: number[] } {
   let roiMap = roi.getMap();
   let data = roiMap.data;

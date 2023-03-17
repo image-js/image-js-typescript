@@ -83,6 +83,7 @@ export function computeRois(roiMapManager: RoiMapManager): void {
     blackRoi.height = blacks[i].maxRow - blacks[i].minRow + 1;
     blackRoi.surface = blacks[i].surface;
     blackRoi.id = blacks[i].id;
+    //computes minX,minY,maxX,maxY for black surfaces
     for (let y = 0; y < map.height; y++) {
       for (let x = 0; x < map.width; x++) {
         let target = y * map.width + x;
@@ -113,6 +114,7 @@ export function computeRois(roiMapManager: RoiMapManager): void {
     whiteRoi.height = whites[i].maxRow - whites[i].minRow + 1;
     whiteRoi.surface = whites[i].surface;
     whiteRoi.id = whites[i].id;
+    //computes minX,minY,maxX,maxY for white surfaces
     for (let y = 0; y < map.height; y++) {
       for (let x = 0; x < map.width; x++) {
         let target = y * map.width + x;
