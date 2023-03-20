@@ -158,10 +158,10 @@ export class Roi {
   }
 
   get externalLengths() {
-    if (this.computed.externalLengths) {
+    if (!this.computed.externalLengths) {
+      this.getExternalIDs();
       return this.computed.externalLengths;
     }
-    this.getExternalIDs();
     return this.computed.externalLengths;
   }
 
@@ -331,6 +331,7 @@ export class Roi {
       perimeter: this.perimeter,
       perimeterInfo: this.perimeterInfo,
       externalIDs: this.externalIDs,
+      externalLengths: this.externalLengths,
       internalIDs: this.internalIDs,
       borderIDs: this.borderIDs,
       external: this.external,

@@ -18,6 +18,9 @@ exports[`3x3 mask 1`] = `
     "externalIDs": [
       -1,
     ],
+    "externalLengths": [
+      3,
+    ],
     "feretDiameterMax": {
       "angle": -33.690067525979785,
       "length": 3.605551275463989,
@@ -83,6 +86,9 @@ exports[`3x3 mask 1`] = `
     "external": 2,
     "externalIDs": [
       -1,
+    ],
+    "externalLengths": [
+      2,
     ],
     "feretDiameterMax": {
       "angle": 45.00000000000001,
@@ -160,6 +166,10 @@ exports[`3x3 mask 2`] = `
     "externalIDs": [
       1,
       2,
+    ],
+    "externalLengths": [
+      3,
+      1,
     ],
     "feretDiameterMax": {
       "angle": -33.690067525979785,
