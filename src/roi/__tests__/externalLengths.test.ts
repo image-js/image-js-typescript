@@ -1,4 +1,4 @@
-import { fromMask } from '..';
+import { fromMask } from '../..';
 
 test('external lengths property 5x5', () => {
   const mask = testUtils.createMask([
