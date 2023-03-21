@@ -21,10 +21,6 @@ export function computeRois(roiMapManager: RoiMapManager): void {
       maxColumn: -1,
       surface: 0,
       id: i + 1,
-      minX: Infinity,
-      minY: Infinity,
-      maxX: -Infinity,
-      maxY: -Infinity,
     };
   }
 
@@ -38,10 +34,6 @@ export function computeRois(roiMapManager: RoiMapManager): void {
       maxColumn: -1,
       surface: 0,
       id: -i - 1,
-      minX: Infinity,
-      minY: Infinity,
-      maxX: -Infinity,
-      maxY: -Infinity,
     };
   }
 
@@ -83,27 +75,6 @@ export function computeRois(roiMapManager: RoiMapManager): void {
     blackRoi.height = blacks[i].maxRow - blacks[i].minRow + 1;
     blackRoi.surface = blacks[i].surface;
     blackRoi.id = blacks[i].id;
-    //computes minX,minY,maxX,maxY for black surfaces
-    for (let y = 0; y < map.height; y++) {
-      for (let x = 0; x < map.width; x++) {
-        let target = y * map.width + x;
-        if (map.data[target] === blackRoi.id) {
-          const roi = blackRoi;
-          if (x < roi.minX) {
-            roi.minX = x;
-          }
-          if (x > roi.maxX) {
-            roi.maxX = x;
-          }
-          if (y < roi.minY) {
-            roi.minY = y;
-          }
-          if (y > roi.maxY) {
-            roi.maxY = y;
-          }
-        }
-      }
-    }
     roiMapManager.blackRois[i] = blackRoi;
   }
 
@@ -114,27 +85,6 @@ export function computeRois(roiMapManager: RoiMapManager): void {
     whiteRoi.height = whites[i].maxRow - whites[i].minRow + 1;
     whiteRoi.surface = whites[i].surface;
     whiteRoi.id = whites[i].id;
-    //computes minX,minY,maxX,maxY for white surfaces
-    for (let y = 0; y < map.height; y++) {
-      for (let x = 0; x < map.width; x++) {
-        let target = y * map.width + x;
-        if (map.data[target] === whiteRoi.id) {
-          const roi = whiteRoi;
-          if (x < roi.minX) {
-            roi.minX = x;
-          }
-          if (x > roi.maxX) {
-            roi.maxX = x;
-          }
-          if (y < roi.minY) {
-            roi.minY = y;
-          }
-          if (y > roi.maxY) {
-            roi.maxY = y;
-          }
-        }
-      }
-    }
     roiMapManager.whiteRois[i] = whiteRoi;
   }
 }

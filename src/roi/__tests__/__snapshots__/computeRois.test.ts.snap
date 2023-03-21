@@ -55,10 +55,6 @@ exports[`3x3 mask 1`] = `
     "internalIDs": [
       1,
     ],
-    "maxX": 2,
-    "maxY": 1,
-    "minX": 0,
-    "minY": 0,
     "ped": 2.0643291761037372,
     "perimeter": 6.485281374238571,
     "perimeterInfo": {
@@ -124,10 +120,6 @@ exports[`3x3 mask 1`] = `
     "internalIDs": [
       2,
     ],
-    "maxX": 2,
-    "maxY": 2,
-    "minX": 2,
-    "minY": 2,
     "ped": 0.4501581580785531,
     "perimeter": 1.4142135623730951,
     "perimeterInfo": {
@@ -205,10 +197,6 @@ exports[`3x3 mask 2`] = `
     "internalIDs": [
       -1,
     ],
-    "maxX": 2,
-    "maxY": 2,
-    "minX": 0,
-    "minY": 1,
     "ped": 1.8006326323142123,
     "perimeter": 5.656854249492381,
     "perimeterInfo": {

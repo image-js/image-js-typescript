@@ -39,10 +39,9 @@ export class Roi {
    */
 
   public surface: number;
-  public maxX: number;
-  public maxY: number;
-  public minX: number;
-  public minY: number;
+
+  public maxColumn: number;
+  public maxRow: number;
 
   private computed: {
     perimeter?: number;
@@ -64,6 +63,8 @@ export class Roi {
     fillRatio?: number;
     internalIDs?: number[];
     feretDiameters?: Feret;
+    maxRow?: number;
+    maxColumn?: number;
   };
 
   public constructor(map: RoiMap, id: number) {
@@ -72,12 +73,10 @@ export class Roi {
     this.origin = { row: map.height, column: map.width };
     this.width = 0;
     this.height = 0;
+    this.maxColumn = this.width + this.origin.column - 1;
+    this.maxRow = this.height + this.origin.row - 1;
     this.surface = 0;
     this.computed = {};
-    this.minX = Infinity;
-    this.minY = Infinity;
-    this.maxX = -Infinity;
-    this.maxY = -Infinity;
   }
   /**
    * Get the ROI map of the original image.
@@ -87,6 +86,14 @@ export class Roi {
   public getMap(): RoiMap {
     return this.map;
   }
+
+  // public get maxRow() {
+  //   return this.origin.row + this.height;
+  // }
+
+  // public get maxColumn() {
+  //   return this.origin.column + this.width;
+  // }
 
   /**
    * Return the value at the given coordinates in an ROI map.
@@ -205,7 +212,8 @@ export class Roi {
       let points = [];
       for (let y = 0; y < this.height; y++) {
         for (let x = 0; x < this.width; x++) {
-          let target = (y + this.minY) * this.map.width + x + this.minX;
+          let target =
+            (y + this.origin.row) * this.map.width + x + this.origin.column;
           if (this.map.data[target] === this.id) {
             points.push([x, y]);
           }
@@ -332,10 +340,6 @@ export class Roi {
   toJSON() {
     return {
       id: this.id,
-      minX: this.minX,
-      maxX: this.maxX,
-      minY: this.minY,
-      maxY: this.maxY,
       height: this.height,
       width: this.width,
       surface: this.surface,
@@ -375,7 +379,7 @@ function getPerimeterInfo(roi: Roi) {
 
   for (let x = 0; x < roiMap.width; x++) {
     for (let y = 0; y < roiMap.height; y++) {
-      let target = (y + roi.minY) * roiMap.width + x + roi.minX;
+      let target = (y + roi.origin.row) * roiMap.width + x + roi.origin.column;
       if (data[target] === roi.id) {
         let nbAround = 0;
         if (x === 0) {
@@ -429,7 +433,7 @@ function getExternal(roi: Roi) {
 
   for (let x = 0; x < roi.width; x++) {
     for (let y = 0; y < roi.height; y++) {
-      let target = (y + roi.minY) * roiMap.width + x + roi.minX;
+      let target = (y + roi.origin.row) * roiMap.width + x + roi.origin.column;
       if (data[target] === roi.id) {
         // if a point around is not roi.id it is a border
         if (
@@ -457,7 +461,7 @@ function getHolesInfo(roi: Roi) {
   let data = roi.getMap().data;
   for (let x = 1; x < roi.width - 1; x++) {
     for (let y = 1; y < roi.height - 1; y++) {
-      let target = (y + roi.minY) * width + x + roi.minX;
+      let target = (y + roi.origin.row) * width + x + roi.origin.column;
       if (roi.internalIDs.includes(data[target]) && data[target] !== roi.id) {
         surface++;
       }
@@ -476,7 +480,7 @@ function getInternalIDs(roi: Roi) {
 
   if (roi.height > 2) {
     for (let x = 0; x < roi.width; x++) {
-      let target = roi.minY * roiMap.width + x + roi.minX;
+      let target = roi.origin.row * roiMap.width + x + roi.origin.column;
       if (internal.includes(data[target])) {
         let id = data[target + roiMap.width];
         if (!internal.includes(id) && !roi.boxIDs.includes(id)) {
@@ -489,7 +493,7 @@ function getInternalIDs(roi: Roi) {
   let array = new Array(4);
   for (let x = 1; x < roi.width - 1; x++) {
     for (let y = 1; y < roi.height - 1; y++) {
-      let target = (y + roi.minY) * roiMap.width + x + roi.minX;
+      let target = (y + roi.origin.row) * roiMap.width + x + roi.origin.column;
       if (internal.includes(data[target])) {
         // we check if one of the neighbour is not yet in
 
@@ -521,7 +525,7 @@ function getBox(roi: Roi) {
   }
   for (let y of topBottom) {
     for (let x = 1; x < roi.width - 1; x++) {
-      let target = (y + roi.minY) * roiMap.width + x + roi.minX;
+      let target = (y + roi.origin.row) * roiMap.width + x + roi.origin.column;
       if (data[target] === roi.id) {
         total++;
       }
@@ -534,7 +538,7 @@ function getBox(roi: Roi) {
   }
   for (let x of leftRight) {
     for (let y = 0; y < roi.height; y++) {
-      let target = (y + roi.minY) * roiMap.width + x + roi.minX;
+      let target = (y + roi.origin.row) * roiMap.width + x + roi.origin.column;
       if (data[target] === roi.id) {
         total++;
       }
@@ -552,9 +556,9 @@ function getBoxIDs(roi: Roi): number[] {
   // we check the first line and the last line
   for (let y of [0, roi.height - 1]) {
     for (let x = 0; x < roi.width; x++) {
-      let target = (y + roi.minY) * roiMap.width + x + roi.minX;
+      let target = (y + roi.origin.row) * roiMap.width + x + roi.origin.column;
       if (
-        x - roi.minX > 0 &&
+        x - roi.origin.column > 0 &&
         data[target] === roi.id &&
         data[target - 1] !== roi.id
       ) {
@@ -562,7 +566,7 @@ function getBoxIDs(roi: Roi): number[] {
         surroundingIDs.add(value);
       }
       if (
-        roiMap.width - x - roi.minX > 1 &&
+        roiMap.width - x - roi.origin.column > 1 &&
         data[target] === roi.id &&
         data[target + 1] !== roi.id
       ) {
@@ -575,9 +579,9 @@ function getBoxIDs(roi: Roi): number[] {
   // we check the first column and the last column
   for (let x of [0, roi.width - 1]) {
     for (let y = 0; y < roi.height; y++) {
-      let target = (y + roi.minY) * roiMap.width + x + roi.minX;
+      let target = (y + roi.origin.row) * roiMap.width + x + roi.origin.column;
       if (
-        y - roi.minY > 0 &&
+        y - roi.origin.row > 0 &&
         data[target] === roi.id &&
         data[target - roiMap.width] !== roi.id
       ) {
@@ -585,7 +589,7 @@ function getBoxIDs(roi: Roi): number[] {
         surroundingIDs.add(value);
       }
       if (
-        roiMap.height - y - roi.minY > 1 &&
+        roiMap.height - y - roi.origin.row > 1 &&
         data[target] === roi.id &&
         data[target + roiMap.width] !== roi.id
       ) {
@@ -612,8 +616,8 @@ function getBorders(roi: Roi): { ids: number[]; lengths: number[] } {
   let dx = [+1, 0, -1, 0];
   let dy = [0, +1, 0, -1];
 
-  for (let x = roi.minX; x <= roi.maxX; x++) {
-    for (let y = roi.minY; y <= roi.maxY; y++) {
+  for (let x = roi.origin.column; x <= roi.maxColumn; x++) {
+    for (let y = roi.origin.row; y <= roi.maxRow; y++) {
       let target = x + y * roiMap.width;
       if (data[target] === roi.id) {
         for (let dir = 0; dir < 4; dir++) {

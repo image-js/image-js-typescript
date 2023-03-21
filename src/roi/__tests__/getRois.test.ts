@@ -34,6 +34,7 @@ test('3x3 mask, minSurface = 2', () => {
     [0, 0, 1],
   ]);
   const roiMapManager = fromMask(mask);
+
   const rois = getRois(roiMapManager, { minSurface: 2 });
   expect(rois).toHaveLength(1);
   expect(rois[0].surface).toBe(4);
