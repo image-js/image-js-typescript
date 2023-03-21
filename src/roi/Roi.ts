@@ -118,6 +118,9 @@ export class Roi {
     return getMask(this, options);
   }
 
+  /**
+   * Diameter of a circle of equal perimeter
+   */
   get ped() {
     if (!this.computed.ped) {
       this.computed.ped = this.perimeter / Math.PI;
@@ -142,6 +145,10 @@ export class Roi {
     this.computed.borderLengths = [...borders.lengths];
   }
 
+  /**
+   * Return an array of ROIs IDs that are included in the current ROI.
+   * This will be useful to know if there are some holes in the ROI.
+   */
   get internalIDs() {
     if (!this.computed.internalIDs) {
       this.computed.internalIDs = getInternalIDs(this);
@@ -149,6 +156,9 @@ export class Roi {
     return this.computed.internalIDs;
   }
 
+  /**
+   * Return an array of ROIs IDs that touch the current ROI.
+   */
   get externalIDs(): number[] {
     if (this.computed.externalIDs) {
       return this.computed.externalIDs;
@@ -172,6 +182,12 @@ export class Roi {
     return this.computed.perimeterInfo;
   }
 
+  /**
+   * Perimeter of the ROI.
+   * The perimeter is calculated using the sum of all the external borders of the ROI to which we subtract
+   * (2 - √2) * the number of pixels that have 2 external borders
+   * 2 * (2 - √2) * the number of pixels that have 3 external borders
+   */
   get perimeter() {
     let info = this.perimeterInfo;
     let delta = 2 - Math.sqrt(2);
@@ -206,6 +222,9 @@ export class Roi {
     return this.computed.boxIDs;
   }
 
+  /**
+   * Returns the diameter of a circle of equal projection area
+   */
   get eqpc() {
     if (!this.computed.eqpc) {
       this.computed.eqpc = 2 * Math.sqrt(this.surface / Math.PI);
@@ -219,6 +238,7 @@ export class Roi {
     }
     return this.computed.external;
   }
+
   get holesInfo() {
     if (!this.computed.holesInfo) {
       this.computed.holesInfo = getHolesInfo(this);
@@ -425,6 +445,7 @@ function getExternal(roi: Roi) {
   }
   return total + roi.box;
 }
+
 /**
  *
  * @param roi - ROI
