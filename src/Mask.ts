@@ -518,10 +518,6 @@ export class Mask {
     return getBorderPoints(this, options);
   }
 
-  get ratio() {
-    return this.width / this.height;
-  }
-
   /**
    * Get the vertices of the convex Hull polygon of a mask.
    *
