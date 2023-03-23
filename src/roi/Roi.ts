@@ -62,7 +62,7 @@ export class Roi {
     convexHull?: { polyline: Point[]; surface: number; perimeter: number };
     fillRatio?: number;
     internalIDs?: number[];
-    feretDiameters?: Feret;
+    feret?: Feret;
     maxRow?: number;
     maxColumn?: number;
   };
@@ -311,21 +311,18 @@ export class Roi {
 
   get roundness() {
     /*Slide 24 https://static.horiba.com/fileadmin/Horiba/Products/Scientific/Particle_Characterization/Webinars/Slides/TE011.pdf */
-    return (
-      (4 * this.surface) /
-      (Math.PI * this.feretDiameters.maxDiameter.length ** 2)
-    );
+    return (4 * this.surface) / (Math.PI * this.feret.maxDiameter.length ** 2);
   }
 
-  get feretDiameters(): {
+  get feret(): {
     minDiameter: FeretDiameter;
     maxDiameter: FeretDiameter;
     aspectRatio: number;
   } {
-    if (!this.computed.feretDiameters) {
-      this.computed.feretDiameters = getFeret(this.getMask());
+    if (!this.computed.feret) {
+      this.computed.feret = getFeret(this.getMask());
     }
-    return this.computed.feretDiameters;
+    return this.computed.feret;
   }
   /**
    *
@@ -339,9 +336,9 @@ export class Roi {
       surface: this.surface,
       eqpc: this.eqpc,
       ped: this.ped,
-      feretDiameterMin: this.feretDiameters.minDiameter,
-      feretDiameterMax: this.feretDiameters.maxDiameter,
-      aspectRatio: this.feretDiameters.aspectRatio,
+      feretDiameterMin: this.feret.minDiameter,
+      feretDiameterMax: this.feret.maxDiameter,
+      aspectRatio: this.feret.aspectRatio,
       fillRatio: this.fillRatio,
       sphericity: this.sphericity,
       roundness: this.roundness,
