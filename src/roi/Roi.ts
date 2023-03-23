@@ -371,8 +371,8 @@ function getPerimeterInfo(roi: Roi) {
   let three = 0;
   let four = 0;
 
-  for (let column = 0; column < roiMap.width; column++) {
-    for (let row = 0; row < roiMap.height; row++) {
+  for (let column = 0; column < roi.origin.column + roi.width; column++) {
+    for (let row = 0; row < roi.origin.row + roi.height; row++) {
       let target = computeIndex(roi, row, column);
       if (data[target] === roi.id) {
         let nbAround = 0;
