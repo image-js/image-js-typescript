@@ -142,8 +142,8 @@ export class Roi {
 
   _computeBorderIDs(): void {
     let borders = getBorders(this);
-    this.computed.borderIDs = [...borders.ids];
-    this.computed.borderLengths = [...borders.lengths];
+    this.computed.borderIDs = borders.ids;
+    this.computed.borderLengths = borders.lengths;
   }
 
   /**
