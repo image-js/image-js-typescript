@@ -13,6 +13,32 @@ exports[`3x3 mask 1`] = `
     "boxIDs": [
       -1,
     ],
+    "convexHull": {
+      "perimeter": 9.23606797749979,
+      "points": [
+        {
+          "column": 0,
+          "row": 0,
+        },
+        {
+          "column": 0,
+          "row": 2,
+        },
+        {
+          "column": 1,
+          "row": 2,
+        },
+        {
+          "column": 3,
+          "row": 1,
+        },
+        {
+          "column": 3,
+          "row": 0,
+        },
+      ],
+      "surface": 5,
+    },
     "eqpc": 2.256758334191025,
     "external": 7,
     "externalIDs": [
@@ -55,6 +81,31 @@ exports[`3x3 mask 1`] = `
     "internalIDs": [
       1,
     ],
+    "mbr": {
+      "angle": -0,
+      "corners": [
+        {
+          "column": 3,
+          "row": -3.834758505292834e-17,
+        },
+        {
+          "column": 3,
+          "row": 2,
+        },
+        {
+          "column": 3.2162452993532727e-16,
+          "row": 2,
+        },
+        {
+          "column": 4.440892098500626e-16,
+          "row": -2.2204460492503128e-16,
+        },
+      ],
+      "height": 2.9999999999999996,
+      "perimeter": 10,
+      "surface": 5.999999999999999,
+      "width": 2,
+    },
     "ped": 2.0643291761037372,
     "perimeter": 6.485281374238571,
     "perimeterInfo": {
@@ -78,6 +129,28 @@ exports[`3x3 mask 1`] = `
       2,
     ],
     "boxIDs": [],
+    "convexHull": {
+      "perimeter": 4,
+      "points": [
+        {
+          "column": 0,
+          "row": 0,
+        },
+        {
+          "column": 0,
+          "row": 1,
+        },
+        {
+          "column": 1,
+          "row": 1,
+        },
+        {
+          "column": 1,
+          "row": 0,
+        },
+      ],
+      "surface": 1,
+    },
     "eqpc": 1.1283791670955126,
     "external": 2,
     "externalIDs": [
@@ -120,6 +193,31 @@ exports[`3x3 mask 1`] = `
     "internalIDs": [
       2,
     ],
+    "mbr": {
+      "angle": 0,
+      "corners": [
+        {
+          "column": 6.123233995736766e-17,
+          "row": 1,
+        },
+        {
+          "column": 0,
+          "row": 0,
+        },
+        {
+          "column": 1,
+          "row": -6.123233995736766e-17,
+        },
+        {
+          "column": 1,
+          "row": 0.9999999999999999,
+        },
+      ],
+      "height": 1,
+      "perimeter": 4,
+      "surface": 1,
+      "width": 1,
+    },
     "ped": 0.4501581580785531,
     "perimeter": 1.4142135623730951,
     "perimeterInfo": {
@@ -153,6 +251,36 @@ exports[`3x3 mask 2`] = `
       1,
       2,
     ],
+    "convexHull": {
+      "perimeter": 8.82842712474619,
+      "points": [
+        {
+          "column": 0,
+          "row": 1,
+        },
+        {
+          "column": 0,
+          "row": 2,
+        },
+        {
+          "column": 2,
+          "row": 2,
+        },
+        {
+          "column": 3,
+          "row": 1,
+        },
+        {
+          "column": 3,
+          "row": 0,
+        },
+        {
+          "column": 1,
+          "row": 0,
+        },
+      ],
+      "surface": 5,
+    },
     "eqpc": 2.256758334191025,
     "external": 8,
     "externalIDs": [
@@ -197,6 +325,31 @@ exports[`3x3 mask 2`] = `
     "internalIDs": [
       -1,
     ],
+    "mbr": {
+      "angle": -0,
+      "corners": [
+        {
+          "column": 3,
+          "row": -3.834758505292834e-17,
+        },
+        {
+          "column": 3,
+          "row": 2,
+        },
+        {
+          "column": 3.2162452993532727e-16,
+          "row": 2,
+        },
+        {
+          "column": 4.440892098500626e-16,
+          "row": -2.2204460492503128e-16,
+        },
+      ],
+      "height": 2.9999999999999996,
+      "perimeter": 10,
+      "surface": 5.999999999999999,
+      "width": 2,
+    },
     "ped": 1.8006326323142123,
     "perimeter": 5.656854249492381,
     "perimeterInfo": {
