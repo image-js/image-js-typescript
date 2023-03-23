@@ -5,6 +5,8 @@ import {
   Feret,
   FeretDiameter,
   getConvexHull,
+  getMbr,
+  Mbr,
 } from '../maskAnalysis';
 import { Point } from '../utils/geometry/points';
 
@@ -59,6 +61,7 @@ export class Roi {
     externalIDs?: number[];
     roundness?: number;
     convexHull?: { points: Point[]; surface: number; perimeter: number };
+    mbr?: Mbr;
     fillRatio?: number;
     internalIDs?: number[];
     feret?: Feret;
@@ -315,6 +318,13 @@ export class Roi {
     return this.computed.convexHull;
   }
 
+  get mbr() {
+    if (!this.computed.mbr) {
+      this.computed.mbr = getMbr(this.getMask());
+    }
+    return this.computed.mbr;
+  }
+
   get roundness() {
     /*Slide 24 https://static.horiba.com/fileadmin/Horiba/Products/Scientific/Particle_Characterization/Webinars/Slides/TE011.pdf */
     return (4 * this.surface) / (Math.PI * this.feret.maxDiameter.length ** 2);
@@ -359,6 +369,7 @@ export class Roi {
       borderLengths: this.borderLengths,
       boxIDs: this.boxIDs,
       convexHull: this.convexHull,
+      mbr: this.mbr,
     };
   }
 }
