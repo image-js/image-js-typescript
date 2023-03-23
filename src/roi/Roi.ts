@@ -42,9 +42,6 @@ export class Roi {
 
   public surface: number;
 
-  public maxColumn: number;
-  public maxRow: number;
-
   private computed: {
     perimeter?: number;
     borderIDs?: number[];
@@ -65,8 +62,6 @@ export class Roi {
     fillRatio?: number;
     internalIDs?: number[];
     feret?: Feret;
-    maxRow?: number;
-    maxColumn?: number;
   };
 
   public constructor(map: RoiMap, id: number) {
@@ -75,8 +70,6 @@ export class Roi {
     this.origin = { row: map.height, column: map.width };
     this.width = 0;
     this.height = 0;
-    this.maxColumn = this.width + this.origin.column - 1;
-    this.maxRow = this.height + this.origin.row - 1;
     this.surface = 0;
     this.computed = {};
   }
@@ -624,8 +617,12 @@ function getBorders(roi: Roi): { ids: number[]; lengths: number[] } {
   let dx = [+1, 0, -1, 0];
   let dy = [0, +1, 0, -1];
 
-  for (let column = roi.origin.column; column <= roi.maxColumn; column++) {
-    for (let row = roi.origin.row; row <= roi.maxRow; row++) {
+  for (
+    let column = roi.origin.column;
+    column <= roi.origin.column + roi.width;
+    column++
+  ) {
+    for (let row = roi.origin.row; row <= roi.origin.row + roi.height; row++) {
       let target = column + row * roiMap.width;
       if (data[target] === roi.id) {
         for (let dir = 0; dir < 4; dir++) {
