@@ -47,7 +47,6 @@ export class Roi {
     perimeter?: number;
     borderIDs?: number[];
     perimeterInfo?: { one: number; two: number; three: number; four: number };
-    BoxIDs?: number[];
     externalLengths?: number[];
     borderLengths?: number[];
     box?: number;
@@ -59,7 +58,7 @@ export class Roi {
     ped?: number;
     externalIDs?: number[];
     roundness?: number;
-    convexHull?: { polyline: Point[]; surface: number; perimeter: number };
+    convexHull?: { points: Point[]; surface: number; perimeter: number };
     fillRatio?: number;
     internalIDs?: number[];
     feret?: Feret;
@@ -309,6 +308,13 @@ export class Roi {
     return this.surface / getConvexHull(this.getMask()).surface;
   }
 
+  get convexHull() {
+    if (!this.computed.convexHull) {
+      this.computed.convexHull = getConvexHull(this.getMask());
+    }
+    return this.computed.convexHull;
+  }
+
   get roundness() {
     /*Slide 24 https://static.horiba.com/fileadmin/Horiba/Products/Scientific/Particle_Characterization/Webinars/Slides/TE011.pdf */
     return (4 * this.surface) / (Math.PI * this.feret.maxDiameter.length ** 2);
@@ -352,6 +358,7 @@ export class Roi {
       external: this.external,
       borderLengths: this.borderLengths,
       boxIDs: this.boxIDs,
+      convexHull: this.convexHull,
     };
   }
 }
