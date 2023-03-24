@@ -3,16 +3,6 @@
 exports[`3x3 mask 1`] = `
 [
   {
-    "aspectRatio": 0.554700196225229,
-    "borderIDs": [
-      -1,
-    ],
-    "borderLengths": [
-      3,
-    ],
-    "boxIDs": [
-      -1,
-    ],
     "convexHull": {
       "perimeter": 9.23606797749979,
       "points": [
@@ -40,47 +30,40 @@ exports[`3x3 mask 1`] = `
       "surface": 5,
     },
     "eqpc": 2.256758334191025,
-    "external": 7,
-    "externalIDs": [
-      -1,
-    ],
-    "externalLengths": [
-      3,
-    ],
-    "feretDiameterMax": {
-      "angle": -33.690067525979785,
-      "length": 3.605551275463989,
-      "points": [
-        {
-          "column": 0,
-          "row": 2,
-        },
-        {
-          "column": 3,
-          "row": 0,
-        },
-      ],
-    },
-    "feretDiameterMin": {
-      "angle": 180,
-      "length": 1.9999999999999996,
-      "points": [
-        {
-          "column": 3,
-          "row": 0,
-        },
-        {
-          "column": 0,
-          "row": 2,
-        },
-      ],
+    "feret": {
+      "aspectRatio": 0.554700196225229,
+      "maxDiameter": {
+        "angle": -33.690067525979785,
+        "length": 3.605551275463989,
+        "points": [
+          {
+            "column": 0,
+            "row": 2,
+          },
+          {
+            "column": 3,
+            "row": 0,
+          },
+        ],
+      },
+      "minDiameter": {
+        "angle": 180,
+        "length": 1.9999999999999996,
+        "points": [
+          {
+            "column": 3,
+            "row": 0,
+          },
+          {
+            "column": 0,
+            "row": 2,
+          },
+        ],
+      },
     },
     "fillRatio": 1,
     "height": 2,
     "id": 1,
-    "internalIDs": [
-      1,
-    ],
     "mbr": {
       "angle": -0,
       "corners": [
@@ -108,12 +91,6 @@ exports[`3x3 mask 1`] = `
     },
     "ped": 2.0643291761037372,
     "perimeter": 6.485281374238571,
-    "perimeterInfo": {
-      "four": 0,
-      "one": 0,
-      "three": 2,
-      "two": 2,
-    },
     "roundness": 0.39176601376466547,
     "solidity": 0.8,
     "sphericity": 1.0932163146821783,
@@ -121,14 +98,6 @@ exports[`3x3 mask 1`] = `
     "width": 3,
   },
   {
-    "aspectRatio": 0.7071067811865475,
-    "borderIDs": [
-      -1,
-    ],
-    "borderLengths": [
-      2,
-    ],
-    "boxIDs": [],
     "convexHull": {
       "perimeter": 4,
       "points": [
@@ -152,47 +121,40 @@ exports[`3x3 mask 1`] = `
       "surface": 1,
     },
     "eqpc": 1.1283791670955126,
-    "external": 2,
-    "externalIDs": [
-      -1,
-    ],
-    "externalLengths": [
-      2,
-    ],
-    "feretDiameterMax": {
-      "angle": 45.00000000000001,
-      "length": 1.4142135623730951,
-      "points": [
-        {
-          "column": 0,
-          "row": 0,
-        },
-        {
-          "column": 1,
-          "row": 1,
-        },
-      ],
-    },
-    "feretDiameterMin": {
-      "angle": 90,
-      "length": 1,
-      "points": [
-        {
-          "column": 0,
-          "row": 0,
-        },
-        {
-          "column": 1,
-          "row": 0,
-        },
-      ],
+    "feret": {
+      "aspectRatio": 0.7071067811865475,
+      "maxDiameter": {
+        "angle": 45.00000000000001,
+        "length": 1.4142135623730951,
+        "points": [
+          {
+            "column": 0,
+            "row": 0,
+          },
+          {
+            "column": 1,
+            "row": 1,
+          },
+        ],
+      },
+      "minDiameter": {
+        "angle": 90,
+        "length": 1,
+        "points": [
+          {
+            "column": 0,
+            "row": 0,
+          },
+          {
+            "column": 1,
+            "row": 0,
+          },
+        ],
+      },
     },
     "fillRatio": 1,
     "height": 1,
     "id": 2,
-    "internalIDs": [
-      2,
-    ],
     "mbr": {
       "angle": 0,
       "corners": [
@@ -220,12 +182,6 @@ exports[`3x3 mask 1`] = `
     },
     "ped": 0.4501581580785531,
     "perimeter": 1.4142135623730951,
-    "perimeterInfo": {
-      "four": 0,
-      "one": 0,
-      "three": 0,
-      "two": 1,
-    },
     "roundness": 0.6366197723675812,
     "solidity": 1,
     "sphericity": 2.5066282746310002,
@@ -238,19 +194,6 @@ exports[`3x3 mask 1`] = `
 exports[`3x3 mask 2`] = `
 [
   {
-    "aspectRatio": 0.5547001962252291,
-    "borderIDs": [
-      1,
-      2,
-    ],
-    "borderLengths": [
-      3,
-      1,
-    ],
-    "boxIDs": [
-      1,
-      2,
-    ],
     "convexHull": {
       "perimeter": 8.82842712474619,
       "points": [
@@ -282,49 +225,40 @@ exports[`3x3 mask 2`] = `
       "surface": 5,
     },
     "eqpc": 2.256758334191025,
-    "external": 8,
-    "externalIDs": [
-      1,
-      2,
-    ],
-    "externalLengths": [
-      3,
-      1,
-    ],
-    "feretDiameterMax": {
-      "angle": -33.690067525979785,
-      "length": 3.605551275463989,
-      "points": [
-        {
-          "column": 0,
-          "row": 2,
-        },
-        {
-          "column": 3,
-          "row": 0,
-        },
-      ],
-    },
-    "feretDiameterMin": {
-      "angle": 0,
-      "length": 2,
-      "points": [
-        {
-          "column": 0,
-          "row": 2,
-        },
-        {
-          "column": 3,
-          "row": 0,
-        },
-      ],
+    "feret": {
+      "aspectRatio": 0.5547001962252291,
+      "maxDiameter": {
+        "angle": -33.690067525979785,
+        "length": 3.605551275463989,
+        "points": [
+          {
+            "column": 0,
+            "row": 2,
+          },
+          {
+            "column": 3,
+            "row": 0,
+          },
+        ],
+      },
+      "minDiameter": {
+        "angle": 0,
+        "length": 2,
+        "points": [
+          {
+            "column": 0,
+            "row": 2,
+          },
+          {
+            "column": 3,
+            "row": 0,
+          },
+        ],
+      },
     },
     "fillRatio": 1,
     "height": 2,
     "id": -1,
-    "internalIDs": [
-      -1,
-    ],
     "mbr": {
       "angle": -0,
       "corners": [
@@ -352,12 +286,6 @@ exports[`3x3 mask 2`] = `
     },
     "ped": 1.8006326323142123,
     "perimeter": 5.656854249492381,
-    "perimeterInfo": {
-      "four": 0,
-      "one": 1,
-      "three": 1,
-      "two": 2,
-    },
     "roundness": 0.39176601376466547,
     "solidity": 0.8,
     "sphericity": 1.2533141373155001,

@@ -42,7 +42,7 @@ export class Roi {
 
   public surface: number;
 
-  private computed: {
+  #computed: {
     perimeter?: number;
     borderIDs?: number[];
     perimeterInfo?: { one: number; two: number; three: number; four: number };
@@ -71,7 +71,7 @@ export class Roi {
     this.width = 0;
     this.height = 0;
     this.surface = 0;
-    this.computed = {};
+    this.#computed = {};
   }
   /**
    * Get the ROI map of the original image.
@@ -116,10 +116,10 @@ export class Roi {
    * Diameter of a circle of equal perimeter
    */
   get ped() {
-    if (!this.computed.ped) {
-      this.computed.ped = this.perimeter / Math.PI;
+    if (!this.#computed.ped) {
+      this.#computed.ped = this.perimeter / Math.PI;
     }
-    return this.computed.ped;
+    return this.#computed.ped;
   }
 
   /**
@@ -135,8 +135,8 @@ export class Roi {
 
   _computeBorderIDs(): void {
     let borders = getBorders(this);
-    this.computed.borderIDs = borders.ids;
-    this.computed.borderLengths = borders.lengths;
+    this.#computed.borderIDs = borders.ids;
+    this.#computed.borderLengths = borders.lengths;
   }
 
   /**
@@ -144,36 +144,36 @@ export class Roi {
    * This will be useful to know if there are some holes in the ROI.
    */
   get internalIDs() {
-    if (!this.computed.internalIDs) {
-      this.computed.internalIDs = getInternalIDs(this);
+    if (!this.#computed.internalIDs) {
+      this.#computed.internalIDs = getInternalIDs(this);
     }
-    return this.computed.internalIDs;
+    return this.#computed.internalIDs;
   }
 
   /**
    * Return an array of ROIs IDs that touch the current ROI.
    */
   get externalIDs(): number[] {
-    if (this.computed.externalIDs) {
-      return this.computed.externalIDs;
+    if (this.#computed.externalIDs) {
+      return this.#computed.externalIDs;
     }
     this.getExternalIDs();
-    return this.computed.externalIDs || [];
+    return this.#computed.externalIDs || [];
   }
 
   get externalLengths() {
-    if (!this.computed.externalLengths) {
+    if (!this.#computed.externalLengths) {
       this.getExternalIDs();
-      return this.computed.externalLengths;
+      return this.#computed.externalLengths;
     }
-    return this.computed.externalLengths;
+    return this.#computed.externalLengths;
   }
 
   get perimeterInfo() {
-    if (!this.computed.perimeterInfo) {
-      this.computed.perimeterInfo = getPerimeterInfo(this);
+    if (!this.#computed.perimeterInfo) {
+      this.#computed.perimeterInfo = getPerimeterInfo(this);
     }
-    return this.computed.perimeterInfo;
+    return this.#computed.perimeterInfo;
   }
 
   /**
@@ -195,7 +195,7 @@ export class Roi {
   }
 
   get points() {
-    if (!this.computed.points) {
+    if (!this.#computed.points) {
       let points = [];
       for (let row = 0; row < this.height; row++) {
         for (let column = 0; column < this.width; column++) {
@@ -208,39 +208,39 @@ export class Roi {
           }
         }
       }
-      this.computed.points = points;
+      this.#computed.points = points;
     }
-    return this.computed.points;
+    return this.#computed.points;
   }
   get boxIDs() {
-    if (!this.computed.boxIDs) {
-      this.computed.boxIDs = getBoxIDs(this);
+    if (!this.#computed.boxIDs) {
+      this.#computed.boxIDs = getBoxIDs(this);
     }
-    return this.computed.boxIDs;
+    return this.#computed.boxIDs;
   }
 
   /**
    * Returns the diameter of a circle of equal projection area
    */
   get eqpc() {
-    if (!this.computed.eqpc) {
-      this.computed.eqpc = 2 * Math.sqrt(this.surface / Math.PI);
+    if (!this.#computed.eqpc) {
+      this.#computed.eqpc = 2 * Math.sqrt(this.surface / Math.PI);
     }
-    return this.computed.eqpc;
+    return this.#computed.eqpc;
   }
 
   get external() {
-    if (!this.computed.external) {
-      this.computed.external = getExternal(this);
+    if (!this.#computed.external) {
+      this.#computed.external = getExternal(this);
     }
-    return this.computed.external;
+    return this.#computed.external;
   }
 
   get holesInfo() {
-    if (!this.computed.holesInfo) {
-      this.computed.holesInfo = getHolesInfo(this);
+    if (!this.#computed.holesInfo) {
+      this.#computed.holesInfo = getHolesInfo(this);
     }
-    return this.computed.holesInfo;
+    return this.#computed.holesInfo;
   }
 
   getExternalIDs(): void {
@@ -248,41 +248,41 @@ export class Roi {
     let borders = this.borderIDs;
     let lengths = this.borderLengths;
 
-    this.computed.externalLengths = [];
-    this.computed.externalIDs = [];
+    this.#computed.externalLengths = [];
+    this.#computed.externalIDs = [];
 
     let internals = this.internalIDs;
 
     for (let i = 0; i < borders.length; i++) {
       if (!internals.includes(borders[i])) {
-        this.computed.externalIDs.push(borders[i]);
-        this.computed.externalLengths.push(lengths[i]);
+        this.#computed.externalIDs.push(borders[i]);
+        this.#computed.externalLengths.push(lengths[i]);
       }
     }
   }
 
   get borderIDs() {
-    if (this.computed.borderIDs) {
-      return this.computed.borderIDs;
+    if (this.#computed.borderIDs) {
+      return this.#computed.borderIDs;
     }
     this._computeBorderIDs();
-    return this.computed.borderIDs || [];
+    return this.#computed.borderIDs || [];
   }
 
   get borderLengths(): number[] {
-    if (this.computed.borderLengths) {
-      return this.computed.borderLengths;
+    if (this.#computed.borderLengths) {
+      return this.#computed.borderLengths;
     }
     this._computeBorderIDs();
-    return this.computed.borderLengths || [];
+    return this.#computed.borderLengths || [];
   }
 
   get box() {
     // points of the Roi that touch the rectangular shape
-    if (!this.computed.box) {
-      this.computed.box = getBox(this);
+    if (!this.#computed.box) {
+      this.#computed.box = getBox(this);
     }
-    return this.computed.box;
+    return this.#computed.box;
   }
   /**
    * Getter that calculates fill ratio of the ROI
@@ -305,17 +305,17 @@ export class Roi {
   }
 
   get convexHull() {
-    if (!this.computed.convexHull) {
-      this.computed.convexHull = getConvexHull(this.getMask());
+    if (!this.#computed.convexHull) {
+      this.#computed.convexHull = getConvexHull(this.getMask());
     }
-    return this.computed.convexHull;
+    return this.#computed.convexHull;
   }
 
   get mbr() {
-    if (!this.computed.mbr) {
-      this.computed.mbr = getMbr(this.getMask());
+    if (!this.#computed.mbr) {
+      this.#computed.mbr = getMbr(this.getMask());
     }
-    return this.computed.mbr;
+    return this.#computed.mbr;
   }
 
   get roundness() {
@@ -328,10 +328,10 @@ export class Roi {
     maxDiameter: FeretDiameter;
     aspectRatio: number;
   } {
-    if (!this.computed.feret) {
-      this.computed.feret = getFeret(this.getMask());
+    if (!this.#computed.feret) {
+      this.#computed.feret = getFeret(this.getMask());
     }
-    return this.computed.feret;
+    return this.#computed.feret;
   }
   /**
    *
@@ -345,22 +345,12 @@ export class Roi {
       surface: this.surface,
       eqpc: this.eqpc,
       ped: this.ped,
-      feretDiameterMin: this.feret.minDiameter,
-      feretDiameterMax: this.feret.maxDiameter,
-      aspectRatio: this.feret.aspectRatio,
+      feret: this.feret,
       fillRatio: this.fillRatio,
       sphericity: this.sphericity,
       roundness: this.roundness,
       solidity: this.solidity,
       perimeter: this.perimeter,
-      perimeterInfo: this.perimeterInfo,
-      externalIDs: this.externalIDs,
-      externalLengths: this.externalLengths,
-      internalIDs: this.internalIDs,
-      borderIDs: this.borderIDs,
-      external: this.external,
-      borderLengths: this.borderLengths,
-      boxIDs: this.boxIDs,
       convexHull: this.convexHull,
       mbr: this.mbr,
     };
