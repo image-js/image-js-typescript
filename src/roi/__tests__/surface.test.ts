@@ -1,6 +1,7 @@
 import { fromMask } from '..';
 
-test('surface of a figure with a hole', () => {
+describe('ROI surface', () => {
+ it('surface of a figure with a hole', () => {
   const mask = testUtils.createMask([
     [0, 1, 1, 1],
     [0, 1, 0, 1],
@@ -12,7 +13,7 @@ test('surface of a figure with a hole', () => {
   expect(rois[0].surface).toStrictEqual(8);
 });
 
-test('surface of a slightly more complex figure', () => {
+it('surface of a slightly more complex figure', () => {
   const mask = testUtils.createMask([
     [0, 1, 1, 1, 0],
     [1, 0, 0, 1, 0],
@@ -25,7 +26,7 @@ test('surface of a slightly more complex figure', () => {
   expect(rois[0].surface).toStrictEqual(13);
 });
 
-test('surface on multiple ROIs', () => {
+it('surface on multiple ROIs', () => {
   const mask = testUtils.createMask([
     [0, 1, 1, 1, 0],
     [1, 0, 0, 0, 0],
@@ -38,4 +39,5 @@ test('surface on multiple ROIs', () => {
   expect(rois[0].surface).toStrictEqual(1);
   expect(rois[1].surface).toStrictEqual(3);
   expect(rois[2].surface).toStrictEqual(8);
+});
 });
