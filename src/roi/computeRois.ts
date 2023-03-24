@@ -13,8 +13,6 @@ export function computeRois(roiMapManager: RoiMapManager): void {
   const blacks = new Array(map.nbNegative);
   for (let i = 0; i < map.nbPositive; i++) {
     whites[i] = {
-      borderLengths: [],
-      borderIDs: [],
       minRow: map.height,
       minColumn: map.width,
       maxRow: -1,
