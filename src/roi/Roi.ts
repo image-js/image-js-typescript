@@ -3,7 +3,6 @@ import {
   GetBorderPointsOptions,
   getFeret,
   Feret,
-  FeretDiameter,
   getConvexHull,
   getMbr,
   Mbr,
@@ -14,6 +13,27 @@ import { RoiMap } from './RoiMapManager';
 import { getBorderPoints } from './getBorderPoints';
 import { getMask, GetMaskOptions } from './getMask';
 
+interface Computed {
+  perimeter?: number;
+  borderIDs?: number[];
+  perimeterInfo?: { one: number; two: number; three: number; four: number };
+  externalLengths?: number[];
+  borderLengths?: number[];
+  box?: number;
+  points?: number[][];
+  holesInfo?: { number: number; surface: number };
+  external?: number;
+  boxIDs?: number[];
+  eqpc?: number;
+  ped?: number;
+  externalIDs?: number[];
+  roundness?: number;
+  convexHull?: { points: Point[]; surface: number; perimeter: number };
+  mbr?: Mbr;
+  fillRatio?: number;
+  internalIDs?: number[];
+  feret?: Feret;
+}
 export class Roi {
   /**
    * Original map with all the ROI IDs.
@@ -42,27 +62,7 @@ export class Roi {
 
   public readonly surface: number;
 
-  #computed: {
-    perimeter?: number;
-    borderIDs?: number[];
-    perimeterInfo?: { one: number; two: number; three: number; four: number };
-    externalLengths?: number[];
-    borderLengths?: number[];
-    box?: number;
-    points?: number[][];
-    holesInfo?: { number: number; surface: number };
-    external?: number;
-    boxIDs?: number[];
-    eqpc?: number;
-    ped?: number;
-    externalIDs?: number[];
-    roundness?: number;
-    convexHull?: { points: Point[]; surface: number; perimeter: number };
-    mbr?: Mbr;
-    fillRatio?: number;
-    internalIDs?: number[];
-    feret?: Feret;
-  };
+  #computed: Computed;
 
   public constructor(
     map: RoiMap,
@@ -123,10 +123,9 @@ export class Roi {
    * Diameter of a circle of equal perimeter
    */
   get ped() {
-    if (!this.#computed.ped) {
-      this.#computed.ped = this.perimeter / Math.PI;
-    }
-    return this.#computed.ped;
+    return this.#getComputed('ped', () => {
+      return this.perimeter / Math.PI;
+    });
   }
 
   /**
@@ -140,10 +139,11 @@ export class Roi {
     return getBorderPoints(this, options);
   }
 
-  _computeBorderIDs(): void {
+  _computeBorderIDs(): { ids: number[]; lengths: number[] } {
     let borders = getBorders(this);
     this.#computed.borderIDs = borders.ids;
     this.#computed.borderLengths = borders.lengths;
+    return borders;
   }
 
   /**
@@ -151,6 +151,9 @@ export class Roi {
    * This will be useful to know if there are some holes in the ROI.
    */
   get internalIDs() {
+    // return this.#getComputed('internalIDs', () => {
+    //   return getInternalIDs(this);
+    // });
     if (!this.#computed.internalIDs) {
       this.#computed.internalIDs = getInternalIDs(this);
     }
@@ -168,7 +171,7 @@ export class Roi {
     return this.#computed.externalIDs || [];
   }
 
-  get externalLengths() {
+  private get externalLengths() {
     if (!this.#computed.externalLengths) {
       this.getExternalIDs();
       return this.#computed.externalLengths;
@@ -202,52 +205,62 @@ export class Roi {
   }
 
   get points() {
-    if (!this.#computed.points) {
-      let points = [];
-      for (let row = 0; row < this.height; row++) {
-        for (let column = 0; column < this.width; column++) {
-          let target =
-            (row + this.origin.row) * this.map.width +
-            column +
-            this.origin.column;
-          if (this.map.data[target] === this.id) {
-            points.push([column, row]);
+    return this.#getComputed('points', () => {
+      if (!this.#computed.points) {
+        let points = [];
+        for (let row = 0; row < this.height; row++) {
+          for (let column = 0; column < this.width; column++) {
+            let target =
+              (row + this.origin.row) * this.map.width +
+              column +
+              this.origin.column;
+            if (this.map.data[target] === this.id) {
+              points.push([column, row]);
+            }
           }
         }
+        this.#computed.points = points;
       }
-      this.#computed.points = points;
-    }
-    return this.#computed.points;
+      return this.#computed.points;
+    });
   }
   get boxIDs() {
-    if (!this.#computed.boxIDs) {
-      this.#computed.boxIDs = getBoxIDs(this);
-    }
-    return this.#computed.boxIDs;
+    return this.#getComputed('boxIDs', () => {
+      return getBoxIDs(this);
+    });
+    // if (!this.#computed.boxIDs) {
+    //   this.#computed.boxIDs = getBoxIDs(this);
+    // }
+    // return this.#computed.boxIDs;
   }
 
   /**
    * Returns the diameter of a circle of equal projection area
    */
   get eqpc() {
-    if (!this.#computed.eqpc) {
-      this.#computed.eqpc = 2 * Math.sqrt(this.surface / Math.PI);
-    }
-    return this.#computed.eqpc;
+    return this.#getComputed('eqpc', () => {
+      return 2 * Math.sqrt(this.surface / Math.PI);
+    });
   }
 
   get external() {
-    if (!this.#computed.external) {
-      this.#computed.external = getExternal(this);
-    }
-    return this.#computed.external;
+    return this.#getComputed('external', () => {
+      return getExternal(this);
+    });
+    // if (!this.#computed.external) {
+    //   this.#computed.external = getExternal(this);
+    // }
+    // return this.#computed.external;
   }
 
   get holesInfo() {
-    if (!this.#computed.holesInfo) {
-      this.#computed.holesInfo = getHolesInfo(this);
-    }
-    return this.#computed.holesInfo;
+    return this.#getComputed('holesInfo', () => {
+      return getHolesInfo(this);
+    });
+    // if (!this.#computed.holesInfo) {
+    //   this.#computed.holesInfo = getHolesInfo(this);
+    // }
+    // return this.#computed.holesInfo;
   }
 
   getExternalIDs(): void {
@@ -269,27 +282,36 @@ export class Roi {
   }
 
   get borderIDs() {
-    if (this.#computed.borderIDs) {
-      return this.#computed.borderIDs;
-    }
-    this._computeBorderIDs();
-    return this.#computed.borderIDs || [];
+    return this.#getComputed('borderIDs', () => {
+      return this._computeBorderIDs().ids;
+    });
+    // if (this.#computed.borderIDs) {
+    //   return this.#computed.borderIDs;
+    // }
+    // this._computeBorderIDs();
+    // return this.#computed.borderIDs || [];
   }
 
-  get borderLengths(): number[] {
-    if (this.#computed.borderLengths) {
-      return this.#computed.borderLengths;
-    }
-    this._computeBorderIDs();
-    return this.#computed.borderLengths || [];
+  get borderLengths() {
+    return this.#getComputed('borderLengths', () => {
+      return this._computeBorderIDs().lengths;
+    });
+    // if (this.#computed.borderLengths) {
+    //   return this.#computed.borderLengths;
+    // }
+    // this._computeBorderIDs();
+    // return this.#computed.borderLengths || [];
   }
 
-  get box() {
-    // points of the Roi that touch the rectangular shape
-    if (!this.#computed.box) {
-      this.#computed.box = getBox(this);
-    }
-    return this.#computed.box;
+  get box(): number {
+    return this.#getComputed('box', () => {
+      return getBox(this);
+    });
+    // // points of the Roi that touch the rectangular shape
+    // if (!this.#computed.box) {
+    //   this.#computed.box = getBox(this);
+    // }
+    // return this.#computed.box;
   }
   /**
    * Getter that calculates fill ratio of the ROI
@@ -312,17 +334,23 @@ export class Roi {
   }
 
   get convexHull() {
-    if (!this.#computed.convexHull) {
-      this.#computed.convexHull = getConvexHull(this.getMask());
-    }
-    return this.#computed.convexHull;
+    return this.#getComputed('convexHull', () => {
+      return getConvexHull(this.getMask());
+    });
+    // if (!this.#computed.convexHull) {
+    //   this.#computed.convexHull = getConvexHull(this.getMask());
+    // }
+    // return this.#computed.convexHull;
   }
 
   get mbr() {
-    if (!this.#computed.mbr) {
-      this.#computed.mbr = getMbr(this.getMask());
-    }
-    return this.#computed.mbr;
+    return this.#getComputed('mbr', () => {
+      return getMbr(this.getMask());
+    });
+    // if (!this.#computed.mbr) {s
+    //   this.#computed.mbr = getMbr(this.getMask());
+    // }
+    // return this.#computed.mbr;
   }
 
   get roundness() {
@@ -330,15 +358,14 @@ export class Roi {
     return (4 * this.surface) / (Math.PI * this.feret.maxDiameter.length ** 2);
   }
 
-  get feret(): {
-    minDiameter: FeretDiameter;
-    maxDiameter: FeretDiameter;
-    aspectRatio: number;
-  } {
-    if (!this.#computed.feret) {
-      this.#computed.feret = getFeret(this.getMask());
-    }
-    return this.#computed.feret;
+  get feret(): Feret {
+    return this.#getComputed('feret', () => {
+      return getFeret(this.getMask());
+    });
+    // if (!this.#computed.feret) {
+    //   this.#computed.feret = getFeret(this.getMask());
+    // }
+    // return this.#computed.feret;
   }
   /**
    *
@@ -362,7 +389,34 @@ export class Roi {
       mbr: this.mbr,
     };
   }
+
+  #getComputed<T extends keyof Computed>(
+    property: T,
+    callback: () => Exclude<Computed[T], undefined>,
+  ) {
+    const value: Computed[T] = this.#computed[property];
+    if (value === undefined) {
+      const result = callback();
+      this.#computed[property] = result;
+
+      return result;
+    } else {
+      return value as Exclude<Computed[T], undefined>;
+    }
+  }
 }
+
+/**
+ *
+ * @param value
+ * @param message
+ */
+export function assert(value: unknown, message?: string): asserts value {
+  if (!value) {
+    throw new Error(`unreachable${message ? `: ${message}` : ''}`);
+  }
+}
+
 /**
  *
  * @param roi -ROI
