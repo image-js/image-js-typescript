@@ -22,25 +22,25 @@ export class Roi {
   /**
    * ID of the ROI. Positive for white ROIs and negative for black ones.
    */
-  public id: number;
+  public readonly id: number;
   /**
    * Origin of the ROI. The top-left corner of the rectangle around
    * the ROI relative to the original image.
    */
-  public origin: Point;
+  public readonly origin: Point;
   /**
    * Width of the ROI.
    */
-  public width: number;
+  public readonly width: number;
   /**
    * Height of the ROI.
    */
-  public height: number;
+  public readonly height: number;
   /**
    * Surface of the ROI.
    */
 
-  public surface: number;
+  public readonly surface: number;
 
   #computed: {
     perimeter?: number;
@@ -64,13 +64,20 @@ export class Roi {
     feret?: Feret;
   };
 
-  public constructor(map: RoiMap, id: number) {
+  public constructor(
+    map: RoiMap,
+    id: number,
+    width: number,
+    height: number,
+    origin: { row: number; column: number },
+    surface: number,
+  ) {
     this.map = map;
     this.id = id;
-    this.origin = { row: map.height, column: map.width };
-    this.width = 0;
-    this.height = 0;
-    this.surface = 0;
+    this.origin = origin;
+    this.width = width;
+    this.height = height;
+    this.surface = surface;
     this.#computed = {};
   }
   /**
