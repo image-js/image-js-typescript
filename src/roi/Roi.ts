@@ -14,25 +14,25 @@ import { getBorderPoints } from './getBorderPoints';
 import { getMask, GetMaskOptions } from './getMask';
 
 interface Computed {
-  perimeter?: number;
-  borderIDs?: number[];
-  perimeterInfo?: { one: number; two: number; three: number; four: number };
-  externalLengths?: number[];
-  borderLengths?: number[];
-  box?: number;
-  points?: number[][];
-  holesInfo?: { number: number; surface: number };
-  external?: number;
-  boxIDs?: number[];
-  eqpc?: number;
-  ped?: number;
-  externalIDs?: number[];
-  roundness?: number;
-  convexHull?: { points: Point[]; surface: number; perimeter: number };
-  mbr?: Mbr;
-  fillRatio?: number;
-  internalIDs?: number[];
-  feret?: Feret;
+  perimeter: number;
+  borderIDs: number[];
+  perimeterInfo: { one: number; two: number; three: number; four: number };
+  externalLengths: number[];
+  borderLengths: number[];
+  box: number;
+  points: number[][];
+  holesInfo: { number: number; surface: number };
+  external: number;
+  boxIDs: number[];
+  eqpc: number;
+  ped: number;
+  externalIDs: number[];
+  roundness: number;
+  convexHull: { points: Point[]; surface: number; perimeter: number };
+  mbr: Mbr;
+  fillRatio: number;
+  internalIDs: number[];
+  feret: Feret;
 }
 export class Roi {
   /**
@@ -62,7 +62,7 @@ export class Roi {
 
   public readonly surface: number;
 
-  #computed: Computed;
+  #computed: Partial<Computed>;
 
   public constructor(
     map: RoiMap,
@@ -151,19 +151,22 @@ export class Roi {
    * This will be useful to know if there are some holes in the ROI.
    */
   get internalIDs() {
-    // return this.#getComputed('internalIDs', () => {
-    //   return getInternalIDs(this);
-    // });
-    if (!this.#computed.internalIDs) {
-      this.#computed.internalIDs = getInternalIDs(this);
-    }
-    return this.#computed.internalIDs;
+    return this.#getComputed('internalIDs', () => {
+      return getInternalIDs(this);
+    });
+    // if (!this.#computed.internalIDs) {
+    //   this.#computed.internalIDs = getInternalIDs(this);
+    // }
+    // return this.#computed.internalIDs;
   }
 
   /**
    * Return an array of ROIs IDs that touch the current ROI.
    */
   get externalIDs(): number[] {
+    // return this.#getComputed('externalIDs', () => {
+    //   return this.getExternalIDs().borders;
+    // });
     if (this.#computed.externalIDs) {
       return this.#computed.externalIDs;
     }
@@ -172,6 +175,9 @@ export class Roi {
   }
 
   private get externalLengths() {
+    // return this.#getComputed('externalLengths', () => {
+    //   return this.getExternalIDs().lengths;
+    // });
     if (!this.#computed.externalLengths) {
       this.getExternalIDs();
       return this.#computed.externalLengths;
@@ -263,7 +269,7 @@ export class Roi {
     // return this.#computed.holesInfo;
   }
 
-  getExternalIDs(): void {
+  getExternalIDs(): { borders: number[]; lengths: number[] } {
     // take all the borders and remove the internal one ...
     let borders = this.borderIDs;
     let lengths = this.borderLengths;
@@ -279,6 +285,7 @@ export class Roi {
         this.#computed.externalLengths.push(lengths[i]);
       }
     }
+    return { borders, lengths };
   }
 
   get borderIDs() {
@@ -392,17 +399,14 @@ export class Roi {
 
   #getComputed<T extends keyof Computed>(
     property: T,
-    callback: () => Exclude<Computed[T], undefined>,
-  ) {
-    const value: Computed[T] = this.#computed[property];
-    if (value === undefined) {
-      const result = callback();
+    callback: () => Computed[T],
+  ): Computed[T] {
+    if (this.#computed[property] === undefined) {
+      let result = callback();
       this.#computed[property] = result;
-
       return result;
-    } else {
-      return value as Exclude<Computed[T], undefined>;
     }
+    return this.#computed[property] as Computed[T];
   }
 }
 

@@ -10,7 +10,7 @@ test('external lengths property 5x5', () => {
   ]);
   const roiMapManager = fromMask(mask);
   const rois = roiMapManager.getRois();
-
+  // @ts-expect-error want to test the private field
   expect(rois[0].externalLengths).toStrictEqual([2, 7]);
 });
 
@@ -23,5 +23,6 @@ test('external lengths property 4x4', () => {
   ]);
   const roiMapManager = fromMask(mask);
   const rois = roiMapManager.getRois();
+  // @ts-expect-error want to test the private field
   expect(rois[0].externalLengths).toStrictEqual([6]);
 });
