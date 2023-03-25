@@ -381,6 +381,7 @@ export class Roi {
   toJSON() {
     return {
       id: this.id,
+      origin: this.origin,
       height: this.height,
       width: this.width,
       surface: this.surface,
