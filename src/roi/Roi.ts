@@ -69,7 +69,7 @@ export class Roi {
     id: number,
     width: number,
     height: number,
-    origin: { row: number; column: number },
+    origin: Point,
     surface: number,
   ) {
     this.map = map;
