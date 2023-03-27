@@ -212,21 +212,20 @@ export class Roi {
 
   get points() {
     return this.#getComputed('points', () => {
-      if (!this.#computed.points) {
-        let points = [];
-        for (let row = 0; row < this.height; row++) {
-          for (let column = 0; column < this.width; column++) {
-            let target =
-              (row + this.origin.row) * this.map.width +
-              column +
-              this.origin.column;
-            if (this.map.data[target] === this.id) {
-              points.push([column, row]);
-            }
+      let points = [];
+      for (let row = 0; row < this.height; row++) {
+        for (let column = 0; column < this.width; column++) {
+          let target =
+            (row + this.origin.row) * this.map.width +
+            column +
+            this.origin.column;
+          if (this.map.data[target] === this.id) {
+            points.push([column, row]);
           }
         }
-        this.#computed.points = points;
       }
+      this.#computed.points = points;
+
       return this.#computed.points;
     });
   }
