@@ -89,6 +89,10 @@ exports[`3x3 mask 1`] = `
       "surface": 5.999999999999999,
       "width": 2,
     },
+    "origin": {
+      "column": 0,
+      "row": 0,
+    },
     "ped": 2.0643291761037372,
     "perimeter": 6.485281374238571,
     "roundness": 0.39176601376466547,
@@ -179,6 +183,10 @@ exports[`3x3 mask 1`] = `
       "perimeter": 4,
       "surface": 1,
       "width": 1,
+    },
+    "origin": {
+      "column": 2,
+      "row": 2,
     },
     "ped": 0.4501581580785531,
     "perimeter": 1.4142135623730951,
@@ -283,6 +291,10 @@ exports[`3x3 mask 2`] = `
       "perimeter": 10,
       "surface": 5.999999999999999,
       "width": 2,
+    },
+    "origin": {
+      "column": 0,
+      "row": 1,
     },
     "ped": 1.8006326323142123,
     "perimeter": 5.656854249492381,

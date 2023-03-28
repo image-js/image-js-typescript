@@ -154,35 +154,26 @@ export class Roi {
     return this.#getComputed('internalIDs', () => {
       return getInternalIDs(this);
     });
-    // if (!this.#computed.internalIDs) {
-    //   this.#computed.internalIDs = getInternalIDs(this);
-    // }
-    // return this.#computed.internalIDs;
   }
 
   /**
    * Return an array of ROIs IDs that touch the current ROI.
    */
   get externalIDs(): number[] {
-    // return this.#getComputed('externalIDs', () => {
-    //   return this.getExternalIDs().borders;
-    // });
-    if (this.#computed.externalIDs) {
-      return this.#computed.externalIDs;
-    }
-    this.getExternalIDs();
-    return this.#computed.externalIDs || [];
+    return this.#getComputed('externalIDs', () => {
+      return this.getExternalIDs().externalIDs;
+    });
   }
 
   private get externalLengths() {
-    // return this.#getComputed('externalLengths', () => {
-    //   return this.getExternalIDs().lengths;
-    // });
-    if (!this.#computed.externalLengths) {
-      this.getExternalIDs();
-      return this.#computed.externalLengths;
-    }
-    return this.#computed.externalLengths;
+    return this.#getComputed('externalLengths', () => {
+      return this.getExternalIDs().externalLengths;
+    });
+    // if (!this.#computed.externalLengths) {
+    //   this.getExternalIDs();
+    //   return this.#computed.externalLengths;
+    // }
+    // return this.#computed.externalLengths;
   }
 
   get perimeterInfo() {
@@ -233,10 +224,6 @@ export class Roi {
     return this.#getComputed('boxIDs', () => {
       return getBoxIDs(this);
     });
-    // if (!this.#computed.boxIDs) {
-    //   this.#computed.boxIDs = getBoxIDs(this);
-    // }
-    // return this.#computed.boxIDs;
   }
 
   /**
@@ -252,23 +239,15 @@ export class Roi {
     return this.#getComputed('external', () => {
       return getExternal(this);
     });
-    // if (!this.#computed.external) {
-    //   this.#computed.external = getExternal(this);
-    // }
-    // return this.#computed.external;
   }
 
   get holesInfo() {
     return this.#getComputed('holesInfo', () => {
       return getHolesInfo(this);
     });
-    // if (!this.#computed.holesInfo) {
-    //   this.#computed.holesInfo = getHolesInfo(this);
-    // }
-    // return this.#computed.holesInfo;
   }
 
-  getExternalIDs(): { borders: number[]; lengths: number[] } {
+  getExternalIDs(): { externalIDs: number[]; externalLengths: number[] } {
     // take all the borders and remove the internal one ...
     let borders = this.borderIDs;
     let lengths = this.borderLengths;
@@ -284,40 +263,27 @@ export class Roi {
         this.#computed.externalLengths.push(lengths[i]);
       }
     }
-    return { borders, lengths };
+    const externalIDs = this.#computed.externalIDs;
+    const externalLengths = this.#computed.externalLengths;
+    return { externalIDs, externalLengths };
   }
 
   get borderIDs() {
     return this.#getComputed('borderIDs', () => {
       return this._computeBorderIDs().ids;
     });
-    // if (this.#computed.borderIDs) {
-    //   return this.#computed.borderIDs;
-    // }
-    // this._computeBorderIDs();
-    // return this.#computed.borderIDs || [];
   }
 
   get borderLengths() {
     return this.#getComputed('borderLengths', () => {
       return this._computeBorderIDs().lengths;
     });
-    // if (this.#computed.borderLengths) {
-    //   return this.#computed.borderLengths;
-    // }
-    // this._computeBorderIDs();
-    // return this.#computed.borderLengths || [];
   }
 
   get box(): number {
     return this.#getComputed('box', () => {
       return getBox(this);
     });
-    // // points of the Roi that touch the rectangular shape
-    // if (!this.#computed.box) {
-    //   this.#computed.box = getBox(this);
-    // }
-    // return this.#computed.box;
   }
   /**
    * Getter that calculates fill ratio of the ROI
@@ -343,20 +309,12 @@ export class Roi {
     return this.#getComputed('convexHull', () => {
       return getConvexHull(this.getMask());
     });
-    // if (!this.#computed.convexHull) {
-    //   this.#computed.convexHull = getConvexHull(this.getMask());
-    // }
-    // return this.#computed.convexHull;
   }
 
   get mbr() {
     return this.#getComputed('mbr', () => {
       return getMbr(this.getMask());
     });
-    // if (!this.#computed.mbr) {s
-    //   this.#computed.mbr = getMbr(this.getMask());
-    // }
-    // return this.#computed.mbr;
   }
 
   get roundness() {
@@ -368,10 +326,6 @@ export class Roi {
     return this.#getComputed('feret', () => {
       return getFeret(this.getMask());
     });
-    // if (!this.#computed.feret) {
-    //   this.#computed.feret = getFeret(this.getMask());
-    // }
-    // return this.#computed.feret;
   }
   /**
    *
