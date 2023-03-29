@@ -169,11 +169,6 @@ export class Roi {
     return this.#getComputed('externalLengths', () => {
       return this.getExternalIDs().externalLengths;
     });
-    // if (!this.#computed.externalLengths) {
-    //   this.getExternalIDs();
-    //   return this.#computed.externalLengths;
-    // }
-    // return this.#computed.externalLengths;
   }
 
   get perimeterInfo() {
@@ -235,12 +230,6 @@ export class Roi {
     });
   }
 
-  get external() {
-    return this.#getComputed('external', () => {
-      return getExternal(this);
-    });
-  }
-
   get holesInfo() {
     return this.#getComputed('holesInfo', () => {
       return getHolesInfo(this);
@@ -277,12 +266,6 @@ export class Roi {
   get borderLengths() {
     return this.#getComputed('borderLengths', () => {
       return this._computeBorderIDs().lengths;
-    });
-  }
-
-  get box(): number {
-    return this.#getComputed('box', () => {
-      return getBox(this);
     });
   }
   /**
@@ -371,17 +354,6 @@ export class Roi {
 
 /**
  *
- * @param value
- * @param message
- */
-export function assert(value: unknown, message?: string): asserts value {
-  if (!value) {
-    throw new Error(`unreachable${message ? `: ${message}` : ''}`);
-  }
-}
-
-/**
- *
  * @param roi -ROI
  * @returns object which tells how many pixels are exposed externally to how many sides
  */
@@ -440,30 +412,6 @@ function getPerimeterInfo(roi: Roi) {
     }
   }
   return { one, two, three, four };
-}
-
-function getExternal(roi: Roi) {
-  let total = 0;
-  let roiMap = roi.getMap();
-  let data = roiMap.data;
-
-  for (let column = 0; column < roi.width; column++) {
-    for (let row = 0; row < roi.height; row++) {
-      let target = roi.computeIndex(row, column);
-      if (data[target] === roi.id) {
-        // if a point around is not roi.id it is a border
-        if (
-          roi.externalIDs.includes(data[target - 1]) ||
-          roi.externalIDs.includes(data[target + 1]) ||
-          roi.externalIDs.includes(data[target - roiMap.width]) ||
-          roi.externalIDs.includes(data[target + roiMap.width])
-        ) {
-          total++;
-        }
-      }
-    }
-  }
-  return total + roi.box;
 }
 
 /**
@@ -528,38 +476,6 @@ function getInternalIDs(roi: Roi) {
   }
 
   return internal;
-}
-function getBox(roi: Roi) {
-  let total = 0;
-  let roiMap = roi.getMap();
-  let data = roiMap.data;
-
-  let topBottom = [0];
-  if (roi.height > 1) {
-    topBottom[1] = roi.height - 1;
-  }
-  for (let row of topBottom) {
-    for (let column = 1; column < roi.width - 1; column++) {
-      let target = roi.computeIndex(row, column);
-      if (data[target] === roi.id) {
-        total++;
-      }
-    }
-  }
-
-  let leftRight = [0];
-  if (roi.width > 1) {
-    leftRight[1] = roi.width - 1;
-  }
-  for (let column of leftRight) {
-    for (let row = 0; row < roi.height; row++) {
-      let target = roi.computeIndex(row, column);
-      if (data[target] === roi.id) {
-        total++;
-      }
-    }
-  }
-  return total;
 }
 
 function getBoxIDs(roi: Roi): number[] {
