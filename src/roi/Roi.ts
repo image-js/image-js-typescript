@@ -140,7 +140,7 @@ export class Roi {
   }
 
   _computeBorderIDs(): { ids: number[]; lengths: number[] } {
-    let borders = getBorders(this);
+    const borders = getBorders(this);
     this.#computed.borderIDs = borders.ids;
     this.#computed.borderLengths = borders.lengths;
     return borders;
@@ -186,7 +186,7 @@ export class Roi {
    */
   get perimeter() {
     let info = this.perimeterInfo;
-    let delta = 2 - Math.sqrt(2);
+    const delta = 2 - Math.sqrt(2);
     return (
       info.one +
       info.two * 2 +
@@ -339,7 +339,7 @@ export class Roi {
     callback: () => Computed[T],
   ): Computed[T] {
     if (this.#computed[property] === undefined) {
-      let result = callback();
+      const result = callback();
       this.#computed[property] = result;
       return result;
     }
@@ -358,8 +358,8 @@ export class Roi {
  * @returns object which tells how many pixels are exposed externally to how many sides
  */
 function getPerimeterInfo(roi: Roi) {
-  let roiMap = roi.getMap();
-  let data = roiMap.data;
+  const roiMap = roi.getMap();
+  const data = roiMap.data;
   let one = 0;
   let two = 0;
   let three = 0;
@@ -421,7 +421,7 @@ function getPerimeterInfo(roi: Roi) {
  */
 function getHolesInfo(roi: Roi) {
   let surface = 0;
-  let data = roi.getMap().data;
+  const data = roi.getMap().data;
   for (let column = 1; column < roi.width - 1; column++) {
     for (let row = 1; row < roi.height - 1; row++) {
       let target = roi.computeIndex(row, column);
@@ -481,8 +481,8 @@ function getInternalIDs(roi: Roi) {
 function getBoxIDs(roi: Roi): number[] {
   let surroundingIDs = new Set<number>(); // allows to get a unique list without indexOf
 
-  let roiMap = roi.getMap();
-  let data = roiMap.data;
+  const roiMap = roi.getMap();
+  const data = roiMap.data;
 
   // we check the first line and the last line
   for (let row of [0, roi.height - 1]) {
@@ -539,8 +539,8 @@ function getBoxIDs(roi: Roi): number[] {
  * @returns borders' length and their IDs
  */
 function getBorders(roi: Roi): { ids: number[]; lengths: number[] } {
-  let roiMap = roi.getMap();
-  let data = roiMap.data;
+  const roiMap = roi.getMap();
+  const data = roiMap.data;
   let surroudingIDs = new Set<number>(); // allows to get a unique list without indexOf
   let surroundingBorders = new Map();
   let visitedData = new Set();
