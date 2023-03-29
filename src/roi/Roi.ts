@@ -450,28 +450,6 @@ function getInternalIDs(roi: Roi) {
     }
   }
 
-  let array = new Array(4);
-  for (let column = 1; column < roi.width - 1; column++) {
-    for (let row = 1; row < roi.height - 1; row++) {
-      let target = roi.computeIndex(row, column);
-      if (internal.includes(data[target])) {
-        // we check if one of the neighbour is not yet in
-
-        array[0] = data[target - 1];
-        array[1] = data[target + 1];
-        array[2] = data[target - roiMap.width];
-        array[3] = data[target + roiMap.width];
-
-        for (let i = 0; i < 4; i++) {
-          let id = array[i];
-          if (!internal.includes(id) && !roi.boxIDs.includes(id)) {
-            internal.push(id);
-          }
-        }
-      }
-    }
-  }
-
   return internal;
 }
 
