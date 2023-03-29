@@ -165,12 +165,6 @@ export class Roi {
     });
   }
 
-  private get externalLengths() {
-    return this.#getComputed('externalLengths', () => {
-      return this.getExternalIDs().externalLengths;
-    });
-  }
-
   get perimeterInfo() {
     if (!this.#computed.perimeterInfo) {
       this.#computed.perimeterInfo = getPerimeterInfo(this);
@@ -236,7 +230,10 @@ export class Roi {
     });
   }
 
-  getExternalIDs(): { externalIDs: number[]; externalLengths: number[] } {
+  getExternalIDs(): {
+    externalIDs: number[];
+    externalLengths: number[];
+  } {
     // take all the borders and remove the internal one ...
     let borders = this.borderIDs;
     let lengths = this.borderLengths;
