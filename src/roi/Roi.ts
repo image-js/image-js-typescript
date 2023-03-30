@@ -138,7 +138,7 @@ export class Roi {
   public getBorderPoints(options?: GetBorderPointsOptions): Array<Point> {
     return getBorderPoints(this, options);
   }
-
+  //TODO The ids and length should be in one computed property which returns an array of {id: number, length: number}
   _computeBorderIDs(): { ids: number[]; lengths: number[] } {
     const borders = getBorders(this);
     this.#computed.borderIDs = borders.ids;
@@ -155,6 +155,7 @@ export class Roi {
       return getInternalIDs(this);
     });
   }
+  //TODO externalIds should be an array of {id: number, length: number}
 
   /**
    * Return an array of ROIs IDs that touch the current ROI.
@@ -164,7 +165,7 @@ export class Roi {
       return this.getExternalIDs().externalIDs;
     });
   }
-
+  //TODO Use #getComputed
   get perimeterInfo() {
     if (!this.#computed.perimeterInfo) {
       this.#computed.perimeterInfo = getPerimeterInfo(this);
@@ -204,9 +205,7 @@ export class Roi {
           }
         }
       }
-      this.#computed.points = points;
-
-      return this.#computed.points;
+      return points;
     });
   }
   get boxIDs() {
@@ -253,7 +252,7 @@ export class Roi {
     const externalLengths = this.#computed.externalLengths;
     return { externalIDs, externalLengths };
   }
-
+  //TODO Should be merged together in one borders property
   get borderIDs() {
     return this.#getComputed('borderIDs', () => {
       return this._computeBorderIDs().ids;
@@ -284,7 +283,7 @@ export class Roi {
   get solidity() {
     return this.surface / getConvexHull(this.getMask()).surface;
   }
-
+  //TODO Should be refactored to not need creating a new Mask
   get convexHull() {
     return this.#getComputed('convexHull', () => {
       return getConvexHull(this.getMask());
@@ -342,7 +341,7 @@ export class Roi {
     }
     return this.#computed[property] as Computed[T];
   }
-
+  //TODO Make this private
   computeIndex(y: number, x: number): number {
     const roiMap = this.getMap();
     return (y + this.origin.row) * roiMap.width + x + this.origin.column;
