@@ -165,12 +165,10 @@ export class Roi {
       return this.getExternalIDs().externalIDs;
     });
   }
-  //TODO Use #getComputed
   get perimeterInfo() {
-    if (!this.#computed.perimeterInfo) {
-      this.#computed.perimeterInfo = getPerimeterInfo(this);
-    }
-    return this.#computed.perimeterInfo;
+    return this.#getComputed('perimeterInfo', () => {
+      return getPerimeterInfo(this);
+    });
   }
 
   /**
