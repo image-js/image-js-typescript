@@ -1,5 +1,5 @@
 import { Image } from '../../Image';
-import { getAngle } from '../../maskAnalysis/utils/getAngle';
+import { getClockwiseAngle } from '../../maskAnalysis/utils/getAngle';
 import { toDegrees } from '../../utils/geometry/angles';
 import { getRadius } from '../../utils/getRadius';
 import { checkBorderDistance } from '../utils/checkBorderDistance';
@@ -14,16 +14,16 @@ import { getPatchIntensityCentroid } from './getPatchIntensityCentroid';
 export interface GetOrientedFastKeypointsOptions
   extends GetFastKeypointsOptions {
   /**
-   * Window size for the intensity centroid computation.
+   * Diameter of the circle used for compotuation of the intensity centroid.
    *
    * @default 7
    */
-  windowSize?: number;
+  centroidPatchDiameter?: number;
 }
 
 export interface OrientedFastKeypoint extends FastKeypoint {
   /**
-   * Clockwise angle of the keypoint in degrees with regard to a horizontal line.
+   * Orientation of the keypoint defined as the angle in degrees between the x axis , the keypoints origin and the center of mass of the keypoint.
    */
   angle: number;
 }
@@ -42,26 +42,27 @@ export function getOrientedFastKeypoints(
   image: Image,
   options: GetOrientedFastKeypointsOptions = {},
 ): OrientedFastKeypoint[] {
-  const { windowSize = 7 } = options;
+  const { centroidPatchDiameter: windowSize = 7 } = options;
 
   const fastKeypoints = getFastKeypoints(image, options);
 
-  const borderDistance = getRadius(windowSize);
+  const radius = getRadius(windowSize);
 
   // handle edge cases: remove keypoints too close to border
-  for (let i = 0; i < fastKeypoints.length; i++) {
-    if (!checkBorderDistance(image, fastKeypoints[i].origin, borderDistance)) {
-      fastKeypoints.splice(i, 1);
+  let keypoints: FastKeypoint[] = [];
+  for (let keypoint of fastKeypoints) {
+    if (checkBorderDistance(image, keypoint.origin, radius)) {
+      keypoints.push(keypoint);
     }
   }
 
   let orientedFastKeypoints: OrientedFastKeypoint[] = [];
-  for (let keypoint of fastKeypoints) {
+  for (let keypoint of keypoints) {
     const centroid = getPatchIntensityCentroid(image, {
-      origin: keypoint.origin,
-      radius: borderDistance,
+      center: keypoint.origin,
+      radius,
     })[0];
-    const angle = toDegrees(getAngle({ column: 0, row: 0 }, centroid));
+    const angle = toDegrees(getClockwiseAngle({ column: 0, row: 0 }, centroid));
     orientedFastKeypoints.push({ ...keypoint, angle });
   }
   return orientedFastKeypoints;

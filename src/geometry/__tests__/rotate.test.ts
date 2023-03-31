@@ -1,106 +1,49 @@
 import { rotate } from '..';
-import { ImageColorModel, ImageCoordinates } from '../../Image';
-import { encodePng } from '../../save';
-import { BorderType } from '../../utils/interpolateBorder';
-import { InterpolationType } from '../../utils/interpolatePixel';
 
-test('rotate + scale compared to opencv (nearest)', () => {
-  const img = testUtils.load('opencv/test.png');
-  const rotated = img.rotate(30, {
-    scale: 0.8,
-    borderType: BorderType.REFLECT,
-    interpolationType: InterpolationType.NEAREST,
-    center: { column: 2, row: 4 },
-  });
+const image = testUtils.createGreyImage(`
+ 1 2 3
+ 4 5 6
+`);
 
-  expect(rotated).toMatchImage('opencv/testRotate.png');
+test('rotate by 90 degrees', () => {
+  const rotated = rotate(image, 90);
+
+  expect(rotated).toMatchImageData(`
+   4 1
+   5 2
+   6 3
+  `);
 });
 
-test('rotate + scale compared to opencv (bilinear)', () => {
-  const img = testUtils.load('opencv/test.png');
+test('rotate by 180 degrees', () => {
+  const rotated = rotate(image, 180);
 
-  const rotated = rotate(img, 30, {
-    scale: 1.4,
-    borderType: BorderType.REFLECT,
-    interpolationType: InterpolationType.BILINEAR,
-    center: { column: 2, row: 4 },
-  });
-  expect(rotated).toMatchImage('opencv/testRotateBilinear.png', { error: 5 });
+  expect(rotated).toMatchImageData(`
+   6 5 4
+   3 2 1
+  `);
 });
 
-test('rotate + scale compared to opencv (bicubic)', () => {
-  const img = testUtils.load('opencv/test.png');
+test('rotate by 270 degrees', () => {
+  const rotated = rotate(image, 270);
 
-  const rotated = rotate(img, 30, {
-    scale: 1.4,
-    borderType: BorderType.REFLECT,
-    interpolationType: InterpolationType.BICUBIC,
-    center: { column: 2, row: 4 },
-  });
-
-  expect(rotated).toMatchImage('opencv/testRotateBicubic.png', { error: 13 });
+  expect(rotated).toMatchImageData(`
+   3 6
+   2 5
+   1 4
+  `);
 });
 
-test('default options', () => {
-  const img = testUtils.load('opencv/test.png');
-  const rotated = img.rotate(90);
+test('with an rgb image', () => {
+  const image = testUtils.createRgbImage(`
+   1 2 3 | 4 5 6
+   7 8 9 | 10 11 12
+  `);
 
-  const rotatedAroundCenter = img.rotate(90, {
-    center: ImageCoordinates.CENTER,
-  });
+  const rotated = rotate(image, 90);
 
-  expect(rotated).toMatchImage(rotatedAroundCenter);
-});
-
-test('coordinates as a string', () => {
-  const img = testUtils.load('opencv/test.png');
-  const rotated = img.rotate(90, {
-    center: { column: 3.5, row: 4.5 },
-  });
-
-  const rotatedAroundCenter = img.rotate(90, {
-    center: ImageCoordinates.CENTER,
-  });
-
-  expect(rotated).toMatchImage(rotatedAroundCenter);
-});
-
-test('rotate around corner', () => {
-  const img = testUtils.load('opencv/test.png');
-  const rotated = img.rotate(15, {
-    center: ImageCoordinates.BOTTOM_LEFT,
-  });
-
-  const png = Buffer.from(
-    encodePng(rotated.convertColor(ImageColorModel.GREY)),
-  );
-
-  expect(png).toMatchImageSnapshot();
-});
-
-test('rotate around center', () => {
-  const img = testUtils.load('opencv/test.png');
-  const rotated = img.rotate(90, {
-    center: ImageCoordinates.CENTER,
-  });
-
-  const png = Buffer.from(
-    encodePng(rotated.convertColor(ImageColorModel.GREY)),
-  );
-
-  expect(png).toMatchImageSnapshot();
-});
-
-test('fullImage option', () => {
-  const img = testUtils.load('opencv/test.png');
-  const rotated = img.rotate(15, {
-    center: ImageCoordinates.BOTTOM_LEFT,
-    fullImage: true,
-  });
-
-  const png = Buffer.from(
-    encodePng(rotated.convertColor(ImageColorModel.GREY)),
-  );
-
-  expect(png).toMatchImageSnapshot();
+  expect(rotated).toMatchImageData(`
+    7 8 9 | 1 2 3
+    10 11 12 | 4 5 6
+  `);
 });

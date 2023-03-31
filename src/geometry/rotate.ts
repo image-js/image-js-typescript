@@ -1,100 +1,64 @@
-import { Image, ImageCoordinates } from '../Image';
-import { Point } from '../utils/geometry/points';
-import { BorderType } from '../utils/interpolateBorder';
-import { InterpolationType } from '../utils/interpolatePixel';
+import { Image } from '../Image';
 
-import { transform } from './transform';
-
-export interface RotateOptions {
-  /**
-   * Specify the rotation center point as a predefined string or a Point.
-   *
-   * @default The center of the image.
-   */
-  center?: ImageCoordinates | Point;
-  /**
-   * Scaling factor for the rotated image.
-   *
-   * @default 1
-   */
-  scale?: number;
-  /**
-   * Width of the final image.
-   */
-  width?: number;
-  /**
-   * Height of the final image.
-   */
-  height?: number;
-  /*
-    Bypasses width, height, and center options to include
-    every pixel of the original image inside the rotated image
-  */
-  fullImage?: boolean;
-  /**
-   * Method to use to interpolate the new pixels
-   *
-   * @default InterpolationType.BILINEAR
-   */
-  interpolationType?: InterpolationType;
-  /**
-   * Specify how the borders should be handled.
-   *
-   * @default BorderType.CONSTANT
-   */
-  borderType?: BorderType;
-  /**
-   * Value of the border if BorderType is CONSTANT.
-   *
-   * @default 0
-   */
-  borderValue?: number;
-}
+export type RotateAngle = 90 | 180 | 270 | -90 | -180 | -270;
 
 /**
- * Rotate an image anti-clockwise of a given angle.
+ * Rotates an image in multiples of 90 degrees.
  *
- * @param image - Original image.
- * @param angle - Angle in degrees.
- * @param options - Rotate options.
- * @returns A new rotated image.
+ * @param image
+ * @param angle - The angle to rotate the image by. Positive values rotate clockwise, negative values rotate counter-clockwise.
+ * @returns - The rotated image.
  */
-export function rotate(
-  image: Image,
-  angle: number,
-  options: RotateOptions = {},
-): Image {
-  const { center = ImageCoordinates.CENTER, scale = 1 } = options;
+export function rotate(image: Image, angle: RotateAngle): Image {
+  const newWidth = angle % 180 === 0 ? image.width : image.height;
+  const newHeight = angle % 180 === 0 ? image.height : image.width;
+  const newImage = Image.createFrom(image, {
+    width: newWidth,
+    height: newHeight,
+  });
 
-  let centerCoordinates;
-  if (typeof center === 'string') {
-    centerCoordinates = image.getCoordinates(center);
+  if (angle === 90 || angle === -270) {
+    for (let column = 0; column < image.width; column++) {
+      for (let row = 0; row < image.height; row++) {
+        for (let channel = 0; channel < image.channels; channel++) {
+          newImage.setValue(
+            newImage.width - row - 1,
+            column,
+            channel,
+            image.getValue(column, row, channel),
+          );
+        }
+      }
+    }
+  } else if (angle === 180 || angle === -180) {
+    for (let column = 0; column < image.width; column++) {
+      for (let row = 0; row < image.height; row++) {
+        for (let channel = 0; channel < image.channels; channel++) {
+          newImage.setValue(
+            newImage.width - column - 1,
+            newImage.height - row - 1,
+            channel,
+            image.getValue(column, row, channel),
+          );
+        }
+      }
+    }
+  } else if (angle === 270 || angle === -90) {
+    for (let column = 0; column < image.width; column++) {
+      for (let row = 0; row < image.height; row++) {
+        for (let channel = 0; channel < image.channels; channel++) {
+          newImage.setValue(
+            row,
+            newImage.height - column - 1,
+            channel,
+            image.getValue(column, row, channel),
+          );
+        }
+      }
+    }
   } else {
-    centerCoordinates = center;
+    throw new Error(`invalid angle: ${angle}`);
   }
-  const transformMatrix = getRotationMatrix(angle, centerCoordinates, scale);
 
-  return transform(image, transformMatrix, options);
-}
-
-/**
- * Generates a rotation matrix for the given angle.
- *
- * @param angle - Angle in degrees.
- * @param center - Center point of the image.
- * @param scale - Scaling factor.
- * @returns 2 x 3 rotation matrix.
- */
-function getRotationMatrix(
-  angle: number,
-  center: Point,
-  scale: number,
-): number[][] {
-  const angleRadians = (angle * Math.PI) / 180;
-  const cos = scale * Math.cos(angleRadians);
-  const sin = scale * Math.sin(angleRadians);
-  return [
-    [cos, sin, (1 - cos) * center.column - sin * center.row],
-    [-sin, cos, sin * center.column + (1 - cos) * center.row],
-  ];
+  return newImage;
 }

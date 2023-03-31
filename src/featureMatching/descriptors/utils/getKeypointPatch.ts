@@ -37,7 +37,7 @@ export function getKeypointPatch(
     patchSize * (Math.abs(Math.cos(radAngle)) + Math.abs(Math.sin(radAngle))),
   );
 
-  const cropWidth = rawWidth % 2 ? rawWidth : rawWidth - 1;
+  const cropWidth = rawWidth % 2 ? rawWidth : rawWidth + 1;
 
   // we are not allowing keypoints that are too close to the border of the image
   let borderDistance = getRadius(cropWidth);
@@ -48,11 +48,13 @@ export function getKeypointPatch(
 
   const cropped = extractSquareImage(image, keypoint.origin, cropWidth);
 
-  const rotated = cropped.rotate(keypoint.angle, {
+  const rotated = cropped.transformRotate(-keypoint.angle, {
     center: ImageCoordinates.CENTER,
     interpolationType: InterpolationType.NEAREST,
   });
 
   const cropOrigin = rotated.getCoordinates(ImageCoordinates.CENTER);
-  return extractSquareImage(rotated, cropOrigin, patchSize);
+  const result = extractSquareImage(rotated, cropOrigin, patchSize);
+
+  return result;
 }

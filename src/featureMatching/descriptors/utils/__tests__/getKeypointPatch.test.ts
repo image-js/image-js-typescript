@@ -1,6 +1,5 @@
 import { TestImagePath } from '../../../../../test/TestImagePath';
 import { ImageColorModel } from '../../../../Image';
-import { getBestKeypointsInRadius } from '../../../keypoints/getBestKeypointsInRadius';
 import { getOrientedFastKeypoints } from '../../../keypoints/getOrientedFastKeypoints';
 import { drawKeypoints } from '../../../visualize/drawKeypoints';
 import { getKeypointPatch } from '../getKeypointPatch';
@@ -12,23 +11,56 @@ test.each([
     expected: 2,
   },
   {
-    message: 'polygon rotated 180°',
-    image: 'polygonRotated180degrees',
-    expected: 8,
+    message: 'scalene triangle rotated 90',
+    image: 'scaleneTriangle90',
+    expected: 2,
   },
 ])('default options ($message)', (data) => {
-  const image = testUtils.load(
-    `featureMatching/polygons/${data.image}.png` as TestImagePath,
-  );
+  const image = testUtils
+    .load(`featureMatching/polygons/${data.image}.png` as TestImagePath)
+    .convertColor(ImageColorModel.GREY)
+    .invert();
 
-  const grey = image.convertColor(ImageColorModel.GREY);
-
-  const allKeypoints = getOrientedFastKeypoints(grey, { windowSize: 15 });
-  const keypoints = getBestKeypointsInRadius(allKeypoints, 10);
+  const keypoints = getOrientedFastKeypoints(image);
 
   expect(keypoints).toHaveLength(data.expected);
 
   const kptImage = drawKeypoints(image, keypoints, { showOrientation: true });
+
+  expect(kptImage).toMatchImageSnapshot();
+
+  for (let keypoint of keypoints) {
+    expect(getKeypointPatch(image, keypoint)).toMatchImageSnapshot();
+  }
+});
+
+test.each([
+  {
+    message: 'scalene triangle',
+    image: 'scaleneTriangle',
+    expected: 2,
+  },
+  {
+    message: 'scalene triangle rotated 90',
+    image: 'scaleneTriangle90',
+    expected: 2,
+  },
+])('centroidPatchDiameter = 31 ($message)', (data) => {
+  const image = testUtils
+    .load(`featureMatching/polygons/${data.image}.png` as TestImagePath)
+    .convertColor(ImageColorModel.GREY)
+    .invert();
+
+  const keypoints = getOrientedFastKeypoints(image, {
+    centroidPatchDiameter: 31,
+  });
+
+  expect(keypoints).toHaveLength(data.expected);
+
+  const kptImage = drawKeypoints(image, keypoints, {
+    showOrientation: true,
+    markerSize: 31,
+  });
 
   expect(kptImage).toMatchImageSnapshot();
 

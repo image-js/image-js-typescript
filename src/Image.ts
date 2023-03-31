@@ -45,6 +45,17 @@ import {
   LevelOptions,
 } from './filters';
 import {
+  Point,
+  resize,
+  ResizeOptions,
+  rotate,
+  RotateAngle,
+  transform,
+  TransformOptions,
+  transformRotate,
+  TransformRotateOptions,
+} from './geometry';
+import {
   bottomHat,
   BottomHatOptions,
   cannyEdgeDetector,
@@ -77,7 +88,6 @@ import {
 } from './operations';
 import { cropAlpha, CropAlphaOptions } from './operations/cropAlpha';
 import { ImageColorModel, colorModels } from './utils/constants/colorModels';
-import { Point } from './utils/geometry/points';
 import { validateChannel, validateValue } from './utils/validators';
 
 import {
@@ -87,15 +97,9 @@ import {
   histogram,
   HistogramOptions,
   mean,
-  resize,
-  ResizeOptions,
-  rotate,
-  RotateOptions,
   threshold,
   ThresholdOptions,
-  transform,
-  TransformOptions,
-} from '.';
+} from './index';
 
 export { ImageColorModel, colorModels } from './utils/constants/colorModels';
 
@@ -944,12 +948,12 @@ export class Image {
 
   // GEOMETRY
 
-  public rotate(angle: number, options?: RotateOptions): Image {
-    return rotate(this, angle, options);
-  }
-
   public resize(options: ResizeOptions): Image {
     return resize(this, options);
+  }
+
+  public rotate(angle: RotateAngle): Image {
+    return rotate(this, angle);
   }
 
   public transform(
@@ -957,6 +961,13 @@ export class Image {
     options?: TransformOptions,
   ): Image {
     return transform(this, transformMatrix, options);
+  }
+
+  public transformRotate(
+    angle: number,
+    options?: TransformRotateOptions,
+  ): Image {
+    return transformRotate(this, angle, options);
   }
 
   // MORPHOLOGY

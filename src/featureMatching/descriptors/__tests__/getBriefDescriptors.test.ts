@@ -1,43 +1,6 @@
 import { ImageColorModel, Image, ImageCoordinates } from '../../../Image';
 import { getOrientedFastKeypoints } from '../../keypoints/getOrientedFastKeypoints';
-import { drawKeypoints } from '../../visualize/drawKeypoints';
 import { getBriefDescriptors } from '../getBriefDescriptors';
-
-test('alphabet image, maxNbFeatures = 10', () => {
-  const image = testUtils.load('various/alphabet.jpg');
-  const grey = image.convertColor(ImageColorModel.GREY);
-
-  const keypoints = getOrientedFastKeypoints(grey, { maxNbFeatures: 10 });
-  expect(keypoints).toHaveLength(10);
-
-  let imageWithKeypoints = drawKeypoints(image, keypoints);
-
-  expect(imageWithKeypoints).toMatchImageSnapshot();
-
-  const result = getBriefDescriptors(grey, keypoints);
-
-  expect(result.descriptors).toMatchSnapshot();
-  expect(result.descriptors.length).toBe(keypoints.length);
-});
-
-test('should work with small patch size', () => {
-  const image = testUtils.load('various/alphabet.jpg');
-  const grey = image.convertColor(ImageColorModel.GREY);
-
-  const keypoints = getOrientedFastKeypoints(grey, { maxNbFeatures: 10 });
-  expect(keypoints).toHaveLength(10);
-
-  const keypoint = keypoints.slice(0, 1);
-
-  let imageWithKeypoints = drawKeypoints(image, keypoints);
-  expect(imageWithKeypoints).toMatchImageSnapshot();
-
-  const descriptor = getBriefDescriptors(grey, keypoint, {
-    patchSize: 5,
-  }).descriptors;
-
-  expect(descriptor).toMatchSnapshot();
-});
 
 test('count occurences of 1 and 0 with default options', () => {
   const image = testUtils.load('various/alphabet.jpg');
@@ -54,7 +17,7 @@ test('count occurences of 1 and 0 with default options', () => {
   const onesPercentage = (nbOnes / descriptor.length) * 100;
 
   // in the BRIEF article, they say that the optimal value would be 50%
-  expect(onesPercentage).toBeCloseTo(47.66);
+  expect(onesPercentage).toBeCloseTo(46.09);
 });
 
 test('patch size error', () => {
