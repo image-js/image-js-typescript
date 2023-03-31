@@ -81,15 +81,6 @@ export class Roi {
     this.#computed = {};
   }
   /**
-   * Get the ROI map of the original image.
-   *
-   * @returns The ROI map.
-   */
-  public getMap(): RoiMap {
-    return this.map;
-  }
-
-  /**
    * Return the value at the given coordinates in an ROI map.
    *
    * @param column - Column of the value.
@@ -140,7 +131,7 @@ export class Roi {
   }
   //TODO The ids and length should be in one computed property which returns an array of {id: number, length: number}
   _computeBorderIDs(): { ids: number[]; lengths: number[] } {
-    const borders = getBorders(this);
+    const borders = getBorders(this, this.map);
     this.#computed.borderIDs = borders.ids;
     this.#computed.borderLengths = borders.lengths;
     return borders;
@@ -152,7 +143,7 @@ export class Roi {
    */
   get internalIDs() {
     return this.#getComputed('internalIDs', () => {
-      return getInternalIDs(this);
+      return getInternalIDs(this, this.map);
     });
   }
   //TODO externalIds should be an array of {id: number, length: number}
@@ -167,7 +158,7 @@ export class Roi {
   }
   get perimeterInfo() {
     return this.#getComputed('perimeterInfo', () => {
-      return getPerimeterInfo(this);
+      return getPerimeterInfo(this, this.map);
     });
   }
 
@@ -208,7 +199,7 @@ export class Roi {
   }
   get boxIDs() {
     return this.#getComputed('boxIDs', () => {
-      return getBoxIDs(this);
+      return getBoxIDs(this, this.map);
     });
   }
 
@@ -223,7 +214,7 @@ export class Roi {
 
   get holesInfo() {
     return this.#getComputed('holesInfo', () => {
-      return getHolesInfo(this);
+      return getHolesInfo(this, this.map);
     });
   }
 
@@ -341,7 +332,7 @@ export class Roi {
   }
   //TODO Make this private
   computeIndex(y: number, x: number): number {
-    const roiMap = this.getMap();
+    const roiMap = this.map;
     return (y + this.origin.row) * roiMap.width + x + this.origin.column;
   }
 }
@@ -349,10 +340,11 @@ export class Roi {
 /**
  *
  * @param roi -ROI
+ * @param map
  * @returns object which tells how many pixels are exposed externally to how many sides
  */
-function getPerimeterInfo(roi: Roi) {
-  const roiMap = roi.getMap();
+function getPerimeterInfo(roi: Roi, map: RoiMap) {
+  const roiMap = map;
   const data = roiMap.data;
   let one = 0;
   let two = 0;
@@ -411,11 +403,12 @@ function getPerimeterInfo(roi: Roi) {
 /**
  *
  * @param roi - ROI
+ * @param map
  * @returns the surface of holes in ROI
  */
-function getHolesInfo(roi: Roi) {
+function getHolesInfo(roi: Roi, map: RoiMap) {
   let surface = 0;
-  const data = roi.getMap().data;
+  const data = map.data;
   for (let column = 1; column < roi.width - 1; column++) {
     for (let row = 1; row < roi.height - 1; row++) {
       let target = roi.computeIndex(row, column);
@@ -430,9 +423,9 @@ function getHolesInfo(roi: Roi) {
   };
 }
 
-function getInternalIDs(roi: Roi) {
+function getInternalIDs(roi: Roi, map: RoiMap) {
   let internal = [roi.id];
-  let roiMap = roi.getMap();
+  let roiMap = map;
   let data = roiMap.data;
 
   if (roi.height > 2) {
@@ -472,10 +465,10 @@ function getInternalIDs(roi: Roi) {
   return internal;
 }
 
-function getBoxIDs(roi: Roi): number[] {
+function getBoxIDs(roi: Roi, map: RoiMap): number[] {
   let surroundingIDs = new Set<number>(); // allows to get a unique list without indexOf
 
-  const roiMap = roi.getMap();
+  const roiMap = map;
   const data = roiMap.data;
 
   // we check the first line and the last line
@@ -530,10 +523,14 @@ function getBoxIDs(roi: Roi): number[] {
 /**
  *
  * @param roi - ROI
+ * @param map
  * @returns borders' length and their IDs
  */
-function getBorders(roi: Roi): { ids: number[]; lengths: number[] } {
-  const roiMap = roi.getMap();
+function getBorders(
+  roi: Roi,
+  map: RoiMap,
+): { ids: number[]; lengths: number[] } {
+  const roiMap = map;
   const data = roiMap.data;
   let surroudingIDs = new Set<number>(); // allows to get a unique list without indexOf
   let surroundingBorders = new Map();
