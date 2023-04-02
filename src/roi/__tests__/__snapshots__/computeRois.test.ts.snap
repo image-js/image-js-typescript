@@ -66,6 +66,7 @@ exports[`3x3 mask 1`] = `
     "id": 1,
     "mbr": {
       "angle": -0,
+      "aspectRatio": 0.6666666666666667,
       "corners": [
         {
           "column": 3,
@@ -161,6 +162,7 @@ exports[`3x3 mask 1`] = `
     "id": 2,
     "mbr": {
       "angle": 0,
+      "aspectRatio": 1,
       "corners": [
         {
           "column": 6.123233995736766e-17,
@@ -269,6 +271,7 @@ exports[`3x3 mask 2`] = `
     "id": -1,
     "mbr": {
       "angle": -0,
+      "aspectRatio": 0.6666666666666667,
       "corners": [
         {
           "column": 3,

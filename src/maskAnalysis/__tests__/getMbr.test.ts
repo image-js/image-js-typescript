@@ -72,6 +72,7 @@ test('horizontal MBR', () => {
     height: 3,
     perimeter: 22,
     surface: 24,
+    aspectRatio: 8 / 3,
   });
 });
 
@@ -97,6 +98,7 @@ test('other horizontal MBR', () => {
     height: 3,
     surface: 18,
     perimeter: 18,
+    aspectRatio: 2,
   });
 });
 
@@ -204,6 +206,7 @@ test('empty mask', () => {
     height: 0,
     surface: 0,
     perimeter: 0,
+    aspectRatio: 0,
   });
 });
 
@@ -231,4 +234,17 @@ test('draw mbr on large image', () => {
   });
 
   expect(result).toMatchImageSnapshot();
+});
+
+test('other horizontal MBR', () => {
+  const mask = testUtils.createMask(
+    `
+      1 0 0 0 1 0 
+      0 1 1 1 1 0 
+      1 0 1 1 0 1 
+    `,
+  );
+
+  const result = getMbr(mask);
+  expect(result.aspectRatio).toBeCloseTo(2);
 });
