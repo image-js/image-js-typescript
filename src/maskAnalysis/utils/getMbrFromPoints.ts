@@ -94,7 +94,7 @@ export function getMbrFromPoints(points: readonly Point[]): Mbr {
   const width = mbr[0].column - mbr[2].column;
   const height = mbr[0].row - mbr[2].row;
   const mbrAngle = getMbrAngle(mbrRotated);
-  const ratio = width / height;
+  const ratio = height / width;
 
   return {
     corners: mbrRotated,
