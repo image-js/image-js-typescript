@@ -72,7 +72,7 @@ test('horizontal MBR', () => {
     height: 3,
     perimeter: 22,
     surface: 24,
-    aspectRatio: 8 / 3,
+    aspectRatio: 3 / 8,
   });
 });
 
@@ -98,7 +98,7 @@ test('other horizontal MBR', () => {
     height: 3,
     surface: 18,
     perimeter: 18,
-    aspectRatio: 2,
+    aspectRatio: 0.5,
   });
 });
 
@@ -246,5 +246,38 @@ test('other horizontal MBR', () => {
   );
 
   const result = getMbr(mask);
-  expect(result.aspectRatio).toBeCloseTo(2);
+  expect(result.aspectRatio).toBeCloseTo(0.5);
+});
+
+test('small triangular ROI', () => {
+  const mask = testUtils.createMask([
+    [0, 1, 0],
+    [1, 1, 1],
+    [0, 1, 0],
+  ]);
+
+  const result = getMbr(mask).aspectRatio;
+
+  expect(result).toBeCloseTo(1);
+});
+
+test('small triangular ROI', () => {
+  const mask = testUtils.createMask([
+    [0, 1, 0],
+    [0, 1, 0],
+    [0, 1, 0],
+    [0, 1, 0],
+  ]);
+
+  const result = getMbr(mask).aspectRatio;
+
+  expect(result).toStrictEqual(0.25);
+});
+
+test('small triangular ROI', () => {
+  const mask = testUtils.createMask([[1, 1, 1, 1]]);
+
+  const result = getMbr(mask).aspectRatio;
+
+  expect(result).toStrictEqual(0.25);
 });
