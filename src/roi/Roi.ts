@@ -33,6 +33,7 @@ interface Computed {
   fillRatio: number;
   internalIDs: number[];
   feret: Feret;
+  centroid: Point;
 }
 export class Roi {
   /**
@@ -326,6 +327,34 @@ export class Roi {
       convexHull: this.convexHull,
       mbr: this.mbr,
     };
+  }
+
+  get centroid() {
+    return this.#getComputed('centroid', () => {
+      const roiMap = this.getMap();
+      const data = roiMap.data;
+      let xCoords = [];
+      let yCoords = [];
+      for (let column = 0; column < this.width; column++) {
+        for (let row = 0; row < this.height; row++) {
+          let target = this.computeIndex(row, column);
+          if (data[target] === this.id) {
+            xCoords.push(column + this.origin.column);
+            yCoords.push(row + this.origin.row);
+          }
+        }
+      }
+      let Xsum = xCoords.reduce((a, b) => {
+        return a + b;
+      });
+      let Ysum = yCoords.reduce((a, b) => {
+        return a + b;
+      });
+      return {
+        column: Xsum / xCoords.length,
+        row: Ysum / yCoords.length,
+      };
+    });
   }
 
   #getComputed<T extends keyof Computed>(
