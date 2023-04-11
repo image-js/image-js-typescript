@@ -143,12 +143,6 @@ export class Roi {
   public getBorderPoints(options?: GetBorderPointsOptions): Array<Point> {
     return getBorderPoints(this, options);
   }
-  //TODO The ids and length should be in one computed property which returns an array of {id: number, length: number}
-  _computeBorderIDs(): ID[] {
-    const borders = getBorders(this);
-    this.#computed.borderIDs = borders;
-    return borders;
-  }
 
   /**
    * Return an array of ROIs IDs that are included in the current ROI.
@@ -250,18 +244,12 @@ export class Roi {
     const externalIDs = this.#computed.externalIDs;
     return externalIDs;
   }
-  //TODO Should be merged together in one borders property
   get borderIDs() {
     return this.#getComputed('borderIDs', () => {
-      return this._computeBorderIDs();
+      return getBorders(this);
     });
   }
 
-  // get borderLengths() {
-  //   return this.#getComputed('borderLengths', () => {
-  //     return this._computeBorderIDs().lengths;
-  //   });
-  // }
   /**
    * Getter that calculates fill ratio of the ROI
    */
