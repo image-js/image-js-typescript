@@ -339,15 +339,15 @@ export class Roi {
         for (let row = 0; row < this.height; row++) {
           let target = this.computeIndex(row, column);
           if (data[target] === this.id) {
-            xCoords += column + this.origin.column;
-            yCoords += row + this.origin.row;
+            xCoords += column;
+            yCoords += row;
           }
         }
       }
 
       return {
-        column: xCoords / this.surface,
-        row: yCoords / this.surface,
+        column: xCoords / this.surface + this.origin.column,
+        row: yCoords / this.surface + this.origin.row,
       };
     });
   }
