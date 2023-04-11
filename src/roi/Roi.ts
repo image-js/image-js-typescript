@@ -333,21 +333,21 @@ export class Roi {
     return this.#getComputed('centroid', () => {
       const roiMap = this.getMap();
       const data = roiMap.data;
-      let xCoords = 0;
-      let yCoords = 0;
+      let sumColumn = 0;
+      let sumRow = 0;
       for (let column = 0; column < this.width; column++) {
         for (let row = 0; row < this.height; row++) {
           let target = this.computeIndex(row, column);
           if (data[target] === this.id) {
-            xCoords += column;
-            yCoords += row;
+            sumColumn += column;
+            sumRow += row;
           }
         }
       }
 
       return {
-        column: xCoords / this.surface + this.origin.column,
-        row: yCoords / this.surface + this.origin.row,
+        column: sumColumn / this.surface + this.origin.column,
+        row: sumRow / this.surface + this.origin.row,
       };
     });
   }
