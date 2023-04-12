@@ -26,7 +26,6 @@ interface Computed {
   box: number;
   points: number[][];
   holesInfo: { number: number; surface: number };
-  external: number;
   boxIDs: number[];
   eqpc: number;
   ped: number;
