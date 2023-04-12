@@ -63,9 +63,10 @@ export class Roi {
   /**
    * Surface of the ROI.
    */
-
   public readonly surface: number;
-
+  /**
+   * Cached values of properties to improve performance
+   */
   #computed: Partial<Computed>;
 
   public constructor(
@@ -185,7 +186,10 @@ export class Roi {
       delta * (info.two + info.three * 2 + info.four)
     );
   }
-
+  /**
+   * Points of the ROI
+   * Returns an array with arrays of 2 numbers which are the coordinates of all the current ROI points
+   */
   get points() {
     return this.#getComputed('points', () => {
       let points = [];
@@ -217,7 +221,10 @@ export class Roi {
       return 2 * Math.sqrt(this.surface / Math.PI);
     });
   }
-
+  /**
+   * Getter that calculates the number of holes in the ROI and their total surface
+   * It is used to calculate fillRatio
+   */
   get holesInfo() {
     return this.#getComputed('holesInfo', () => {
       return getHolesInfo(this);
@@ -248,7 +255,7 @@ export class Roi {
   }
 
   /**
-   *
+   *Getter that calculates the borders' IDs and lengths
    */
   get borders() {
     return this.#getComputed('borders', () => {
@@ -281,7 +288,9 @@ export class Roi {
       return getConvexHull(this.getMask());
     });
   }
-
+  /**
+   * Getter that calculates minimum bounding rectangle
+   */
   get mbr() {
     return this.#getComputed('mbr', () => {
       return getMbr(this.getMask());
@@ -344,7 +353,13 @@ export class Roi {
       };
     });
   }
-
+  /**
+   * A helper function to cache already calculated properties
+   *
+   * @param property
+   * @param callback
+   * @returns Computed[T]
+   */
   #getComputed<T extends keyof Computed>(
     property: T,
     callback: () => Computed[T],
@@ -357,6 +372,13 @@ export class Roi {
     return this.#computed[property] as Computed[T];
   }
   //TODO Make this private
+  /**
+   * Calculates the correct index on the map of ROI
+   *
+   * @param y
+   * @param x
+   * @returns number
+   */
   computeIndex(y: number, x: number): number {
     const roiMap = this.getMap();
     return (y + this.origin.row) * roiMap.width + x + this.origin.column;
@@ -458,7 +480,12 @@ function getHolesInfo(roi: Roi) {
     surface,
   };
 }
-
+/**
+ * calculates internal IDs of the ROI
+ *
+ * @param roi
+ * @returns internalIDs
+ */
 function getInternalIDs(roi: Roi) {
   let internal = [roi.id];
   let roiMap = roi.getMap();
@@ -500,7 +527,12 @@ function getInternalIDs(roi: Roi) {
 
   return internal;
 }
-
+/**
+ * Not sure what it does
+ *
+ * @param roi
+ * @returns
+ */
 function getBoxIDs(roi: Roi): number[] {
   let surroundingIDs = new Set<number>(); // allows to get a unique list without indexOf
 
