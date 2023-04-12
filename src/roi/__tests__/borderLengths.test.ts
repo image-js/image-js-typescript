@@ -10,7 +10,11 @@ test('border lengths property 5x5', () => {
   ]);
   const roiMapManager = fromMask(mask);
   const rois = roiMapManager.getRois();
-  expect(rois[0].borderIDs[1].length).toStrictEqual(8);
+
+  expect(rois[0].borders).toStrictEqual([
+    { connectedID: -1, length: 2 },
+    { connectedID: -2, length: 7 },
+  ]);
 });
 
 test('border lengths property 4x4', () => {
@@ -25,7 +29,7 @@ test('border lengths property 4x4', () => {
 
   const rois = roiMapManager.getRois();
 
-  expect(rois[0].borderIDs[0].length).toStrictEqual(6);
+  expect(rois[0].borders[0]).toStrictEqual({ connectedID: -1, length: 6 });
 });
 
 test('border lengths property 4x4', () => {
@@ -37,6 +41,9 @@ test('border lengths property 4x4', () => {
   ]);
   const roiMapManager = fromMask(mask);
   const rois = roiMapManager.getRois();
-  expect(rois[0].borderIDs[0].id).toStrictEqual(-2);
-  expect(rois[0].borderIDs[0].length).toStrictEqual(1);
+  expect(rois[0].borders).toStrictEqual([
+    { connectedID: -2, length: 2 },
+    { connectedID: -1, length: 1 },
+  ]);
+  expect(rois[0].borders[0].length).toStrictEqual(2);
 });
