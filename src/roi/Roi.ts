@@ -1,3 +1,8 @@
+import variance from 'ml-array-variance';
+//@ts-expect-error just to check if algorithm works
+import covariance from 'ml-array-xy-covariance';
+import { EigenvalueDecomposition } from 'ml-matrix';
+
 import { Mask } from '../Mask';
 import {
   GetBorderPointsOptions,
@@ -13,6 +18,22 @@ import { RoiMap } from './RoiMapManager';
 import { getBorderPoints } from './getBorderPoints';
 import { getMask, GetMaskOptions } from './getMask';
 
+interface Ellipse {
+  rMajor: number;
+  rMinor: number;
+  position: {
+    x: number;
+    y: number;
+  };
+  majorAxis: {
+    point1: { x: number; y: number };
+    point2: { x: number; y: number };
+  };
+  minorAxis: {
+    point1: { x: number; y: number };
+    point2: { x: number; y: number };
+  };
+}
 interface Computed {
   perimeter: number;
   borderIDs: number[];
@@ -33,6 +54,7 @@ interface Computed {
   fillRatio: number;
   internalIDs: number[];
   feret: Feret;
+  ellipse: Ellipse;
   centroid: Point;
 }
 export class Roi {
@@ -219,6 +241,94 @@ export class Roi {
   get eqpc() {
     return this.#getComputed('eqpc', () => {
       return 2 * Math.sqrt(this.surface / Math.PI);
+    });
+  }
+  get ellipse(): Ellipse {
+    return this.#getComputed('ellipse', (): Ellipse => {
+      const nbSD = 2;
+      let xCenter = this.centroid.column;
+      let yCenter = this.centroid.row;
+      let newPoints: number[][] = this.points;
+
+      let xCentered = newPoints.map((item: number[]) => item[0] - xCenter);
+      let yCentered = newPoints.map((item: number[]) => item[1] - yCenter);
+
+      let centeredXVariance = variance(xCentered, { unbiased: false });
+      let centeredYVariance = variance(yCentered, { unbiased: false });
+
+      let centeredCovariance = covariance(
+        {
+          x: xCentered,
+          y: yCentered,
+        },
+        { unbiased: false },
+      );
+
+      //spectral decomposition of the sample covariance matrix
+      let sampleCovarianceMatrix = [
+        [centeredXVariance, centeredCovariance],
+        [centeredCovariance, centeredYVariance],
+      ];
+      let e = new EigenvalueDecomposition(sampleCovarianceMatrix);
+      let eigenvalues = e.realEigenvalues;
+      let vectors = e.eigenvectorMatrix;
+
+      let rMajor: number;
+      let rMinor: number;
+      let vectorMajor: number[];
+      let vectorMinor: number[];
+
+      if (eigenvalues[0] > eigenvalues[1]) {
+        rMajor = Math.sqrt(eigenvalues[0] * nbSD);
+        rMinor = Math.sqrt(eigenvalues[1] * nbSD);
+        vectorMajor = vectors.getColumn(0);
+        vectorMinor = vectors.getColumn(1);
+      } else if (eigenvalues[0] < eigenvalues[1]) {
+        rMajor = Math.sqrt(eigenvalues[1] * nbSD);
+        rMinor = Math.sqrt(eigenvalues[0] * nbSD);
+        vectorMajor = vectors.getColumn(1);
+        vectorMinor = vectors.getColumn(0);
+      } else {
+        // order here does not matter
+        rMajor = Math.sqrt(eigenvalues[1] * nbSD);
+        rMinor = Math.sqrt(eigenvalues[0] * nbSD);
+        vectorMajor = vectors.getColumn(1);
+        vectorMinor = vectors.getColumn(0);
+      }
+
+      let majorAxisPoint1 = {
+        x: xCenter + rMajor * vectorMajor[0],
+        y: yCenter + rMajor * vectorMajor[1],
+      };
+      let majorAxisPoint2 = {
+        x: xCenter - rMajor * vectorMajor[0],
+        y: yCenter - rMajor * vectorMajor[1],
+      };
+      let minorAxisPoint1 = {
+        x: xCenter + rMinor * vectorMinor[0],
+        y: yCenter + rMinor * vectorMinor[1],
+      };
+      let minorAxisPoint2 = {
+        x: xCenter - rMinor * vectorMinor[0],
+        y: yCenter - rMinor * vectorMinor[1],
+      };
+
+      return {
+        rMajor,
+        rMinor,
+        position: {
+          x: xCenter,
+          y: yCenter,
+        },
+        majorAxis: {
+          point1: majorAxisPoint1,
+          point2: majorAxisPoint2,
+        },
+        minorAxis: {
+          point1: minorAxisPoint1,
+          point2: minorAxisPoint2,
+        },
+      };
     });
   }
 
