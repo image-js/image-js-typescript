@@ -560,10 +560,8 @@ function getBoxIDs(roi: Roi): number[] {
 function getBorders(roi: Roi): Border[] {
   const roiMap = roi.getMap();
   const data = roiMap.data;
-  let surroundingID = 0;
-  let surroundingBorder;
-  let surroundingIDs: Border[] = []; // allows to get a unique list without indexOf
-
+  let surroudingIDs = new Set<number>(); // allows to get a unique list without indexOf
+  let surroundingBorders = new Map();
   let visitedData = new Set();
   let dx = [+1, 0, -1, 0];
   let dy = [0, +1, 0, -1];
@@ -589,27 +587,12 @@ function getBorders(roi: Roi): Border[] {
 
             if (data[neighbour] !== roi.id && !visitedData.has(neighbour)) {
               visitedData.add(neighbour);
-              surroundingID = data[neighbour];
-
-              if (surroundingBorder === undefined) {
-                surroundingBorder = 0;
+              surroudingIDs.add(data[neighbour]);
+              let surroundingBorder = surroundingBorders.get(data[neighbour]);
+              if (!surroundingBorder) {
+                surroundingBorders.set(data[neighbour], 1);
               } else {
-                ++surroundingBorder;
-              }
-
-              let index = surroundingIDs.findIndex(
-                (element) => element.connectedID === data[neighbour],
-              );
-              if (index === -1) {
-                surroundingIDs.push({
-                  connectedID: surroundingID,
-                  length: surroundingBorder,
-                });
-              } else {
-                surroundingIDs[index] = {
-                  connectedID: surroundingID,
-                  length: surroundingBorder,
-                };
+                surroundingBorders.set(data[neighbour], ++surroundingBorder);
               }
             }
           }
@@ -617,5 +600,15 @@ function getBorders(roi: Roi): Border[] {
       }
     }
   }
-  return surroundingIDs;
+  let id: number[] = Array.from(surroudingIDs);
+  let borderLengths = id.map((id) => {
+    return surroundingBorders.get(id);
+  });
+  let borders = id.map((id, index) => {
+    return {
+      connectedID: id,
+      length: borderLengths[index],
+    };
+  });
+  return borders;
 }
