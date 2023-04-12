@@ -19,7 +19,7 @@ interface Border {
 }
 interface Computed {
   perimeter: number;
-  borders: Border[]; // external and internal ids which are not equal to roi ID
+  borders: Border[]; // external and internal ids which are not equal to the current roi ID
   perimeterInfo: { one: number; two: number; three: number; four: number };
   externalLengths: number[];
   borderLengths: number[];
@@ -246,6 +246,10 @@ export class Roi {
     const externalIDs = this.#computed.externalBorders;
     return externalIDs;
   }
+
+  /**
+   *
+   */
   get borders() {
     return this.#getComputed('borders', () => {
       return getBorders(this);
@@ -601,14 +605,10 @@ function getBorders(roi: Roi): Border[] {
     }
   }
   let id: number[] = Array.from(surroudingIDs);
-  let borderLengths = id.map((id) => {
-    return surroundingBorders.get(id);
-  });
-  let borders = id.map((id, index) => {
+  return id.map((id) => {
     return {
       connectedID: id,
-      length: borderLengths[index],
+      length: surroundingBorders.get(id),
     };
   });
-  return borders;
 }
