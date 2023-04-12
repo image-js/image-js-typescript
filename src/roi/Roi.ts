@@ -13,13 +13,13 @@ import { RoiMap } from './RoiMapManager';
 import { getBorderPoints } from './getBorderPoints';
 import { getMask, GetMaskOptions } from './getMask';
 
-interface ID {
-  id: number;
+interface Border {
+  connectedID: number; // refers to the roiID of the contiguous ROI
   length: number;
 }
 interface Computed {
   perimeter: number;
-  borderIDs: ID[];
+  borders: Border[]; // external and internal ids which are not equal to roi ID
   perimeterInfo: { one: number; two: number; three: number; four: number };
   externalLengths: number[];
   borderLengths: number[];
@@ -30,7 +30,7 @@ interface Computed {
   boxIDs: number[];
   eqpc: number;
   ped: number;
-  externalIDs: ID[];
+  externalBorders: Border[];
   roundness: number;
   convexHull: { points: Point[]; surface: number; perimeter: number };
   mbr: Mbr;
@@ -158,8 +158,8 @@ export class Roi {
   /**
    * Return an array of ROIs IDs that touch the current ROI.
    */
-  get externalIDs(): ID[] {
-    return this.#getComputed('externalIDs', () => {
+  get externalBorders(): Border[] {
+    return this.#getComputed('externalBorders', () => {
       return this.getExternalIDs();
     });
   }
@@ -225,27 +225,30 @@ export class Roi {
     });
   }
 
-  getExternalIDs(): ID[] {
+  getExternalIDs(): Border[] {
     // take all the borders and remove the internal one ...
-    let borders = this.borderIDs;
+    let borders = this.borders;
 
     this.#computed.externalLengths = [];
-    this.#computed.externalIDs = [];
+    this.#computed.externalBorders = [];
 
     let internals = this.internalIDs;
 
     for (let border of borders) {
-      if (!internals.includes(border.id)) {
-        const element: ID = { id: border.id, length: border.length };
+      if (!internals.includes(border.connectedID)) {
+        const element: Border = {
+          connectedID: border.connectedID,
+          length: border.length,
+        };
 
-        this.#computed.externalIDs.push(element);
+        this.#computed.externalBorders.push(element);
       }
     }
-    const externalIDs = this.#computed.externalIDs;
+    const externalIDs = this.#computed.externalBorders;
     return externalIDs;
   }
-  get borderIDs() {
-    return this.#getComputed('borderIDs', () => {
+  get borders() {
+    return this.#getComputed('borders', () => {
       return getBorders(this);
     });
   }
@@ -377,20 +380,26 @@ function getPerimeterInfo(roi: Roi) {
         let nbAround = 0;
         if (column === 0) {
           nbAround++;
-        } else if (roi.externalIDs.find((el) => el.id === data[target - 1])) {
+        } else if (
+          roi.externalBorders.find((el) => el.connectedID === data[target - 1])
+        ) {
           nbAround++;
         }
 
         if (column === roiMap.width - 1) {
           nbAround++;
-        } else if (roi.externalIDs.find((el) => el.id === data[target + 1])) {
+        } else if (
+          roi.externalBorders.find((el) => el.connectedID === data[target + 1])
+        ) {
           nbAround++;
         }
 
         if (row === 0) {
           nbAround++;
         } else if (
-          roi.externalIDs.find((el) => el.id === data[target - roiMap.width])
+          roi.externalBorders.find(
+            (el) => el.connectedID === data[target - roiMap.width],
+          )
         ) {
           nbAround++;
         }
@@ -398,7 +407,9 @@ function getPerimeterInfo(roi: Roi) {
         if (row === roiMap.height - 1) {
           nbAround++;
         } else if (
-          roi.externalIDs.find((el) => el.id === data[target + roiMap.width])
+          roi.externalBorders.find(
+            (el) => el.connectedID === data[target + roiMap.width],
+          )
         ) {
           nbAround++;
         }
@@ -547,12 +558,12 @@ function getBoxIDs(roi: Roi): number[] {
  * @param roi - ROI
  * @returns borders' length and their IDs
  */
-function getBorders(roi: Roi): ID[] {
+function getBorders(roi: Roi): Border[] {
   const roiMap = roi.getMap();
   const data = roiMap.data;
   let surroundingID = 0;
   let surroundingBorder;
-  let surroundingIDs: ID[] = []; // allows to get a unique list without indexOf
+  let surroundingIDs: Border[] = []; // allows to get a unique list without indexOf
 
   let visitedData = new Set();
   let dx = [+1, 0, -1, 0];
@@ -588,16 +599,16 @@ function getBorders(roi: Roi): ID[] {
               }
 
               let index = surroundingIDs.findIndex(
-                (element) => element.id === data[neighbour],
+                (element) => element.connectedID === data[neighbour],
               );
               if (index === -1) {
                 surroundingIDs.push({
-                  id: surroundingID,
+                  connectedID: surroundingID,
                   length: surroundingBorder,
                 });
               } else {
                 surroundingIDs[index] = {
-                  id: surroundingID,
+                  connectedID: surroundingID,
                   length: surroundingBorder,
                 };
               }
