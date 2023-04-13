@@ -49,9 +49,10 @@ interface ThresholdOptionsBase {
 
 export interface ThresholdOptionsThreshold extends ThresholdOptionsBase {
   /**
-   * Threshold value that should be used. Should be an integer between 0 and Image.maxValue or a value in percents as a string, like "40%".
+   * Threshold value that should be used. Can either be a value between 0 and
+   * image.maxValue or a value in range [0,1[, which will be interpreted as a percentage of maxValue.
    */
-  threshold: number | string;
+  threshold: number;
 }
 
 export interface ThresholdOptionsAlgorithm extends ThresholdOptionsBase {
@@ -131,24 +132,13 @@ export function computeThreshold(
  */
 export function threshold(image: Image, options: ThresholdOptions = {}): Mask {
   let thresholdValue: number;
+
   if ('threshold' in options) {
     const threshold = options.threshold;
-    if (typeof threshold === 'number') {
-      thresholdValue = threshold;
-    } else if (
-      typeof threshold === 'string' &&
-      threshold.endsWith('%') &&
-      !Number.isNaN(Number(threshold.slice(0, -1)))
-    ) {
-      const percents = Number(threshold.slice(0, -1));
-      if (percents < 0 || percents > 100) {
-        throw new RangeError(
-          'threshold: threshold in percents is out of range 0 to 100',
-        );
-      }
-      thresholdValue = (percents / 100) * image.maxValue;
+    if (threshold < 1) {
+      thresholdValue = threshold * image.maxValue;
     } else {
-      throw new Error('threshold: unrecognised threshold format');
+      thresholdValue = threshold;
     }
   } else {
     thresholdValue = computeThreshold(image, options.algorithm);
