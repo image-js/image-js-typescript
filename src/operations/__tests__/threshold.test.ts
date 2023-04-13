@@ -3,7 +3,7 @@ import { computeThreshold, threshold } from '../threshold';
 test('threshold with a fixed value of 100', () => {
   const testImage = testUtils.load('opencv/test.png');
   const grey = testImage.convertColor('GREY');
-  const th = threshold(grey, { threshold: 100 });
+  const th = threshold(grey, { threshold: 100 / 255 });
 
   const expected = testUtils.createMask([
     [1, 1, 1, 1, 1, 1, 1, 1],
@@ -79,22 +79,6 @@ test('threshold in percents', () => {
   ]);
   expect(th).toMatchMask(expected);
 });
-test('threshold = 1', () => {
-  const grey = testUtils.createGreyImage([
-    [1, 2, 3],
-    [0, 0, 0],
-    [50, 60, 70],
-  ]);
-
-  const th = threshold(grey, { threshold: 1 });
-
-  const expected = testUtils.createMask([
-    [0, 1, 1],
-    [0, 0, 0],
-    [1, 1, 1],
-  ]);
-  expect(th).toMatchMask(expected);
-});
 
 test('error too many channels', () => {
   const testImage = testUtils.load('opencv/test.png');
@@ -107,6 +91,6 @@ test('error threshold out of range', () => {
   const testImage = testUtils.load('opencv/test.png');
 
   expect(() => threshold(testImage, { threshold: 450 })).toThrow(
-    /invalid value: 450. It must be a positive value smaller than 256/,
+    /threshold should be a value between 0 and 1/,
   );
 });

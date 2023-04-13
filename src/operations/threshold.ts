@@ -1,7 +1,6 @@
 import { Mask } from '..';
 import { Image } from '../Image';
 import { imageToOutputMask } from '../utils/getOutputImage';
-import { validateValue } from '../utils/validators';
 
 import huang from './thresholds/huang';
 import intermodes from './thresholds/intermodes';
@@ -49,8 +48,8 @@ interface ThresholdOptionsBase {
 
 export interface ThresholdOptionsThreshold extends ThresholdOptionsBase {
   /**
-   * Threshold value that should be used. Can either be a value between 0 and
-   * image.maxValue or a value in range [0,1[, which will be interpreted as a percentage of maxValue.
+   * Threshold value that should be used. Threshold is a value in range [0,1],
+   * which will be interpreted as a percentage of image.maxValue.
    */
   threshold: number;
 }
@@ -135,15 +134,13 @@ export function threshold(image: Image, options: ThresholdOptions = {}): Mask {
 
   if ('threshold' in options) {
     const threshold = options.threshold;
-    if (threshold < 1) {
-      thresholdValue = threshold * image.maxValue;
-    } else {
-      thresholdValue = threshold;
+    if (threshold < 0 || threshold > 1) {
+      throw new Error('threshold should be a value between 0 and 1');
     }
+    thresholdValue = threshold * image.maxValue;
   } else {
     thresholdValue = computeThreshold(image, options.algorithm);
   }
-  validateValue(thresholdValue, image);
   const result = imageToOutputMask(image, options);
   for (let i = 0; i < image.size; i++) {
     result.setBitByIndex(
