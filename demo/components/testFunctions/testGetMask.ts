@@ -15,7 +15,7 @@ export function testGetContourMask(image: Image): Image {
   const roi = rois.sort((a, b) => b.surface - a.surface)[0];
 
   let roiMask = roi.getMask({
-    solidFill: false,
+    solidFill: true,
   });
 
   return image.paintMask(roiMask, {
