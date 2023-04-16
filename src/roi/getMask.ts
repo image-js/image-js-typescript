@@ -19,7 +19,7 @@ export interface GetMaskOptions {
  * @returns The ROI mask.
  */
 export function getMask(roi: Roi, options: GetMaskOptions = {}): Mask {
-  const { solidFill = true } = options;
+  const { solidFill = false } = options;
   let mask = new Mask(roi.width, roi.height, { origin: roi.origin });
 
   for (let row = 0; row < roi.height; row++) {
@@ -35,7 +35,7 @@ export function getMask(roi: Roi, options: GetMaskOptions = {}): Mask {
     }
   }
 
-  if (!solidFill) {
+  if (solidFill) {
     mask.solidFill({ out: mask });
   }
 
