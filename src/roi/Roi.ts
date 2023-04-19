@@ -160,7 +160,7 @@ export class Roi {
    */
   get externalBorders(): Border[] {
     return this.#getComputed('externalBorders', () => {
-      return this.getExternalBorders();
+      return this.getExternalBorders().externalBorders;
     });
   }
   get perimeterInfo() {
@@ -231,12 +231,12 @@ export class Roi {
     });
   }
 
-  getExternalBorders(): Border[] {
+  getExternalBorders(): { externalIDs: number[]; externalBorders: Border[] } {
     // take all the borders and remove the internal one ...
     let borders = this.borders;
 
     let externalBorders = [];
-
+    let externalIDs = [];
     let internals = this.internalIDs;
 
     for (let border of borders) {
@@ -245,12 +245,15 @@ export class Roi {
           connectedID: border.connectedID,
           length: border.length,
         };
-
+        externalIDs.push(element.connectedID);
         externalBorders.push(element);
       }
     }
-    const externalIDs = externalBorders;
-    return externalIDs;
+
+    return {
+      externalIDs,
+      externalBorders,
+    };
   }
 
   /**
@@ -390,7 +393,7 @@ function getPerimeterInfo(roi: Roi) {
   let two = 0;
   let three = 0;
   let four = 0;
-
+  let externalIDs = roi.getExternalBorders().externalIDs;
   for (let column = 0; column < roi.width; column++) {
     for (let row = 0; row < roi.height; row++) {
       let target = roi.computeIndex(row, column);
@@ -398,37 +401,25 @@ function getPerimeterInfo(roi: Roi) {
         let nbAround = 0;
         if (column === 0) {
           nbAround++;
-        } else if (
-          roi.externalBorders.find((el) => el.connectedID === data[target - 1])
-        ) {
+        } else if (externalIDs.includes(data[target - 1])) {
           nbAround++;
         }
 
         if (column === roiMap.width - 1) {
           nbAround++;
-        } else if (
-          roi.externalBorders.find((el) => el.connectedID === data[target + 1])
-        ) {
+        } else if (externalIDs.includes(data[target + 1])) {
           nbAround++;
         }
 
         if (row === 0) {
           nbAround++;
-        } else if (
-          roi.externalBorders.find(
-            (el) => el.connectedID === data[target - roiMap.width],
-          )
-        ) {
+        } else if (externalIDs.includes(data[target - roiMap.width])) {
           nbAround++;
         }
 
         if (row === roiMap.height - 1) {
           nbAround++;
-        } else if (
-          roi.externalBorders.find(
-            (el) => el.connectedID === data[target + roiMap.width],
-          )
-        ) {
+        } else if (externalIDs.includes(data[target + roiMap.width])) {
           nbAround++;
         }
         switch (nbAround) {
