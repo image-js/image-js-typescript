@@ -95,7 +95,7 @@ export class Roi {
   }
 
   /**
-   * Return the value at the given coordinates in an ROI map.
+   * Returns the value at the given coordinates in an ROI map.
    *
    * @param column - Column of the value.
    * @param row - Row of the value.
@@ -106,7 +106,7 @@ export class Roi {
   }
 
   /**
-   * Return the ratio between the width and the height of the bounding rectangle of the ROI.
+   * Returns the ratio between the width and the height of the bounding rectangle of the ROI.
    *
    * @returns The width by height ratio.
    */
@@ -115,7 +115,7 @@ export class Roi {
   }
 
   /**
-   * Generate a mask of an ROI. You can specify the kind of mask you want using the `kind` option.
+   * Generates a mask of an ROI. You can specify the kind of mask you want using the `kind` option.
    *
    * @param options - Get Mask options
    * @returns The ROI mask.
@@ -187,8 +187,8 @@ export class Roi {
     );
   }
   /**
-   * Points of the ROI
-   * Returns an array with arrays of 2 numbers which are the coordinates of all the current ROI points
+   * An array of tuples, each tuple being the x and y coordinates of the ROI point.
+   * the current ROI points
    */
   get points() {
     return this.#getComputed('points', () => {
@@ -222,8 +222,8 @@ export class Roi {
     });
   }
   /**
-   * Getter that calculates the number of holes in the ROI and their total surface
-   * It is used to calculate fillRatio
+   * Number of holes in the ROI and their total surface.
+   * Used to calculate fillRatio.
    */
   get holesInfo() {
     return this.#getComputed('holesInfo', () => {
@@ -255,7 +255,7 @@ export class Roi {
   }
 
   /**
-   *Getter that calculates the borders' IDs and lengths
+   *Calculates the borders' IDs and lengths
    */
   get borders() {
     return this.#getComputed('borders', () => {
@@ -264,20 +264,20 @@ export class Roi {
   }
 
   /**
-   * Getter that calculates fill ratio of the ROI
+   * Calculates fill ratio of the ROI
    */
   get fillRatio() {
     return this.surface / (this.surface + this.holesInfo.surface);
   }
   /**
-   * Getter that calculates sphericity of the ROI
+   * Calculates sphericity of the ROI
    */
   get sphericity() {
     return (2 * Math.sqrt(this.surface * Math.PI)) / this.perimeter;
   }
 
   /**
-   * Getter that calculates solidity of the ROI
+   * Calculates solidity of the ROI
    */
   get solidity() {
     return this.surface / getConvexHull(this.getMask()).surface;
@@ -289,7 +289,7 @@ export class Roi {
     });
   }
   /**
-   * Getter that calculates minimum bounding rectangle
+   * Calculates minimum bounding rectangle
    */
   get mbr() {
     return this.#getComputed('mbr', () => {
@@ -353,13 +353,8 @@ export class Roi {
       };
     });
   }
-  /**
-   * A helper function to cache already calculated properties
-   *
-   * @param property
-   * @param callback
-   * @returns Computed[T]
-   */
+
+  //  A helper function to cache already calculated properties
   #getComputed<T extends keyof Computed>(
     property: T,
     callback: () => Computed[T],
@@ -377,7 +372,6 @@ export class Roi {
    *
    * @param y
    * @param x
-   * @returns number
    */
   computeIndex(y: number, x: number): number {
     const roiMap = this.getMap();
@@ -481,7 +475,7 @@ function getHolesInfo(roi: Roi) {
   };
 }
 /**
- * calculates internal IDs of the ROI
+ * Calculates internal IDs of the ROI
  *
  * @param roi
  * @returns internalIDs
@@ -527,12 +521,7 @@ function getInternalIDs(roi: Roi) {
 
   return internal;
 }
-/**
- * Not sure what it does
- *
- * @param roi
- * @returns
- */
+
 function getBoxIDs(roi: Roi): number[] {
   let surroundingIDs = new Set<number>(); // allows to get a unique list without indexOf
 
