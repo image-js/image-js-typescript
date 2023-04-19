@@ -11,3 +11,4 @@ export * from './save';
 export * from './utils/constants/colorModels';
 export { BorderType } from './utils/interpolateBorder';
 export { InterpolationType } from './utils/interpolatePixel';
+export { Montage } from './featureMatching/visualize/Montage';

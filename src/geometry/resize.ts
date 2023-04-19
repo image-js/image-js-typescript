@@ -62,6 +62,9 @@ export function resize(image: Image, options: ResizeOptions): Image {
     borderType = 'constant',
     borderValue = 0,
   } = options;
+
+  const start = Date.now();
+
   const { width, height } = checkOptions(image, options);
   const newImage = Image.createFrom(image, { width, height });
   const interpolate = getInterpolationFunction(interpolationType);
@@ -86,6 +89,13 @@ export function resize(image: Image, options: ResizeOptions): Image {
       }
     }
   }
+
+  console.log({
+    time: (Date.now() - start) / 1000,
+    from: { width: image.width, height: image.height },
+    to: { width: newImage.width, height: newImage.height },
+  });
+
   return newImage;
 }
 
