@@ -160,7 +160,7 @@ export class Roi {
    */
   get externalBorders(): Border[] {
     return this.#getComputed('externalBorders', () => {
-      return this.getExternalIDs();
+      return this.getExternalBorders();
     });
   }
   get perimeterInfo() {
@@ -231,7 +231,7 @@ export class Roi {
     });
   }
 
-  getExternalIDs(): Border[] {
+  getExternalBorders(): Border[] {
     // take all the borders and remove the internal one ...
     let borders = this.borders;
 
