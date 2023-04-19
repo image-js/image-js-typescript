@@ -10,8 +10,9 @@ test('should throw error', () => {
 
   const roiMapManager = fromMask(mask);
 
-  const roi2 = roiMapManager.getRoiById(4);
-  expect(roi2).toThrowError(/'Not found'/);
+  expect(() => {
+    roiMapManager.getRoiById(4);
+  }).toThrow(`invalid ID: 4`);
 });
 
 test('should give ROI of id = 1 ', () => {
@@ -28,4 +29,18 @@ test('should give ROI of id = 1 ', () => {
   const roi = roiMapManager.getRoiById(1);
 
   expect(roi.id).toStrictEqual(1);
+});
+
+test('should give ROI of id = 3 ', () => {
+  const mask = testUtils.createMask([
+    [1, 0, 1, 0, 1],
+    [1, 0, 1, 1, 1],
+    [0, 0, 0, 1, 0],
+    [0, 1, 0, 1, 1],
+  ]);
+
+  const roiMapManager = fromMask(mask);
+  const roi = roiMapManager.getRoiById(3);
+
+  expect(roi.id).toStrictEqual(3);
 });
