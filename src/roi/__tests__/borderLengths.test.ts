@@ -1,4 +1,4 @@
-import { fromMask } from '../..';
+import { fromMask, RoiKind } from '../..';
 
 test('border lengths property 5x5', () => {
   const mask = testUtils.createMask([
@@ -17,22 +17,20 @@ test('border lengths property 5x5', () => {
   ]);
 });
 
-// test('border lengths property 4x4', () => {
-//   const mask = testUtils.createMask([
-//     [0, 1, 1, 1],
-//     [0, 1, 0, 1],
-//     [0, 1, 1, 1],
-//     [0, 0, 0, 0],
-//   ]);
+test.skip.failing('border lengths property 4x4', () => {
+  const mask = testUtils.createMask([
+    [0, 1, 1, 1],
+    [0, 1, 0, 1],
+    [0, 1, 1, 1],
+    [0, 0, 0, 0],
+  ]);
 
-//   const roiMapManager = fromMask(mask);
+  const roiMapManager = fromMask(mask);
 
-//   const rois = roiMapManager.getRois({ kind: RoiKind.BW });
+  const rois = roiMapManager.getRois({ kind: RoiKind.BW });
 
-//   console.log(rois.map((roi) => roi.borders));
-//   console.log(rois[0].getMap());
-//   expect(rois[0].borders[0]).toStrictEqual({ connectedID: -1, length: 6 });
-// });
+  expect(rois[0].borders[0]).toStrictEqual({ connectedID: -1, length: 6 });
+});
 
 test('border lengths property 4x4', () => {
   const mask = testUtils.createMask([
