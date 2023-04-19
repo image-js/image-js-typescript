@@ -92,8 +92,22 @@ export function resize(image: Image, options: ResizeOptions): Image {
 
   console.log({
     time: (Date.now() - start) / 1000,
-    from: { width: image.width, height: image.height },
-    to: { width: newImage.width, height: newImage.height },
+    from: {
+      width: image.width,
+      height: image.height,
+      //@ts-expect-error is private
+      dataType: image.data.constructor,
+      //@ts-expect-error is private
+      dataLength: image.data.length,
+    },
+    to: {
+      width: newImage.width,
+      height: newImage.height,
+      //@ts-expect-error is private
+      dataType: newImage.data.constructor,
+      //@ts-expect-error is private
+      dataLength: newImage.data.length,
+    },
   });
 
   return newImage;

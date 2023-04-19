@@ -1,4 +1,7 @@
+import { join } from 'path';
+
 import { Image } from '../../../Image';
+import { readSync } from '../../../load';
 import { getBriefDescriptors } from '../../descriptors/getBriefDescriptors';
 import { FastKeypoint } from '../../keypoints/getFastKeypoints';
 import { getOrientedFastKeypoints } from '../../keypoints/getOrientedFastKeypoints';
@@ -11,7 +14,12 @@ const sourceKeypoints = getOrientedFastKeypoints(grey);
 
 describe('constructor', () => {
   it(' scale = 3', () => {
-    const source = testUtils.load('featureMatching/alphabet.jpg');
+    // const source = testUtils.load('featureMatching/alphabet.jpg');
+
+    const source = readSync(
+      join(__dirname, '../../../../test/img/featureMatching/alphabet.jpg'),
+    );
+
     const montage = new Montage(source, source, { scale: 3 });
     expect(montage.height).toBe(3 * source.height);
   });
