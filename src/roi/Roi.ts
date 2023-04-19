@@ -33,7 +33,7 @@ interface Ellipse {
     point1: { x: number; y: number };
     point2: { x: number; y: number };
   };
-  Surface: number;
+  surface: number;
 }
 interface Computed {
   perimeter: number;
@@ -247,8 +247,8 @@ export class Roi {
   get ellipse(): Ellipse {
     return this.#getComputed('ellipse', () => {
       let ellipse = getEllipse(this, { nbSD: 2, scale: 1 });
-      if (ellipse.Surface !== this.surface) {
-        const scaleFactor = Math.sqrt(this.surface / ellipse.Surface);
+      if (ellipse.surface !== this.surface) {
+        const scaleFactor = Math.sqrt(this.surface / ellipse.surface);
         ellipse = getEllipse(this, { nbSD: 2, scale: scaleFactor });
       }
       return ellipse;
@@ -677,7 +677,7 @@ function getEllipse(
   let rMinor: number;
   let vectorMajor: number[];
   let vectorMinor: number[];
-  let surface: number;
+  let ellipseSurface: number;
   if (eigenvalues[0] > eigenvalues[1]) {
     rMajor = Math.sqrt(eigenvalues[0] * options.nbSD);
     rMinor = Math.sqrt(eigenvalues[1] * options.nbSD);
@@ -715,7 +715,7 @@ function getEllipse(
     y: yCenter - rMinor * vectorMinor[1],
   };
 
-  surface =
+  ellipseSurface =
     Math.sqrt(
       Math.pow(majorAxisPoint1.x - xCenter, 2) +
         Math.pow(majorAxisPoint1.y - yCenter, 2),
@@ -740,6 +740,6 @@ function getEllipse(
       point1: minorAxisPoint1,
       point2: minorAxisPoint2,
     },
-    Surface: surface,
+    surface: ellipseSurface,
   };
 }
