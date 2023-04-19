@@ -66,11 +66,11 @@ export class RoiMapManager implements RoiManager {
     return this.map.data[this.map.width * row + column];
   }
 
-  public getRoiById(RoiID: number): Roi {
+  public getRoiById(roiID: number): Roi {
     const rois = this.getRois();
-    const thatRoi = rois.find((roi) => roi.id === RoiID);
+    const thatRoi = rois.find((roi) => roi.id === roiID);
     if (thatRoi === undefined) {
-      throw new Error('Invalid ID');
+      throw new Error(`invalid ID: ${roiID}`);
     } else {
       return thatRoi;
     }
