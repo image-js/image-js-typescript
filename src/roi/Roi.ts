@@ -33,6 +33,7 @@ interface Ellipse {
     point1: { x: number; y: number };
     point2: { x: number; y: number };
   };
+  Surface: number;
 }
 interface Computed {
   perimeter: number;
@@ -244,91 +245,13 @@ export class Roi {
     });
   }
   get ellipse(): Ellipse {
-    return this.#getComputed('ellipse', (): Ellipse => {
-      const nbSD = 2;
-      let xCenter = this.centroid.column;
-      let yCenter = this.centroid.row;
-      let newPoints: number[][] = this.points;
-
-      let xCentered = newPoints.map((item: number[]) => item[0] - xCenter);
-      let yCentered = newPoints.map((item: number[]) => item[1] - yCenter);
-
-      let centeredXVariance = variance(xCentered, { unbiased: false });
-      let centeredYVariance = variance(yCentered, { unbiased: false });
-
-      let centeredCovariance = covariance(
-        {
-          x: xCentered,
-          y: yCentered,
-        },
-        { unbiased: false },
-      );
-
-      //spectral decomposition of the sample covariance matrix
-      let sampleCovarianceMatrix = [
-        [centeredXVariance, centeredCovariance],
-        [centeredCovariance, centeredYVariance],
-      ];
-      let e = new EigenvalueDecomposition(sampleCovarianceMatrix);
-      let eigenvalues = e.realEigenvalues;
-      let vectors = e.eigenvectorMatrix;
-
-      let rMajor: number;
-      let rMinor: number;
-      let vectorMajor: number[];
-      let vectorMinor: number[];
-
-      if (eigenvalues[0] > eigenvalues[1]) {
-        rMajor = Math.sqrt(eigenvalues[0] * nbSD);
-        rMinor = Math.sqrt(eigenvalues[1] * nbSD);
-        vectorMajor = vectors.getColumn(0);
-        vectorMinor = vectors.getColumn(1);
-      } else if (eigenvalues[0] < eigenvalues[1]) {
-        rMajor = Math.sqrt(eigenvalues[1] * nbSD);
-        rMinor = Math.sqrt(eigenvalues[0] * nbSD);
-        vectorMajor = vectors.getColumn(1);
-        vectorMinor = vectors.getColumn(0);
-      } else {
-        // order here does not matter
-        rMajor = Math.sqrt(eigenvalues[1] * nbSD);
-        rMinor = Math.sqrt(eigenvalues[0] * nbSD);
-        vectorMajor = vectors.getColumn(1);
-        vectorMinor = vectors.getColumn(0);
+    return this.#getComputed('ellipse', () => {
+      let ellipse = getEllipse(this, { nbSD: 2, scale: 1 });
+      if (ellipse.Surface !== this.surface) {
+        const scaleFactor = Math.sqrt(this.surface / ellipse.Surface);
+        ellipse = getEllipse(this, { nbSD: 2, scale: scaleFactor });
       }
-
-      let majorAxisPoint1 = {
-        x: xCenter + rMajor * vectorMajor[0],
-        y: yCenter + rMajor * vectorMajor[1],
-      };
-      let majorAxisPoint2 = {
-        x: xCenter - rMajor * vectorMajor[0],
-        y: yCenter - rMajor * vectorMajor[1],
-      };
-      let minorAxisPoint1 = {
-        x: xCenter + rMinor * vectorMinor[0],
-        y: yCenter + rMinor * vectorMinor[1],
-      };
-      let minorAxisPoint2 = {
-        x: xCenter - rMinor * vectorMinor[0],
-        y: yCenter - rMinor * vectorMinor[1],
-      };
-
-      return {
-        rMajor,
-        rMinor,
-        position: {
-          x: xCenter,
-          y: yCenter,
-        },
-        majorAxis: {
-          point1: majorAxisPoint1,
-          point2: majorAxisPoint2,
-        },
-        minorAxis: {
-          point1: minorAxisPoint1,
-          point2: minorAxisPoint2,
-        },
-      };
+      return ellipse;
     });
   }
 
@@ -716,5 +639,107 @@ function getBorders(roi: Roi): { ids: number[]; lengths: number[] } {
   return {
     ids,
     lengths: borderLengths,
+  };
+}
+
+function getEllipse(
+  roi: Roi,
+  options: { nbSD: number; scale: number },
+): Ellipse {
+  let xCenter = roi.centroid.column;
+  let yCenter = roi.centroid.row;
+  let newPoints: number[][] = roi.points;
+
+  let xCentered = newPoints.map((item: number[]) => item[0] - xCenter);
+  let yCentered = newPoints.map((item: number[]) => item[1] - yCenter);
+
+  let centeredXVariance = variance(xCentered, { unbiased: false });
+  let centeredYVariance = variance(yCentered, { unbiased: false });
+
+  let centeredCovariance = covariance(
+    {
+      x: xCentered,
+      y: yCentered,
+    },
+    { unbiased: false },
+  );
+
+  //spectral decomposition of the sample covariance matrix
+  let sampleCovarianceMatrix = [
+    [centeredXVariance, centeredCovariance],
+    [centeredCovariance, centeredYVariance],
+  ];
+  let e = new EigenvalueDecomposition(sampleCovarianceMatrix);
+  let eigenvalues = e.realEigenvalues;
+  let vectors = e.eigenvectorMatrix;
+
+  let rMajor: number;
+  let rMinor: number;
+  let vectorMajor: number[];
+  let vectorMinor: number[];
+  let surface: number;
+  if (eigenvalues[0] > eigenvalues[1]) {
+    rMajor = Math.sqrt(eigenvalues[0] * options.nbSD);
+    rMinor = Math.sqrt(eigenvalues[1] * options.nbSD);
+    vectorMajor = vectors.getColumn(0);
+    vectorMinor = vectors.getColumn(1);
+  } else if (eigenvalues[0] < eigenvalues[1]) {
+    rMajor = Math.sqrt(eigenvalues[1] * options.nbSD);
+    rMinor = Math.sqrt(eigenvalues[0] * options.nbSD);
+    vectorMajor = vectors.getColumn(1);
+    vectorMinor = vectors.getColumn(0);
+  } else {
+    // order here does not matter
+    rMajor = Math.sqrt(eigenvalues[1] * options.nbSD);
+    rMinor = Math.sqrt(eigenvalues[0] * options.nbSD);
+    vectorMajor = vectors.getColumn(1);
+    vectorMinor = vectors.getColumn(0);
+  }
+  rMajor *= options.scale;
+  rMinor *= options.scale;
+
+  let majorAxisPoint1 = {
+    x: xCenter + rMajor * vectorMajor[0],
+    y: yCenter + rMajor * vectorMajor[1],
+  };
+  let majorAxisPoint2 = {
+    x: xCenter - rMajor * vectorMajor[0],
+    y: yCenter - rMajor * vectorMajor[1],
+  };
+  let minorAxisPoint1 = {
+    x: xCenter + rMinor * vectorMinor[0],
+    y: yCenter + rMinor * vectorMinor[1],
+  };
+  let minorAxisPoint2 = {
+    x: xCenter - rMinor * vectorMinor[0],
+    y: yCenter - rMinor * vectorMinor[1],
+  };
+
+  surface =
+    Math.sqrt(
+      Math.pow(majorAxisPoint1.x - xCenter, 2) +
+        Math.pow(majorAxisPoint1.y - yCenter, 2),
+    ) *
+    Math.sqrt(
+      Math.pow(minorAxisPoint1.x - xCenter, 2) +
+        Math.pow(minorAxisPoint1.y - yCenter, 2),
+    ) *
+    Math.PI;
+  return {
+    rMajor,
+    rMinor,
+    position: {
+      x: xCenter,
+      y: yCenter,
+    },
+    majorAxis: {
+      point1: majorAxisPoint1,
+      point2: majorAxisPoint2,
+    },
+    minorAxis: {
+      point1: minorAxisPoint1,
+      point2: minorAxisPoint2,
+    },
+    Surface: surface,
   };
 }
