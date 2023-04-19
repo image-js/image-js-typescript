@@ -235,8 +235,7 @@ export class Roi {
     // take all the borders and remove the internal one ...
     let borders = this.borders;
 
-    this.#computed.externalLengths = [];
-    this.#computed.externalBorders = [];
+    let externalBorders = [];
 
     let internals = this.internalIDs;
 
@@ -247,10 +246,10 @@ export class Roi {
           length: border.length,
         };
 
-        this.#computed.externalBorders.push(element);
+        externalBorders.push(element);
       }
     }
-    const externalIDs = this.#computed.externalBorders;
+    const externalIDs = externalBorders;
     return externalIDs;
   }
 
