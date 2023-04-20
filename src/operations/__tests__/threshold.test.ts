@@ -91,6 +91,6 @@ test('error threshold out of range', () => {
   const testImage = testUtils.load('opencv/test.png');
 
   expect(() => threshold(testImage, { threshold: 450 })).toThrow(
-    /threshold should be a value between 0 and 1/,
+    /threshold must be a value between 0 and 1/,
   );
 });
