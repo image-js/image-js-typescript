@@ -11,9 +11,7 @@ test('calculates surface from eqpc', () => {
   const rois = roiMapManager.getRois();
   const result = rois[0].ellipse;
   expect(result).toBeDeepCloseTo({
-    rMajor: 1.6080925781597333,
-    rMinor: 1.1876550784708841,
-    position: { x: 0.8333333333333334, y: 0.8333333333333334 },
+    center: { column: 0.8333333333333334, row: 0.8333333333333334 },
     majorAxis: {
       point1: { x: 1.9704265001258388, y: 1.9704265001258392 },
       point2: { x: -0.3037598334591721, y: -0.30375983345917235 },
