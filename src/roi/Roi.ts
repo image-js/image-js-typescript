@@ -19,11 +19,9 @@ import { getBorderPoints } from './getBorderPoints';
 import { getMask, GetMaskOptions } from './getMask';
 
 interface Ellipse {
-  rMajor: number;
-  rMinor: number;
-  position: {
-    x: number;
-    y: number;
+  center: {
+    column: number;
+    row: number;
   };
   majorAxis: {
     point1: { x: number; y: number };
@@ -673,51 +671,51 @@ function getEllipse(
   let eigenvalues = e.realEigenvalues;
   let vectors = e.eigenvectorMatrix;
 
-  let rMajor: number;
-  let rMinor: number;
+  let radiusMajor: number;
+  let radiusMinor: number;
   let vectorMajor: number[];
   let vectorMinor: number[];
   let ellipseSurface: number;
   if (eigenvalues[0] > eigenvalues[1]) {
-    rMajor = Math.sqrt(eigenvalues[0] * options.nbSD);
-    rMinor = Math.sqrt(eigenvalues[1] * options.nbSD);
+    radiusMajor = Math.sqrt(eigenvalues[0] * options.nbSD);
+    radiusMinor = Math.sqrt(eigenvalues[1] * options.nbSD);
     vectorMajor = vectors.getColumn(0);
     vectorMinor = vectors.getColumn(1);
   } else if (eigenvalues[0] < eigenvalues[1]) {
-    rMajor = Math.sqrt(eigenvalues[1] * options.nbSD);
-    rMinor = Math.sqrt(eigenvalues[0] * options.nbSD);
+    radiusMajor = Math.sqrt(eigenvalues[1] * options.nbSD);
+    radiusMinor = Math.sqrt(eigenvalues[0] * options.nbSD);
     vectorMajor = vectors.getColumn(1);
     vectorMinor = vectors.getColumn(0);
   } else {
     // order here does not matter
-    rMajor = Math.sqrt(eigenvalues[1] * options.nbSD);
-    rMinor = Math.sqrt(eigenvalues[0] * options.nbSD);
+    radiusMajor = Math.sqrt(eigenvalues[1] * options.nbSD);
+    radiusMinor = Math.sqrt(eigenvalues[0] * options.nbSD);
     vectorMajor = vectors.getColumn(1);
     vectorMinor = vectors.getColumn(0);
   }
-  rMajor *= options.scale;
-  rMinor *= options.scale;
+  radiusMajor *= options.scale;
+  radiusMinor *= options.scale;
 
   let majorAxisPoint1 = {
-    x: xCenter + rMajor * vectorMajor[0],
-    y: yCenter + rMajor * vectorMajor[1],
+    x: xCenter + radiusMajor * vectorMajor[0],
+    y: yCenter + radiusMajor * vectorMajor[1],
   };
   let majorAxisPoint2 = {
-    x: xCenter - rMajor * vectorMajor[0],
-    y: yCenter - rMajor * vectorMajor[1],
+    x: xCenter - radiusMajor * vectorMajor[0],
+    y: yCenter - radiusMajor * vectorMajor[1],
   };
   let minorAxisPoint1 = {
-    x: xCenter + rMinor * vectorMinor[0],
-    y: yCenter + rMinor * vectorMinor[1],
+    x: xCenter + radiusMinor * vectorMinor[0],
+    y: yCenter + radiusMinor * vectorMinor[1],
   };
   let minorAxisPoint2 = {
-    x: xCenter - rMinor * vectorMinor[0],
-    y: yCenter - rMinor * vectorMinor[1],
+    x: xCenter - radiusMinor * vectorMinor[0],
+    y: yCenter - radiusMinor * vectorMinor[1],
   };
 
   ellipseSurface =
     Math.sqrt(
-      Math.pow(majorAxisPoint1.x - xCenter, 2) +
+      (majorAxisPoint1.x - xCenter) ** 2 +
         Math.pow(majorAxisPoint1.y - yCenter, 2),
     ) *
     Math.sqrt(
@@ -726,11 +724,9 @@ function getEllipse(
     ) *
     Math.PI;
   return {
-    rMajor,
-    rMinor,
-    position: {
-      x: xCenter,
-      y: yCenter,
+    center: {
+      column: xCenter,
+      row: yCenter,
     },
     majorAxis: {
       point1: majorAxisPoint1,
