@@ -1,4 +1,4 @@
-import { ColorDepth, Image } from './Image';
+import { BitDepth, Image } from './Image';
 import { subtract, SubtractImageOptions } from './compare';
 import {
   drawLineOnMask,
@@ -100,7 +100,7 @@ export class Mask {
   /**
    * The number of bits per value in each channel (always 1).
    */
-  public readonly depth: ColorDepth;
+  public readonly bitDepth: BitDepth;
 
   /**
    * The color model of the mask (always BINARY).
@@ -164,7 +164,7 @@ export class Mask {
     this.width = width;
     this.height = height;
     this.size = width * height;
-    this.depth = 1;
+    this.bitDepth = 1;
     this.colorModel = 'BINARY';
     this.origin = origin;
 
@@ -762,6 +762,8 @@ function printData(mask: Mask): string {
  */
 function checkChannel(channel: number) {
   if (channel !== 0) {
-    throw new Error(`Channel value must be 0 on type Mask, got ${channel}.`);
+    throw new RangeError(
+      `channel value must be 0 on type Mask. Received ${channel}`,
+    );
   }
 }

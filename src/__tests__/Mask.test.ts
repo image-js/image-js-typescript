@@ -10,7 +10,7 @@ describe('create new masks', () => {
       width: 10,
       height: 20,
       size: 200,
-      depth: 1,
+      bitDepth: 1,
       colorModel: 'BINARY',
       components: 1,
       channels: 1,
@@ -82,7 +82,7 @@ describe('get and set value', () => {
     const mask = new Mask(10, 20);
     expect(() => {
       mask.getValue(2, 1, 2);
-    }).toThrow(/Channel value must be 0 on type Mask, got 2./);
+    }).toThrow(/channel value must be 0 on type Mask. Received 2/);
   });
 });
 
