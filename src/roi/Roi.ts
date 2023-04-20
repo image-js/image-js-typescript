@@ -713,12 +713,10 @@ function getEllipse(
 
   ellipseSurface =
     Math.sqrt(
-      (majorAxisPoint1.x - xCenter) ** 2 +
-        Math.pow(majorAxisPoint1.y - yCenter, 2),
+      (majorAxisPoint1.x - xCenter) ** 2 + (majorAxisPoint1.y - yCenter) ** 2,
     ) *
     Math.sqrt(
-      Math.pow(minorAxisPoint1.x - xCenter, 2) +
-        Math.pow(minorAxisPoint1.y - yCenter, 2),
+      (minorAxisPoint1.x - xCenter) ** 2 + (minorAxisPoint1.y - yCenter) ** 2,
     ) *
     Math.PI;
   return {
