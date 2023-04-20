@@ -130,4 +130,4 @@ src/**/*.png
 
 # ignore images in test scripts folder
 scripts/**.png
-scripts/background.jpg
+scripts/**.jpg
