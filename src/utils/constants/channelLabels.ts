@@ -4,4 +4,4 @@ export const channelLabels = {
   RGB: ['Red', 'Green', 'Blue'],
   RGBA: ['Red', 'Green', 'Blue', 'Alpha'],
   BINARY: ['Mask'],
-} as const;
+} as const satisfies Record<ImageColorModel, string[]>;
