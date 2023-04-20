@@ -1,6 +1,5 @@
 import { Image } from '../../Image';
 import {
-  BorderType,
   getBorderInterpolation,
   interpolateConstantPoint,
   interpolateReflectPoint,
@@ -18,9 +17,8 @@ test('in range', () => {
 
 test('too far', () => {
   const image = new Image(10, 10);
-  const interpolate = getBorderInterpolation(BorderType.REFLECT, 0);
-  const exp =
-    /interpolateBorder only supports borders smaller than the original image/;
+  const interpolate = getBorderInterpolation('reflect', 0);
+  const exp = 'border must be smaller than the original image';
   expect(() => interpolate(-10, 0, 0, image)).toThrow(exp);
   expect(() => interpolate(19, 0, 0, image)).toThrow(exp);
   expect(() => interpolate(-110, 0, 0, image)).toThrow(exp);
@@ -94,6 +92,6 @@ test('REFLECT_101 - positive', () => {
 test('unknown type', () => {
   // @ts-expect-error: testing JS problem
   expect(() => getBorderInterpolation('unknown', 5)).toThrow(
-    /interpolateBorder cannot be used with border type unknown/,
+    'invalid border type: unknown',
   );
 });

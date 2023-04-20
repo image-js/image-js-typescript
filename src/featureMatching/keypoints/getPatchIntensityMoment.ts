@@ -1,4 +1,4 @@
-import { Image, ImageCoordinates } from '../../Image';
+import { Image } from '../../Image';
 import { Point } from '../../geometry';
 import { getFilledCirclePoints } from '../../utils/geometry/getCirclePoints';
 import { checkBorderDistance } from '../utils/checkBorderDistance';
@@ -36,13 +36,11 @@ export function getPatchIntensityMoment(
   q: number,
   options: GetPatchIntensityMomentOptions = {},
 ): number[] {
-  const {
-    center: origin = image.getCoordinates(ImageCoordinates.CENTER),
-    radius = 3,
-  } = options;
+  const { center: origin = image.getCoordinates('center'), radius = 3 } =
+    options;
 
   if (!checkBorderDistance(image, origin, radius)) {
-    throw new Error(`desired patch is too close to image border`);
+    throw new RangeError(`desired patch is too close to image border`);
   }
   let moment = new Array(image.channels).fill(0);
 

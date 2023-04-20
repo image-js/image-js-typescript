@@ -19,7 +19,7 @@ export interface PaintMaskOnImageOptions {
    */
   color?: Array<number | null>;
   /**
-   * Should the given color be blended with the original pixel?
+   * Whether the given color should be blended with the original pixel.
    *
    * @default true
    */
@@ -51,9 +51,7 @@ export function paintMaskOnImage(
   const { column, row } = origin;
 
   if (color.length !== image.channels) {
-    throw new Error(
-      'paintMask: the given color is not compatible with the image',
-    );
+    throw new RangeError('the given color is not compatible with the image');
   }
 
   const result = getOutputImage(image, options, { clone: true });
@@ -108,8 +106,8 @@ function checkColorIsNumberArray(
 ): asserts color is number[] {
   for (let channel of color) {
     if (typeof channel !== 'number') {
-      throw new Error(
-        'paintMask: cannot have null channels in color if blend is true',
+      throw new TypeError(
+        'cannot have null channels in color if blend is true',
       );
     }
   }

@@ -1,5 +1,5 @@
 import {
-  ColorDepth,
+  BitDepth,
   Image,
   ImageColorModel,
   ImageDataArray,
@@ -7,7 +7,7 @@ import {
 } from '../src';
 import { colorModels } from '../src/utils/constants/colorModels';
 
-export type CreateImageOptions = Pick<ImageOptions, 'depth'>;
+export type CreateImageOptions = Pick<ImageOptions, 'bitDepth'>;
 
 /**
  * Create a new Image object from image data.
@@ -22,11 +22,11 @@ export function createImageFromData(
   colorModel: ImageColorModel,
   options: CreateImageOptions = {},
 ): Image {
-  const { depth = ColorDepth.UINT8 } = options;
+  const { bitDepth = 8 } = options;
   if (Array.isArray(data)) {
-    return createImageFrom2DArray(data, colorModel, depth);
+    return createImageFrom2DArray(data, colorModel, bitDepth);
   } else {
-    return createImageFromString(data, colorModel, depth);
+    return createImageFromString(data, colorModel, bitDepth);
   }
 }
 
@@ -35,26 +35,26 @@ export function createImageFromData(
  *
  * @param data - Image data.
  * @param colorModel - Image color model.
- * @param depth - Color depth.
+ * @param bitDepth - Bit depth.
  * @returns - The new image.
  */
 function createImageFrom2DArray(
   data: number[][],
   colorModel: ImageColorModel,
-  depth: ColorDepth,
+  bitDepth: BitDepth,
 ): Image {
   const { channels } = colorModels[colorModel];
   const height = data.length;
   const width = data[0].length / channels;
-  const imageData = createDataArray(height * width * channels, depth);
+  const imageData = createDataArray(height * width * channels, bitDepth);
   for (let row = 0; row < height; row++) {
     if (data[row].length % channels !== 0) {
-      throw new Error(
+      throw new RangeError(
         `length of row ${row} (${data[row].length}) is not a multiple of channels (${channels})`,
       );
     }
     if (data[row].length !== width * channels) {
-      throw new Error(
+      throw new RangeError(
         `length of row ${row} (${
           data[row].length / channels
         }) does not match width (${width})`,
@@ -69,7 +69,7 @@ function createImageFrom2DArray(
     }
   }
   return new Image(width, height, {
-    depth,
+    bitDepth,
     colorModel,
     data: imageData,
   });
@@ -80,30 +80,30 @@ function createImageFrom2DArray(
  *
  * @param data - Image data.
  * @param colorModel - Image color model.
- * @param depth - Color depth.
+ * @param bitDepth - Bit depth.
  * @returns - The new image.
  */
 function createImageFromString(
   data: string,
   colorModel: ImageColorModel,
-  depth: ColorDepth,
+  bitDepth: BitDepth,
 ): Image {
   const { channels } = colorModels[colorModel];
   const trimmed = data.trim();
   const lines = trimmed.split('\n');
   const height = lines.length;
   const width = lines[0].trim().split(/[^0-9]+/).length / channels;
-  const imageData = createDataArray(height * width * channels, depth);
+  const imageData = createDataArray(height * width * channels, bitDepth);
   for (let row = 0; row < height; row++) {
     const line = lines[row].trim();
     const values = line.split(/[^0-9]+/).map((v) => parseInt(v, 10));
     if (values.length % channels !== 0) {
-      throw new Error(
+      throw new RangeError(
         `length of row ${row} (${values.length}) is not a multiple of channels (${channels})`,
       );
     }
     if (values.length !== width * channels) {
-      throw new Error(
+      throw new RangeError(
         `length of row ${row} (${
           values.length / channels
         }) does not match width (${width})`,
@@ -118,7 +118,7 @@ function createImageFromString(
     }
   }
   return new Image(width, height, {
-    depth,
+    bitDepth,
     colorModel,
     data: imageData,
   });
@@ -128,11 +128,11 @@ function createImageFromString(
  * Create a new data typed array for an image.
  *
  * @param size - Total size of the data array.
- * @param depth - Color depth.
+ * @param bitDepth - Bit depth.
  * @returns The created array.
  */
-function createDataArray(size: number, depth: ColorDepth): ImageDataArray {
-  if (depth === ColorDepth.UINT8) {
+function createDataArray(size: number, bitDepth: BitDepth): ImageDataArray {
+  if (bitDepth === 8) {
     return new Uint8Array(size);
   } else {
     return new Uint16Array(size);

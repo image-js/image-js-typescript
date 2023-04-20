@@ -1,6 +1,6 @@
 import { encode } from 'jpeg-js';
 
-import { Image, ImageColorModel, ColorDepth } from '../Image';
+import { Image } from '../Image';
 
 export interface EncodeJpegOptions {
   /**
@@ -24,14 +24,14 @@ export function encodeJpeg(
 ): Uint8Array {
   const { quality = 50 } = options;
 
-  if (image.colorModel !== ImageColorModel.RGBA) {
-    image = image.convertColor(ImageColorModel.RGBA);
+  if (image.colorModel !== 'RGBA') {
+    image = image.convertColor('RGBA');
   }
-  if (image.depth !== ColorDepth.UINT8) {
-    image = image.convertDepth(ColorDepth.UINT8);
+  if (image.bitDepth !== 8) {
+    image = image.convertBitDepth(8);
   }
 
-  // Image data after depth conversion will always be UInt8Array
+  // Image data after bit depth conversion will always be UInt8Array
   const buffer = encode(image.getRawImage(), quality).data;
   return new Uint8Array(buffer, buffer.byteOffset, buffer.byteLength);
 }

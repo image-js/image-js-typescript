@@ -1,6 +1,8 @@
 import { decode, DecodedPng } from 'fast-png';
 
-import { Image, ImageColorModel, ColorDepth } from '../Image';
+import { BitDepth, Image } from '../Image';
+import { assert } from '../utils/assert';
+import { ImageColorModel } from '../utils/constants/colorModels';
 
 /**
  * Decode a PNG. See the fast-png npm module.
@@ -12,8 +14,7 @@ export function decodePng(buffer: Uint8Array): Image {
   const png = decode(buffer);
 
   let colorModel: ImageColorModel;
-  const depth: ColorDepth =
-    png.depth === 16 ? ColorDepth.UINT16 : ColorDepth.UINT8;
+  const bitDepth: BitDepth = png.depth === 16 ? 16 : 8;
 
   if (png.palette) {
     return loadPalettePng(png);
@@ -21,23 +22,23 @@ export function decodePng(buffer: Uint8Array): Image {
 
   switch (png.channels) {
     case 1:
-      colorModel = ImageColorModel.GREY;
+      colorModel = 'GREY';
       break;
     case 2:
-      colorModel = ImageColorModel.GREYA;
+      colorModel = 'GREYA';
       break;
     case 3:
-      colorModel = ImageColorModel.RGB;
+      colorModel = 'RGB';
       break;
     case 4:
-      colorModel = ImageColorModel.RGBA;
+      colorModel = 'RGBA';
       break;
     default:
-      throw new Error(`Unexpected number of channels: ${png.channels}`);
+      throw new RangeError(`invalid number of channels: ${png.channels}`);
   }
   return new Image(png.width, png.height, {
     colorModel,
-    depth,
+    bitDepth,
     data: png.data,
   });
 }
@@ -49,11 +50,7 @@ export function decodePng(buffer: Uint8Array): Image {
  * @returns The new image.
  */
 function loadPalettePng(png: DecodedPng): Image {
-  if (!png.palette) {
-    throw new Error(
-      'unexpected: there should be a palette when colourType is 3',
-    );
-  }
+  assert(png.palette);
   const pixels = png.width * png.height;
   const data = new Uint8Array(pixels * 3);
   const pixelsPerByte = 8 / png.depth;

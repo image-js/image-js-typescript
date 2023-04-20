@@ -1,5 +1,6 @@
-import { Image, ImageColorModel } from '../Image';
+import { Image } from '../Image';
 import { Mask } from '../Mask';
+import { ImageColorModel } from '../utils/constants/colorModels';
 import { getOutputImage, maskToOutputImage } from '../utils/getOutputImage';
 
 export interface ConvertColorOptions {
@@ -22,33 +23,21 @@ export function convertColor(
   colorModel: ImageColorModel,
   options: ConvertColorOptions = {},
 ): Image {
-  const canConvert = new Map([
-    [
-      ImageColorModel.GREY,
-      [ImageColorModel.GREYA, ImageColorModel.RGB, ImageColorModel.RGBA],
-    ],
-    [
-      ImageColorModel.GREYA,
-      [ImageColorModel.GREY, ImageColorModel.RGB, ImageColorModel.RGBA],
-    ],
-    [
-      ImageColorModel.RGB,
-      [ImageColorModel.GREYA, ImageColorModel.GREY, ImageColorModel.RGBA],
-    ],
-    [
-      ImageColorModel.RGBA,
-      [ImageColorModel.GREYA, ImageColorModel.GREY, ImageColorModel.RGB],
-    ],
-    [ImageColorModel.BINARY, [ImageColorModel.GREY]],
+  const canConvert = new Map<ImageColorModel, Array<ImageColorModel>>([
+    ['GREY', ['GREYA', 'RGB', 'RGBA']],
+    ['GREYA', ['GREY', 'RGB', 'RGBA']],
+    ['RGB', ['GREY', 'GREYA', 'RGBA']],
+    ['RGBA', ['GREY', 'GREYA', 'RGB']],
+    ['BINARY', ['GREY']],
   ]);
 
   if (image.colorModel === colorModel) {
-    throw new Error(`Cannot convert color, image is already ${colorModel}`);
+    throw new TypeError(`cannot convert color, image is already ${colorModel}`);
   }
 
   const canConvertTo = canConvert.get(image.colorModel);
   if (!canConvertTo?.includes(colorModel)) {
-    throw new Error(
+    throw new RangeError(
       `conversion from ${image.colorModel} to ${colorModel} not implemented`,
     );
   }
@@ -58,21 +47,12 @@ export function convertColor(
       newParameters: { colorModel },
     });
 
-    if (
-      image.colorModel === ImageColorModel.GREY ||
-      image.colorModel === ImageColorModel.GREYA
-    ) {
+    if (image.colorModel === 'GREY' || image.colorModel === 'GREYA') {
       convertGreyToAny(image, output);
     }
 
-    if (
-      image.colorModel === ImageColorModel.RGB ||
-      image.colorModel === ImageColorModel.RGBA
-    ) {
-      if (
-        colorModel === ImageColorModel.RGB ||
-        colorModel === ImageColorModel.RGBA
-      ) {
+    if (image.colorModel === 'RGB' || image.colorModel === 'RGBA') {
+      if (colorModel === 'RGB' || colorModel === 'RGBA') {
         convertRgbToRgb(image, output);
       } else {
         // GREYA or GREY
@@ -103,13 +83,13 @@ export function convertColor(
  */
 export function copyAlpha(source: Image, dest: Image): void {
   if (source.size !== dest.size) {
-    throw new Error('source and destination have different sizes');
+    throw new RangeError('source and destination have different sizes');
   }
   if (!source.alpha) {
-    throw new Error('source image does not have alpha');
+    throw new RangeError('source image does not have alpha');
   }
   if (!dest.alpha) {
-    throw new Error('destination does not have alpha');
+    throw new RangeError('destination does not have alpha');
   }
 
   for (let i = 0; i < dest.size; i++) {

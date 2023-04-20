@@ -1,4 +1,4 @@
-import { ColorDepth, Image } from '..';
+import { BitDepth, Image } from '..';
 import {
   PREWITT_X,
   PREWITT_Y,
@@ -7,16 +7,19 @@ import {
   SOBEL_X,
   SOBEL_Y,
 } from '../utils/constants/kernels';
-import { BorderType } from '../utils/interpolateBorder';
+import type { BorderType } from '../utils/interpolateBorder';
 
-export enum DerivativeFilters {
-  SOBEL = 'SOBEL',
-  SCHARR = 'SCHARR',
-  PREWITT = 'PREWITT',
+export const DerivativeFilter = {
+  SOBEL: 'sobel',
+  SCHARR: 'scharr',
+  PREWITT: 'prewitt',
   // todo: handle even sized kernels to implement Roberts' filter
   // for 2x2 matrices, the current pixel corresponds to the top-left
-  //  ROBERTS = 'ROBERTS',
-}
+  //  ROBERTS = 'roberts',
+} as const;
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export type DerivativeFilter =
+  (typeof DerivativeFilter)[keyof typeof DerivativeFilter];
 
 export interface DerivativeFilterOptions {
   /**
@@ -24,25 +27,25 @@ export interface DerivativeFilterOptions {
    *
    * @default SOBEL
    */
-  filter?: DerivativeFilters;
+  filter?: DerivativeFilter;
   /**
    * Specify how the borders should be handled.
    *
-   * @default BorderType.REPLICATE
+   * @default 'replicate'
    */
   borderType?: BorderType;
   /**
-   * Value of the border if BorderType is CONSTANT.
+   * Value of the border if BorderType is 'constant'.
    *
    * @default 0
    */
   borderValue?: number;
   /**
-   * Specify the bitDepth of the resulting image.
+   * Specify the bit depth of the resulting image.
    *
    * @default image.bitDepth
    */
-  bitDepth?: ColorDepth;
+  bitDepth?: BitDepth;
 }
 
 /**
@@ -56,23 +59,23 @@ export function derivativeFilter(
   image: Image,
   options: DerivativeFilterOptions = {},
 ): Image {
-  const { filter = DerivativeFilters.SOBEL } = options;
+  const { filter = 'sobel' } = options;
   let kernelX = SOBEL_X;
   let kernelY = SOBEL_Y;
 
   switch (filter) {
-    case DerivativeFilters.SOBEL:
+    case 'sobel':
       break;
-    case DerivativeFilters.SCHARR:
+    case 'scharr':
       kernelX = SCHARR_X;
       kernelY = SCHARR_Y;
       break;
-    case DerivativeFilters.PREWITT:
+    case 'prewitt':
       kernelX = PREWITT_X;
       kernelY = PREWITT_Y;
       break;
     default:
-      throw new Error('derivativeFilter: unrecognised derivative filter.');
+      throw new RangeError(`invalid derivative filter: ${filter}`);
   }
 
   return image.gradientFilter({ kernelX, kernelY, ...options });

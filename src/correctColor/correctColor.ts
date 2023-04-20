@@ -1,7 +1,7 @@
 import { RgbColor } from 'colord';
 import MLR from 'ml-regression-multivariate-linear';
 
-import { Image, ImageColorModel } from '../Image';
+import { Image } from '../Image';
 import checkProcessable from '../utils/checkProcessable';
 import { getClamp } from '../utils/clamp';
 
@@ -22,13 +22,13 @@ export function correctColor(
   measuredColors: RgbColor[],
   referenceColors: RgbColor[],
 ): Image {
-  checkProcessable(image, 'correctColor', {
-    colorModel: [ImageColorModel.RGB, ImageColorModel.RGBA],
+  checkProcessable(image, {
+    colorModel: ['RGB', 'RGBA'],
   });
 
   if (measuredColors.length !== referenceColors.length) {
-    throw new Error(
-      'correctColor: number of measured colors and reference colors differ',
+    throw new RangeError(
+      'number of measured colors and reference colors must be the same',
     );
   }
 
