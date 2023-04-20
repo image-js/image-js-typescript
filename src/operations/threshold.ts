@@ -135,7 +135,7 @@ export function threshold(image: Image, options: ThresholdOptions = {}): Mask {
   if ('threshold' in options) {
     const threshold = options.threshold;
     if (threshold < 0 || threshold > 1) {
-      throw new Error('threshold should be a value between 0 and 1');
+      throw new RangeError('threshold must be a value between 0 and 1');
     }
     thresholdValue = threshold * image.maxValue;
   } else {
