@@ -1,7 +1,5 @@
-import variance from 'ml-array-variance';
-//@ts-expect-error just to check if algorithm works
-import covariance from 'ml-array-xy-covariance';
 import { EigenvalueDecomposition } from 'ml-matrix';
+import { xVariance, xyCovariance } from 'ml-spectra-processing';
 
 import { Mask } from '../Mask';
 import {
@@ -651,10 +649,10 @@ function getEllipse(
   let xCentered = newPoints.map((item: number[]) => item[0] - xCenter);
   let yCentered = newPoints.map((item: number[]) => item[1] - yCenter);
 
-  let centeredXVariance = variance(xCentered, { unbiased: false });
-  let centeredYVariance = variance(yCentered, { unbiased: false });
+  let centeredXVariance = xVariance(xCentered, { unbiased: false });
+  let centeredYVariance = xVariance(yCentered, { unbiased: false });
 
-  let centeredCovariance = covariance(
+  let centeredCovariance = xyCovariance(
     {
       x: xCentered,
       y: yCentered,

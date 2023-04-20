@@ -50,7 +50,6 @@
     "jpeg-js": "^0.4.4",
     "median-quickselect": "^1.0.1",
     "ml-array-variance": "^1.1.8",
-    "ml-array-xy-covariance": "^0.2.1",
     "ml-convolution": "^2.0.0",
     "ml-directional-distribution": "github:mljs/directional-distribution",
     "ml-matrix": "^6.10.4",
