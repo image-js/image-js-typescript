@@ -62,6 +62,7 @@ exports[`3x3 mask 1`] = `
       },
     },
     "fillRatio": 1,
+    "filledSurface": 4,
     "height": 2,
     "id": 1,
     "mbr": {
@@ -157,6 +158,7 @@ exports[`3x3 mask 1`] = `
       },
     },
     "fillRatio": 1,
+    "filledSurface": 1,
     "height": 1,
     "id": 2,
     "mbr": {
@@ -265,6 +267,7 @@ exports[`3x3 mask 2`] = `
       },
     },
     "fillRatio": 1,
+    "filledSurface": 4,
     "height": 2,
     "id": -1,
     "mbr": {
