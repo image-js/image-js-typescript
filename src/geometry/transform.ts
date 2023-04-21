@@ -37,7 +37,7 @@ export interface TransformOptions {
    */
   borderValue?: number;
   /**
-   * Should the transform matrix be inverted?
+   * Whether the transform matrix should be inverted.
    */
   inverse?: boolean;
   /**
@@ -117,8 +117,8 @@ export function transform(
     transformMatrix[0].length !== 3 ||
     transformMatrix[1].length !== 3
   ) {
-    throw new Error(
-      `transform: transformation matrix must be 2x3, found ${transformMatrix.length}x${transformMatrix[1].length}`,
+    throw new TypeError(
+      `transformation matrix must be 2x3. Received ${transformMatrix.length}x${transformMatrix[1].length}`,
     );
   }
 

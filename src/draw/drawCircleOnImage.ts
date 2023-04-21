@@ -49,17 +49,18 @@ export function drawCircleOnImage(
 
   validateColor(color, newImage);
 
-  checkProcessable(newImage, 'paintPoints', {
+  checkProcessable(newImage, {
     bitDepth: [8, 16],
   });
 
   if (!Number.isInteger(radius)) {
-    throw new Error('drawCircle: radius must be an integer');
+    throw new TypeError('circle radius must be an integer');
   }
 
   if (radius < 0) {
-    throw new Error('drawCircle: circle radius must be positive');
+    throw new RangeError('circle radius must be positive');
   }
+
   if (radius === 0) {
     newImage.setVisiblePixel(center.column, center.row, color);
     return newImage;

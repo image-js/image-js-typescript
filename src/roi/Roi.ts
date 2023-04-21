@@ -331,6 +331,8 @@ export class Roi {
       convexHull: this.convexHull,
       mbr: this.mbr,
       filledSurface: this.filledSurface,
+      centroid: this.centroid,
+
     };
   }
 
