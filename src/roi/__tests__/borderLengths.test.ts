@@ -1,3 +1,5 @@
+import { test } from 'vitest';
+
 import { fromMask, RoiKind } from '../..';
 
 test('border lengths property 5x5', () => {
@@ -17,7 +19,7 @@ test('border lengths property 5x5', () => {
   ]);
 });
 
-test.skip.failing('border lengths property 4x4', () => {
+test.skip('border lengths property 4x4', () => {
   const mask = testUtils.createMask([
     [0, 1, 1, 1],
     [0, 1, 0, 1],
