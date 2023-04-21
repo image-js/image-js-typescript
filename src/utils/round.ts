@@ -5,7 +5,7 @@
  * @returns The rounded value.
  */
 export function round(value: number): number {
-  const integer = value >> 0;
+  const integer = Math.trunc(value);
   const decimal = value - integer;
   if (decimal < 0.5) {
     return integer;
