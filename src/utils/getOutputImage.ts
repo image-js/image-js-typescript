@@ -49,12 +49,12 @@ export function getOutputImage(
     }
   } else {
     if (!(out instanceof Image)) {
-      throw new TypeError('out must be an Image object');
+      throw new TypeError('out must be an Image');
     }
     const requirements: NewImageParameters = {
       width: thisImage.width,
       height: thisImage.height,
-      depth: thisImage.depth,
+      bitDepth: thisImage.bitDepth,
       colorModel: thisImage.colorModel,
       ...newParameters,
     };
@@ -83,12 +83,12 @@ export function maskToOutputImage(mask: Mask, options: OutOptions = {}): Image {
     });
   } else {
     if (!(out instanceof Image)) {
-      throw new TypeError('out must be an Image object');
+      throw new TypeError('out must be an Image');
     }
     const requirements: NewImageParameters = {
       width: mask.width,
       height: mask.height,
-      depth: 8,
+      bitDepth: 8,
       colorModel: 'GREY',
     };
     checkRequirements(requirements, out);
@@ -113,12 +113,12 @@ export function imageToOutputMask(
     return Mask.createFrom(image);
   } else {
     if (!(out instanceof Mask)) {
-      throw new TypeError('out must be a Mask object');
+      throw new TypeError('out must be a Mask');
     }
     const requirements: NewImageParameters = {
       width: image.width,
       height: image.height,
-      depth: 1,
+      bitDepth: 1,
       colorModel: 'BINARY',
     };
     checkRequirements(requirements, out);
@@ -135,7 +135,7 @@ function checkRequirements<ReqType extends object, OutType extends ReqType>(
     const prop = property as Keys;
     if (out[prop] !== requirements[prop]) {
       throw new RangeError(
-        `cannot use out. Its ${property} property must be ${requirements[prop]}. Found ${out[prop]}`,
+        `cannot use out image. Its ${property} property must be ${requirements[prop]}. Received ${out[prop]}`,
       );
     }
   }
@@ -165,12 +165,12 @@ export function maskToOutputMask(
     }
   } else {
     if (!(out instanceof Mask)) {
-      throw new TypeError('out must be a Mask object');
+      throw new TypeError('out must be a Mask');
     }
     const requirements: NewImageParameters = {
       width: mask.width,
       height: mask.height,
-      depth: 1,
+      bitDepth: 1,
       colorModel: 'BINARY',
     };
     checkRequirements(requirements, out);
