@@ -34,7 +34,6 @@ interface Computed {
   internalIDs: number[];
   feret: Feret;
   centroid: Point;
-  filledSurface: number;
 }
 export class Roi {
   /**
@@ -278,10 +277,9 @@ export class Roi {
   }
 
   get filledSurface() {
-    return this.#getComputed('filledSurface', () => {
-      return this.surface + this.holesInfo.surface;
-    });
+    return this.surface + this.holesInfo.surface;
   }
+
   /**
    * Getter that calculates solidity of the ROI
    */
