@@ -160,7 +160,7 @@ export class Roi {
    */
   get externalBorders(): Border[] {
     return this.#getComputed('externalBorders', () => {
-      return this.getExternalBorders().externalBorders;
+      return this.getExternalBorders();
     });
   }
   get perimeterInfo() {
@@ -231,7 +231,7 @@ export class Roi {
     });
   }
 
-  getExternalBorders(): { externalIDs: number[]; externalBorders: Border[] } {
+  getExternalBorders(): Border[] {
     // take all the borders and remove the internal one ...
     let borders = this.borders;
 
@@ -250,10 +250,7 @@ export class Roi {
       }
     }
 
-    return {
-      externalIDs,
-      externalBorders,
-    };
+    return externalBorders;
   }
 
   /**
@@ -393,7 +390,9 @@ function getPerimeterInfo(roi: Roi) {
   let two = 0;
   let three = 0;
   let four = 0;
-  let externalIDs = roi.getExternalBorders().externalIDs;
+  let externalIDs = roi
+    .getExternalBorders()
+    .map((element) => element.connectedID);
   for (let column = 0; column < roi.width; column++) {
     for (let row = 0; row < roi.height; row++) {
       let target = roi.computeIndex(row, column);
