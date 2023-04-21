@@ -332,7 +332,6 @@ export class Roi {
       mbr: this.mbr,
       filledSurface: this.filledSurface,
       centroid: this.centroid,
-
     };
   }
 
