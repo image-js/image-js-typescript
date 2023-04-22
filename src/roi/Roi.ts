@@ -668,7 +668,6 @@ function getEllipse(roi: Roi, scale: number): Ellipse {
 
   let centeredCovariance = xyCovariance(
     {
-      //@ts-expect-error check
       x: xCentered,
       y: yCentered,
     },
