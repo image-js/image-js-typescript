@@ -153,7 +153,7 @@ export class Roi {
   get internalIDs() {
     return this.#getComputed('internalIDs', () => {
       let internal = [this.id];
-      let roiMap = this.getMap();
+      let roiMap = this.map;
       let data = roiMap.data;
 
       if (this.height > 2) {
@@ -427,7 +427,7 @@ export class Roi {
    */
   get borders() {
     return this.#getComputed('borders', () => {
-      const roiMap = this.getMap();
+      const roiMap = this.map;
       const data = roiMap.data;
       let surroudingIDs = new Set<number>(); // allows to get a unique list without indexOf
       let surroundingBorders = new Map();
@@ -566,7 +566,7 @@ export class Roi {
 
   get centroid() {
     return this.#getComputed('centroid', () => {
-      const roiMap = this.getMap();
+      const roiMap = this.map;
       const data = roiMap.data;
       let sumColumn = 0;
       let sumRow = 0;
