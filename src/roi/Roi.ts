@@ -18,7 +18,6 @@ import { RoiMap } from './RoiMapManager';
 import { getBorderPoints } from './getBorderPoints';
 import { getMask, GetMaskOptions } from './getMask';
 
-
 interface Ellipse {
   center: {
     column: number;
@@ -27,11 +26,10 @@ interface Ellipse {
   majorAxis: FeretDiameter;
   minorAxis: FeretDiameter;
   surface: number;
-
+}
 interface Border {
   connectedID: number; // refers to the roiID of the contiguous ROI
   length: number;
-
 }
 interface Computed {
   perimeter: number;
