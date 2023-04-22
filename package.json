@@ -53,7 +53,6 @@
     "median-quickselect": "^1.0.1",
     "ml-array-variance": "^1.1.8",
     "ml-convolution": "^2.0.0",
-    "ml-directional-distribution": "github:mljs/directional-distribution",
     "ml-matrix": "^6.10.4",
     "ml-regression-multivariate-linear": "^2.0.4",
     "ml-spectra-processing": "^12.1.0",
