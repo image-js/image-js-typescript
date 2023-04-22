@@ -181,9 +181,69 @@ export class Roi {
       return externalBorders;
     });
   }
+  /**
+   * Calculates and caches the number of sides by which each pixel is touched externally
+   * @param roi -ROI
+   * @returns object which tells how many pixels are exposed externally to how many sides
+   */
   get perimeterInfo() {
     return this.#getComputed('perimeterInfo', () => {
-      return getPerimeterInfo(this);
+      const roiMap = this.map;
+      const data = roiMap.data;
+      let one = 0;
+      let two = 0;
+      let three = 0;
+      let four = 0;
+      let externalIDs = this.externalBorders.map(
+        (element) => element.connectedID,
+      );
+      for (let column = 0; column < this.width; column++) {
+        for (let row = 0; row < this.height; row++) {
+          let target = this.computeIndex(row, column);
+          if (data[target] === this.id) {
+            let nbAround = 0;
+            if (column === 0) {
+              nbAround++;
+            } else if (externalIDs.includes(data[target - 1])) {
+              nbAround++;
+            }
+
+            if (column === roiMap.width - 1) {
+              nbAround++;
+            } else if (externalIDs.includes(data[target + 1])) {
+              nbAround++;
+            }
+
+            if (row === 0) {
+              nbAround++;
+            } else if (externalIDs.includes(data[target - roiMap.width])) {
+              nbAround++;
+            }
+
+            if (row === roiMap.height - 1) {
+              nbAround++;
+            } else if (externalIDs.includes(data[target + roiMap.width])) {
+              nbAround++;
+            }
+            switch (nbAround) {
+              case 1:
+                one++;
+                break;
+              case 2:
+                two++;
+                break;
+              case 3:
+                three++;
+                break;
+              case 4:
+                four++;
+                break;
+              default:
+            }
+          }
+        }
+      }
+      return { one, two, three, four };
     });
   }
 
@@ -439,68 +499,6 @@ export class Roi {
     const roiMap = this.getMap();
     return (y + this.origin.row) * roiMap.width + x + this.origin.column;
   }
-}
-
-/**
- *
- * @param roi -ROI
- * @returns object which tells how many pixels are exposed externally to how many sides
- */
-function getPerimeterInfo(roi: Roi) {
-  const roiMap = roi.getMap();
-  const data = roiMap.data;
-  let one = 0;
-  let two = 0;
-  let three = 0;
-  let four = 0;
-  let externalIDs = roi.externalBorders.map((element) => element.connectedID);
-  for (let column = 0; column < roi.width; column++) {
-    for (let row = 0; row < roi.height; row++) {
-      let target = roi.computeIndex(row, column);
-      if (data[target] === roi.id) {
-        let nbAround = 0;
-        if (column === 0) {
-          nbAround++;
-        } else if (externalIDs.includes(data[target - 1])) {
-          nbAround++;
-        }
-
-        if (column === roiMap.width - 1) {
-          nbAround++;
-        } else if (externalIDs.includes(data[target + 1])) {
-          nbAround++;
-        }
-
-        if (row === 0) {
-          nbAround++;
-        } else if (externalIDs.includes(data[target - roiMap.width])) {
-          nbAround++;
-        }
-
-        if (row === roiMap.height - 1) {
-          nbAround++;
-        } else if (externalIDs.includes(data[target + roiMap.width])) {
-          nbAround++;
-        }
-        switch (nbAround) {
-          case 1:
-            one++;
-            break;
-          case 2:
-            two++;
-            break;
-          case 3:
-            three++;
-            break;
-          case 4:
-            four++;
-            break;
-          default:
-        }
-      }
-    }
-  }
-  return { one, two, three, four };
 }
 
 /**
