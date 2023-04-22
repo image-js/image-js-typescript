@@ -147,10 +147,50 @@ export class Roi {
   /**
    * Return an array of ROIs IDs that are included in the current ROI.
    * This will be useful to know if there are some holes in the ROI.
+   *
+   * @returns internalIDs
    */
   get internalIDs() {
     return this.#getComputed('internalIDs', () => {
-      return getInternalIDs(this);
+      let internal = [this.id];
+      let roiMap = this.getMap();
+      let data = roiMap.data;
+
+      if (this.height > 2) {
+        for (let column = 0; column < this.width; column++) {
+          let target = this.computeIndex(0, column);
+          if (internal.includes(data[target])) {
+            let id = data[target + roiMap.width];
+            if (!internal.includes(id) && !this.boxIDs.includes(id)) {
+              internal.push(id);
+            }
+          }
+        }
+      }
+
+      let array = new Array(4);
+      for (let column = 1; column < this.width - 1; column++) {
+        for (let row = 1; row < this.height - 1; row++) {
+          let target = this.computeIndex(row, column);
+          if (internal.includes(data[target])) {
+            // we check if one of the neighbour is not yet in
+
+            array[0] = data[target - 1];
+            array[1] = data[target + 1];
+            array[2] = data[target - roiMap.width];
+            array[3] = data[target + roiMap.width];
+
+            for (let i = 0; i < 4; i++) {
+              let id = array[i];
+              if (!internal.includes(id) && !this.boxIDs.includes(id)) {
+                internal.push(id);
+              }
+            }
+          }
+        }
+      }
+
+      return internal;
     });
   }
   //TODO externalIds should be an array of {id: number, length: number}
@@ -183,6 +223,7 @@ export class Roi {
   }
   /**
    * Calculates and caches the number of sides by which each pixel is touched externally
+   *
    * @param roi -ROI
    * @returns object which tells how many pixels are exposed externally to how many sides
    */
@@ -521,53 +562,6 @@ function getHolesInfo(roi: Roi) {
     number: roi.internalIDs.length - 1,
     surface,
   };
-}
-/**
- * Calculates internal IDs of the ROI
- *
- * @param roi
- * @returns internalIDs
- */
-function getInternalIDs(roi: Roi) {
-  let internal = [roi.id];
-  let roiMap = roi.getMap();
-  let data = roiMap.data;
-
-  if (roi.height > 2) {
-    for (let column = 0; column < roi.width; column++) {
-      let target = roi.computeIndex(0, column);
-      if (internal.includes(data[target])) {
-        let id = data[target + roiMap.width];
-        if (!internal.includes(id) && !roi.boxIDs.includes(id)) {
-          internal.push(id);
-        }
-      }
-    }
-  }
-
-  let array = new Array(4);
-  for (let column = 1; column < roi.width - 1; column++) {
-    for (let row = 1; row < roi.height - 1; row++) {
-      let target = roi.computeIndex(row, column);
-      if (internal.includes(data[target])) {
-        // we check if one of the neighbour is not yet in
-
-        array[0] = data[target - 1];
-        array[1] = data[target + 1];
-        array[2] = data[target - roiMap.width];
-        array[3] = data[target + roiMap.width];
-
-        for (let i = 0; i < 4; i++) {
-          let id = array[i];
-          if (!internal.includes(id) && !roi.boxIDs.includes(id)) {
-            internal.push(id);
-          }
-        }
-      }
-    }
-  }
-
-  return internal;
 }
 
 function getBoxIDs(roi: Roi): number[] {
