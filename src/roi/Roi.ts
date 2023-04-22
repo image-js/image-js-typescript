@@ -250,14 +250,75 @@ export class Roi {
   }
 
   /**
-   *Calculates the borders' IDs and lengths
+   *Calculates and caches border's length and their IDs
+   *
+   * @returns borders' length and their IDs
    */
   get borders() {
     return this.#getComputed('borders', () => {
-      return getBorders(this);
+      const roiMap = this.getMap();
+      const data = roiMap.data;
+      let surroudingIDs = new Set<number>(); // allows to get a unique list without indexOf
+      let surroundingBorders = new Map();
+      let visitedData = new Set();
+      let dx = [+1, 0, -1, 0];
+      let dy = [0, +1, 0, -1];
+
+      for (
+        let column = this.origin.column;
+        column <= this.origin.column + this.width;
+        column++
+      ) {
+        for (
+          let row = this.origin.row;
+          row <= this.origin.row + this.height;
+          row++
+        ) {
+          let target = column + row * roiMap.width;
+          if (data[target] === this.id) {
+            for (let dir = 0; dir < 4; dir++) {
+              let newX = column + dx[dir];
+              let newY = row + dy[dir];
+              if (
+                newX >= 0 &&
+                newY >= 0 &&
+                newX < roiMap.width &&
+                newY < roiMap.height
+              ) {
+                let neighbour = newX + newY * roiMap.width;
+
+                if (
+                  data[neighbour] !== this.id &&
+                  !visitedData.has(neighbour)
+                ) {
+                  visitedData.add(neighbour);
+                  surroudingIDs.add(data[neighbour]);
+                  let surroundingBorder = surroundingBorders.get(
+                    data[neighbour],
+                  );
+                  if (!surroundingBorder) {
+                    surroundingBorders.set(data[neighbour], 1);
+                  } else {
+                    surroundingBorders.set(
+                      data[neighbour],
+                      ++surroundingBorder,
+                    );
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      let id: number[] = Array.from(surroudingIDs);
+      return id.map((id) => {
+        return {
+          connectedID: id,
+          length: surroundingBorders.get(id),
+        };
+      });
     });
   }
-
   /**
    * Calculates fill ratio of the ROI
    */
@@ -564,61 +625,4 @@ function getBoxIDs(roi: Roi): number[] {
   }
 
   return Array.from(surroundingIDs); // the selection takes the whole rectangle
-}
-
-/**
- *
- * @param roi - ROI
- * @returns borders' length and their IDs
- */
-function getBorders(roi: Roi): Border[] {
-  const roiMap = roi.getMap();
-  const data = roiMap.data;
-  let surroudingIDs = new Set<number>(); // allows to get a unique list without indexOf
-  let surroundingBorders = new Map();
-  let visitedData = new Set();
-  let dx = [+1, 0, -1, 0];
-  let dy = [0, +1, 0, -1];
-
-  for (
-    let column = roi.origin.column;
-    column <= roi.origin.column + roi.width;
-    column++
-  ) {
-    for (let row = roi.origin.row; row <= roi.origin.row + roi.height; row++) {
-      let target = column + row * roiMap.width;
-      if (data[target] === roi.id) {
-        for (let dir = 0; dir < 4; dir++) {
-          let newX = column + dx[dir];
-          let newY = row + dy[dir];
-          if (
-            newX >= 0 &&
-            newY >= 0 &&
-            newX < roiMap.width &&
-            newY < roiMap.height
-          ) {
-            let neighbour = newX + newY * roiMap.width;
-
-            if (data[neighbour] !== roi.id && !visitedData.has(neighbour)) {
-              visitedData.add(neighbour);
-              surroudingIDs.add(data[neighbour]);
-              let surroundingBorder = surroundingBorders.get(data[neighbour]);
-              if (!surroundingBorder) {
-                surroundingBorders.set(data[neighbour], 1);
-              } else {
-                surroundingBorders.set(data[neighbour], ++surroundingBorder);
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-  let id: number[] = Array.from(surroudingIDs);
-  return id.map((id) => {
-    return {
-      connectedID: id,
-      length: surroundingBorders.get(id),
-    };
-  });
 }
