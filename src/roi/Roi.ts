@@ -160,7 +160,25 @@ export class Roi {
    */
   get externalBorders(): Border[] {
     return this.#getComputed('externalBorders', () => {
-      return this.getExternalBorders();
+      // take all the borders and remove the internal one ...
+      let borders = this.borders;
+
+      let externalBorders = [];
+      let externalIDs = [];
+      let internals = this.internalIDs;
+
+      for (let border of borders) {
+        if (!internals.includes(border.connectedID)) {
+          const element: Border = {
+            connectedID: border.connectedID,
+            length: border.length,
+          };
+          externalIDs.push(element.connectedID);
+          externalBorders.push(element);
+        }
+      }
+
+      return externalBorders;
     });
   }
   get perimeterInfo() {
@@ -229,28 +247,6 @@ export class Roi {
     return this.#getComputed('holesInfo', () => {
       return getHolesInfo(this);
     });
-  }
-
-  getExternalBorders(): Border[] {
-    // take all the borders and remove the internal one ...
-    let borders = this.borders;
-
-    let externalBorders = [];
-    let externalIDs = [];
-    let internals = this.internalIDs;
-
-    for (let border of borders) {
-      if (!internals.includes(border.connectedID)) {
-        const element: Border = {
-          connectedID: border.connectedID,
-          length: border.length,
-        };
-        externalIDs.push(element.connectedID);
-        externalBorders.push(element);
-      }
-    }
-
-    return externalBorders;
   }
 
   /**
