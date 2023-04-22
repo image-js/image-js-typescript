@@ -328,7 +328,58 @@ export class Roi {
   }
   get boxIDs() {
     return this.#getComputed('boxIDs', () => {
-      return getBoxIDs(this);
+      let surroundingIDs = new Set<number>(); // allows to get a unique list without indexOf
+
+      const roiMap = this.map;
+      const data = roiMap.data;
+
+      // we check the first line and the last line
+      for (let row of [0, this.height - 1]) {
+        for (let column = 0; column < this.width; column++) {
+          let target = this.computeIndex(row, column);
+          if (
+            column - this.origin.column > 0 &&
+            data[target] === this.id &&
+            data[target - 1] !== this.id
+          ) {
+            let value = data[target - 1];
+            surroundingIDs.add(value);
+          }
+          if (
+            roiMap.width - column - this.origin.column > 1 &&
+            data[target] === this.id &&
+            data[target + 1] !== this.id
+          ) {
+            let value = data[target + 1];
+            surroundingIDs.add(value);
+          }
+        }
+      }
+
+      // we check the first column and the last column
+      for (let column of [0, this.width - 1]) {
+        for (let row = 0; row < this.height; row++) {
+          let target = this.computeIndex(row, column);
+          if (
+            row - this.origin.row > 0 &&
+            data[target] === this.id &&
+            data[target - roiMap.width] !== this.id
+          ) {
+            let value = data[target - roiMap.width];
+            surroundingIDs.add(value);
+          }
+          if (
+            roiMap.height - row - this.origin.row > 1 &&
+            data[target] === this.id &&
+            data[target + roiMap.width] !== this.id
+          ) {
+            let value = data[target + roiMap.width];
+            surroundingIDs.add(value);
+          }
+        }
+      }
+
+      return Array.from(surroundingIDs); // the selection takes the whole rectangle
     });
   }
 
@@ -562,59 +613,4 @@ function getHolesInfo(roi: Roi) {
     number: roi.internalIDs.length - 1,
     surface,
   };
-}
-
-function getBoxIDs(roi: Roi): number[] {
-  let surroundingIDs = new Set<number>(); // allows to get a unique list without indexOf
-
-  const roiMap = roi.getMap();
-  const data = roiMap.data;
-
-  // we check the first line and the last line
-  for (let row of [0, roi.height - 1]) {
-    for (let column = 0; column < roi.width; column++) {
-      let target = roi.computeIndex(row, column);
-      if (
-        column - roi.origin.column > 0 &&
-        data[target] === roi.id &&
-        data[target - 1] !== roi.id
-      ) {
-        let value = data[target - 1];
-        surroundingIDs.add(value);
-      }
-      if (
-        roiMap.width - column - roi.origin.column > 1 &&
-        data[target] === roi.id &&
-        data[target + 1] !== roi.id
-      ) {
-        let value = data[target + 1];
-        surroundingIDs.add(value);
-      }
-    }
-  }
-
-  // we check the first column and the last column
-  for (let column of [0, roi.width - 1]) {
-    for (let row = 0; row < roi.height; row++) {
-      let target = roi.computeIndex(row, column);
-      if (
-        row - roi.origin.row > 0 &&
-        data[target] === roi.id &&
-        data[target - roiMap.width] !== roi.id
-      ) {
-        let value = data[target - roiMap.width];
-        surroundingIDs.add(value);
-      }
-      if (
-        roiMap.height - row - roi.origin.row > 1 &&
-        data[target] === roi.id &&
-        data[target + roiMap.width] !== roi.id
-      ) {
-        let value = data[target + roiMap.width];
-        surroundingIDs.add(value);
-      }
-    }
-  }
-
-  return Array.from(surroundingIDs); // the selection takes the whole rectangle
 }
