@@ -1,4 +1,4 @@
-import { Image, ImageColorModel, Mask } from '..';
+import { Image, Mask } from '..';
 import { GaussianBlurOptions } from '../filters';
 import checkProcessable from '../utils/checkProcessable';
 import { getIndex } from '../utils/getIndex';
@@ -68,8 +68,8 @@ export function cannyEdgeDetector(
   const minValue = lowThreshold * image.maxValue;
   const maxValue = highThreshold * image.maxValue;
 
-  checkProcessable(image, 'cannyEdgeDetector', {
-    colorModel: ImageColorModel.GREY,
+  checkProcessable(image, {
+    colorModel: 'GREY',
   });
 
   const width = image.width;

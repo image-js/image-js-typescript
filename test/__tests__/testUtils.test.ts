@@ -1,4 +1,4 @@
-import { ColorDepth, Image } from '../../src';
+import { Image } from '../../src';
 
 describe('load', () => {
   it('should load the image synchronously', () => {
@@ -7,7 +7,7 @@ describe('load', () => {
   });
 
   it('should throw and have TS error for bad path', () => {
-    // @ts-expect-error
+    // @ts-expect-error - this is expected to fail
     expect(() => testUtils.load('bad/path')).toThrow(/ENOENT/);
   });
 });
@@ -39,9 +39,9 @@ describe('createGreyImage', () => {
 
   it('should create a 16-bit image', () => {
     const image = testUtils.createGreyImage([[1, 32768]], {
-      depth: ColorDepth.UINT16,
+      bitDepth: 16,
     });
-    expect(image.depth).toBe(ColorDepth.UINT16);
+    expect(image.bitDepth).toBe(16);
     expect(image.getValueByIndex(0, 1)).toBe(32768);
   });
 
@@ -95,9 +95,9 @@ describe('createRgbImage', () => {
 
   it('should create a 16-bit image', () => {
     const image = testUtils.createRgbImage([[1, 2, 32768]], {
-      depth: ColorDepth.UINT16,
+      bitDepth: 16,
     });
-    expect(image.depth).toBe(ColorDepth.UINT16);
+    expect(image.bitDepth).toBe(16);
     expect(image.getPixel(0, 0)).toStrictEqual([1, 2, 32768]);
   });
 
@@ -137,9 +137,9 @@ describe('createRgbaImage', () => {
 
   it('should create a 16-bit image', () => {
     const image = testUtils.createRgbaImage([[1, 2, 3, 32768]], {
-      depth: ColorDepth.UINT16,
+      bitDepth: 16,
     });
-    expect(image.depth).toBe(ColorDepth.UINT16);
+    expect(image.bitDepth).toBe(16);
     expect(image.getPixel(0, 0)).toStrictEqual([1, 2, 3, 32768]);
   });
 
@@ -249,6 +249,6 @@ describe('createRoi', () => {
         [0, 0, 1],
         [0, 0, 1],
       ]),
-    ).toThrow(/createRoi: multiple ROIs found./);
+    ).toThrow(/multiple ROIs found/);
   });
 });

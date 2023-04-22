@@ -1,6 +1,5 @@
 import { fromMask } from '../fromMask';
 import { getMask } from '../getMask';
-import { RoiKind } from '../getRois';
 
 test('cross', () => {
   const mask = testUtils.createMask([
@@ -10,7 +9,7 @@ test('cross', () => {
   ]);
   const roiMapManager = fromMask(mask);
 
-  const rois = roiMapManager.getRois({ kind: RoiKind.WHITE });
+  const rois = roiMapManager.getRois({ kind: 'white' });
   const roiMask = rois[0].getMask();
   expect(roiMask).toMatchMask(mask);
 });
@@ -23,7 +22,7 @@ test('L', () => {
   ]);
   const roiMapManager = fromMask(mask);
 
-  const roi = roiMapManager.getRois({ kind: RoiKind.WHITE })[0];
+  const roi = roiMapManager.getRois({ kind: 'white' })[0];
   const roiMask = getMask(roi);
 
   expect(roiMask).toMatchMaskData([
@@ -40,7 +39,7 @@ test('1 pixel ROI', () => {
   ]);
   const roiMapManager = fromMask(mask);
 
-  const roi = roiMapManager.getRois({ kind: RoiKind.WHITE })[0];
+  const roi = roiMapManager.getRois({ kind: 'white' })[0];
   const roiMask = getMask(roi);
 
   expect(roiMask).toMatchMaskData([[1]]);
@@ -56,7 +55,7 @@ test('fill', () => {
   ]);
   const roiMapManager = fromMask(mask);
 
-  const roi = roiMapManager.getRois({ kind: RoiKind.WHITE })[0];
+  const roi = roiMapManager.getRois({ kind: 'white' })[0];
   const roiMask = getMask(roi);
 
   expect(roiMask).toMatchMaskData([
@@ -75,9 +74,9 @@ test('innerBorders false', () => {
   ]);
   const roiMapManager = fromMask(mask);
 
-  const roi = roiMapManager.getRois({ kind: RoiKind.WHITE })[0];
+  const roi = roiMapManager.getRois({ kind: 'white' })[0];
   const roiMask = getMask(roi, {
-    innerBorders: false,
+    solidFill: true,
   });
 
   expect(roiMask).toMatchMaskData([
@@ -95,9 +94,9 @@ test('innerBorders true', () => {
   ]);
   const roiMapManager = fromMask(mask);
 
-  const roi = roiMapManager.getRois({ kind: RoiKind.WHITE })[0];
+  const roi = roiMapManager.getRois({ kind: 'white' })[0];
   const roiMask = getMask(roi, {
-    innerBorders: true,
+    solidFill: false,
   });
 
   expect(roiMask).toMatchMaskData([
@@ -117,9 +116,9 @@ test('larger mask, innerBorders false', () => {
   ]);
   const roiMapManager = fromMask(mask);
 
-  const roi = roiMapManager.getRois({ kind: RoiKind.WHITE })[0];
+  const roi = roiMapManager.getRois({ kind: 'white' })[0];
   const roiMask = getMask(roi, {
-    innerBorders: false,
+    solidFill: true,
   });
 
   expect(roiMask).toMatchMaskData([
@@ -139,10 +138,9 @@ test('allowCorners true', () => {
   ]);
   const roiMapManager = fromMask(mask);
 
-  const roi = roiMapManager.getRois({ kind: RoiKind.WHITE })[0];
+  const roi = roiMapManager.getRois({ kind: 'white' })[0];
   const roiMask = getMask(roi, {
-    allowCorners: true,
-    innerBorders: false,
+    solidFill: true,
   });
 
   expect(roiMask).toMatchMaskData([
@@ -160,7 +158,7 @@ test('mask should have same origin as ROI', () => {
   ]);
   const roiMapManager = fromMask(mask);
 
-  const roi = roiMapManager.getRois({ kind: RoiKind.WHITE })[0];
+  const roi = roiMapManager.getRois({ kind: 'white' })[0];
   const roiMask = roi.getMask();
 
   expect(roiMask.origin).toStrictEqual(roi.origin);

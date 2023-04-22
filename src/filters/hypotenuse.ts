@@ -1,14 +1,14 @@
-import { Image } from '..';
+import { BitDepth, Image } from '..';
 import checkProcessable from '../utils/checkProcessable';
 import { validateChannels } from '../utils/validators';
 
 export interface HypotenuseOptions {
   /**
-   * Depth of the resulting image.
+   * Bit depth of the resulting image.
    *
-   * @default image.depth
+   * @default image.bitDepth
    */
-  depth?: number;
+  bitDepth?: BitDepth;
   /**
    * To which channels to apply the filter. By default all but alpha.
    */
@@ -28,33 +28,32 @@ export function hypotenuse(
   otherImage: Image,
   options: HypotenuseOptions = {},
 ): Image {
-  let { depth = image.depth, channels = [] } = options;
+  let { bitDepth = image.bitDepth, channels = [] } = options;
 
   for (let i = 0; i < image.components; i++) {
     channels.push(i);
   }
 
-  checkProcessable(image, 'hypotenuse', {
+  checkProcessable(image, {
     bitDepth: [8, 16],
   });
 
   if (image.width !== otherImage.width || image.height !== otherImage.height) {
-    throw new Error('hypotenuse: both images must have the same size');
+    throw new RangeError('both images must have the same size');
   }
-  if (image.alpha !== otherImage.alpha || image.depth !== otherImage.depth) {
-    throw new Error(
-      'hypotenuse: both images must have the same alpha and bitDepth',
-    );
+  if (
+    image.alpha !== otherImage.alpha ||
+    image.bitDepth !== otherImage.bitDepth
+  ) {
+    throw new RangeError('both images must have the same alpha and bitDepth');
   }
   if (image.channels !== otherImage.channels) {
-    throw new Error(
-      'hypotenuse: both images must have the same number of channels',
-    );
+    throw new RangeError('both images must have the same number of channels');
   }
 
   validateChannels(channels, image);
 
-  let newImage = Image.createFrom(image, { depth });
+  let newImage = Image.createFrom(image, { bitDepth });
 
   for (const channel of channels) {
     for (let i = 0; i < image.size; i++) {

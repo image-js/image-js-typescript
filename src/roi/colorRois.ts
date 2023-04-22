@@ -1,4 +1,4 @@
-import { Image, ImageColorModel } from '..';
+import { Image } from '..';
 
 import { RoiKind } from './getRois';
 import { colorMapCenter } from './utils/constants';
@@ -6,32 +6,34 @@ import { getColorMap } from './utils/getColorMap';
 
 import { RoiMapManager } from '.';
 
-export enum RoisColorMode {
+export const RoisColorMode = {
   /**
    * Only two acceptable values: red or green
    */
-  BINARY = 'BINARY',
+  BINARY: 'binary',
   /**
    * Palette of reds and blues.
    */
-  SATURATION = 'SATURATION',
+  SATURATION: 'saturation',
   /**
    * All possible hues (gradient of colors).
    */
-  RAINBOW = 'RAINBOW',
-}
+  RAINBOW: 'rainbow',
+} as const;
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export type RoisColorMode = (typeof RoisColorMode)[keyof typeof RoisColorMode];
 
 export interface ColorRoisOptions {
   /**
    * Define the color mode to use to color the ROIs.
    *
-   * @default ColorMode.BINARY
+   * @default 'binary'
    */
   mode?: RoisColorMode;
   /**
-   * Specify which ROIs to colour.
+   * Specify which ROIs to color.
    *
-   * @default RoiKind.BW
+   * @default 'bw'
    */
   roiKind?: RoiKind;
 }
@@ -47,11 +49,11 @@ export function colorRois(
   roiMapManager: RoiMapManager,
   options: ColorRoisOptions = {},
 ): Image {
-  const { roiKind = RoiKind.BW, mode = RoisColorMode.BINARY } = options;
+  const { roiKind = 'bw', mode = 'binary' } = options;
   const map = roiMapManager.getMap();
 
   let image = new Image(map.width, map.height, {
-    colorModel: ImageColorModel.RGBA,
+    colorModel: 'RGBA',
   });
 
   const colorMap = getColorMap({

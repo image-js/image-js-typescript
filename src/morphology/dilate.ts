@@ -1,5 +1,5 @@
 import { Mask } from '..';
-import { ColorDepth, Image } from '../Image';
+import { Image } from '../Image';
 import { checkKernel } from '../utils/checkKernel';
 import checkProcessable from '../utils/checkProcessable';
 
@@ -51,14 +51,14 @@ export function dilate(
   } = options;
 
   if (image instanceof Image) {
-    checkProcessable(image, 'dilate', {
-      bitDepth: [ColorDepth.UINT1, ColorDepth.UINT8, ColorDepth.UINT16],
+    checkProcessable(image, {
+      bitDepth: [1, 8, 16],
       components: 1,
       alpha: false,
     });
   }
 
-  checkKernel(kernel, 'dilate');
+  checkKernel(kernel);
 
   let onlyOnes = true;
   if (!defaultKernel) {

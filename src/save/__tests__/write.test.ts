@@ -1,10 +1,9 @@
 import { existsSync } from 'node:fs';
 import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 
 import { write, writeSync } from '..';
-import { read } from '../..';
-import { ImageColorModel } from '../../utils/constants/colorModels';
-import { ImageFormat } from '../encode';
+import { read, readSync } from '../..';
 
 let tmpDir: string;
 beforeEach(() => {
@@ -26,7 +25,7 @@ test('async write image to disk (png)', async () => {
 test('format option png', async () => {
   const img = testUtils.load('opencv/test.png');
   const destination = path.join(tmpDir, 'image.png');
-  await write(destination, img, { format: ImageFormat.png });
+  await write(destination, img, { format: 'png' });
   expect(existsSync(destination)).toBe(true);
   const imgRead = await read(destination);
   expect(imgRead).toMatchImage(img);
@@ -35,48 +34,49 @@ test('format option png', async () => {
 test('async write image to disk (jpeg)', async () => {
   const img = testUtils.load('opencv/test.png');
   const destination = path.join(tmpDir, 'image.jpeg');
-  await write(destination, img, { format: ImageFormat.jpeg });
+  await write(destination, img, { format: 'jpeg' });
   expect(existsSync(destination)).toBe(true);
   const imgRead = await read(destination);
   expect(imgRead.width).toBe(img.width);
-  expect(imgRead.colorModel).toBe(ImageColorModel.RGBA);
+  expect(imgRead.colorModel).toBe('RGBA');
 });
 
-test('write image to disk', async () => {
+test('sync write image to disk', () => {
   const img = testUtils.load('opencv/test.png');
   const destination = path.join(tmpDir, 'image.png');
   writeSync(destination, img);
   expect(existsSync(destination)).toBe(true);
-  const imgRead = await read(destination);
+  const imgRead = readSync(destination);
   expect(imgRead).toMatchImage(img);
 });
 
-test('write image to disk (jpeg)', async () => {
+test('sync write image to disk (jpeg)', () => {
   const img = testUtils.load('opencv/test.png');
   const destination = path.join(tmpDir, 'image.jpeg');
   writeSync(destination, img);
   expect(existsSync(destination)).toBe(true);
-  const imgRead = await read(destination);
+  const imgRead = readSync(destination);
   expect(imgRead.width).toBe(img.width);
-  expect(imgRead.colorModel).toBe(ImageColorModel.RGBA);
+  expect(imgRead.colorModel).toBe('RGBA');
 });
 
-test('write mask image to disk', async () => {
+test('sync write mask image to disk', () => {
   let img = testUtils.load('opencv/test.png');
-  img = img.convertColor(ImageColorModel.GREY);
+  img = img.convertColor('GREY');
   let mask = img.threshold();
-  let maskImage = mask.convertColor(ImageColorModel.GREY);
+  let maskImage = mask.convertColor('GREY');
   const destination = path.join(tmpDir, 'image.png');
   writeSync(destination, mask);
   expect(existsSync(destination)).toBe(true);
-  const imgRead = await read(destination);
+  const imgRead = readSync(destination);
   expect(imgRead).toMatchImage(maskImage);
 });
+
 test('async write mask image to disk', async () => {
   let img = testUtils.load('opencv/test.png');
-  img = img.convertColor(ImageColorModel.GREY);
+  img = img.convertColor('GREY');
   let mask = img.threshold();
-  let maskImage = mask.convertColor(ImageColorModel.GREY);
+  let maskImage = mask.convertColor('GREY');
   const destination = path.join(tmpDir, 'image.png');
   await write(destination, mask);
   expect(existsSync(destination)).toBe(true);
@@ -84,10 +84,55 @@ test('async write mask image to disk', async () => {
   expect(imgRead).toMatchImage(maskImage);
 });
 
+test('async write with URL', async () => {
+  const img = testUtils.load('opencv/test.png');
+  const destination = pathToFileURL(path.join(tmpDir, 'image.png'));
+  await write(destination, img);
+  expect(existsSync(destination)).toBe(true);
+  const imgRead = await read(destination);
+  expect(imgRead).toMatchImage(img);
+});
+
+test('sync write with URL', () => {
+  const img = testUtils.load('opencv/test.png');
+  const destination = pathToFileURL(path.join(tmpDir, 'image.png'));
+  writeSync(destination, img);
+  expect(existsSync(destination)).toBe(true);
+  const imgRead = readSync(destination);
+  expect(imgRead).toMatchImage(img);
+});
+
+test('async write with recursive option', async () => {
+  const img = testUtils.load('opencv/test.png');
+  const destination = path.join(tmpDir, 'subdir/123', 'image.png');
+  await write(destination, img, { recursive: true });
+  expect(existsSync(destination)).toBe(true);
+  const imgRead = await read(destination);
+  expect(imgRead).toMatchImage(img);
+});
+
+test('sync write with recursive option', () => {
+  const img = testUtils.load('opencv/test.png');
+  const destination = path.join(tmpDir, 'subdir/123', 'image.png');
+  writeSync(destination, img, { recursive: true });
+  expect(existsSync(destination)).toBe(true);
+  const imgRead = readSync(destination);
+  expect(imgRead).toMatchImage(img);
+});
+
+test('unknown format error', () => {
+  const img = testUtils.load('opencv/test.png');
+  const destination = path.join(tmpDir, 'image.png');
+  // @ts-expect-error test invalid format
+  expect(() => writeSync(destination, img, { format: 'foo' })).toThrow(
+    /invalid format: foo/,
+  );
+});
+
 test('image extension error', async () => {
   const img = testUtils.load('opencv/test.png');
   const destination = path.join(tmpDir, 'image.tiff');
   await expect(write(destination, img)).rejects.toThrow(
-    'image format could not be determined from file extension. Please use a supported extension or specify the format option',
+    'image format could not be determined from file extension. Use a supported extension or specify the format option',
   );
 });

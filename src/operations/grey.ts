@@ -1,10 +1,42 @@
 import { Image, ImageColorModel } from '..';
+import { assert } from '../utils/assert';
+import checkProcessable from '../utils/checkProcessable';
 import { getClamp } from '../utils/clamp';
 import { getOutputImage } from '../utils/getOutputImage';
 
 import * as greyAlgorithms from './greyAlgorithms';
 
-export type GreyAlgorithms = keyof typeof greyAlgorithms;
+export const GreyAlgorithm = {
+  LUMA_709: 'luma709',
+  LUMA_601: 'luma601',
+  MAX: 'max',
+  MIN: 'min',
+  AVERAGE: 'average',
+  MINMAX: 'minmax',
+  RED: 'red',
+  GREEN: 'green',
+  BLUE: 'blue',
+  BLACK: 'black',
+  CYAN: 'cyan',
+  MAGENTA: 'magenta',
+  YELLOW: 'yellow',
+  HUE: 'hue',
+  SATURATION: 'saturation',
+  LIGHTNESS: 'lightness',
+} as const satisfies Record<string, keyof typeof greyAlgorithms>;
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export type GreyAlgorithm = (typeof GreyAlgorithm)[keyof typeof GreyAlgorithm];
+
+{
+  // Check that all the algorithms are in the enum.
+  const algos = new Set<string>(Object.values(GreyAlgorithm));
+  for (const algo of Object.keys(greyAlgorithms)) {
+    assert(
+      algos.has(algo),
+      `Grey algorithm ${algo} is missing in the GreyAlgorithm enum`,
+    );
+  }
+}
 
 /**
  * Call back that converts the RGB channels to grey. It is clamped afterwards.
@@ -28,7 +60,7 @@ export interface GreyOptions {
    *
    * @default 'luma709'
    */
-  algorithm?: GreyAlgorithms | GreyAlgorithmCallback;
+  algorithm?: GreyAlgorithm | GreyAlgorithmCallback;
   /**
    * Specify wether to keep an alpha channel in the new image or not.
    *
@@ -61,12 +93,9 @@ export interface GreyOptions {
 export function grey(image: Image, options: GreyOptions = {}): Image {
   let { algorithm = 'luma709', keepAlpha = false, mergeAlpha = true } = options;
 
-  if (
-    image.colorModel !== ImageColorModel.RGB &&
-    image.colorModel !== ImageColorModel.RGBA
-  ) {
-    throw new Error('Image color model is not RGB or RGBA');
-  }
+  checkProcessable(image, {
+    colorModel: ['RGB', 'RGBA'],
+  });
 
   keepAlpha = keepAlpha && image.alpha;
   mergeAlpha = mergeAlpha && image.alpha;
@@ -74,7 +103,7 @@ export function grey(image: Image, options: GreyOptions = {}): Image {
     mergeAlpha = false;
   }
 
-  let newColorModel = keepAlpha ? ImageColorModel.GREYA : ImageColorModel.GREY;
+  let newColorModel: ImageColorModel = keepAlpha ? 'GREYA' : 'GREY';
 
   let newImage = getOutputImage(image, options, {
     newParameters: { colorModel: newColorModel },

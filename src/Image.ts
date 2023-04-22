@@ -76,7 +76,7 @@ import {
 import {
   convertColor,
   ConvertColorOptions,
-  convertDepth,
+  convertBitDepth,
   copyTo,
   CopyToOptions,
   crop,
@@ -101,33 +101,31 @@ import {
   ThresholdOptions,
 } from './index';
 
-export { ImageColorModel, colorModels } from './utils/constants/colorModels';
-
 export type ImageDataArray = Uint8Array | Uint16Array | Uint8ClampedArray;
+
 /**
  * Bit depth of the image (nb of bits that encode each value in the image).
  */
-export enum ColorDepth {
-  UINT1 = 1,
-  UINT8 = 8,
-  UINT16 = 16,
-}
+export type BitDepth = 1 | 8 | 16;
 
-export enum ImageCoordinates {
-  CENTER = 'CENTER',
-  TOP_LEFT = 'TOP_LEFT',
-  TOP_RIGHT = 'TOP_RIGHT',
-  BOTTOM_LEFT = 'BOTTOM_LEFT',
-  BOTTOM_RIGHT = 'BOTTOM_RIGHT',
-}
+export const ImageCoordinates = {
+  CENTER: 'center',
+  TOP_LEFT: 'top-left',
+  TOP_RIGHT: 'top-right',
+  BOTTOM_LEFT: 'bottom-left',
+  BOTTOM_RIGHT: 'bottom-right',
+} as const;
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export type ImageCoordinates =
+  (typeof ImageCoordinates)[keyof typeof ImageCoordinates];
 
 export interface ImageOptions {
   /**
    * Number of bits per value in each channel.
    *
-   * @default `ColorDepth.UINT8`.
+   * @default `8`.
    */
-  depth?: ColorDepth;
+  bitDepth?: BitDepth;
 
   /**
    * Typed array holding the image data.
@@ -137,7 +135,7 @@ export interface ImageOptions {
   /**
    * Color model of the created image.
    *
-   * @default `ImageColorModel.RGB`.
+   * @default 'RGB'.
    */
   colorModel?: ImageColorModel;
 
@@ -175,7 +173,7 @@ export class Image {
   /**
    * The number of bits per value in each channel.
    */
-  public readonly depth: ColorDepth;
+  public readonly bitDepth: BitDepth;
 
   /**
    * The color model of the image.
@@ -184,7 +182,7 @@ export class Image {
 
   /**
    * The number of color channels in the image, excluding the alpha channel.
-   * A grey image has 1 component. An RGB image has 3 components.
+   * A GREY image has 1 component. An RGB image has 3 components.
    */
   public readonly components: number;
 
@@ -224,9 +222,9 @@ export class Image {
     options: ImageOptions = {},
   ) {
     const {
-      depth = ColorDepth.UINT8,
+      bitDepth = 8,
       data,
-      colorModel = ImageColorModel.RGB,
+      colorModel = 'RGB',
       origin = { row: 0, column: 0 },
     } = options;
 
@@ -245,7 +243,7 @@ export class Image {
     this.width = width;
     this.height = height;
     this.size = width * height;
-    this.depth = depth;
+    this.bitDepth = bitDepth;
     this.colorModel = colorModel;
     this.origin = origin;
 
@@ -254,21 +252,21 @@ export class Image {
     this.alpha = colorModelDef.alpha;
     this.channels = colorModelDef.channels;
 
-    this.maxValue = 2 ** depth - 1;
+    this.maxValue = 2 ** bitDepth - 1;
 
     if (data === undefined) {
       this.data = createPixelArray(
         this.size,
         this.channels,
         this.alpha,
-        this.depth,
+        this.bitDepth,
         this.maxValue,
       );
     } else {
-      if (depth === ColorDepth.UINT8 && data instanceof Uint16Array) {
-        throw new Error(`depth is ${depth} but data is Uint16Array`);
-      } else if (depth === ColorDepth.UINT16 && data instanceof Uint8Array) {
-        throw new Error(`depth is ${depth} but data is Uint8Array`);
+      if (bitDepth === 8 && data instanceof Uint16Array) {
+        throw new RangeError(`bitDepth is ${bitDepth} but data is Uint16Array`);
+      } else if (bitDepth === 16 && data instanceof Uint8Array) {
+        throw new RangeError(`bitDepth is ${bitDepth} but data is Uint8Array`);
       }
       const expectedLength = this.size * this.channels;
       if (data.length !== expectedLength) {
@@ -292,14 +290,14 @@ export class Image {
     options: CreateFromOptions = {},
   ): Image {
     const { width = other.width, height = other.height } = options;
-    let depth;
+    let bitDepth: BitDepth;
     if (other instanceof Image) {
-      depth = other.depth;
+      bitDepth = other.bitDepth;
     } else {
-      depth = ColorDepth.UINT8;
+      bitDepth = 8;
     }
     return new Image(width, height, {
-      depth,
+      bitDepth,
       colorModel: other.colorModel,
       origin: other.origin,
       ...options,
@@ -460,7 +458,7 @@ export class Image {
       height: this.height,
       data: this.data,
       channels: this.channels,
-      depth: this.depth,
+      bitDepth: this.bitDepth,
     };
   }
 
@@ -474,7 +472,7 @@ export class Image {
     return `Image {
   width: ${this.width}
   height: ${this.height}
-  depth: ${this.depth}
+  bitDepth: ${this.bitDepth}
   colorModel: ${this.colorModel}
   channels: ${this.channels}
   data: ${dataString}
@@ -495,7 +493,7 @@ export class Image {
     } else {
       if (value.length !== this.channels) {
         throw new RangeError(
-          `the size of value must match the number of channels (${this.channels}). Got ${value.length} instead`,
+          `the size of value must match the number of channels (${this.channels}). Received ${value.length}`,
         );
       }
       for (const val of value) validateValue(val, this);
@@ -548,7 +546,7 @@ export class Image {
   public fillAlpha(value: number): this {
     validateValue(value, this);
     if (!this.alpha) {
-      throw new Error(
+      throw new TypeError(
         'fillAlpha can only be called if the image has an alpha channel',
       );
     }
@@ -579,12 +577,12 @@ export class Image {
    * Get the coordinates of a point in the image. The reference is the top-left corner.
    *
    * @param coordinates - The point for which you want the coordinates.
-   * @param round - Should the coordinates be rounded? This is useful when you want the center of the image.
+   * @param round - Whether the coordinates should be rounded. This is useful when you want the center of the image.
    * @returns Coordinates of the point in the format [column, row].
    */
   public getCoordinates(coordinates: ImageCoordinates, round = false): Point {
     switch (coordinates) {
-      case ImageCoordinates.CENTER: {
+      case 'center': {
         const centerX = (this.width - 1) / 2;
         const centerY = (this.height - 1) / 2;
         if (round) {
@@ -593,16 +591,16 @@ export class Image {
           return { column: centerX, row: centerY };
         }
       }
-      case ImageCoordinates.TOP_LEFT:
+      case 'top-left':
         return { column: 0, row: 0 };
-      case ImageCoordinates.TOP_RIGHT:
+      case 'top-right':
         return { column: this.width - 1, row: 0 };
-      case ImageCoordinates.BOTTOM_LEFT:
+      case 'bottom-left':
         return { column: 0, row: this.height - 1 };
-      case ImageCoordinates.BOTTOM_RIGHT:
+      case 'bottom-right':
         return { column: this.width - 1, row: this.height - 1 };
       default:
-        throw new Error(`Unknown image coordinates ${coordinates}`);
+        throw new RangeError(`invalid image coordinates: ${coordinates}`);
     }
   }
 
@@ -768,8 +766,8 @@ export class Image {
     return convertColor(this, colorModel, options);
   }
 
-  public convertDepth(newDepth: ColorDepth): Image {
-    return convertDepth(this, newDepth);
+  public convertBitDepth(newDepth: BitDepth): Image {
+    return convertBitDepth(this, newDepth);
   }
 
   public grey(options?: GreyOptions): Image {
@@ -1056,7 +1054,7 @@ export class Image {
  * @param size - Number of pixels.
  * @param channels - Number of channels.
  * @param alpha - Specify if there is alpha channel.
- * @param depth - Number of bits per channel.
+ * @param bitDepth - Number of bits per channel.
  * @param maxValue - Maximal acceptable value for the channels.
  * @returns The new pixel array.
  */
@@ -1064,20 +1062,20 @@ function createPixelArray(
   size: number,
   channels: number,
   alpha: boolean,
-  depth: ColorDepth,
+  bitDepth: BitDepth,
   maxValue: number,
 ): ImageDataArray {
   const length = channels * size;
   let arr;
-  switch (depth) {
-    case ColorDepth.UINT8:
+  switch (bitDepth) {
+    case 8:
       arr = new Uint8Array(length);
       break;
-    case ColorDepth.UINT16:
+    case 16:
       arr = new Uint16Array(length);
       break;
     default:
-      throw new Error(`unexpected color depth: ${depth}`);
+      throw new RangeError(`invalid bitDepth: ${bitDepth}`);
   }
 
   // Alpha channel is 100% by default.
@@ -1098,7 +1096,7 @@ function createPixelArray(
  */
 function printData(img: Image): string {
   const result = [];
-  const padding = img.depth === 8 ? 3 : 5;
+  const padding = img.bitDepth === 8 ? 3 : 5;
 
   for (let row = 0; row < img.height; row++) {
     const currentRow = [];

@@ -1,6 +1,6 @@
 import { ssim as bufferSsim } from 'ssim.js';
 
-import { ColorDepth, Image, ImageColorModel } from '..';
+import { Image } from '..';
 import checkProcessable from '../utils/checkProcessable';
 import { validateForComparison } from '../utils/validators';
 
@@ -53,21 +53,21 @@ export function computeSsim(
 
   if (windowSize) {
     if (windowSize > image.width || windowSize > image.height) {
-      throw new Error('ssim: windowSize cannot exceed image dimensions');
+      throw new RangeError('windowSize cannot exceed image dimensions');
     }
   } else {
     windowSize = Math.min(11, image.height, image.width);
   }
-  checkProcessable(image, 'ssim', {
-    bitDepth: [ColorDepth.UINT8],
+  checkProcessable(image, {
+    bitDepth: [8],
     channels: [1, 3, 4],
   });
 
-  validateForComparison('ssim', image, otherImage);
+  validateForComparison(image, otherImage);
 
-  if (image.colorModel !== ImageColorModel.RGBA) {
-    image = image.convertColor(ImageColorModel.RGBA);
-    otherImage = otherImage.convertColor(ImageColorModel.RGBA);
+  if (image.colorModel !== 'RGBA') {
+    image = image.convertColor('RGBA');
+    otherImage = otherImage.convertColor('RGBA');
   }
 
   const imageData = new Uint8ClampedArray(image.getRawImage().data);
