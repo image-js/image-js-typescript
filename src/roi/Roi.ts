@@ -391,13 +391,32 @@ export class Roi {
       return 2 * Math.sqrt(this.surface / Math.PI);
     });
   }
+
   /**
    * Number of holes in the ROI and their total surface.
    * Used to calculate fillRatio.
+   *
+   * @returns the surface of holes in ROI
    */
   get holesInfo() {
     return this.#getComputed('holesInfo', () => {
-      return getHolesInfo(this);
+      let surface = 0;
+      const data = this.map.data;
+      for (let column = 1; column < this.width - 1; column++) {
+        for (let row = 1; row < this.height - 1; row++) {
+          let target = this.computeIndex(row, column);
+          if (
+            this.internalIDs.includes(data[target]) &&
+            data[target] !== this.id
+          ) {
+            surface++;
+          }
+        }
+      }
+      return {
+        number: this.internalIDs.length - 1,
+        surface,
+      };
     });
   }
 
@@ -581,6 +600,7 @@ export class Roi {
     return this.#computed[property] as Computed[T];
   }
   //TODO Make this private
+
   /**
    * Calculates the correct index on the map of ROI
    *
@@ -591,26 +611,4 @@ export class Roi {
     const roiMap = this.getMap();
     return (y + this.origin.row) * roiMap.width + x + this.origin.column;
   }
-}
-
-/**
- *
- * @param roi - ROI
- * @returns the surface of holes in ROI
- */
-function getHolesInfo(roi: Roi) {
-  let surface = 0;
-  const data = roi.getMap().data;
-  for (let column = 1; column < roi.width - 1; column++) {
-    for (let row = 1; row < roi.height - 1; row++) {
-      let target = roi.computeIndex(row, column);
-      if (roi.internalIDs.includes(data[target]) && data[target] !== roi.id) {
-        surface++;
-      }
-    }
-  }
-  return {
-    number: roi.internalIDs.length - 1,
-    surface,
-  };
 }
