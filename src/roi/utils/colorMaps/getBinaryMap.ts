@@ -17,9 +17,9 @@ export interface GetBinaryMapOptions {
    */
   nbPositive: number;
   /**
-   * Specify which ROIs to colour.
+   * Specify which ROIs to color.
    *
-   * @default RoiKind.BW
+   * @default 'bw'
    */
   roiKind?: RoiKind;
   /**
@@ -48,19 +48,19 @@ export function getBinaryMap(options: GetBinaryMapOptions): Uint32Array {
     nbPositive,
     whiteHue = 120,
     blackHue = 0,
-    roiKind = RoiKind.BW,
+    roiKind = 'bw',
   } = options;
 
   let colorMap = new Uint32Array(maxNumberRois);
 
   // negative values
-  if (roiKind === RoiKind.BW || roiKind === RoiKind.BLACK) {
+  if (roiKind === 'bw' || roiKind === 'black') {
     for (let i = colorMapCenter - nbNegative; i < colorMapCenter; i++) {
       const hsv = [blackHue, 255, 255];
       colorMap[i] = rgbToNumber(hsvToRgb(hsv));
     }
   }
-  if (roiKind === RoiKind.BW || roiKind === RoiKind.WHITE) {
+  if (roiKind === 'bw' || roiKind === 'white') {
     // positive values
     for (let i = colorMapCenter + 1; i < colorMapCenter + 1 + nbPositive; i++) {
       const hsv = [whiteHue, 255, 255];

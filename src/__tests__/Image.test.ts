@@ -1,7 +1,7 @@
 import { inspect } from 'node:util';
 
-import { Image, ColorDepth, ImageCoordinates } from '../Image';
-import { ImageColorModel } from '../utils/constants/colorModels';
+import { Image, ImageCoordinates } from '../Image';
+import { Point } from '../geometry';
 
 describe('create new images', () => {
   it('should create a 8-bit image', () => {
@@ -10,8 +10,8 @@ describe('create new images', () => {
       width: 10,
       height: 20,
       size: 200,
-      depth: ColorDepth.UINT8,
-      colorModel: ImageColorModel.RGB,
+      bitDepth: 8,
+      colorModel: 'RGB',
       components: 3,
       channels: 3,
       alpha: false,
@@ -21,13 +21,13 @@ describe('create new images', () => {
   });
 
   it('should create a 16-bit image', () => {
-    const img = new Image(10, 20, { depth: ColorDepth.UINT16 });
+    const img = new Image(10, 20, { bitDepth: 16 });
     expect(img).toMatchObject({
       width: 10,
       height: 20,
       size: 200,
-      depth: ColorDepth.UINT16,
-      colorModel: ImageColorModel.RGB,
+      bitDepth: 16,
+      colorModel: 'RGB',
       components: 3,
       channels: 3,
       alpha: false,
@@ -37,10 +37,10 @@ describe('create new images', () => {
   });
 
   it('should create a grey image with alpha', () => {
-    const img = new Image(10, 20, { colorModel: ImageColorModel.GREYA });
+    const img = new Image(10, 20, { colorModel: 'GREYA' });
     expect(img).toMatchObject({
-      depth: ColorDepth.UINT8,
-      colorModel: ImageColorModel.GREYA,
+      bitDepth: 8,
+      colorModel: 'GREYA',
       components: 1,
       channels: 2,
       alpha: true,
@@ -54,7 +54,7 @@ describe('create new images', () => {
       0, 1, 2,
       3, 4, 5
     ]);
-    const img = new Image(3, 2, { data, colorModel: ImageColorModel.GREY });
+    const img = new Image(3, 2, { data, colorModel: 'GREY' });
     expect(img.getValue(0, 1, 0)).toBe(3);
     expect(img.getRawImage().data).toBe(data);
   });
@@ -79,33 +79,33 @@ describe('create new images', () => {
 
   it('should throw on wrong data size', () => {
     const data = new Uint16Array(2);
-    expect(() => new Image(2, 2, { data, depth: ColorDepth.UINT16 })).toThrow(
+    expect(() => new Image(2, 2, { data, bitDepth: 16 })).toThrow(
       /incorrect data size: 2. Expected 12/,
     );
   });
 
   it('should throw on wrong bit depth', () => {
     // @ts-expect-error we want to test the error.
-    expect(() => new Image(1, 1, { depth: 20 })).toThrow(
-      /unexpected color depth: 20/,
+    expect(() => new Image(1, 1, { bitDepth: 20 })).toThrow(
+      /invalid bitDepth: 20/,
     );
   });
-  it('should throw depth 8 but data 16', () => {
+  it('should throw with bit depth 8 but data 16', () => {
     const data = new Uint16Array([1, 2, 3, 4]);
-    expect(
-      () => new Image(2, 2, { colorModel: ImageColorModel.GREY, data }),
-    ).toThrow('depth is 8 but data is Uint16Array');
+    expect(() => new Image(2, 2, { colorModel: 'GREY', data })).toThrow(
+      'bitDepth is 8 but data is Uint16Array',
+    );
   });
-  it('should throw depth 16 but data 8', () => {
+  it('should throw with bit depth 16 but data 8', () => {
     const data = new Uint8Array([1, 2, 3, 4]);
     expect(
       () =>
         new Image(2, 2, {
-          colorModel: ImageColorModel.GREY,
-          depth: ColorDepth.UINT16,
+          colorModel: 'GREY',
+          bitDepth: 16,
           data,
         }),
-    ).toThrow('depth is 16 but data is Uint8Array');
+    ).toThrow('bitDepth is 16 but data is Uint8Array');
   });
 });
 
@@ -157,7 +157,7 @@ describe('get and set pixels', () => {
 });
 
 test('createFrom', () => {
-  const img = new Image(2, 20, { colorModel: ImageColorModel.GREY });
+  const img = new Image(2, 20, { colorModel: 'GREY' });
   const newImg = Image.createFrom(img);
   expect(img.width).toBe(newImg.width);
   expect(img.height).toBe(newImg.height);
@@ -166,7 +166,7 @@ test('createFrom', () => {
 });
 
 test('clone', () => {
-  const img = new Image(2, 2, { colorModel: ImageColorModel.GREY });
+  const img = new Image(2, 2, { colorModel: 'GREY' });
   img.setValue(1, 0, 0, 50);
   const copy = img.clone();
   expect(copy).toMatchImage(img);
@@ -182,32 +182,31 @@ test('changeEach', () => {
   ]);
 });
 
-test('getCoordinates', () => {
+test.each<[ImageCoordinates, Point]>([
+  ['bottom-left', { column: 0, row: 4 }],
+  ['bottom-right', { column: 3, row: 4 }],
+  ['center', { column: 1.5, row: 2 }],
+  ['top-left', { column: 0, row: 0 }],
+  ['top-right', { column: 3, row: 0 }],
+])('getCoordinates - %s', (coordinates, point) => {
   const img = new Image(4, 5);
-  expect(img.getCoordinates(ImageCoordinates.BOTTOM_LEFT)).toStrictEqual({
-    column: 0,
-    row: 4,
-  });
-  expect(img.getCoordinates(ImageCoordinates.BOTTOM_RIGHT)).toStrictEqual({
-    column: 3,
-    row: 4,
-  });
-  expect(img.getCoordinates(ImageCoordinates.CENTER)).toStrictEqual({
-    column: 1.5,
-    row: 2,
-  });
-  expect(img.getCoordinates(ImageCoordinates.CENTER, true)).toStrictEqual({
+  expect(img.getCoordinates(coordinates)).toStrictEqual(point);
+});
+
+test('getCoordinates - with rounding', () => {
+  const img = new Image(4, 5);
+  expect(img.getCoordinates('center', true)).toStrictEqual({
     column: 2,
     row: 2,
   });
-  expect(img.getCoordinates(ImageCoordinates.TOP_LEFT)).toStrictEqual({
-    column: 0,
-    row: 0,
-  });
-  expect(img.getCoordinates(ImageCoordinates.TOP_RIGHT)).toStrictEqual({
-    column: 3,
-    row: 0,
-  });
+});
+
+test('getCoordinates - bad parameter', () => {
+  const img = new Image(4, 5);
+  // @ts-expect-error bad parameter
+  expect(() => img.getCoordinates('bad')).toThrow(
+    /invalid image coordinates: bad/,
+  );
 });
 
 test('fill with a constant color', () => {
@@ -254,7 +253,7 @@ test('fill with out of range value in array', () => {
 test('fill with channel mismatch', () => {
   const img = new Image(1, 1);
   expect(() => img.fill([0, 1, 2, 3])).toThrow(
-    /the size of value must match the number of channels \(3\). Got 4 instead/,
+    /the size of value must match the number of channels \(3\). Received 4/,
   );
 });
 
@@ -304,7 +303,7 @@ test('get channel', () => {
 });
 
 test('fill alpha', () => {
-  const img = new Image(1, 2, { colorModel: ImageColorModel.RGBA });
+  const img = new Image(1, 2, { colorModel: 'RGBA' });
   img.fillAlpha(0);
   expect(img).toMatchImageData([
     [0, 0, 0, 0],
@@ -331,13 +330,13 @@ test('check custom inspect, RGB image', () => {
 });
 
 test('check custom inspect, GREYA image', () => {
-  const image = new Image(2, 2, { colorModel: ImageColorModel.GREYA });
+  const image = new Image(2, 2, { colorModel: 'GREYA' });
 
   expect(inspect(image)).toMatchSnapshot();
 });
 
 test('check custom inspect with image too large', () => {
-  const image = new Image(25, 25, { colorModel: ImageColorModel.GREYA });
+  const image = new Image(25, 25, { colorModel: 'GREYA' });
 
   expect(inspect(image)).toMatchSnapshot();
 });

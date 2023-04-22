@@ -1,4 +1,4 @@
-import { Image, ImageColorModel } from '../../Image';
+import { Image } from '../../Image';
 import { GaussianBlurSigmaOptions } from '../../filters';
 import checkProcessable from '../../utils/checkProcessable';
 import { OrientedFastKeypoint } from '../keypoints/getOrientedFastKeypoints';
@@ -67,17 +67,17 @@ export function getBriefDescriptors(
     pointsDistributionOptions,
   } = options;
 
-  checkProcessable(image, 'getBriefDescriptors', {
+  checkProcessable(image, {
     alpha: false,
-    colorModel: ImageColorModel.GREY,
+    colorModel: 'GREY',
   });
 
   if (!(patchSize % 2)) {
-    throw new Error('getBriefDescriptors: patchSize must be an odd integer');
+    throw new TypeError('patchSize must be an odd integer');
   }
 
   if (Math.min(image.width, image.height) < patchSize) {
-    throw new Error(`image is too small for patchSize = ${patchSize}`);
+    throw new RangeError(`image is too small for patchSize = ${patchSize}`);
   }
 
   const gaussianPoints = getGaussianPoints(patchSize, patchSize, {

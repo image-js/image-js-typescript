@@ -17,14 +17,14 @@ export interface GetColorMapOptions {
   /**
    * Specify the mode: what colors to use in the color map
    *
-   * @default ColorMode.BINARY
+   * @default 'binary'
    */
   mode?: RoisColorMode;
 
   /**
-   * Specify which ROIs to colour.
+   * Specify which ROIs to color.
    *
-   * @default RoiKind.BW
+   * @default 'bw'
    */
   roiKind?: RoiKind;
 }
@@ -36,17 +36,17 @@ export interface GetColorMapOptions {
  * @returns The color map.
  */
 export function getColorMap(options: GetColorMapOptions): Uint32Array {
-  const { mode = RoisColorMode.BINARY } = options;
-  options = { roiKind: RoiKind.BW, ...options };
+  const { mode = 'binary' } = options;
+  options = { roiKind: 'bw', ...options };
 
   switch (mode) {
-    case RoisColorMode.BINARY:
+    case 'binary':
       return getBinaryMap(options);
-    case RoisColorMode.SATURATION:
+    case 'saturation':
       return getSaturationMap(options);
-    case RoisColorMode.RAINBOW:
+    case 'rainbow':
       return getRainbowMap(options);
     default:
-      throw new Error('getColorMap: unknown color mode');
+      throw new RangeError(`invalid color mode: ${mode}`);
   }
 }

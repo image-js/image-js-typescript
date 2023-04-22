@@ -1,4 +1,5 @@
-import { Image, ImageColorModel } from '../Image';
+import { Image } from '../Image';
+import { ImageColorModel } from '../utils/constants/colorModels';
 
 /**
  * Inverse of split. Merges multiple single-channel images into one.
@@ -12,39 +13,45 @@ export function merge(images: Image[]): Image {
   let colorModel: ImageColorModel;
   switch (channels) {
     case 2: {
-      colorModel = ImageColorModel.GREYA;
+      colorModel = 'GREYA';
       break;
     }
     case 3: {
-      colorModel = ImageColorModel.RGB;
+      colorModel = 'RGB';
       break;
     }
     case 4: {
-      colorModel = ImageColorModel.RGBA;
+      colorModel = 'RGBA';
       break;
     }
     default: {
       throw new RangeError(
-        `merge expects an array of two to four images. Got ${channels}`,
+        `merge expects an array of two to four images. Received ${channels}`,
       );
     }
   }
 
   const first = images[0];
   if (first.channels !== 1) {
-    throw new Error(`each image must have one channel. Got ${first.channels}`);
+    throw new RangeError(
+      `each image must have one channel. Received ${first.channels}`,
+    );
   }
   for (let i = 1; i < channels; i++) {
     const img = images[i];
     if (img.channels !== 1) {
-      throw new Error(`each image must have one channel. Got ${img.channels}`);
+      throw new RangeError(
+        `each image must have one channel. Received ${img.channels}`,
+      );
     }
     if (
       img.width !== first.width ||
       img.height !== first.height ||
-      img.depth !== first.depth
+      img.bitDepth !== first.bitDepth
     ) {
-      throw new Error('all images must have the same width, height and depth');
+      throw new RangeError(
+        'all images must have the same width, height and bitDepth',
+      );
     }
   }
 

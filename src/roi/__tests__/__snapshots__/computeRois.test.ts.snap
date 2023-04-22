@@ -3,6 +3,10 @@
 exports[`3x3 mask 1`] = `
 [
   {
+    "centroid": {
+      "column": 0.75,
+      "row": 0.25,
+    },
     "convexHull": {
       "perimeter": 9.23606797749979,
       "points": [
@@ -62,6 +66,7 @@ exports[`3x3 mask 1`] = `
       },
     },
     "fillRatio": 1,
+    "filledSurface": 4,
     "height": 2,
     "id": 1,
     "mbr": {
@@ -102,6 +107,10 @@ exports[`3x3 mask 1`] = `
     "width": 3,
   },
   {
+    "centroid": {
+      "column": 2,
+      "row": 2,
+    },
     "convexHull": {
       "perimeter": 4,
       "points": [
@@ -157,6 +166,7 @@ exports[`3x3 mask 1`] = `
       },
     },
     "fillRatio": 1,
+    "filledSurface": 1,
     "height": 1,
     "id": 2,
     "mbr": {
@@ -202,6 +212,10 @@ exports[`3x3 mask 1`] = `
 exports[`3x3 mask 2`] = `
 [
   {
+    "centroid": {
+      "column": 1,
+      "row": 1.5,
+    },
     "convexHull": {
       "perimeter": 8.82842712474619,
       "points": [
@@ -265,6 +279,7 @@ exports[`3x3 mask 2`] = `
       },
     },
     "fillRatio": 1,
+    "filledSurface": 4,
     "height": 2,
     "id": -1,
     "mbr": {
