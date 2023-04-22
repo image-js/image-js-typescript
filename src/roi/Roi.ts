@@ -1,4 +1,3 @@
-//import { covariance } from 'ml-array-xy-covariance';
 import { EigenvalueDecomposition } from 'ml-matrix';
 import { xVariance, xyCovariance } from 'ml-spectra-processing';
 
