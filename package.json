@@ -54,7 +54,7 @@
     "ml-directional-distribution": "github:mljs/directional-distribution",
     "ml-matrix": "^6.10.4",
     "ml-regression-multivariate-linear": "^2.0.4",
-    "ml-spectra-processing": "^12.0.0",
+    "ml-spectra-processing": "^12.1.0",
     "robust-point-in-polygon": "^1.0.3",
     "ssim.js": "^3.5.0",
     "tiff": "^5.0.3"

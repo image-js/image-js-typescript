@@ -1,3 +1,4 @@
+//import { covariance } from 'ml-array-xy-covariance';
 import { EigenvalueDecomposition } from 'ml-matrix';
 import { xVariance, xyCovariance } from 'ml-spectra-processing';
 
@@ -9,7 +10,9 @@ import {
   getConvexHull,
   getMbr,
   Mbr,
+  FeretDiameter,
 } from '../maskAnalysis';
+import { getAngle } from '../maskAnalysis/utils/getAngle';
 import { Point } from '../utils/geometry/points';
 
 import { RoiMap } from './RoiMapManager';
@@ -21,14 +24,8 @@ interface Ellipse {
     column: number;
     row: number;
   };
-  majorAxis: {
-    point1: { x: number; y: number };
-    point2: { x: number; y: number };
-  };
-  minorAxis: {
-    point1: { x: number; y: number };
-    point2: { x: number; y: number };
-  };
+  majorAxis: FeretDiameter;
+  minorAxis: FeretDiameter;
   surface: number;
 }
 interface Computed {
@@ -242,10 +239,10 @@ export class Roi {
   }
   get ellipse(): Ellipse {
     return this.#getComputed('ellipse', () => {
-      let ellipse = getEllipse(this, { nbSD: 2, scale: 1 });
+      let ellipse = getEllipse(this, 1);
       if (ellipse.surface !== this.surface) {
         const scaleFactor = Math.sqrt(this.surface / ellipse.surface);
-        ellipse = getEllipse(this, { nbSD: 2, scale: scaleFactor });
+        ellipse = getEllipse(this, scaleFactor);
       }
       return ellipse;
     });
@@ -638,22 +635,21 @@ function getBorders(roi: Roi): { ids: number[]; lengths: number[] } {
   };
 }
 
-function getEllipse(
-  roi: Roi,
-  options: { nbSD: number; scale: number },
-): Ellipse {
+function getEllipse(roi: Roi, scale: number): Ellipse {
+  const nbSD = 2;
+
   let xCenter = roi.centroid.column;
   let yCenter = roi.centroid.row;
-  let newPoints: number[][] = roi.points;
 
-  let xCentered = newPoints.map((item: number[]) => item[0] - xCenter);
-  let yCentered = newPoints.map((item: number[]) => item[1] - yCenter);
+  let xCentered = roi.points.map((point: number[]) => point[0] - xCenter);
+  let yCentered = roi.points.map((point: number[]) => point[1] - yCenter);
 
   let centeredXVariance = xVariance(xCentered, { unbiased: false });
   let centeredYVariance = xVariance(yCentered, { unbiased: false });
 
   let centeredCovariance = xyCovariance(
     {
+      //@ts-expect-error check
       x: xCentered,
       y: yCentered,
     },
@@ -673,64 +669,68 @@ function getEllipse(
   let radiusMinor: number;
   let vectorMajor: number[];
   let vectorMinor: number[];
-  let ellipseSurface: number;
+
   if (eigenvalues[0] > eigenvalues[1]) {
-    radiusMajor = Math.sqrt(eigenvalues[0] * options.nbSD);
-    radiusMinor = Math.sqrt(eigenvalues[1] * options.nbSD);
+    radiusMajor = Math.sqrt(eigenvalues[0] * nbSD);
+    radiusMinor = Math.sqrt(eigenvalues[1] * nbSD);
     vectorMajor = vectors.getColumn(0);
     vectorMinor = vectors.getColumn(1);
   } else if (eigenvalues[0] < eigenvalues[1]) {
-    radiusMajor = Math.sqrt(eigenvalues[1] * options.nbSD);
-    radiusMinor = Math.sqrt(eigenvalues[0] * options.nbSD);
+    radiusMajor = Math.sqrt(eigenvalues[1] * nbSD);
+    radiusMinor = Math.sqrt(eigenvalues[0] * nbSD);
     vectorMajor = vectors.getColumn(1);
     vectorMinor = vectors.getColumn(0);
   } else {
     // order here does not matter
-    radiusMajor = Math.sqrt(eigenvalues[1] * options.nbSD);
-    radiusMinor = Math.sqrt(eigenvalues[0] * options.nbSD);
+    radiusMajor = Math.sqrt(eigenvalues[1] * nbSD);
+    radiusMinor = Math.sqrt(eigenvalues[0] * nbSD);
     vectorMajor = vectors.getColumn(1);
     vectorMinor = vectors.getColumn(0);
   }
-  radiusMajor *= options.scale;
-  radiusMinor *= options.scale;
 
+  radiusMajor *= scale;
+  radiusMinor *= scale;
   let majorAxisPoint1 = {
-    x: xCenter + radiusMajor * vectorMajor[0],
-    y: yCenter + radiusMajor * vectorMajor[1],
+    column: xCenter + radiusMajor * vectorMajor[0],
+    row: yCenter + radiusMajor * vectorMajor[1],
   };
   let majorAxisPoint2 = {
-    x: xCenter - radiusMajor * vectorMajor[0],
-    y: yCenter - radiusMajor * vectorMajor[1],
+    column: xCenter - radiusMajor * vectorMajor[0],
+    row: yCenter - radiusMajor * vectorMajor[1],
   };
   let minorAxisPoint1 = {
-    x: xCenter + radiusMinor * vectorMinor[0],
-    y: yCenter + radiusMinor * vectorMinor[1],
+    column: xCenter + radiusMinor * vectorMinor[0],
+    row: yCenter + radiusMinor * vectorMinor[1],
   };
   let minorAxisPoint2 = {
-    x: xCenter - radiusMinor * vectorMinor[0],
-    y: yCenter - radiusMinor * vectorMinor[1],
+    column: xCenter - radiusMinor * vectorMinor[0],
+    row: yCenter - radiusMinor * vectorMinor[1],
   };
 
-  ellipseSurface =
-    Math.sqrt(
-      (majorAxisPoint1.x - xCenter) ** 2 + (majorAxisPoint1.y - yCenter) ** 2,
-    ) *
-    Math.sqrt(
-      (minorAxisPoint1.x - xCenter) ** 2 + (minorAxisPoint1.y - yCenter) ** 2,
-    ) *
-    Math.PI;
+  const majorLength = Math.sqrt(
+    (majorAxisPoint1.column - majorAxisPoint2.column) ** 2 +
+      (majorAxisPoint1.row - majorAxisPoint2.row) ** 2,
+  );
+  const minorLength = Math.sqrt(
+    (minorAxisPoint1.column - majorAxisPoint2.column) ** 2 +
+      (minorAxisPoint1.row - minorAxisPoint2.row) ** 2,
+  );
+
+  let ellipseSurface = (((minorLength / 2) * majorLength) / 2) * Math.PI;
   return {
     center: {
       column: xCenter,
       row: yCenter,
     },
     majorAxis: {
-      point1: majorAxisPoint1,
-      point2: majorAxisPoint2,
+      points: [majorAxisPoint1, majorAxisPoint2],
+      length: majorLength,
+      angle: getAngle(majorAxisPoint1, majorAxisPoint2),
     },
     minorAxis: {
-      point1: minorAxisPoint1,
-      point2: minorAxisPoint2,
+      points: [minorAxisPoint1, minorAxisPoint1],
+      length: minorLength,
+      angle: getAngle(minorAxisPoint1, minorAxisPoint2),
     },
     surface: ellipseSurface,
   };
