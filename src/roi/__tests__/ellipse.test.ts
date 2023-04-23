@@ -18,7 +18,7 @@ test('ellipse on a small figure 3x3', () => {
         { column: -0.1645007254402011, row: -0.4978340587735344 },
       ],
       length: 2.3508963970396173,
-      angle: -2.356194490192345,
+      angle: -135,
     },
     minorAxis: {
       points: [
@@ -26,7 +26,7 @@ test('ellipse on a small figure 3x3', () => {
         { column: 1.146541384241206, row: -0.14654138424120605 },
       ],
       length: 1.6247924149339357,
-      angle: 2.356194490192345,
+      angle: 135,
     },
     surface: 3,
   });
@@ -50,7 +50,7 @@ test('ellipse on 3x3 cross', () => {
         { column: 1, row: -0.7841241161527714 },
       ],
       length: 3.5682482323055424,
-      angle: -1.5707963267948966,
+      angle: -90,
     },
     minorAxis: {
       points: [
@@ -58,7 +58,7 @@ test('ellipse on 3x3 cross', () => {
         { column: 2.7841241161527712, row: 1 },
       ],
       length: 1.7841241161527712,
-      angle: 3.141592653589793,
+      angle: 180,
     },
     surface: 5,
   });
@@ -81,7 +81,7 @@ test('ellipse on slightly changed 3x3 cross', () => {
         { column: -0.5085171343431153, row: -0.5085171343431155 },
       ],
       length: 3.7953262601294284,
-      angle: -2.356194490192345,
+      angle: -135,
     },
     minorAxis: {
       points: [
@@ -89,7 +89,7 @@ test('ellipse on slightly changed 3x3 cross', () => {
         { column: -0.15768891509232064, row: 1.8243555817589874 },
       ],
       length: 2.01285390103734,
-      angle: -0.7853981633974483,
+      angle: -45,
     },
     surface: 6.000000000000002,
   });
@@ -114,7 +114,7 @@ test('ellipse on 4x4 ROI', () => {
         { column: 3.0666371578044496, row: -0.06875086941190611 },
       ],
       length: 4.503699166851579,
-      angle: -0.961420320555157,
+      angle: -55.08532670592521,
     },
     minorAxis: {
       points: [
@@ -122,7 +122,7 @@ test('ellipse on 4x4 ROI', () => {
         { column: 0.8646151602330147, row: 1.1403989822180598 },
       ],
       length: 2.544387508597132,
-      angle: 0.6093760062397394,
+      angle: 34.91467329407479,
     },
     surface: 9.000000000000002,
   });
