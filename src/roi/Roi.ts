@@ -12,6 +12,7 @@ import {
   FeretDiameter,
 } from '../maskAnalysis';
 import { getAngle } from '../maskAnalysis/utils/getAngle';
+import { toDegrees } from '../utils/geometry/angles';
 import { Point } from '../utils/geometry/points';
 
 import { RoiMap } from './RoiMapManager';
@@ -743,12 +744,12 @@ function getEllipse(roi: Roi, scale: number): Ellipse {
     majorAxis: {
       points: [majorAxisPoint1, majorAxisPoint2],
       length: majorLength,
-      angle: getAngle(majorAxisPoint1, majorAxisPoint2),
+      angle: toDegrees(getAngle(majorAxisPoint1, majorAxisPoint2)),
     },
     minorAxis: {
       points: [minorAxisPoint1, minorAxisPoint1],
       length: minorLength,
-      angle: getAngle(minorAxisPoint1, minorAxisPoint2),
+      angle: toDegrees(getAngle(minorAxisPoint1, minorAxisPoint2)),
     },
     surface: ellipseSurface,
   };
