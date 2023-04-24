@@ -29,6 +29,7 @@ export interface Feret {
    * Bigger Feret diameter.
    */
   maxDiameter: FeretDiameter;
+  lines: { maxDiameter: Point[][]; minDiameter: Point[][] };
   /**
    * Ratio between the smaller and the bigger diameter.
    * Expresses how elongated the shape is. This is a value between 0 and 1.
@@ -56,6 +57,28 @@ export function getFeret(mask: Mask): Feret {
           { column: 0, row: 0 },
         ],
         angle: 0,
+      },
+      lines: {
+        maxDiameter: [
+          [
+            { column: 0, row: 0 },
+            { column: 0, row: 0 },
+          ],
+          [
+            { column: 0, row: 0 },
+            { column: 0, row: 0 },
+          ],
+        ],
+        minDiameter: [
+          [
+            { column: 0, row: 0 },
+            { column: 0, row: 0 },
+          ],
+          [
+            { column: 0, row: 0 },
+            { column: 0, row: 0 },
+          ],
+        ],
       },
       maxDiameter: {
         length: 0,
@@ -105,6 +128,33 @@ export function getFeret(mask: Mask): Feret {
     angle: toDegrees(minWidthAngle),
   };
 
+  let line1 = [
+    {
+      column:
+        minDiameter.points[0].column + mask.width * Math.cos(minDiameter.angle),
+      row: minDiameter.points[0].row + mask.width * Math.sin(minDiameter.angle),
+    },
+    {
+      column:
+        minDiameter.points[0].column - mask.width * Math.cos(minDiameter.angle),
+      row: minDiameter.points[0].row - mask.width * Math.sin(minDiameter.angle),
+    },
+  ];
+  let line2 = [
+    {
+      column:
+        minDiameter.points[1].column + mask.width * Math.cos(minDiameter.angle),
+      row: minDiameter.points[1].row + mask.width * Math.sin(minDiameter.angle),
+    },
+    {
+      column:
+        minDiameter.points[1].column - mask.width * Math.cos(minDiameter.angle),
+      row: minDiameter.points[1].row - mask.width * Math.sin(minDiameter.angle),
+    },
+  ];
+
+  const minLines = [line1, line2];
+
   // Compute maximum diameter
   let maxLinePoints: Point[] = [];
   let maxSquaredWidth = 0;
@@ -125,10 +175,52 @@ export function getFeret(mask: Mask): Feret {
     angle: toDegrees(getAngle(maxLinePoints[0], maxLinePoints[1])),
     points: maxLinePoints,
   };
+  let line3 = [
+    {
+      column:
+        maxDiameter.points[0].column +
+        mask.width * Math.cos(maxDiameter.angle + 90),
+      row:
+        maxDiameter.points[0].row +
+        mask.width * Math.sin(maxDiameter.angle + 90),
+    },
+    {
+      column:
+        maxDiameter.points[0].column -
+        mask.width * Math.cos(maxDiameter.angle + 90),
+      row:
+        maxDiameter.points[0].row -
+        mask.width * Math.sin(maxDiameter.angle + 90),
+    },
+  ];
+  let line4 = [
+    {
+      column:
+        maxDiameter.points[1].column +
+        mask.width * Math.cos(maxDiameter.angle + 90),
+      row:
+        maxDiameter.points[1].row +
+        mask.width * Math.sin(maxDiameter.angle + 90),
+    },
+    {
+      column:
+        maxDiameter.points[1].column -
+        mask.width * Math.cos(maxDiameter.angle + 90),
+      row:
+        maxDiameter.points[1].row -
+        mask.width * Math.sin(maxDiameter.angle + 90),
+    },
+  ];
+  const maxLines = [line3, line4];
+  let lines = {
+    maxDiameter: maxLines,
+    minDiameter: minLines,
+  };
 
   return {
     minDiameter,
     maxDiameter,
+    lines,
     aspectRatio: minDiameter.length / maxDiameter.length,
   };
 }
