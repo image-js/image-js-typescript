@@ -17,9 +17,11 @@ export interface Ellipse {
   surface: number;
 }
 /**
+ *Calculates ellipse on around ROI
  *
- * @param roi
- * @param scale
+ * @param roi - region of interest
+ * @param scale - the multiplier to match the surface of ellipse with the surface of ROI
+ * @returns Ellipse
  */
 export function getEllipse(roi: Roi, scale: number): Ellipse {
   const nbSD = 2;
