@@ -3,6 +3,7 @@ import { xVariance, xyCovariance } from 'ml-spectra-processing';
 
 import { FeretDiameter } from '../../maskAnalysis';
 import { getAngle } from '../../maskAnalysis/utils/getAngle';
+import { assert } from '../../utils/assert';
 import { toDegrees } from '../../utils/geometry/angles';
 import { Roi } from '../Roi';
 
@@ -54,23 +55,11 @@ export function getEllipse(roi: Roi, scale: number): Ellipse {
   let vectorMajor: number[];
   let vectorMinor: number[];
 
-  if (eigenvalues[0] > eigenvalues[1]) {
-    radiusMajor = Math.sqrt(eigenvalues[0] * nbSD);
-    radiusMinor = Math.sqrt(eigenvalues[1] * nbSD);
-    vectorMajor = vectors.getColumn(0);
-    vectorMinor = vectors.getColumn(1);
-  } else if (eigenvalues[0] < eigenvalues[1]) {
-    radiusMajor = Math.sqrt(eigenvalues[1] * nbSD);
-    radiusMinor = Math.sqrt(eigenvalues[0] * nbSD);
-    vectorMajor = vectors.getColumn(1);
-    vectorMinor = vectors.getColumn(0);
-  } else {
-    // order here does not matter
-    radiusMajor = Math.sqrt(eigenvalues[1] * nbSD);
-    radiusMinor = Math.sqrt(eigenvalues[0] * nbSD);
-    vectorMajor = vectors.getColumn(1);
-    vectorMinor = vectors.getColumn(0);
-  }
+  assert(eigenvalues[0] <= eigenvalues[1]);
+  radiusMajor = Math.sqrt(eigenvalues[1] * nbSD);
+  radiusMinor = Math.sqrt(eigenvalues[0] * nbSD);
+  vectorMajor = vectors.getColumn(1);
+  vectorMinor = vectors.getColumn(0);
 
   radiusMajor *= scale;
   radiusMinor *= scale;
