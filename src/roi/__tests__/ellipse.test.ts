@@ -10,6 +10,7 @@ test('ellipse on a small figure 3x3', () => {
 
   const rois = roiMapManager.getRois();
   const result = rois[0].ellipse;
+
   expect(result).toBeDeepCloseTo({
     center: { column: 0.6666666666666666, row: 0.3333333333333333 },
     majorAxis: {
@@ -23,7 +24,7 @@ test('ellipse on a small figure 3x3', () => {
     minorAxis: {
       points: [
         { column: 1.146541384241206, row: -0.14654138424120605 },
-        { column: 1.146541384241206, row: -0.14654138424120605 },
+        { column: 0.18679194909212726, row: 0.8132080509078727 },
       ],
       length: 1.6247924149339357,
       angle: 135,
@@ -55,7 +56,7 @@ test('ellipse on 3x3 cross', () => {
     minorAxis: {
       points: [
         { column: 2.7841241161527712, row: 1 },
-        { column: 2.7841241161527712, row: 1 },
+        { column: -0.7841241161527714, row: 1 },
       ],
       length: 1.7841241161527712,
       angle: 180,
@@ -86,7 +87,7 @@ test('ellipse on slightly changed 3x3 cross', () => {
     minorAxis: {
       points: [
         { column: -0.15768891509232064, row: 1.8243555817589874 },
-        { column: -0.15768891509232064, row: 1.8243555817589874 },
+        { column: 1.8243555817589874, row: -0.15768891509232064 },
       ],
       length: 2.01285390103734,
       angle: -45,
@@ -105,7 +106,6 @@ test('ellipse on 4x4 ROI', () => {
 
   const rois = roiMapManager.getRois();
   const result = rois[0].ellipse;
-
   expect(result).toBeDeepCloseTo({
     center: { column: 1.7777777777777777, row: 1.7777777777777777 },
     majorAxis: {
@@ -119,7 +119,7 @@ test('ellipse on 4x4 ROI', () => {
     minorAxis: {
       points: [
         { column: 0.8646151602330147, row: 1.1403989822180598 },
-        { column: 0.8646151602330147, row: 1.1403989822180598 },
+        { column: 2.690940395322541, row: 2.4151565733374953 },
       ],
       length: 2.544387508597132,
       angle: 34.91467329407479,
