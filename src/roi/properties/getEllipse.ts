@@ -20,10 +20,10 @@ export interface Ellipse {
  *Calculates ellipse on around ROI
  *
  * @param roi - region of interest
- * @param scale - the multiplier to match the surface of ellipse with the surface of ROI
+ * @param surface - the surface of ROI that ellipse should match
  * @returns Ellipse
  */
-export function getEllipse(roi: Roi, scale: number): Ellipse {
+export function getEllipse(roi: Roi, surface: number): Ellipse {
   const nbSD = 2;
 
   let xCenter = roi.centroid.column;
@@ -63,8 +63,6 @@ export function getEllipse(roi: Roi, scale: number): Ellipse {
   vectorMajor = vectors.getColumn(1);
   vectorMinor = vectors.getColumn(0);
 
-  radiusMajor *= scale;
-  radiusMinor *= scale;
   let majorAxisPoint1 = {
     column: xCenter + radiusMajor * vectorMajor[0],
     row: yCenter + radiusMajor * vectorMajor[1],
@@ -82,16 +80,43 @@ export function getEllipse(roi: Roi, scale: number): Ellipse {
     row: yCenter - radiusMinor * vectorMinor[1],
   };
 
-  const majorLength = Math.sqrt(
+  let majorLength = Math.sqrt(
     (majorAxisPoint1.column - majorAxisPoint2.column) ** 2 +
       (majorAxisPoint1.row - majorAxisPoint2.row) ** 2,
   );
-  const minorLength = Math.sqrt(
+  let minorLength = Math.sqrt(
     (minorAxisPoint1.column - majorAxisPoint2.column) ** 2 +
       (minorAxisPoint1.row - minorAxisPoint2.row) ** 2,
   );
 
   let ellipseSurface = (((minorLength / 2) * majorLength) / 2) * Math.PI;
+  if (ellipseSurface !== surface) {
+    const scaleFactor = Math.sqrt(surface / ellipseSurface);
+    radiusMajor *= scaleFactor;
+    radiusMinor *= scaleFactor;
+    majorAxisPoint1 = {
+      column: xCenter + radiusMajor * vectorMajor[0],
+      row: yCenter + radiusMajor * vectorMajor[1],
+    };
+    majorAxisPoint2 = {
+      column: xCenter - radiusMajor * vectorMajor[0],
+      row: yCenter - radiusMajor * vectorMajor[1],
+    };
+    minorAxisPoint1 = {
+      column: xCenter + radiusMinor * vectorMinor[0],
+      row: yCenter + radiusMinor * vectorMinor[1],
+    };
+    minorAxisPoint2 = {
+      column: xCenter - radiusMinor * vectorMinor[0],
+      row: yCenter - radiusMinor * vectorMinor[1],
+    };
+
+    majorLength *= scaleFactor;
+
+    minorLength *= scaleFactor;
+    ellipseSurface *= scaleFactor ** 2;
+  }
+
   return {
     center: {
       column: xCenter,
@@ -103,7 +128,7 @@ export function getEllipse(roi: Roi, scale: number): Ellipse {
       angle: toDegrees(getAngle(majorAxisPoint1, majorAxisPoint2)),
     },
     minorAxis: {
-      points: [minorAxisPoint1, minorAxisPoint1],
+      points: [minorAxisPoint1, minorAxisPoint2],
       length: minorLength,
       angle: toDegrees(getAngle(minorAxisPoint1, minorAxisPoint2)),
     },

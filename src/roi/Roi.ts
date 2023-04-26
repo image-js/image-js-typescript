@@ -396,11 +396,8 @@ export class Roi {
 
   get ellipse(): Ellipse {
     return this.#getComputed('ellipse', () => {
-      let ellipse = getEllipse(this, 1);
-      if (ellipse.surface !== this.surface) {
-        const scaleFactor = Math.sqrt(this.surface / ellipse.surface);
-        ellipse = getEllipse(this, scaleFactor);
-      }
+      const ellipse = getEllipse(this, this.surface);
+
       return ellipse;
     });
   }
