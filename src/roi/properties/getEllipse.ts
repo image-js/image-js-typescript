@@ -23,9 +23,7 @@ export interface Ellipse {
  * @param surface - the surface of ROI that ellipse should match
  * @returns Ellipse
  */
-export function getEllipse(roi: Roi, surface: number): Ellipse {
-  const nbSD = 2;
-
+export function getEllipse(roi: Roi): Ellipse {
   let xCenter = roi.centroid.column;
   let yCenter = roi.centroid.row;
 
@@ -58,8 +56,8 @@ export function getEllipse(roi: Roi, surface: number): Ellipse {
   let vectorMinor: number[];
 
   assert(eigenvalues[0] <= eigenvalues[1]);
-  radiusMajor = Math.sqrt(eigenvalues[1] * nbSD);
-  radiusMinor = Math.sqrt(eigenvalues[0] * nbSD);
+  radiusMajor = Math.sqrt(eigenvalues[1]);
+  radiusMinor = Math.sqrt(eigenvalues[0]);
   vectorMajor = vectors.getColumn(1);
   vectorMinor = vectors.getColumn(0);
 
@@ -90,8 +88,8 @@ export function getEllipse(roi: Roi, surface: number): Ellipse {
   );
 
   let ellipseSurface = (((minorLength / 2) * majorLength) / 2) * Math.PI;
-  if (ellipseSurface !== surface) {
-    const scaleFactor = Math.sqrt(surface / ellipseSurface);
+  if (ellipseSurface !== roi.surface) {
+    const scaleFactor = Math.sqrt(roi.surface / ellipseSurface);
     radiusMajor *= scaleFactor;
     radiusMinor *= scaleFactor;
     majorAxisPoint1 = {
