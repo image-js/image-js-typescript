@@ -128,32 +128,29 @@ export function getFeret(mask: Mask): Feret {
     angle: toDegrees(minWidthAngle),
   };
 
-  let line1 = [
-    {
-      column:
-        minDiameter.points[0].column + mask.width * Math.cos(minDiameter.angle),
-      row: minDiameter.points[0].row + mask.width * Math.sin(minDiameter.angle),
-    },
-    {
-      column:
-        minDiameter.points[0].column - mask.width * Math.cos(minDiameter.angle),
-      row: minDiameter.points[0].row - mask.width * Math.sin(minDiameter.angle),
-    },
-  ];
-  let line2 = [
-    {
-      column:
-        minDiameter.points[1].column + mask.width * Math.cos(minDiameter.angle),
-      row: minDiameter.points[1].row + mask.width * Math.sin(minDiameter.angle),
-    },
-    {
-      column:
-        minDiameter.points[1].column - mask.width * Math.cos(minDiameter.angle),
-      row: minDiameter.points[1].row - mask.width * Math.sin(minDiameter.angle),
-    },
-  ];
-
-  const minLines = [line1, line2];
+  const minSlope =
+    (minDiameter.points[1].row - minDiameter.points[1].row) /
+    (minDiameter.points[1].column - minDiameter.points[1].column);
+  const minShift =
+    minDiameter.points[1].row - minDiameter.points[1].column * minSlope;
+  let minDistLow = 0;
+  let minDistHigh = 0;
+  for (let point of hullPoints) {
+    const minFdistance = Math.abs(
+      Math.cos(minDiameter.angle) * (minDiameter.points[0].row - point.row) -
+        Math.sin(minDiameter.angle) *
+          (minDiameter.points[0].column - point.column),
+    );
+    if (point.row < point.column * minSlope + minShift) {
+      if (minDistLow < minFdistance) {
+        minDistLow = minFdistance;
+      }
+    } else if (point.row > point.column * minSlope + minShift) {
+      if (minDistHigh < minFdistance) {
+        minDistHigh = minFdistance;
+      }
+    }
+  }
 
   // Compute maximum diameter
   let maxLinePoints: Point[] = [];
@@ -175,46 +172,10 @@ export function getFeret(mask: Mask): Feret {
     angle: toDegrees(getAngle(maxLinePoints[0], maxLinePoints[1])),
     points: maxLinePoints,
   };
-  let line3 = [
-    {
-      column:
-        maxDiameter.points[0].column +
-        mask.width * Math.cos(maxDiameter.angle + 90),
-      row:
-        maxDiameter.points[0].row +
-        mask.width * Math.sin(maxDiameter.angle + 90),
-    },
-    {
-      column:
-        maxDiameter.points[0].column -
-        mask.width * Math.cos(maxDiameter.angle + 90),
-      row:
-        maxDiameter.points[0].row -
-        mask.width * Math.sin(maxDiameter.angle + 90),
-    },
-  ];
-  let line4 = [
-    {
-      column:
-        maxDiameter.points[1].column +
-        mask.width * Math.cos(maxDiameter.angle + 90),
-      row:
-        maxDiameter.points[1].row +
-        mask.width * Math.sin(maxDiameter.angle + 90),
-    },
-    {
-      column:
-        maxDiameter.points[1].column -
-        mask.width * Math.cos(maxDiameter.angle + 90),
-      row:
-        maxDiameter.points[1].row -
-        mask.width * Math.sin(maxDiameter.angle + 90),
-    },
-  ];
-  const maxLines = [line3, line4];
+
   let lines = {
-    maxDiameter: maxLines,
-    minDiameter: minLines,
+    minDiameter: getMinLines(minDiameter, hullPoints),
+    maxDiameter: getMaxLines(maxDiameter, hullPoints),
   };
 
   return {
@@ -223,4 +184,219 @@ export function getFeret(mask: Mask): Feret {
     lines,
     aspectRatio: minDiameter.length / maxDiameter.length,
   };
+}
+
+function isHorizontal(points: Point[]) {
+  if (points[0].row - points[1].row === 0) {
+    return true;
+  }
+  return false;
+}
+function isVertical(points: Point[]) {
+  if (points[0].column - points[1].column === 0) {
+    return true;
+  }
+  return false;
+}
+
+function getMinLines(minDiameter: FeretDiameter, hullPoints: Point[]) {
+  let shift = 0;
+  let slope = 0;
+  let lowerLength = 0;
+  let higherLength = 0;
+  if (isHorizontal(minDiameter.points)) {
+    const horizontal = minDiameter.points[0].row;
+    for (let point of hullPoints) {
+      const distance = Math.abs(
+        Math.cos(minDiameter.angle) * (minDiameter.points[0].row - point.row) -
+          Math.sin(minDiameter.angle) *
+            (minDiameter.points[0].column - point.column),
+      );
+      if (point.row < horizontal) {
+        if (lowerLength < distance) {
+          lowerLength = distance;
+        }
+      } else if (point.row > horizontal) {
+        if (higherLength < distance) {
+          higherLength = distance;
+        }
+      }
+    }
+  } else if (isVertical(minDiameter.points)) {
+    const vertical = minDiameter.points[0].column;
+    for (let point of hullPoints) {
+      const distance = Math.abs(
+        Math.cos(minDiameter.angle) * (minDiameter.points[0].row - point.row) -
+          Math.sin(minDiameter.angle) *
+            (minDiameter.points[0].column - point.column),
+      );
+      if (point.column < vertical) {
+        if (lowerLength < distance) {
+          lowerLength = distance;
+        }
+      } else if (point.column > vertical) {
+        if (higherLength < distance) {
+          higherLength = distance;
+        }
+      }
+    }
+  } else {
+    slope =
+      (minDiameter.points[1].row - minDiameter.points[0].row) /
+      (minDiameter.points[1].column - minDiameter.points[0].column);
+    shift = minDiameter.points[1].row - minDiameter.points[1].column * slope;
+
+    for (let point of hullPoints) {
+      const distance = Math.abs(
+        Math.cos(minDiameter.angle) * (minDiameter.points[0].row - point.row) -
+          Math.sin(minDiameter.angle) *
+            (minDiameter.points[0].column - point.column),
+      );
+      if (point.row < point.column * slope + shift) {
+        if (lowerLength < distance) {
+          lowerLength = distance;
+        }
+      } else if (point.row > point.column * slope + shift) {
+        if (higherLength < distance) {
+          higherLength = distance;
+        }
+      }
+    }
+  }
+  let line1 = [
+    {
+      column:
+        minDiameter.points[0].column +
+        higherLength * Math.cos(minDiameter.angle),
+      row:
+        minDiameter.points[0].row + higherLength * Math.sin(minDiameter.angle),
+    },
+    {
+      column:
+        minDiameter.points[0].column -
+        lowerLength * Math.cos(minDiameter.angle),
+      row:
+        minDiameter.points[0].row - lowerLength * Math.sin(minDiameter.angle),
+    },
+  ];
+  let line2 = [
+    {
+      column:
+        minDiameter.points[1].column +
+        higherLength * Math.cos(minDiameter.angle),
+      row:
+        minDiameter.points[1].row + higherLength * Math.sin(minDiameter.angle),
+    },
+    {
+      column:
+        minDiameter.points[1].column -
+        lowerLength * Math.cos(minDiameter.angle),
+      row:
+        minDiameter.points[1].row - lowerLength * Math.sin(minDiameter.angle),
+    },
+  ];
+  return [line1, line2];
+}
+
+function getMaxLines(maxDiameter: FeretDiameter, hullPoints: Point[]) {
+  let shift = 0;
+  let slope = 0;
+  let lowerLength = 0;
+  let higherLength = 0;
+  if (isHorizontal(maxDiameter.points)) {
+    const horizontal = maxDiameter.points[0].row;
+    for (let point of hullPoints) {
+      const distance = Math.abs(
+        Math.cos(maxDiameter.angle) * (maxDiameter.points[0].row - point.row) -
+          Math.sin(maxDiameter.angle) *
+            (maxDiameter.points[0].column - point.column),
+      );
+      if (point.row < horizontal) {
+        if (lowerLength < distance) {
+          lowerLength = distance;
+        }
+      } else if (point.row > horizontal) {
+        if (higherLength < distance) {
+          higherLength = distance;
+        }
+      }
+    }
+  } else if (isVertical(maxDiameter.points)) {
+    const vertical = maxDiameter.points[0].column;
+    for (let point of hullPoints) {
+      const distance = Math.abs(
+        Math.cos(maxDiameter.angle) * (maxDiameter.points[0].row - point.row) -
+          Math.sin(maxDiameter.angle) *
+            (maxDiameter.points[0].column - point.column),
+      );
+      if (point.row < vertical) {
+        if (lowerLength < distance) {
+          lowerLength = distance;
+        }
+      } else if (point.row > vertical) {
+        if (higherLength < distance) {
+          higherLength = distance;
+        }
+      }
+    }
+  } else {
+    slope =
+      (maxDiameter.points[1].row - maxDiameter.points[0].row) /
+      (maxDiameter.points[1].column - maxDiameter.points[0].column);
+    shift = maxDiameter.points[1].row - maxDiameter.points[1].column * slope;
+
+    for (let point of hullPoints) {
+      const distance = Math.abs(
+        Math.cos(maxDiameter.angle) * (maxDiameter.points[0].row - point.row) -
+          Math.sin(maxDiameter.angle) *
+            (maxDiameter.points[0].column - point.column),
+      );
+      if (point.row < point.column * slope + shift) {
+        if (lowerLength < distance) {
+          lowerLength = distance;
+        }
+      } else if (point.row > point.column * slope + shift) {
+        if (higherLength < distance) {
+          higherLength = distance;
+        }
+      }
+    }
+  }
+  let line3 = [
+    {
+      column:
+        maxDiameter.points[0].column +
+        higherLength * Math.cos(maxDiameter.angle + 90),
+      row:
+        maxDiameter.points[0].row +
+        higherLength * Math.sin(maxDiameter.angle + 90),
+    },
+    {
+      column:
+        maxDiameter.points[0].column -
+        lowerLength * Math.cos(maxDiameter.angle + 90),
+      row:
+        maxDiameter.points[0].row -
+        lowerLength * Math.sin(maxDiameter.angle + 90),
+    },
+  ];
+  let line4 = [
+    {
+      column:
+        maxDiameter.points[1].column +
+        higherLength * Math.cos(maxDiameter.angle + 90),
+      row:
+        maxDiameter.points[1].row +
+        higherLength * Math.sin(maxDiameter.angle + 90),
+    },
+    {
+      column:
+        maxDiameter.points[1].column -
+        lowerLength * Math.cos(maxDiameter.angle + 90),
+      row:
+        maxDiameter.points[1].row -
+        lowerLength * Math.sin(maxDiameter.angle + 90),
+    },
+  ];
+  return [line3, line4];
 }
