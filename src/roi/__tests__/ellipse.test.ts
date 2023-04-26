@@ -2,6 +2,37 @@ import { fromMask } from '..';
 
 test('ellipse on a small figure 3x3', () => {
   const mask = testUtils.createMask([
+    [0, 1, 0],
+    [0, 1, 0],
+    [0, 1, 0],
+  ]);
+  const roiMapManager = fromMask(mask);
+  const rois = roiMapManager.getRois();
+  const result = rois[0].ellipse;
+
+  expect(result).toBeDeepCloseTo({
+    center: { column: 1, row: 1 },
+    majorAxis: {
+      points: [
+        { column: NaN, row: Infinity },
+        { column: NaN, row: -Infinity },
+      ],
+      length: Infinity,
+      angle: NaN,
+    },
+    minorAxis: {
+      points: [
+        { column: NaN, row: NaN },
+        { column: NaN, row: NaN },
+      ],
+      length: NaN,
+      angle: NaN,
+    },
+    surface: NaN,
+  });
+});
+test('ellipse on a small figure 3x3', () => {
+  const mask = testUtils.createMask([
     [1, 1, 0],
     [0, 1, 0],
     [0, 0, 0],
