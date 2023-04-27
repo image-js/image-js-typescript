@@ -29,6 +29,9 @@ export interface Feret {
    * Bigger Feret diameter.
    */
   maxDiameter: FeretDiameter;
+  /**
+   * Calliper lines that pass by endpoints of Feret diameters.
+   */
   lines: { maxDiameter: Point[][]; minDiameter: Point[][] };
   /**
    * Ratio between the smaller and the bigger diameter.
@@ -185,20 +188,38 @@ export function getFeret(mask: Mask): Feret {
     aspectRatio: minDiameter.length / maxDiameter.length,
   };
 }
-
+/**
+ *  Checks if a line is horizontal
+ *
+ * @param points - enpoints of a line
+ * @returns boolean
+ */
 function isHorizontal(points: Point[]) {
   if (points[0].row - points[1].row === 0) {
     return true;
   }
   return false;
 }
+/**
+ * Checks if a line is vertical or not
+ *
+ * @param points - endpoints of a line
+ * @returns boolean
+ */
 function isVertical(points: Point[]) {
   if (points[0].column - points[1].column === 0) {
     return true;
   }
   return false;
 }
-
+/**
+ * Calculates calliper lines from Feret diameter
+ *
+ * @param diameter - Feret diameter(max or min)
+ * @param hullPoints - points that constitute convexHull
+ * @param isMax - a parameter to check if a Feret diameter is max or min
+ * @returns array of arrays with two points
+ */
 function getCalliperLines(
   diameter: FeretDiameter,
   hullPoints: Point[],
@@ -270,6 +291,7 @@ function getCalliperLines(
       }
     }
   }
+  //for maxDiameter
   if (isMax) {
     let line3 = [
       {
@@ -309,6 +331,7 @@ function getCalliperLines(
     ];
     return [line3, line4];
   } else {
+    //for minDiameter
     let line1 = [
       {
         column:
