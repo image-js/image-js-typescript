@@ -131,30 +131,6 @@ export function getFeret(mask: Mask): Feret {
     angle: toDegrees(minWidthAngle),
   };
 
-  const minSlope =
-    (minDiameter.points[1].row - minDiameter.points[1].row) /
-    (minDiameter.points[1].column - minDiameter.points[1].column);
-  const minShift =
-    minDiameter.points[1].row - minDiameter.points[1].column * minSlope;
-  let minDistLow = 0;
-  let minDistHigh = 0;
-  for (let point of hullPoints) {
-    const minFdistance = Math.abs(
-      Math.cos(minDiameter.angle) * (minDiameter.points[0].row - point.row) -
-        Math.sin(minDiameter.angle) *
-          (minDiameter.points[0].column - point.column),
-    );
-    if (point.row < point.column * minSlope + minShift) {
-      if (minDistLow < minFdistance) {
-        minDistLow = minFdistance;
-      }
-    } else if (point.row > point.column * minSlope + minShift) {
-      if (minDistHigh < minFdistance) {
-        minDistHigh = minFdistance;
-      }
-    }
-  }
-
   // Compute maximum diameter
   let maxLinePoints: Point[] = [];
   let maxSquaredWidth = 0;
