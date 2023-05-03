@@ -50,8 +50,8 @@ test('empty mask', () => {
 test('mask with only 1 pixel', () => {
   let mask = testUtils.createMask(`0 1 0`);
   const result = mask.getFeret();
-  // the minimum diameter points are not as expected,
-  // but this is a very edge case so it does not matter too much
+  //   // the minimum diameter points are not as expected,
+  //   // but this is a very edge case so it does not matter too much
   expect(result).toBeDeepCloseTo(
     {
       minDiameter: {
@@ -73,22 +73,22 @@ test('mask with only 1 pixel', () => {
       lines: {
         minDiameter: [
           [
-            { column: 0.9999999999999999, row: 7.498798913309288e-33 },
-            { column: 2, row: -1.2246467991473532e-16 },
+            { column: 1, row: 0 },
+            { column: 2, row: 0 },
           ],
           [
+            { column: 1, row: 1 },
             { column: 2, row: 1 },
-            { column: 3, row: 0.9999999999999999 },
           ],
         ],
         maxDiameter: [
           [
-            { column: 0.5000000000000002, row: 0.4999999999999999 },
-            { column: 1.5, row: -0.5000000000000001 },
+            { column: 1.5000000000000002, row: -0.5 },
+            { column: 0.5, row: 0.4999999999999998 },
           ],
           [
-            { column: 1.5000000000000002, row: 1.5 },
-            { column: 2.5, row: 0.4999999999999999 },
+            { column: 1.4999999999999998, row: 1.5 },
+            { column: 2.5, row: 0.5 },
           ],
         ],
       },
@@ -126,22 +126,22 @@ test('mask 3x3', () => {
       lines: {
         minDiameter: [
           [
-            { column: -2, row: 4 },
-            { column: 1.9999999999999996, row: 0 },
+            { column: 0, row: 0 },
+            { column: 0, row: 3 },
           ],
           [
-            { column: 1, row: 3 },
-            { column: 5, row: -1.0000000000000002 },
+            { column: 3, row: 0 },
+            { column: 3, row: 3 },
           ],
         ],
         maxDiameter: [
           [
+            { column: 0.5000000000000002, row: -0.5000000000000002 },
             { column: -0.5000000000000001, row: 2.5 },
-            { column: 0.5000000000000003, row: -0.5000000000000002 },
           ],
           [
-            { column: 2.5, row: 3.5 },
-            { column: 3.5000000000000004, row: 0.4999999999999998 },
+            { column: 2.4999999999999996, row: 3.5 },
+            { column: 3.4999999999999996, row: 0.5 },
           ],
         ],
       },
@@ -182,22 +182,22 @@ test('mask 4x4', () => {
       lines: {
         maxDiameter: [
           [
-            { column: -0.6000000000000005, row: 0.7999999999999997 },
-            { column: 2.6, row: -0.7999999999999996 },
+            { column: 2.5999999999999996, row: -0.7999999999999999 },
+            { column: -0.6000000000000003, row: 0.8000000000000003 },
           ],
           [
-            { column: 1.3999999999999995, row: 4.8 },
-            { column: 4.6, row: 3.2 },
+            { column: 1.4000000000000001, row: 4.8 },
+            { column: 4.6000000000000005, row: 3.1999999999999993 },
           ],
         ],
         minDiameter: [
           [
-            { column: -0.9999999999999998, row: 2.449293598294706e-16 },
             { column: 1, row: 0 },
+            { column: 1, row: 4 },
           ],
           [
-            { column: 1.0000000000000002, row: 2.449293598294706e-16 },
             { column: 3, row: 0 },
+            { column: 3, row: 4 },
           ],
         ],
       },
@@ -217,7 +217,6 @@ test('mask 5x5', () => {
       `);
 
   const result = mask.getFeret();
-
   expect(result).toBeDeepCloseTo(
     {
       minDiameter: {
@@ -239,22 +238,22 @@ test('mask 5x5', () => {
       lines: {
         minDiameter: [
           [
-            { column: 5.5, row: 7.499999999999998 },
-            { column: 0, row: 2.0000000000000004 },
+            { column: 2.5, row: 5.5 },
+            { column: 5.5, row: 2.499999999999999 },
           ],
           [
-            { column: 2.5, row: 4.499999999999999 },
-            { column: -3, row: -0.9999999999999987 },
+            { column: -0.5000000000000002, row: 2.5000000000000004 },
+            { column: 2.4999999999999996, row: -0.5 },
           ],
         ],
         maxDiameter: [
           [
-            { column: -0.4999999999999997, row: 4.500000000000001 },
-            { column: 0.4999999999999994, row: -0.4999999999999991 },
+            { column: 0.49999999999999906, row: -0.4999999999999991 },
+            { column: -0.4999999999999994, row: 4.500000000000001 },
           ],
           [
-            { column: 4.5, row: 5.500000000000001 },
-            { column: 5.499999999999999, row: 0.5000000000000009 },
+            { column: 4.500000000000001, row: 5.5 },
+            { column: 5.499999999999999, row: 0.5 },
           ],
         ],
       },
@@ -264,7 +263,7 @@ test('mask 5x5', () => {
   );
 });
 
-test('triangle 5x5', () => {
+test('another triangle 5x5', () => {
   let mask = testUtils.createMask(`
       1 0 0 0 0 0
       1 1 1 0 0 0
@@ -296,18 +295,18 @@ test('triangle 5x5', () => {
       lines: {
         minDiameter: [
           [
-            { column: 1.8369701987210297e-16, row: 8 },
             { column: 0, row: 5 },
+            { column: 6, row: 5 },
           ],
           [
-            { column: 1.8369701987210297e-16, row: 3 },
             { column: 0, row: 0 },
+            { column: 6, row: 0 },
           ],
         ],
         maxDiameter: [
           [
+            { column: 0.4, row: -0.8 },
             { column: -2, row: 4 },
-            { column: 0.40000000000000024, row: -0.8000000000000005 },
           ],
           [
             { column: 4, row: 7 },
@@ -329,6 +328,7 @@ test('square triangle 3x3', () => {
       `);
 
   const result = mask.getFeret();
+
   expect(result).toBeDeepCloseTo(
     {
       minDiameter: {
@@ -350,26 +350,83 @@ test('square triangle 3x3', () => {
       lines: {
         minDiameter: [
           [
-            { column: 1.5, row: 3.5 },
-            { column: 0.5000000000000003, row: 2.500000000000001 },
+            { column: 0, row: 3 },
+            { column: 3, row: 3 },
           ],
           [
-            { column: 0.5000000000000001, row: 0.5 },
-            { column: -0.49999999999999944, row: -0.4999999999999993 },
+            { column: 0, row: 0 },
+            { column: 3, row: 0 },
           ],
         ],
         maxDiameter: [
           [
+            { column: -1.5, row: 1.4999999999999996 },
             { column: 0.5, row: 3.5 },
-            { column: -1.5000000000000002, row: 1.5 },
           ],
           [
-            { column: 3.5, row: 0.4999999999999999 },
-            { column: 1.4999999999999998, row: -1.5 },
+            { column: 3.5000000000000004, row: 0.5000000000000004 },
+            { column: 1.5000000000000004, row: -1.5 },
           ],
         ],
       },
       aspectRatio: 0.6667,
+    },
+    3,
+  );
+});
+
+test('triangle 5x5', () => {
+  let mask = testUtils.createMask(`
+      1 1 1 0 0 0 0 0 0
+      1 1 1 1 0 0 0 1 0
+      1 1 1 1 1 1 1 1 1
+      1 1 1 1 1 1 1 1 1
+      0 0 0 1 0 1 0 1 0
+    `);
+
+  const result = mask.getFeret();
+
+  expect(result).toBeDeepCloseTo(
+    {
+      minDiameter: {
+        points: [
+          { column: 8, row: 1 },
+          { column: 3, row: 5 },
+        ],
+        length: 4.9029033784546,
+        angle: -168.6900675259798,
+      },
+      maxDiameter: {
+        length: 9.848857801796104,
+        angle: 23.962488974578164,
+        points: [
+          { column: 0, row: 0 },
+          { column: 9, row: 4 },
+        ],
+      },
+      lines: {
+        minDiameter: [
+          [
+            { column: 10, row: 3 },
+            { column: 3.5, row: -3.5 },
+          ],
+          [
+            { column: 5.5, row: 7.5 },
+            { column: -1, row: 1 },
+          ],
+        ],
+        maxDiameter: [
+          [
+            { column: 0.9484536082474211, row: -2.1340206185566992 },
+            { column: -1.484536082474226, row: 3.340206185567011 },
+          ],
+          [
+            { column: 7.515463917525774, row: 7.340206185567009 },
+            { column: 9.948453608247421, row: 1.8659793814432994 },
+          ],
+        ],
+      },
+      aspectRatio: 0.49781441433345436,
     },
     3,
   );
