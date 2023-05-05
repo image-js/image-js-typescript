@@ -127,7 +127,7 @@ export function getFeret(mask: Mask): Feret {
       minWidth = currentWidth;
       minWidthAngle = angle;
       minLinePoints = currentMinLinePoints;
-
+      //TODO make next three lines into a separate helper function with a loop for perfomance enhancement
       const columns = rotatedPoints.map((point) => point.column);
       const currentMin = columns.indexOf(Math.min(...columns));
       const currentMax = columns.indexOf(Math.max(...columns));
@@ -174,17 +174,38 @@ export function getFeret(mask: Mask): Feret {
       }
     }
   }
+  const maxAngle = getAngle(maxLinePoints[0], maxLinePoints[1]);
+  let rotatedMaxPoints = rotate(-maxAngle, hullPoints);
+  //TODO make next three lines into a separate helper function with a loop for perfomance enhancement
+  const rows = rotatedMaxPoints.map((point) => point.row);
+  const currentMin = rows.indexOf(Math.min(...rows));
+  const currentMax = rows.indexOf(Math.max(...rows));
+  let maxLine1 = [
+    {
+      column: rotatedMaxPoints[maxLineIndex[0]].column,
+      row: rotatedMaxPoints[currentMin].row,
+    },
+    {
+      column: rotatedMaxPoints[maxLineIndex[0]].column,
+      row: rotatedMaxPoints[currentMax].row,
+    },
+  ];
+  let maxLine2 = [
+    {
+      column: rotatedMaxPoints[maxLineIndex[1]].column,
+      row: rotatedMaxPoints[currentMin].row,
+    },
+    {
+      column: rotatedMaxPoints[maxLineIndex[1]].column,
+      row: rotatedMaxPoints[currentMax].row,
+    },
+  ];
 
   const maxDiameter = {
     length: Math.sqrt(maxSquaredWidth),
     angle: toDegrees(getAngle(maxLinePoints[0], maxLinePoints[1])),
     points: maxLinePoints,
-    lines: getMaxCalliper(
-      hullPoints,
-
-      maxLineIndex,
-      getAngle(maxLinePoints[0], maxLinePoints[1]),
-    ),
+    lines: [rotate(maxAngle, maxLine1), rotate(maxAngle, maxLine2)],
   };
 
   return {
@@ -192,120 +213,4 @@ export function getFeret(mask: Mask): Feret {
     maxDiameter,
     aspectRatio: minDiameter.length / maxDiameter.length,
   };
-}
-/**
- *  Checks if a line is horizontal
- *
- * @param points - enpoints of a line
- * @returns boolean
- */
-function isHorizontal(points: Point[]) {
-  if (points[0].row - points[1].row === 0) {
-    return true;
-  }
-  return false;
-}
-/**
- * Checks if a line is vertical or not
- *
- * @param points - endpoints of a line
- * @returns boolean
- */
-function isVertical(points: Point[]) {
-  if (points[0].column - points[1].column === 0) {
-    return true;
-  }
-  return false;
-}
-
-/**
- * Calculates calliper lines for Feret maxDiameter
- *
- * @param hullPoints - points that constitute convexHull
- * @param index - saved indexes of feretDiameter max/min points
- * @param angle - angle of feretDiameter max/min
- * @returns array of arrays with two points
- */
-
-function getMaxCalliper(hullPoints: Point[], index: number[], angle: number) {
-  const feretSlope = Math.tan(angle);
-  const feretPoint1 = hullPoints[index[0]];
-  const feretPoint2 = hullPoints[index[1]];
-  const rotatedPoints = rotate(-angle, hullPoints);
-  const rows = rotatedPoints.map((point) => point.row);
-  const roiEdge1 = rows.indexOf(Math.min(...rows));
-  const roiEdge2 = rows.indexOf(Math.max(...rows));
-
-  let point1: Point = { column: 0, row: 0 };
-  let point2: Point = { column: 0, row: 0 };
-  let point3: Point = { column: 0, row: 0 };
-  let point4: Point = { column: 0, row: 0 };
-  if (isVertical([feretPoint1, feretPoint2])) {
-    point1 = {
-      column: hullPoints[roiEdge1].column,
-      row: feretPoint1.row,
-    };
-    point2 = {
-      column: hullPoints[roiEdge2].column,
-      row: feretPoint1.row,
-    };
-    point3 = {
-      column: hullPoints[roiEdge1].column,
-      row: feretPoint2.row,
-    };
-    point4 = {
-      column: hullPoints[roiEdge2].column,
-      row: feretPoint2.row,
-    };
-
-    return [
-      [point1, point2],
-      [point3, point4],
-    ];
-  } else if (isHorizontal([feretPoint1, feretPoint2])) {
-    point1 = {
-      column: feretPoint1.column,
-      row: hullPoints[roiEdge1].row,
-    };
-    point2 = {
-      column: feretPoint1.column,
-      row: hullPoints[roiEdge2].row,
-    };
-    point3 = {
-      column: feretPoint2.column,
-      row: hullPoints[roiEdge1].row,
-    };
-    point4 = {
-      column: feretPoint2.column,
-      row: hullPoints[roiEdge2].row,
-    };
-
-    return [
-      [point1, point2],
-      [point3, point4],
-    ];
-  } else {
-    let calliperSlope = -(1 / feretSlope);
-
-    const shift1 = feretPoint1.row - feretPoint1.column * calliperSlope;
-    const shift2 = feretPoint2.row - feretPoint2.column * calliperSlope;
-    const shift3 =
-      hullPoints[roiEdge1].row - hullPoints[roiEdge1].column * feretSlope;
-    const shift4 =
-      hullPoints[roiEdge2].row - hullPoints[roiEdge2].column * feretSlope;
-
-    point1.column = (shift3 - shift1) / (calliperSlope - feretSlope);
-    point1.row = point1.column * calliperSlope + shift1;
-    point2.column = (shift4 - shift1) / (calliperSlope - feretSlope);
-    point2.row = point2.column * calliperSlope + shift1;
-    point3.column = (shift4 - shift2) / (calliperSlope - feretSlope);
-    point3.row = point3.column * calliperSlope + shift2;
-    point4.column = (shift3 - shift2) / (calliperSlope - feretSlope);
-    point4.row = point4.column * calliperSlope + shift2;
-
-    return [
-      [point1, point2],
-      [point3, point4],
-    ];
-  }
 }
