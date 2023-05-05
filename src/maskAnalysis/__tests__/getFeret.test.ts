@@ -83,11 +83,11 @@ test('mask with only 1 pixel', () => {
         ],
         maxDiameter: [
           [
-            { column: 1.5000000000000002, row: -0.5 },
-            { column: 0.5, row: 0.4999999999999998 },
+            { column: 1.5, row: -0.5 },
+            { column: 0.5, row: 0.5 },
           ],
           [
-            { column: 1.4999999999999998, row: 1.5 },
+            { column: 1.5, row: 1.5 },
             { column: 2.5, row: 0.5 },
           ],
         ],
@@ -108,16 +108,16 @@ test('mask 3x3', () => {
   expect(result).toBeDeepCloseTo(
     {
       minDiameter: {
-        length: 2.8284271247461903,
-        angle: 45.00000000000001,
+        length: 2.83,
+        angle: 45,
         points: [
           { column: 0, row: 2 },
-          { column: 3, row: 0.9999999999999998 },
+          { column: 3, row: 1 },
         ],
       },
       maxDiameter: {
-        length: 3.1622776601683795,
-        angle: 18.434948822922017,
+        length: 3.16,
+        angle: 18.43,
         points: [
           { column: 0, row: 1 },
           { column: 3, row: 2 },
@@ -136,12 +136,12 @@ test('mask 3x3', () => {
         ],
         maxDiameter: [
           [
-            { column: 0.5000000000000002, row: -0.5000000000000002 },
-            { column: -0.5000000000000001, row: 2.5 },
+            { column: 0.5, row: -0.5 },
+            { column: -0.5, row: 2.5 },
           ],
           [
-            { column: 2.4999999999999996, row: 3.5 },
-            { column: 3.4999999999999996, row: 0.5 },
+            { column: 2.5, row: 3.5 },
+            { column: 3.5, row: 0.5 },
           ],
         ],
       },
@@ -182,12 +182,12 @@ test('mask 4x4', () => {
       lines: {
         maxDiameter: [
           [
-            { column: 2.5999999999999996, row: -0.7999999999999999 },
-            { column: -0.6000000000000003, row: 0.8000000000000003 },
+            { column: 2.6, row: -0.8 },
+            { column: -0.6, row: 0.8 },
           ],
           [
-            { column: 1.4000000000000001, row: 4.8 },
-            { column: 4.6000000000000005, row: 3.1999999999999993 },
+            { column: 1.4, row: 4.8 },
+            { column: 4.6, row: 3.2 },
           ],
         ],
         minDiameter: [
@@ -239,21 +239,21 @@ test('mask 5x5', () => {
         minDiameter: [
           [
             { column: 2.5, row: 5.5 },
-            { column: 5.5, row: 2.499999999999999 },
+            { column: 5.5, row: 2.5 },
           ],
           [
-            { column: -0.5000000000000002, row: 2.5000000000000004 },
-            { column: 2.4999999999999996, row: -0.5 },
+            { column: -0.5, row: 2.5 },
+            { column: 2.5, row: -0.5 },
           ],
         ],
         maxDiameter: [
           [
-            { column: 0.49999999999999906, row: -0.4999999999999991 },
-            { column: -0.4999999999999994, row: 4.500000000000001 },
+            { column: 0.5, row: -0.5 },
+            { column: -0.5, row: 4.500000000000001 },
           ],
           [
-            { column: 4.500000000000001, row: 5.5 },
-            { column: 5.499999999999999, row: 0.5 },
+            { column: 4.5, row: 5.5 },
+            { column: 5.5, row: 0.5 },
           ],
         ],
       },
@@ -263,7 +263,7 @@ test('mask 5x5', () => {
   );
 });
 
-test('another triangle 5x5', () => {
+test('triangle 5x5', () => {
   let mask = testUtils.createMask(`
       1 0 0 0 0 0
       1 1 1 0 0 0
@@ -310,7 +310,7 @@ test('another triangle 5x5', () => {
           ],
           [
             { column: 4, row: 7 },
-            { column: 6.4, row: 2.1999999999999993 },
+            { column: 6.4, row: 2.2 },
           ],
         ],
       },
@@ -360,12 +360,12 @@ test('square triangle 3x3', () => {
         ],
         maxDiameter: [
           [
-            { column: -1.5, row: 1.4999999999999996 },
+            { column: -1.5, row: 1.5 },
             { column: 0.5, row: 3.5 },
           ],
           [
-            { column: 3.5000000000000004, row: 0.5000000000000004 },
-            { column: 1.5000000000000004, row: -1.5 },
+            { column: 3.5, row: 0.5 },
+            { column: 1.5, row: -1.5 },
           ],
         ],
       },
@@ -375,7 +375,7 @@ test('square triangle 3x3', () => {
   );
 });
 
-test('triangle 5x5', () => {
+test('complex figure', () => {
   let mask = testUtils.createMask(`
       1 1 1 0 0 0 0 0 0
       1 1 1 1 0 0 0 1 0
@@ -393,12 +393,12 @@ test('triangle 5x5', () => {
           { column: 8, row: 1 },
           { column: 3, row: 5 },
         ],
-        length: 4.9029033784546,
-        angle: -168.6900675259798,
+        length: 4.903,
+        angle: -168.69,
       },
       maxDiameter: {
-        length: 9.848857801796104,
-        angle: 23.962488974578164,
+        length: 9.8488,
+        angle: 23.9624,
         points: [
           { column: 0, row: 0 },
           { column: 9, row: 4 },
@@ -407,26 +407,26 @@ test('triangle 5x5', () => {
       lines: {
         minDiameter: [
           [
-            { column: 10, row: 3 },
-            { column: 3.5, row: -3.5 },
+            { column: 9.538, row: 1.308 },
+            { column: 0.115, row: -0.577 },
           ],
           [
-            { column: 5.5, row: 7.5 },
-            { column: -1, row: 1 },
+            { column: 8.577, row: 6.115 },
+            { column: -0.846, row: 4.231 },
           ],
         ],
         maxDiameter: [
           [
-            { column: 0.9484536082474211, row: -2.1340206185566992 },
-            { column: -1.484536082474226, row: 3.340206185567011 },
+            { column: 0.948, row: -2.134 },
+            { column: -1.4845, row: 3.34 },
           ],
           [
-            { column: 7.515463917525774, row: 7.340206185567009 },
-            { column: 9.948453608247421, row: 1.8659793814432994 },
+            { column: 7.515, row: 7.34 },
+            { column: 9.948, row: 1.866 },
           ],
         ],
       },
-      aspectRatio: 0.49781441433345436,
+      aspectRatio: 0.498,
     },
     3,
   );
