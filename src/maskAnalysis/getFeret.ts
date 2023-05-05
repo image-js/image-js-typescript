@@ -129,8 +129,8 @@ export function getFeret(mask: Mask): Feret {
       minWidth = currentWidth;
       minWidthAngle = angle;
       minLinePoints = currentMinLinePoints;
-      const currentMin = findPointsOfExtremeColumns(rotatedPoints).minIndex;
-      const currentMax = findPointsOfExtremeColumns(rotatedPoints).maxIndex;
+      const { minIndex: currentMin, maxIndex: currentMax } =
+        findPointsOfExtremeColumns(rotatedPoints);
       minLines = formMinLines(
         minWidthAngle,
         currentMin,
