@@ -97,8 +97,6 @@ export function getFeret(mask: Mask): Feret {
   let minWidth = Number.POSITIVE_INFINITY;
   let minWidthAngle = 0;
   let minLinePoints: Point[] = [];
-  let minLineIndex: number[] = [];
-  let minCalliperXs: number[] = [];
   let minLine1 = [
     { column: 0, row: 0 },
     { column: 0, row: 0 },
@@ -117,21 +115,19 @@ export function getFeret(mask: Mask): Feret {
     const rotatedPoints = rotate(-angle, hullPoints);
     let currentWidth = 0;
     let currentMinLinePoints: Point[] = [];
-    let currentMinLineIndex: number[] = [];
 
     for (let j = 0; j < hullPoints.length; j++) {
       let absWidth = Math.abs(rotatedPoints[i].row - rotatedPoints[j].row);
       if (absWidth > currentWidth) {
         currentWidth = absWidth;
         currentMinLinePoints = [rotatedPoints[i], rotatedPoints[j]];
-        currentMinLineIndex = [i, j];
       }
     }
     if (currentWidth < minWidth) {
       minWidth = currentWidth;
       minWidthAngle = angle;
       minLinePoints = currentMinLinePoints;
-      minLineIndex = currentMinLineIndex;
+
       const columns = rotatedPoints.map((point) => point.column);
       const currentMin = columns.indexOf(Math.min(...columns));
       const currentMax = columns.indexOf(Math.max(...columns));
