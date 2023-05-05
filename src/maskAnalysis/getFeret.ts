@@ -167,8 +167,8 @@ export function getFeret(mask: Mask): Feret {
   const maxAngle = getAngle(maxLinePoints[0], maxLinePoints[1]);
   let rotatedMaxPoints = rotate(-maxAngle, hullPoints);
 
-  const currentMin = findPointsOfExtremeRows(rotatedMaxPoints).minIndex;
-  const currentMax = findPointsOfExtremeRows(rotatedMaxPoints).maxIndex;
+  const { minIndex: currentMin, maxIndex: currentMax } =
+    findPointsOfExtremeRows(rotatedMaxPoints);
   let maxLines = formMaxLines(
     maxAngle,
     currentMin,
