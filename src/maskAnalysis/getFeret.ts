@@ -195,14 +195,13 @@ function findPointsOfExtremeColumns(points: Point[]): {
 } {
   let max = 0;
   let min = 0;
+
   for (let i = 0; i < points.length; i++) {
-    for (let j = 0; j < points.length; j++) {
-      if (points[i].column > points[max].column) {
-        max = i;
-      }
-      if (points[j].column < points[min].column) {
-        min = j;
-      }
+    if (points[i].column > points[max].column) {
+      max = i;
+    }
+    if (points[i].column < points[min].column) {
+      min = i;
     }
   }
   return { minIndex: min, maxIndex: max };
@@ -214,13 +213,11 @@ function findPointsOfExtremeRows(points: Point[]): {
   let max = 0;
   let min = 0;
   for (let i = 0; i < points.length; i++) {
-    for (let j = 0; j < points.length; j++) {
-      if (points[i].row > points[max].row) {
-        max = i;
-      }
-      if (points[j].row < points[min].row) {
-        min = j;
-      }
+    if (points[i].row > points[max].row) {
+      max = i;
+    }
+    if (points[i].row < points[min].row) {
+      min = i;
     }
   }
   return { minIndex: min, maxIndex: max };
