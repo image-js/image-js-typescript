@@ -18,6 +18,10 @@ export interface FeretDiameter {
    * Angle between the diameter and a horizontal line in degrees.
    */
   angle: number;
+  /**
+   * Calliper lines that pass by endpoints of Feret diameters.
+   */
+  lines: Point[][];
 }
 
 export interface Feret {
@@ -29,10 +33,6 @@ export interface Feret {
    * Bigger Feret diameter.
    */
   maxDiameter: FeretDiameter;
-  /**
-   * Calliper lines that pass by endpoints of Feret diameters.
-   */
-  lines: { maxDiameter: Point[][]; minDiameter: Point[][] };
   /**
    * Ratio between the smaller and the bigger diameter.
    * Expresses how elongated the shape is. This is a value between 0 and 1.
@@ -60,19 +60,7 @@ export function getFeret(mask: Mask): Feret {
           { column: 0, row: 0 },
         ],
         angle: 0,
-      },
-      lines: {
-        maxDiameter: [
-          [
-            { column: 0, row: 0 },
-            { column: 0, row: 0 },
-          ],
-          [
-            { column: 0, row: 0 },
-            { column: 0, row: 0 },
-          ],
-        ],
-        minDiameter: [
+        lines: [
           [
             { column: 0, row: 0 },
             { column: 0, row: 0 },
@@ -90,6 +78,16 @@ export function getFeret(mask: Mask): Feret {
           { column: 0, row: 0 },
         ],
         angle: 0,
+        lines: [
+          [
+            { column: 0, row: 0 },
+            { column: 0, row: 0 },
+          ],
+          [
+            { column: 0, row: 0 },
+            { column: 0, row: 0 },
+          ],
+        ],
       },
       aspectRatio: 1,
     };
@@ -137,6 +135,7 @@ export function getFeret(mask: Mask): Feret {
     points: rotate(minWidthAngle, minLinePoints),
     length: minWidth,
     angle: toDegrees(minWidthAngle),
+    lines: getMinCalliper(hullPoints, minCalliperXs, minLineIndex),
   };
 
   // Compute maximum diameter
@@ -160,22 +159,17 @@ export function getFeret(mask: Mask): Feret {
     length: Math.sqrt(maxSquaredWidth),
     angle: toDegrees(getAngle(maxLinePoints[0], maxLinePoints[1])),
     points: maxLinePoints,
-  };
-
-  const lines = {
-    minDiameter: getMinCalliper(hullPoints, minCalliperXs, minLineIndex),
-    maxDiameter: getMaxCalliper(
+    lines: getMaxCalliper(
       hullPoints,
 
       maxLineIndex,
-      (maxDiameter.angle * Math.PI) / 180,
+      getAngle(maxLinePoints[0], maxLinePoints[1]),
     ),
   };
 
   return {
     minDiameter,
     maxDiameter,
-    lines,
     aspectRatio: minDiameter.length / maxDiameter.length,
   };
 }
