@@ -1,3 +1,4 @@
+import { RoiMapManager } from '../RoiMapManager';
 import { fromMask } from '../fromMask';
 
 test('should work with crop', () => {
@@ -8,7 +9,7 @@ test('should work with crop', () => {
     [0, 0, 0, 0, 0],
   ]);
 
-  const mask = image.threshold({ threshold: 100 });
+  const mask = image.threshold({ threshold: 100 / 255 });
 
   expect(mask).toMatchMaskData([
     [0, 0, 0, 0, 0],
@@ -22,6 +23,16 @@ test('should work with crop', () => {
   const result = image.crop(rois[0]);
 
   expect(result).toMatchImageData([
+    [0, 200, 0],
+    [225, 250, 200],
+  ]);
+
+  const roiMapManager2 = RoiMapManager.fromMask(mask);
+  const rois2 = roiMapManager2.getRois();
+
+  const result2 = image.crop(rois2[0]);
+
+  expect(result2).toMatchImageData([
     [0, 200, 0],
     [225, 250, 200],
   ]);

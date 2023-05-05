@@ -1,7 +1,6 @@
 import { Mask } from '..';
 import { Image } from '../Image';
 import { imageToOutputMask } from '../utils/getOutputImage';
-import { validateValue } from '../utils/validators';
 
 import huang from './thresholds/huang';
 import intermodes from './thresholds/intermodes';
@@ -19,23 +18,26 @@ import shanbhag from './thresholds/shanbhag';
 import { triangle } from './thresholds/triangle';
 import yen from './thresholds/yen';
 
-export enum ThresholdAlgorithm {
-  HUANG = 'HUANG',
-  INTERMODES = 'INTERMODES',
-  ISODATA = 'ISODATA',
-  LI = 'LI',
-  MAX_ENTROPY = 'MAX_ENTROPY',
-  MEAN = 'MEAN',
-  MIN_ERROR = 'MIN_ERROR',
-  MINIMUM = 'MINIMUM',
-  MOMENTS = 'MOMENTS',
-  OTSU = 'OTSU',
-  PERCENTILE = 'PERCENTILE',
-  RENYI_ENTROPY = 'RENYI_ENTROPY',
-  SHANBHAG = 'SHANBHAG',
-  TRIANGLE = 'TRIANGLE',
-  YEN = 'YEN',
-}
+export const ThresholdAlgorithm = {
+  HUANG: 'huang',
+  INTERMODES: 'intermodes',
+  ISODATA: 'isodata',
+  LI: 'li',
+  MAX_ENTROPY: 'maxEntropy',
+  MEAN: 'mean',
+  MIN_ERROR: 'minError',
+  MINIMUM: 'minimum',
+  MOMENTS: 'moments',
+  OTSU: 'otsu',
+  PERCENTILE: 'percentile',
+  RENYI_ENTROPY: 'renyiEntropy',
+  SHANBHAG: 'shanbhag',
+  TRIANGLE: 'triangle',
+  YEN: 'yen',
+} as const;
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export type ThresholdAlgorithm =
+  (typeof ThresholdAlgorithm)[keyof typeof ThresholdAlgorithm];
 
 interface ThresholdOptionsBase {
   /**
@@ -46,16 +48,17 @@ interface ThresholdOptionsBase {
 
 export interface ThresholdOptionsThreshold extends ThresholdOptionsBase {
   /**
-   * Threshold value that should be used. Should be an integer between 0 and Image.maxValue or a value in percents as a string, like "40%".
+   * Threshold value that should be used. Threshold is a value in range [0,1],
+   * which will be interpreted as a percentage of image.maxValue.
    */
-  threshold: number | string;
+  threshold: number;
 }
 
 export interface ThresholdOptionsAlgorithm extends ThresholdOptionsBase {
   /**
    * Specify a function to computes the threshold value.
    *
-   *   @default ThresholdAlgorithm.OTSU
+   *   @default 'otsu'
    */
   algorithm?: ThresholdAlgorithm;
 }
@@ -73,48 +76,48 @@ export type ThresholdOptions =
  */
 export function computeThreshold(
   image: Image,
-  algorithm: ThresholdAlgorithm = ThresholdAlgorithm.OTSU,
+  algorithm: ThresholdAlgorithm = 'otsu',
 ): number {
   if (image.channels !== 1) {
-    throw new Error(
+    throw new TypeError(
       'threshold can only be computed on images with one channel',
     );
   }
   const histogram = image.histogram();
 
   switch (algorithm) {
-    case ThresholdAlgorithm.HUANG:
+    case 'huang':
       return huang(histogram);
-    case ThresholdAlgorithm.INTERMODES:
+    case 'intermodes':
       return intermodes(histogram);
-    case ThresholdAlgorithm.ISODATA:
+    case 'isodata':
       return isodata(histogram);
-    case ThresholdAlgorithm.LI:
+    case 'li':
       return li(histogram, image.size);
-    case ThresholdAlgorithm.MAX_ENTROPY:
+    case 'maxEntropy':
       return maxEntropy(histogram, image.size);
-    case ThresholdAlgorithm.MEAN:
+    case 'mean':
       return mean(histogram, image.size);
-    case ThresholdAlgorithm.MINIMUM:
+    case 'minimum':
       return minimum(histogram);
-    case ThresholdAlgorithm.MIN_ERROR:
+    case 'minError':
       return minError(histogram, image.size);
-    case ThresholdAlgorithm.MOMENTS:
+    case 'moments':
       return moments(histogram, image.size);
-    case ThresholdAlgorithm.OTSU:
+    case 'otsu':
       return otsu(histogram, image.size);
-    case ThresholdAlgorithm.PERCENTILE:
+    case 'percentile':
       return percentile(histogram);
-    case ThresholdAlgorithm.RENYI_ENTROPY:
+    case 'renyiEntropy':
       return renyiEntropy(histogram, image.size);
-    case ThresholdAlgorithm.SHANBHAG:
+    case 'shanbhag':
       return shanbhag(histogram, image.size);
-    case ThresholdAlgorithm.TRIANGLE:
+    case 'triangle':
       return triangle(histogram);
-    case ThresholdAlgorithm.YEN:
+    case 'yen':
       return yen(histogram, image.size);
     default:
-      throw new RangeError(`unsupported threshold algorithm: ${algorithm}`);
+      throw new RangeError(`invalid threshold algorithm: ${algorithm}`);
   }
 }
 
@@ -128,29 +131,16 @@ export function computeThreshold(
  */
 export function threshold(image: Image, options: ThresholdOptions = {}): Mask {
   let thresholdValue: number;
+
   if ('threshold' in options) {
     const threshold = options.threshold;
-    if (typeof threshold === 'number') {
-      thresholdValue = threshold;
-    } else if (
-      typeof threshold === 'string' &&
-      threshold.endsWith('%') &&
-      !Number.isNaN(Number(threshold.slice(0, -1)))
-    ) {
-      const percents = Number(threshold.slice(0, -1));
-      if (percents < 0 || percents > 100) {
-        throw new RangeError(
-          'threshold: threshold in percents is out of range 0 to 100',
-        );
-      }
-      thresholdValue = (percents / 100) * image.maxValue;
-    } else {
-      throw new Error('threshold: unrecognised threshold format');
+    if (threshold < 0 || threshold > 1) {
+      throw new RangeError('threshold must be a value between 0 and 1');
     }
+    thresholdValue = threshold * image.maxValue;
   } else {
     thresholdValue = computeThreshold(image, options.algorithm);
   }
-  validateValue(thresholdValue, image);
   const result = imageToOutputMask(image, options);
   for (let i = 0; i < image.size; i++) {
     result.setBitByIndex(

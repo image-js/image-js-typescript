@@ -1,4 +1,4 @@
-import { Image, ImageColorModel } from '../../Image';
+import { Image } from '../../Image';
 import { Point } from '../../geometry';
 import { sum } from '../../utils/geometry/points';
 import { getOutputImage } from '../../utils/getOutputImage';
@@ -27,13 +27,13 @@ export interface DrawKeypointsOptions {
    */
   color?: number[];
   /**
-   * Should the markers be filled?
+   * Whether to fill the markers.
    *
    * @default false
    */
   fill?: boolean;
   /**
-   * Should the score of the keypoints reflect in their color?
+   * Whether the score of the keypoints should be reflected in their color.
    *
    * @default false
    */
@@ -102,8 +102,8 @@ export function drawKeypoints(
 
   let newImage = getOutputImage(image, options, { clone: true });
 
-  if (image.colorModel !== ImageColorModel.RGB) {
-    newImage = newImage.convertColor(ImageColorModel.RGB);
+  if (image.colorModel !== 'RGB') {
+    newImage = newImage.convertColor('RGB');
   }
 
   const colors = getColors(image, color, showScoreOptions);

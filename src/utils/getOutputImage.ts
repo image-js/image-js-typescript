@@ -1,5 +1,4 @@
-import { ColorDepth } from '..';
-import { CreateFromOptions, Image, ImageColorModel } from '../Image';
+import { CreateFromOptions, Image } from '../Image';
 import { Mask } from '../Mask';
 
 import { copyData } from './copyData';
@@ -50,12 +49,12 @@ export function getOutputImage(
     }
   } else {
     if (!(out instanceof Image)) {
-      throw new TypeError('out must be an Image object');
+      throw new TypeError('out must be an Image');
     }
     const requirements: NewImageParameters = {
       width: thisImage.width,
       height: thisImage.height,
-      depth: thisImage.depth,
+      bitDepth: thisImage.bitDepth,
       colorModel: thisImage.colorModel,
       ...newParameters,
     };
@@ -80,17 +79,17 @@ export function maskToOutputImage(mask: Mask, options: OutOptions = {}): Image {
 
   if (out === undefined) {
     return Image.createFrom(mask, {
-      colorModel: ImageColorModel.GREY,
+      colorModel: 'GREY',
     });
   } else {
     if (!(out instanceof Image)) {
-      throw new TypeError('out must be an Image object');
+      throw new TypeError('out must be an Image');
     }
     const requirements: NewImageParameters = {
       width: mask.width,
       height: mask.height,
-      depth: ColorDepth.UINT8,
-      colorModel: ImageColorModel.GREY,
+      bitDepth: 8,
+      colorModel: 'GREY',
     };
     checkRequirements(requirements, out);
     return out;
@@ -114,13 +113,13 @@ export function imageToOutputMask(
     return Mask.createFrom(image);
   } else {
     if (!(out instanceof Mask)) {
-      throw new TypeError('out must be a Mask object');
+      throw new TypeError('out must be a Mask');
     }
     const requirements: NewImageParameters = {
       width: image.width,
       height: image.height,
-      depth: ColorDepth.UINT1,
-      colorModel: ImageColorModel.BINARY,
+      bitDepth: 1,
+      colorModel: 'BINARY',
     };
     checkRequirements(requirements, out);
     return out;
@@ -136,7 +135,7 @@ function checkRequirements<ReqType extends object, OutType extends ReqType>(
     const prop = property as Keys;
     if (out[prop] !== requirements[prop]) {
       throw new RangeError(
-        `cannot use out. Its ${property} property must be ${requirements[prop]}. Found ${out[prop]}`,
+        `cannot use out image. Its ${property} property must be ${requirements[prop]}. Received ${out[prop]}`,
       );
     }
   }
@@ -166,13 +165,13 @@ export function maskToOutputMask(
     }
   } else {
     if (!(out instanceof Mask)) {
-      throw new TypeError('out must be a Mask object');
+      throw new TypeError('out must be a Mask');
     }
     const requirements: NewImageParameters = {
       width: mask.width,
       height: mask.height,
-      depth: ColorDepth.UINT1,
-      colorModel: ImageColorModel.BINARY,
+      bitDepth: 1,
+      colorModel: 'BINARY',
     };
     checkRequirements(requirements, out);
     if (clone && mask !== out) {

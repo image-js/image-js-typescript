@@ -1,4 +1,4 @@
-import { ColorDepth, Image, Mask } from '..';
+import { Image, Mask } from '..';
 import { subtract } from '../compare';
 import { checkKernel } from '../utils/checkKernel';
 import checkProcessable from '../utils/checkProcessable';
@@ -46,14 +46,14 @@ export function topHat(
   } = options;
 
   if (image instanceof Image) {
-    checkProcessable(image, 'topHat', {
-      bitDepth: [ColorDepth.UINT1, ColorDepth.UINT8, ColorDepth.UINT16],
+    checkProcessable(image, {
+      bitDepth: [1, 8, 16],
       components: 1,
       alpha: false,
     });
   }
 
-  checkKernel(kernel, 'topHat');
+  checkKernel(kernel);
 
   let newImage = image;
   for (let i = 0; i < iterations; i++) {

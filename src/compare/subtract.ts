@@ -1,4 +1,4 @@
-import { ColorDepth, Image, Mask } from '..';
+import { Image, Mask } from '..';
 import checkProcessable from '../utils/checkProcessable';
 import { validateForComparison } from '../utils/validators';
 
@@ -42,14 +42,14 @@ export function subtract(
   let { absolute = false } = options;
 
   if (image instanceof Image) {
-    checkProcessable(image, 'subtract', {
-      bitDepth: [ColorDepth.UINT1, ColorDepth.UINT8, ColorDepth.UINT16],
+    checkProcessable(image, {
+      bitDepth: [1, 8, 16],
       components: [1, 3],
       alpha: false,
     });
   }
 
-  validateForComparison('subtract', image, otherImage);
+  validateForComparison(image, otherImage);
 
   let newImage = image.clone();
   if (newImage instanceof Image) {
