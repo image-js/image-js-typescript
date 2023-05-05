@@ -97,13 +97,15 @@ export function getFeret(mask: Mask): Feret {
   let minWidth = Number.POSITIVE_INFINITY;
   let minWidthAngle = 0;
   let minLinePoints: Point[] = [];
-  let minLine1 = [
-    { column: 0, row: 0 },
-    { column: 0, row: 0 },
-  ];
-  let minLine2 = [
-    { column: 0, row: 0 },
-    { column: 0, row: 0 },
+  let minLines = [
+    [
+      { column: 0, row: 0 },
+      { column: 0, row: 0 },
+    ],
+    [
+      { column: 0, row: 0 },
+      { column: 0, row: 0 },
+    ],
   ];
   for (let i = 0; i < hullPoints.length; i++) {
     let angle = getAngle(
@@ -127,27 +129,15 @@ export function getFeret(mask: Mask): Feret {
       minWidth = currentWidth;
       minWidthAngle = angle;
       minLinePoints = currentMinLinePoints;
-
       const currentMin = findPointsOfExtremeColumns(rotatedPoints).minIndex;
       const currentMax = findPointsOfExtremeColumns(rotatedPoints).maxIndex;
-
-      minLine1 = [
-        { column: rotatedPoints[currentMin].column, row: minLinePoints[0].row },
-        {
-          column: rotatedPoints[currentMax].column,
-          row: minLinePoints[0].row,
-        },
-      ];
-      minLine2 = [
-        {
-          column: rotatedPoints[currentMin].column,
-          row: minLinePoints[1].row,
-        },
-        {
-          column: rotatedPoints[currentMax].column,
-          row: minLinePoints[1].row,
-        },
-      ];
+      minLines = formMinLines(
+        minWidthAngle,
+        currentMin,
+        currentMax,
+        rotatedPoints,
+        minLinePoints,
+      );
     }
   }
 
@@ -155,7 +145,7 @@ export function getFeret(mask: Mask): Feret {
     points: rotate(minWidthAngle, minLinePoints),
     length: minWidth,
     angle: toDegrees(minWidthAngle),
-    lines: [rotate(minWidthAngle, minLine1), rotate(minWidthAngle, minLine2)],
+    lines: minLines,
   };
 
   // Compute maximum diameter
@@ -179,32 +169,18 @@ export function getFeret(mask: Mask): Feret {
 
   const currentMin = findPointsOfExtremeRows(rotatedMaxPoints).minIndex;
   const currentMax = findPointsOfExtremeRows(rotatedMaxPoints).maxIndex;
-  let maxLine1 = [
-    {
-      column: rotatedMaxPoints[maxLineIndex[0]].column,
-      row: rotatedMaxPoints[currentMin].row,
-    },
-    {
-      column: rotatedMaxPoints[maxLineIndex[0]].column,
-      row: rotatedMaxPoints[currentMax].row,
-    },
-  ];
-  let maxLine2 = [
-    {
-      column: rotatedMaxPoints[maxLineIndex[1]].column,
-      row: rotatedMaxPoints[currentMin].row,
-    },
-    {
-      column: rotatedMaxPoints[maxLineIndex[1]].column,
-      row: rotatedMaxPoints[currentMax].row,
-    },
-  ];
-
+  let maxLines = formMaxLines(
+    maxAngle,
+    currentMin,
+    currentMax,
+    rotatedMaxPoints,
+    maxLineIndex,
+  );
   const maxDiameter = {
     length: Math.sqrt(maxSquaredWidth),
     angle: toDegrees(getAngle(maxLinePoints[0], maxLinePoints[1])),
     points: maxLinePoints,
-    lines: [rotate(maxAngle, maxLine1), rotate(maxAngle, maxLine2)],
+    lines: maxLines,
   };
 
   return {
@@ -249,4 +225,58 @@ function findPointsOfExtremeRows(points: Point[]): {
     }
   }
   return { minIndex: min, maxIndex: max };
+}
+
+function formMinLines(
+  angle: number,
+  min: number,
+  max: number,
+  rotatedPoints: Point[],
+  feretPoints: Point[],
+): Point[][] {
+  let minLine1: Point[] = [
+    { column: rotatedPoints[min].column, row: feretPoints[0].row },
+    {
+      column: rotatedPoints[max].column,
+      row: feretPoints[0].row,
+    },
+  ];
+  let minLine2: Point[] = [
+    {
+      column: rotatedPoints[min].column,
+      row: feretPoints[1].row,
+    },
+    {
+      column: rotatedPoints[max].column,
+      row: feretPoints[1].row,
+    },
+  ];
+
+  const lines = [rotate(angle, minLine1), rotate(angle, minLine2)];
+  return lines;
+}
+function formMaxLines(
+  angle: number,
+  min: number,
+  max: number,
+  rotatedPoints: Point[],
+  index: number[],
+): Point[][] {
+  let maxLine1: Point[] = [
+    { column: rotatedPoints[index[0]].column, row: rotatedPoints[min].row },
+    {
+      column: rotatedPoints[index[0]].column,
+      row: rotatedPoints[max].row,
+    },
+  ];
+  let maxLine2: Point[] = [
+    { column: rotatedPoints[index[1]].column, row: rotatedPoints[min].row },
+    {
+      column: rotatedPoints[index[1]].column,
+      row: rotatedPoints[max].row,
+    },
+  ];
+
+  const lines = [rotate(angle, maxLine1), rotate(angle, maxLine2)];
+  return lines;
 }
