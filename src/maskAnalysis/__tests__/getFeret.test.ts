@@ -100,7 +100,6 @@ test('mask 3x3', () => {
         0 1 0
       `);
   const result = mask.getFeret();
-
   expect(result).toBeDeepCloseTo(
     {
       minDiameter: {
