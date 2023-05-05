@@ -206,7 +206,7 @@ function isVertical(points: Point[]) {
 /**
  * Calculates calliper lines for Feret minDiameter
  *
- * @param HullPoints - points that constitute convexHull
+ * @param hullPoints - points that constitute convexHull
  * @param roiEdges
  * @param index - saved indexes of feretDiameter max/min points
  * @param angle - angle of feretDiameter max/min
@@ -214,15 +214,15 @@ function isVertical(points: Point[]) {
  */
 
 function getMinCalliper(
-  HullPoints: Point[],
+  hullPoints: Point[],
   roiEdges: number[],
   index: number[],
 ) {
   //look for 2 hull points which are adjacent to feret points and which form the same slope
   const checkCoeffs1 = [-1, 1, 1, -1];
   const checkCoeffs2 = [1, -1, 1, -1];
-  const feretPoint1 = HullPoints[index[0]];
-  const feretPoint2 = HullPoints[index[1]];
+  const feretPoint1 = hullPoints[index[0]];
+  const feretPoint2 = hullPoints[index[1]];
 
   let feretSlope = 1;
   let checkHull1: Point = { column: 0, row: 0 };
@@ -230,18 +230,18 @@ function getMinCalliper(
   //checks if the index is not out of array's range
   for (let i = 0; i < checkCoeffs1.length; i++) {
     if (index[0] + checkCoeffs1[i] < 0) {
-      checkHull1 = HullPoints[HullPoints.length - 1];
-    } else if (index[0] + checkCoeffs1[i] >= HullPoints.length) {
-      checkHull1 = HullPoints[0];
+      checkHull1 = hullPoints[hullPoints.length - 1];
+    } else if (index[0] + checkCoeffs1[i] >= hullPoints.length) {
+      checkHull1 = hullPoints[0];
     } else {
-      checkHull1 = HullPoints[index[0] + checkCoeffs1[i]];
+      checkHull1 = hullPoints[index[0] + checkCoeffs1[i]];
     }
     if (index[1] + checkCoeffs2[i] < 0) {
-      checkHull2 = HullPoints[HullPoints.length - 1];
-    } else if (index[1] + checkCoeffs2[i] >= HullPoints.length) {
-      checkHull2 = HullPoints[0];
+      checkHull2 = hullPoints[hullPoints.length - 1];
+    } else if (index[1] + checkCoeffs2[i] >= hullPoints.length) {
+      checkHull2 = hullPoints[0];
     } else {
-      checkHull2 = HullPoints[index[1] + checkCoeffs2[i]];
+      checkHull2 = hullPoints[index[1] + checkCoeffs2[i]];
     }
     if (
       (feretPoint1.row - checkHull1.row) /
@@ -263,19 +263,19 @@ function getMinCalliper(
   if (isVertical([feretPoint2, checkHull2])) {
     point1 = {
       column: feretPoint1.column,
-      row: HullPoints[roiEdges[0]].row,
+      row: hullPoints[roiEdges[0]].row,
     };
     point2 = {
       column: feretPoint1.column,
-      row: HullPoints[roiEdges[1]].row,
+      row: hullPoints[roiEdges[1]].row,
     };
     point3 = {
       column: feretPoint2.column,
-      row: HullPoints[roiEdges[0]].row,
+      row: hullPoints[roiEdges[0]].row,
     };
     point4 = {
       column: feretPoint2.column,
-      row: HullPoints[roiEdges[1]].row,
+      row: hullPoints[roiEdges[1]].row,
     };
 
     return [
@@ -284,16 +284,16 @@ function getMinCalliper(
     ];
   } else if (isHorizontal([feretPoint2, checkHull2])) {
     point1 = {
-      column: HullPoints[roiEdges[0]].column,
+      column: hullPoints[roiEdges[0]].column,
       row: feretPoint1.row,
     };
-    point2 = { column: HullPoints[roiEdges[1]].column, row: feretPoint1.row };
+    point2 = { column: hullPoints[roiEdges[1]].column, row: feretPoint1.row };
     point3 = {
-      column: HullPoints[roiEdges[0]].column,
+      column: hullPoints[roiEdges[0]].column,
       row: feretPoint2.row,
     };
     point4 = {
-      column: HullPoints[roiEdges[1]].column,
+      column: hullPoints[roiEdges[1]].column,
       row: feretPoint2.row,
     };
 
@@ -309,11 +309,11 @@ function getMinCalliper(
     const calliperLineShift2 =
       feretPoint2.row - feretPoint2.column * feretSlope;
     const perpendicularLineShift1 =
-      HullPoints[roiEdges[0]].row -
-      HullPoints[roiEdges[0]].column * calliperSlope;
+      hullPoints[roiEdges[0]].row -
+      hullPoints[roiEdges[0]].column * calliperSlope;
     const perpendicularLineShift2 =
-      HullPoints[roiEdges[1]].row -
-      HullPoints[roiEdges[1]].column * calliperSlope;
+      hullPoints[roiEdges[1]].row -
+      hullPoints[roiEdges[1]].column * calliperSlope;
     point1.column =
       (calliperLineShift1 - perpendicularLineShift1) /
       (calliperSlope - feretSlope);
@@ -340,17 +340,17 @@ function getMinCalliper(
 /**
  * Calculates calliper lines for Feret maxDiameter
  *
- * @param HullPoints - points that constitute convexHull
+ * @param hullPoints - points that constitute convexHull
  * @param index - saved indexes of feretDiameter max/min points
  * @param angle - angle of feretDiameter max/min
  * @returns array of arrays with two points
  */
 
-function getMaxCalliper(HullPoints: Point[], index: number[], angle: number) {
+function getMaxCalliper(hullPoints: Point[], index: number[], angle: number) {
   const feretSlope = Math.tan(angle);
-  const feretPoint1 = HullPoints[index[0]];
-  const feretPoint2 = HullPoints[index[1]];
-  const rotatedPoints = rotate(-angle, HullPoints);
+  const feretPoint1 = hullPoints[index[0]];
+  const feretPoint2 = hullPoints[index[1]];
+  const rotatedPoints = rotate(-angle, hullPoints);
   const rows = rotatedPoints.map((point) => point.row);
   const roiEdge1 = rows.indexOf(Math.min(...rows));
   const roiEdge2 = rows.indexOf(Math.max(...rows));
@@ -361,19 +361,19 @@ function getMaxCalliper(HullPoints: Point[], index: number[], angle: number) {
   let point4: Point = { column: 0, row: 0 };
   if (isVertical([feretPoint1, feretPoint2])) {
     point1 = {
-      column: HullPoints[roiEdge1].column,
+      column: hullPoints[roiEdge1].column,
       row: feretPoint1.row,
     };
     point2 = {
-      column: HullPoints[roiEdge2].column,
+      column: hullPoints[roiEdge2].column,
       row: feretPoint1.row,
     };
     point3 = {
-      column: HullPoints[roiEdge1].column,
+      column: hullPoints[roiEdge1].column,
       row: feretPoint2.row,
     };
     point4 = {
-      column: HullPoints[roiEdge2].column,
+      column: hullPoints[roiEdge2].column,
       row: feretPoint2.row,
     };
 
@@ -384,19 +384,19 @@ function getMaxCalliper(HullPoints: Point[], index: number[], angle: number) {
   } else if (isHorizontal([feretPoint1, feretPoint2])) {
     point1 = {
       column: feretPoint1.column,
-      row: HullPoints[roiEdge1].row,
+      row: hullPoints[roiEdge1].row,
     };
     point2 = {
       column: feretPoint1.column,
-      row: HullPoints[roiEdge2].row,
+      row: hullPoints[roiEdge2].row,
     };
     point3 = {
       column: feretPoint2.column,
-      row: HullPoints[roiEdge1].row,
+      row: hullPoints[roiEdge1].row,
     };
     point4 = {
       column: feretPoint2.column,
-      row: HullPoints[roiEdge2].row,
+      row: hullPoints[roiEdge2].row,
     };
 
     return [
@@ -409,9 +409,9 @@ function getMaxCalliper(HullPoints: Point[], index: number[], angle: number) {
     const shift1 = feretPoint1.row - feretPoint1.column * calliperSlope;
     const shift2 = feretPoint2.row - feretPoint2.column * calliperSlope;
     const shift3 =
-      HullPoints[roiEdge1].row - HullPoints[roiEdge1].column * feretSlope;
+      hullPoints[roiEdge1].row - hullPoints[roiEdge1].column * feretSlope;
     const shift4 =
-      HullPoints[roiEdge2].row - HullPoints[roiEdge2].column * feretSlope;
+      hullPoints[roiEdge2].row - hullPoints[roiEdge2].column * feretSlope;
 
     point1.column = (shift3 - shift1) / (calliperSlope - feretSlope);
     point1.row = point1.column * calliperSlope + shift1;
