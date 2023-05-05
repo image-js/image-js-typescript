@@ -69,7 +69,7 @@ export class RoiMapManager implements RoiManager {
   public getRoiById(roiID: number): Roi {
     const rois = this.getRois();
     const thatRoi = rois.find((roi) => roi.id === roiID);
-    if (thatRoi === undefined) {
+    if (!thatRoi) {
       throw new Error(`invalid ID: ${roiID}`);
     }
     return thatRoi;
