@@ -290,7 +290,6 @@ exports[`3x3 mask 2`] = `
       "height": 2.9999999999999996,
       "perimeter": 10,
       "points": [
-
         {
           "column": 3,
           "row": -3.834758505292834e-17,
