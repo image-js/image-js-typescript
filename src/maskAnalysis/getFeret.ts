@@ -21,9 +21,8 @@ export interface FeretDiameter {
   /**
    * Calliper lines that pass by endpoints of Feret diameters.
    */
-  lines: Point[][];
+  lines: [[Point, Point], [Point, Point]];
 }
-
 export interface Feret {
   /**
    * Smaller Feret diameter.
@@ -97,7 +96,7 @@ export function getFeret(mask: Mask): Feret {
   let minWidth = Number.POSITIVE_INFINITY;
   let minWidthAngle = 0;
   let minLinePoints: Point[] = [];
-  let minLines = [
+  let minLines: [[Point, Point], [Point, Point]] = [
     [
       { column: 0, row: 0 },
       { column: 0, row: 0 },
@@ -141,7 +140,7 @@ export function getFeret(mask: Mask): Feret {
     }
   }
 
-  const minDiameter = {
+  const minDiameter: FeretDiameter = {
     points: rotate(minWidthAngle, minLinePoints),
     length: minWidth,
     angle: toDegrees(minWidthAngle),
@@ -233,15 +232,15 @@ function formMinLines(
   max: number,
   rotatedPoints: Point[],
   feretPoints: Point[],
-): Point[][] {
-  let minLine1: Point[] = [
+): [[Point, Point], [Point, Point]] {
+  let minLine1: [Point, Point] = [
     { column: rotatedPoints[min].column, row: feretPoints[0].row },
     {
       column: rotatedPoints[max].column,
       row: feretPoints[0].row,
     },
   ];
-  let minLine2: Point[] = [
+  let minLine2: [Point, Point] = [
     {
       column: rotatedPoints[min].column,
       row: feretPoints[1].row,
@@ -252,8 +251,10 @@ function formMinLines(
     },
   ];
 
-  const lines = [rotate(angle, minLine1), rotate(angle, minLine2)];
-  return lines;
+  return [rotate(angle, minLine1), rotate(angle, minLine2)] as [
+    [Point, Point],
+    [Point, Point],
+  ];
 }
 function formMaxLines(
   angle: number,
@@ -261,15 +262,15 @@ function formMaxLines(
   max: number,
   rotatedPoints: Point[],
   index: number[],
-): Point[][] {
-  let maxLine1: Point[] = [
+): [[Point, Point], [Point, Point]] {
+  let maxLine1: [Point, Point] = [
     { column: rotatedPoints[index[0]].column, row: rotatedPoints[min].row },
     {
       column: rotatedPoints[index[0]].column,
       row: rotatedPoints[max].row,
     },
   ];
-  let maxLine2: Point[] = [
+  let maxLine2: [Point, Point] = [
     { column: rotatedPoints[index[1]].column, row: rotatedPoints[min].row },
     {
       column: rotatedPoints[index[1]].column,
@@ -277,6 +278,8 @@ function formMaxLines(
     },
   ];
 
-  const lines = [rotate(angle, maxLine1), rotate(angle, maxLine2)];
-  return lines;
+  return [rotate(angle, maxLine1), rotate(angle, maxLine2)] as [
+    [Point, Point],
+    [Point, Point],
+  ];
 }
