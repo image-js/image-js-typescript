@@ -71,9 +71,8 @@ export class RoiMapManager implements RoiManager {
     const thatRoi = rois.find((roi) => roi.id === roiID);
     if (thatRoi === undefined) {
       throw new Error(`invalid ID: ${roiID}`);
-    } else {
-      return thatRoi;
     }
+    return thatRoi;
   }
   /**
    * Returns the ROI map as a correct width and height matrix.
