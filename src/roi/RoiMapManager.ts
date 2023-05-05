@@ -68,11 +68,11 @@ export class RoiMapManager implements RoiManager {
 
   public getRoiById(roiID: number): Roi {
     const rois = this.getRois();
-    const thatRoi = rois.find((roi) => roi.id === roiID);
-    if (!thatRoi) {
+    const foundRoi = rois.find((roi) => roi.id === roiID);
+    if (!foundRoi) {
       throw new Error(`invalid ID: ${roiID}`);
     }
-    return thatRoi;
+    return foundRoi;
   }
   /**
    * Returns the ROI map as a correct width and height matrix.
