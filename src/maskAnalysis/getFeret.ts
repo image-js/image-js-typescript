@@ -127,10 +127,10 @@ export function getFeret(mask: Mask): Feret {
       minWidth = currentWidth;
       minWidthAngle = angle;
       minLinePoints = currentMinLinePoints;
-      //TODO make next three lines into a separate helper function with a loop for perfomance enhancement
-      const columns = rotatedPoints.map((point) => point.column);
-      const currentMin = columns.indexOf(Math.min(...columns));
-      const currentMax = columns.indexOf(Math.max(...columns));
+
+      const currentMin = findPointsOfExtremeColumns(rotatedPoints).minIndex;
+      const currentMax = findPointsOfExtremeColumns(rotatedPoints).maxIndex;
+
       minLine1 = [
         { column: rotatedPoints[currentMin].column, row: minLinePoints[0].row },
         {
@@ -176,10 +176,9 @@ export function getFeret(mask: Mask): Feret {
   }
   const maxAngle = getAngle(maxLinePoints[0], maxLinePoints[1]);
   let rotatedMaxPoints = rotate(-maxAngle, hullPoints);
-  //TODO make next three lines into a separate helper function with a loop for perfomance enhancement
-  const rows = rotatedMaxPoints.map((point) => point.row);
-  const currentMin = rows.indexOf(Math.min(...rows));
-  const currentMax = rows.indexOf(Math.max(...rows));
+
+  const currentMin = findPointsOfExtremeRows(rotatedMaxPoints).minIndex;
+  const currentMax = findPointsOfExtremeRows(rotatedMaxPoints).maxIndex;
   let maxLine1 = [
     {
       column: rotatedMaxPoints[maxLineIndex[0]].column,
@@ -213,4 +212,41 @@ export function getFeret(mask: Mask): Feret {
     maxDiameter,
     aspectRatio: minDiameter.length / maxDiameter.length,
   };
+}
+
+function findPointsOfExtremeColumns(points: Point[]): {
+  minIndex: number;
+  maxIndex: number;
+} {
+  let max = 0;
+  let min = 0;
+  for (let i = 0; i < points.length; i++) {
+    for (let j = 0; j < points.length; j++) {
+      if (points[i].column > points[max].column) {
+        max = i;
+      }
+      if (points[j].column < points[min].column) {
+        min = j;
+      }
+    }
+  }
+  return { minIndex: min, maxIndex: max };
+}
+function findPointsOfExtremeRows(points: Point[]): {
+  minIndex: number;
+  maxIndex: number;
+} {
+  let max = 0;
+  let min = 0;
+  for (let i = 0; i < points.length; i++) {
+    for (let j = 0; j < points.length; j++) {
+      if (points[i].row > points[max].row) {
+        max = i;
+      }
+      if (points[j].row < points[min].row) {
+        min = j;
+      }
+    }
+  }
+  return { minIndex: min, maxIndex: max };
 }
