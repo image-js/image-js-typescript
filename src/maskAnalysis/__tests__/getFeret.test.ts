@@ -11,6 +11,16 @@ test('empty mask', () => {
           { column: 0, row: 0 },
           { column: 0, row: 0 },
         ],
+        lines: [
+          [
+            { column: 0, row: 0 },
+            { column: 0, row: 0 },
+          ],
+          [
+            { column: 0, row: 0 },
+            { column: 0, row: 0 },
+          ],
+        ],
       },
       maxDiameter: {
         length: 0,
@@ -19,19 +29,7 @@ test('empty mask', () => {
           { column: 0, row: 0 },
           { column: 0, row: 0 },
         ],
-      },
-      lines: {
-        minDiameter: [
-          [
-            { column: 0, row: 0 },
-            { column: 0, row: 0 },
-          ],
-          [
-            { column: 0, row: 0 },
-            { column: 0, row: 0 },
-          ],
-        ],
-        maxDiameter: [
+        lines: [
           [
             { column: 0, row: 0 },
             { column: 0, row: 0 },
@@ -61,17 +59,7 @@ test('mask with only 1 pixel', () => {
           { column: 1, row: 0 },
           { column: 2, row: 1 },
         ],
-      },
-      maxDiameter: {
-        length: 1.414,
-        angle: 45,
-        points: [
-          { column: 1, row: 0 },
-          { column: 2, row: 1 },
-        ],
-      },
-      lines: {
-        minDiameter: [
+        lines: [
           [
             { column: 1, row: 0 },
             { column: 2, row: 0 },
@@ -81,7 +69,15 @@ test('mask with only 1 pixel', () => {
             { column: 2, row: 1 },
           ],
         ],
-        maxDiameter: [
+      },
+      maxDiameter: {
+        length: 1.414,
+        angle: 45,
+        points: [
+          { column: 1, row: 0 },
+          { column: 2, row: 1 },
+        ],
+        lines: [
           [
             { column: 1.5, row: -0.5 },
             { column: 0.5, row: 0.5 },
@@ -114,17 +110,7 @@ test('mask 3x3', () => {
           { column: 0, row: 2 },
           { column: 3, row: 1 },
         ],
-      },
-      maxDiameter: {
-        length: 3.16,
-        angle: 18.43,
-        points: [
-          { column: 0, row: 1 },
-          { column: 3, row: 2 },
-        ],
-      },
-      lines: {
-        minDiameter: [
+        lines: [
           [
             { column: 0, row: 0 },
             { column: 0, row: 3 },
@@ -134,7 +120,15 @@ test('mask 3x3', () => {
             { column: 3, row: 3 },
           ],
         ],
-        maxDiameter: [
+      },
+      maxDiameter: {
+        length: 3.16,
+        angle: 18.43,
+        points: [
+          { column: 0, row: 1 },
+          { column: 3, row: 2 },
+        ],
+        lines: [
           [
             { column: 0.5, row: -0.5 },
             { column: -0.5, row: 2.5 },
@@ -145,6 +139,7 @@ test('mask 3x3', () => {
           ],
         ],
       },
+
       aspectRatio: 0.8944,
     },
     2,
@@ -170,27 +165,7 @@ test('mask 4x4', () => {
           { column: 1, row: 0 },
           { column: 3, row: 0 },
         ],
-      },
-      maxDiameter: {
-        length: 4.4721,
-        angle: 63.43,
-        points: [
-          { column: 1, row: 0 },
-          { column: 3, row: 4 },
-        ],
-      },
-      lines: {
-        maxDiameter: [
-          [
-            { column: 2.6, row: -0.8 },
-            { column: -0.6, row: 0.8 },
-          ],
-          [
-            { column: 1.4, row: 4.8 },
-            { column: 4.6, row: 3.2 },
-          ],
-        ],
-        minDiameter: [
+        lines: [
           [
             { column: 1, row: 0 },
             { column: 1, row: 4 },
@@ -201,6 +176,25 @@ test('mask 4x4', () => {
           ],
         ],
       },
+      maxDiameter: {
+        length: 4.4721,
+        angle: 63.43,
+        points: [
+          { column: 1, row: 0 },
+          { column: 3, row: 4 },
+        ],
+        lines: [
+          [
+            { column: 2.6, row: -0.8 },
+            { column: -0.6, row: 0.8 },
+          ],
+          [
+            { column: 1.4, row: 4.8 },
+            { column: 4.6, row: 3.2 },
+          ],
+        ],
+      },
+
       aspectRatio: 0.4472,
     },
     2,
@@ -226,17 +220,7 @@ test('mask 5x5', () => {
           { column: 3, row: 5 },
           { column: 0, row: 2 },
         ],
-      },
-      maxDiameter: {
-        length: 5.099,
-        angle: 11.31,
-        points: [
-          { column: 0, row: 2 },
-          { column: 5, row: 3 },
-        ],
-      },
-      lines: {
-        minDiameter: [
+        lines: [
           [
             { column: 2.5, row: 5.5 },
             { column: 5.5, row: 2.5 },
@@ -246,7 +230,15 @@ test('mask 5x5', () => {
             { column: 2.5, row: -0.5 },
           ],
         ],
-        maxDiameter: [
+      },
+      maxDiameter: {
+        length: 5.099,
+        angle: 11.31,
+        points: [
+          { column: 0, row: 2 },
+          { column: 5, row: 3 },
+        ],
+        lines: [
           [
             { column: 0.5, row: -0.5 },
             { column: -0.5, row: 4.500000000000001 },
@@ -257,6 +249,7 @@ test('mask 5x5', () => {
           ],
         ],
       },
+
       aspectRatio: 0.832,
     },
     2,
@@ -283,17 +276,7 @@ test('triangle 5x5', () => {
           { column: 0, row: 5 },
           { column: 0, row: 0 },
         ],
-      },
-      maxDiameter: {
-        length: 6.7082,
-        angle: 26.565,
-        points: [
-          { column: 0, row: 0 },
-          { column: 6, row: 3 },
-        ],
-      },
-      lines: {
-        minDiameter: [
+        lines: [
           [
             { column: 0, row: 5 },
             { column: 6, row: 5 },
@@ -303,7 +286,15 @@ test('triangle 5x5', () => {
             { column: 6, row: 0 },
           ],
         ],
-        maxDiameter: [
+      },
+      maxDiameter: {
+        length: 6.7082,
+        angle: 26.565,
+        points: [
+          { column: 0, row: 0 },
+          { column: 6, row: 3 },
+        ],
+        lines: [
           [
             { column: 0.4, row: -0.8 },
             { column: -2, row: 4 },
@@ -314,6 +305,7 @@ test('triangle 5x5', () => {
           ],
         ],
       },
+
       aspectRatio: 0.7453,
     },
     3,
@@ -338,17 +330,7 @@ test('square triangle 3x3', () => {
           { column: 1, row: 3 },
           { column: 0, row: 0 },
         ],
-      },
-      maxDiameter: {
-        length: 4.2426,
-        angle: -45,
-        points: [
-          { column: 0, row: 3 },
-          { column: 3, row: 0 },
-        ],
-      },
-      lines: {
-        minDiameter: [
+        lines: [
           [
             { column: 0, row: 3 },
             { column: 3, row: 3 },
@@ -358,7 +340,15 @@ test('square triangle 3x3', () => {
             { column: 3, row: 0 },
           ],
         ],
-        maxDiameter: [
+      },
+      maxDiameter: {
+        length: 4.2426,
+        angle: -45,
+        points: [
+          { column: 0, row: 3 },
+          { column: 3, row: 0 },
+        ],
+        lines: [
           [
             { column: -1.5, row: 1.5 },
             { column: 0.5, row: 3.5 },
@@ -369,6 +359,7 @@ test('square triangle 3x3', () => {
           ],
         ],
       },
+
       aspectRatio: 0.6667,
     },
     3,
@@ -395,17 +386,7 @@ test('complex figure', () => {
         ],
         length: 4.903,
         angle: -168.69,
-      },
-      maxDiameter: {
-        length: 9.8488,
-        angle: 23.9624,
-        points: [
-          { column: 0, row: 0 },
-          { column: 9, row: 4 },
-        ],
-      },
-      lines: {
-        minDiameter: [
+        lines: [
           [
             { column: 9.538, row: 1.308 },
             { column: 0.115, row: -0.577 },
@@ -415,7 +396,15 @@ test('complex figure', () => {
             { column: -0.846, row: 4.231 },
           ],
         ],
-        maxDiameter: [
+      },
+      maxDiameter: {
+        length: 9.8488,
+        angle: 23.9624,
+        points: [
+          { column: 0, row: 0 },
+          { column: 9, row: 4 },
+        ],
+        lines: [
           [
             { column: 0.948, row: -2.134 },
             { column: -1.4845, row: 3.34 },
