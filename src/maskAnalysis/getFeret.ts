@@ -219,41 +219,40 @@ function getMinCalliper(
   index: number[],
 ) {
   //look for 2 hull points which are adjacent to feret points and which form the same slope
-  const checkCoeffs1 = [-1, 1, 1, -1];
-  const checkCoeffs2 = [1, -1, 1, -1];
   const feretPoint1 = hullPoints[index[0]];
   const feretPoint2 = hullPoints[index[1]];
 
   let feretSlope = 1;
-  let checkHull1: Point = { column: 0, row: 0 };
-  let checkHull2: Point = { column: 0, row: 0 };
-  //checks if the index is not out of array's range
-  for (let i = 0; i < checkCoeffs1.length; i++) {
-    if (index[0] + checkCoeffs1[i] < 0) {
-      checkHull1 = hullPoints[hullPoints.length - 1];
-    } else if (index[0] + checkCoeffs1[i] >= hullPoints.length) {
-      checkHull1 = hullPoints[0];
-    } else {
-      checkHull1 = hullPoints[index[0] + checkCoeffs1[i]];
-    }
-    if (index[1] + checkCoeffs2[i] < 0) {
-      checkHull2 = hullPoints[hullPoints.length - 1];
-    } else if (index[1] + checkCoeffs2[i] >= hullPoints.length) {
-      checkHull2 = hullPoints[0];
-    } else {
-      checkHull2 = hullPoints[index[1] + checkCoeffs2[i]];
-    }
-    if (
-      (feretPoint1.row - checkHull1.row) /
-        (feretPoint1.column - checkHull1.column) ===
-      (feretPoint2.row - checkHull2.row) /
-        (feretPoint2.column - checkHull2.column)
-    ) {
-      feretSlope =
-        (feretPoint1.row - checkHull1.row) /
-        (feretPoint1.column - checkHull1.column);
-    }
-  }
+  let checkHull1: Point = hullPoints[(index[0] + 1) % hullPoints.length];
+  let checkHull2: Point =
+    hullPoints[(index[1] + hullPoints.length - 1) % hullPoints.length];
+  // //checks if the index is not out of array's range
+  // for (let i = 0; i < checkCoeffs1.length; i++) {
+  //   if (index[0] + checkCoeffs1[i] < 0) {
+  //     checkHull1 = hullPoints[hullPoints.length - 1];
+  //   } else if (index[0] + checkCoeffs1[i] >= hullPoints.length) {
+  //     checkHull1 = hullPoints[0];
+  //   } else {
+  //     checkHull1 = hullPoints[index[0] + checkCoeffs1[i]];
+  //   }
+  //   if (index[1] + checkCoeffs2[i] < 0) {
+  //     checkHull2 = hullPoints[hullPoints.length - 1];
+  //   } else if (index[1] + checkCoeffs2[i] >= hullPoints.length) {
+  //     checkHull2 = hullPoints[0];
+  //   } else {
+  //     checkHull2 = hullPoints[index[1] + checkCoeffs2[i]];
+  //   }
+  //   if (
+  //     (feretPoint1.row - checkHull1.row) /
+  //       (feretPoint1.column - checkHull1.column) ===
+  //     (feretPoint2.row - checkHull2.row) /
+  //       (feretPoint2.column - checkHull2.column)
+  //   ) {
+  feretSlope =
+    (feretPoint1.row - checkHull1.row) /
+    (feretPoint1.column - checkHull1.column);
+  //   }
+  // }
 
   let point1: Point = { column: 0, row: 0 };
   let point2: Point = { column: 0, row: 0 };
