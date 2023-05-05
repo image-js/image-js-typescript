@@ -99,6 +99,14 @@ export function getFeret(mask: Mask): Feret {
   let minLinePoints: Point[] = [];
   let minLineIndex: number[] = [];
   let minCalliperXs: number[] = [];
+  let minLine1 = [
+    { column: 0, row: 0 },
+    { column: 0, row: 0 },
+  ];
+  let minLine2 = [
+    { column: 0, row: 0 },
+    { column: 0, row: 0 },
+  ];
   for (let i = 0; i < hullPoints.length; i++) {
     let angle = getAngle(
       hullPoints[i],
@@ -127,7 +135,23 @@ export function getFeret(mask: Mask): Feret {
       const columns = rotatedPoints.map((point) => point.column);
       const currentMin = columns.indexOf(Math.min(...columns));
       const currentMax = columns.indexOf(Math.max(...columns));
-      minCalliperXs = [currentMin, currentMax];
+      minLine1 = [
+        { column: rotatedPoints[currentMin].column, row: minLinePoints[0].row },
+        {
+          column: rotatedPoints[currentMax].column,
+          row: minLinePoints[0].row,
+        },
+      ];
+      minLine2 = [
+        {
+          column: rotatedPoints[currentMin].column,
+          row: minLinePoints[1].row,
+        },
+        {
+          column: rotatedPoints[currentMax].column,
+          row: minLinePoints[1].row,
+        },
+      ];
     }
   }
 
@@ -135,7 +159,7 @@ export function getFeret(mask: Mask): Feret {
     points: rotate(minWidthAngle, minLinePoints),
     length: minWidth,
     angle: toDegrees(minWidthAngle),
-    lines: getMinCalliper(hullPoints, minCalliperXs, minLineIndex),
+    lines: [rotate(minWidthAngle, minLine1), rotate(minWidthAngle, minLine2)],
   };
 
   // Compute maximum diameter
@@ -197,139 +221,7 @@ function isVertical(points: Point[]) {
   }
   return false;
 }
-/**
- * Calculates calliper lines for Feret minDiameter
- *
- * @param hullPoints - points that constitute convexHull
- * @param roiEdges
- * @param index - saved indexes of feretDiameter max/min points
- * @param angle - angle of feretDiameter max/min
- * @returns array of arrays with two points
- */
 
-function getMinCalliper(
-  hullPoints: Point[],
-  roiEdges: number[],
-  index: number[],
-) {
-  //look for 2 hull points which are adjacent to feret points and which form the same slope
-  const feretPoint1 = hullPoints[index[0]];
-  const feretPoint2 = hullPoints[index[1]];
-
-  let feretSlope = 1;
-  let checkHull1: Point = hullPoints[(index[0] + 1) % hullPoints.length];
-  let checkHull2: Point =
-    hullPoints[(index[1] + hullPoints.length - 1) % hullPoints.length];
-  // //checks if the index is not out of array's range
-  // for (let i = 0; i < checkCoeffs1.length; i++) {
-  //   if (index[0] + checkCoeffs1[i] < 0) {
-  //     checkHull1 = hullPoints[hullPoints.length - 1];
-  //   } else if (index[0] + checkCoeffs1[i] >= hullPoints.length) {
-  //     checkHull1 = hullPoints[0];
-  //   } else {
-  //     checkHull1 = hullPoints[index[0] + checkCoeffs1[i]];
-  //   }
-  //   if (index[1] + checkCoeffs2[i] < 0) {
-  //     checkHull2 = hullPoints[hullPoints.length - 1];
-  //   } else if (index[1] + checkCoeffs2[i] >= hullPoints.length) {
-  //     checkHull2 = hullPoints[0];
-  //   } else {
-  //     checkHull2 = hullPoints[index[1] + checkCoeffs2[i]];
-  //   }
-  //   if (
-  //     (feretPoint1.row - checkHull1.row) /
-  //       (feretPoint1.column - checkHull1.column) ===
-  //     (feretPoint2.row - checkHull2.row) /
-  //       (feretPoint2.column - checkHull2.column)
-  //   ) {
-  feretSlope =
-    (feretPoint1.row - checkHull1.row) /
-    (feretPoint1.column - checkHull1.column);
-  //   }
-  // }
-
-  let point1: Point = { column: 0, row: 0 };
-  let point2: Point = { column: 0, row: 0 };
-  let point3: Point = { column: 0, row: 0 };
-  let point4: Point = { column: 0, row: 0 };
-
-  if (isVertical([feretPoint2, checkHull2])) {
-    point1 = {
-      column: feretPoint1.column,
-      row: hullPoints[roiEdges[0]].row,
-    };
-    point2 = {
-      column: feretPoint1.column,
-      row: hullPoints[roiEdges[1]].row,
-    };
-    point3 = {
-      column: feretPoint2.column,
-      row: hullPoints[roiEdges[0]].row,
-    };
-    point4 = {
-      column: feretPoint2.column,
-      row: hullPoints[roiEdges[1]].row,
-    };
-
-    return [
-      [point1, point2],
-      [point3, point4],
-    ];
-  } else if (isHorizontal([feretPoint2, checkHull2])) {
-    point1 = {
-      column: hullPoints[roiEdges[0]].column,
-      row: feretPoint1.row,
-    };
-    point2 = { column: hullPoints[roiEdges[1]].column, row: feretPoint1.row };
-    point3 = {
-      column: hullPoints[roiEdges[0]].column,
-      row: feretPoint2.row,
-    };
-    point4 = {
-      column: hullPoints[roiEdges[1]].column,
-      row: feretPoint2.row,
-    };
-
-    return [
-      [point1, point2],
-      [point3, point4],
-    ];
-  } else {
-    //calculate 4 lines that are formed though points of feret diameter and edges of ROI which were calculated earlier. Then calculate points of intersection which will be our calliper lines
-    let calliperSlope = -1 / feretSlope;
-    const calliperLineShift1 =
-      feretPoint1.row - feretPoint1.column * feretSlope;
-    const calliperLineShift2 =
-      feretPoint2.row - feretPoint2.column * feretSlope;
-    const perpendicularLineShift1 =
-      hullPoints[roiEdges[0]].row -
-      hullPoints[roiEdges[0]].column * calliperSlope;
-    const perpendicularLineShift2 =
-      hullPoints[roiEdges[1]].row -
-      hullPoints[roiEdges[1]].column * calliperSlope;
-    point1.column =
-      (calliperLineShift1 - perpendicularLineShift1) /
-      (calliperSlope - feretSlope);
-    point1.row = point1.column * feretSlope + calliperLineShift1;
-    point2.column =
-      (calliperLineShift1 - perpendicularLineShift2) /
-      (calliperSlope - feretSlope);
-    point2.row = point2.column * feretSlope + calliperLineShift1;
-    point3.column =
-      (calliperLineShift2 - perpendicularLineShift1) /
-      (calliperSlope - feretSlope);
-    point3.row = point3.column * feretSlope + calliperLineShift2;
-    point4.column =
-      (calliperLineShift2 - perpendicularLineShift2) /
-      (calliperSlope - feretSlope);
-    point4.row = point4.column * feretSlope + calliperLineShift2;
-
-    return [
-      [point1, point2],
-      [point3, point4],
-    ];
-  }
-}
 /**
  * Calculates calliper lines for Feret maxDiameter
  *
