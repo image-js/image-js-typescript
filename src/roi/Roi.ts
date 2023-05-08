@@ -12,27 +12,32 @@ import { Point } from '../utils/geometry/points';
 import { RoiMap } from './RoiMapManager';
 import { getBorderPoints } from './getBorderPoints';
 import { getMask, GetMaskOptions } from './getMask';
+import { Ellipse, getEllipse } from './properties/getEllipse';
 
+interface Border {
+  connectedID: number; // refers to the roiID of the contiguous ROI
+  length: number;
+}
 interface Computed {
   perimeter: number;
-  borderIDs: number[];
+  borders: Border[]; // external and internal ids which are not equal to the current roi ID
   perimeterInfo: { one: number; two: number; three: number; four: number };
   externalLengths: number[];
   borderLengths: number[];
   box: number;
   points: number[][];
   holesInfo: { number: number; surface: number };
-  external: number;
   boxIDs: number[];
   eqpc: number;
   ped: number;
-  externalIDs: number[];
+  externalBorders: Border[];
   roundness: number;
   convexHull: { points: Point[]; surface: number; perimeter: number };
   mbr: Mbr;
   fillRatio: number;
   internalIDs: number[];
   feret: Feret;
+  ellipse: Ellipse;
   centroid: Point;
 }
 export class Roi {
@@ -60,9 +65,10 @@ export class Roi {
   /**
    * Surface of the ROI.
    */
-
   public readonly surface: number;
-
+  /**
+   * Cached values of properties to improve performance
+   */
   #computed: Partial<Computed>;
 
   public constructor(
@@ -91,7 +97,7 @@ export class Roi {
   }
 
   /**
-   * Return the value at the given coordinates in an ROI map.
+   * Returns the value at the given coordinates in an ROI map.
    *
    * @param column - Column of the value.
    * @param row - Row of the value.
@@ -102,7 +108,7 @@ export class Roi {
   }
 
   /**
-   * Return the ratio between the width and the height of the bounding rectangle of the ROI.
+   * Returns the ratio between the width and the height of the bounding rectangle of the ROI.
    *
    * @returns The width by height ratio.
    */
@@ -111,7 +117,7 @@ export class Roi {
   }
 
   /**
-   * Generate a mask of an ROI. You can specify the kind of mask you want using the `kind` option.
+   * Generates a mask of an ROI. You can specify the kind of mask you want using the `kind` option.
    *
    * @param options - Get Mask options
    * @returns The ROI mask.
@@ -139,21 +145,54 @@ export class Roi {
   public getBorderPoints(options?: GetBorderPointsOptions): Array<Point> {
     return getBorderPoints(this, options);
   }
-  //TODO The ids and length should be in one computed property which returns an array of {id: number, length: number}
-  _computeBorderIDs(): { ids: number[]; lengths: number[] } {
-    const borders = getBorders(this);
-    this.#computed.borderIDs = borders.ids;
-    this.#computed.borderLengths = borders.lengths;
-    return borders;
-  }
 
   /**
    * Return an array of ROIs IDs that are included in the current ROI.
    * This will be useful to know if there are some holes in the ROI.
+   *
+   * @returns internalIDs
    */
   get internalIDs() {
     return this.#getComputed('internalIDs', () => {
-      return getInternalIDs(this);
+      let internal = [this.id];
+      let roiMap = this.map;
+      let data = roiMap.data;
+
+      if (this.height > 2) {
+        for (let column = 0; column < this.width; column++) {
+          let target = this.computeIndex(0, column);
+          if (internal.includes(data[target])) {
+            let id = data[target + roiMap.width];
+            if (!internal.includes(id) && !this.boxIDs.includes(id)) {
+              internal.push(id);
+            }
+          }
+        }
+      }
+
+      let array = new Array(4);
+      for (let column = 1; column < this.width - 1; column++) {
+        for (let row = 1; row < this.height - 1; row++) {
+          let target = this.computeIndex(row, column);
+          if (internal.includes(data[target])) {
+            // we check if one of the neighbour is not yet in
+
+            array[0] = data[target - 1];
+            array[1] = data[target + 1];
+            array[2] = data[target - roiMap.width];
+            array[3] = data[target + roiMap.width];
+
+            for (let i = 0; i < 4; i++) {
+              let id = array[i];
+              if (!internal.includes(id) && !this.boxIDs.includes(id)) {
+                internal.push(id);
+              }
+            }
+          }
+        }
+      }
+
+      return internal;
     });
   }
   //TODO externalIds should be an array of {id: number, length: number}
@@ -161,14 +200,93 @@ export class Roi {
   /**
    * Return an array of ROIs IDs that touch the current ROI.
    */
-  get externalIDs(): number[] {
-    return this.#getComputed('externalIDs', () => {
-      return this.getExternalIDs().externalIDs;
+  get externalBorders(): Border[] {
+    return this.#getComputed('externalBorders', () => {
+      // take all the borders and remove the internal one ...
+      let borders = this.borders;
+
+      let externalBorders = [];
+      let externalIDs = [];
+      let internals = this.internalIDs;
+
+      for (let border of borders) {
+        if (!internals.includes(border.connectedID)) {
+          const element: Border = {
+            connectedID: border.connectedID,
+            length: border.length,
+          };
+          externalIDs.push(element.connectedID);
+          externalBorders.push(element);
+        }
+      }
+
+      return externalBorders;
     });
   }
+  /**
+   * Calculates and caches the number of sides by which each pixel is touched externally
+   *
+   * @param roi -ROI
+   * @returns object which tells how many pixels are exposed externally to how many sides
+   */
   get perimeterInfo() {
     return this.#getComputed('perimeterInfo', () => {
-      return getPerimeterInfo(this);
+      const roiMap = this.map;
+      const data = roiMap.data;
+      let one = 0;
+      let two = 0;
+      let three = 0;
+      let four = 0;
+      let externalIDs = this.externalBorders.map(
+        (element) => element.connectedID,
+      );
+      for (let column = 0; column < this.width; column++) {
+        for (let row = 0; row < this.height; row++) {
+          let target = this.computeIndex(row, column);
+          if (data[target] === this.id) {
+            let nbAround = 0;
+            if (column === 0) {
+              nbAround++;
+            } else if (externalIDs.includes(data[target - 1])) {
+              nbAround++;
+            }
+
+            if (column === roiMap.width - 1) {
+              nbAround++;
+            } else if (externalIDs.includes(data[target + 1])) {
+              nbAround++;
+            }
+
+            if (row === 0) {
+              nbAround++;
+            } else if (externalIDs.includes(data[target - roiMap.width])) {
+              nbAround++;
+            }
+
+            if (row === roiMap.height - 1) {
+              nbAround++;
+            } else if (externalIDs.includes(data[target + roiMap.width])) {
+              nbAround++;
+            }
+            switch (nbAround) {
+              case 1:
+                one++;
+                break;
+              case 2:
+                two++;
+                break;
+              case 3:
+                three++;
+                break;
+              case 4:
+                four++;
+                break;
+              default:
+            }
+          }
+        }
+      }
+      return { one, two, three, four };
     });
   }
 
@@ -189,7 +307,10 @@ export class Roi {
       delta * (info.two + info.three * 2 + info.four)
     );
   }
-
+  /**
+   * An array of tuples, each tuple being the x and y coordinates of the ROI point.
+   * the current ROI points
+   */
   get points() {
     return this.#getComputed('points', () => {
       let points = [];
@@ -209,7 +330,58 @@ export class Roi {
   }
   get boxIDs() {
     return this.#getComputed('boxIDs', () => {
-      return getBoxIDs(this);
+      let surroundingIDs = new Set<number>(); // allows to get a unique list without indexOf
+
+      const roiMap = this.map;
+      const data = roiMap.data;
+
+      // we check the first line and the last line
+      for (let row of [0, this.height - 1]) {
+        for (let column = 0; column < this.width; column++) {
+          let target = this.computeIndex(row, column);
+          if (
+            column - this.origin.column > 0 &&
+            data[target] === this.id &&
+            data[target - 1] !== this.id
+          ) {
+            let value = data[target - 1];
+            surroundingIDs.add(value);
+          }
+          if (
+            roiMap.width - column - this.origin.column > 1 &&
+            data[target] === this.id &&
+            data[target + 1] !== this.id
+          ) {
+            let value = data[target + 1];
+            surroundingIDs.add(value);
+          }
+        }
+      }
+
+      // we check the first column and the last column
+      for (let column of [0, this.width - 1]) {
+        for (let row = 0; row < this.height; row++) {
+          let target = this.computeIndex(row, column);
+          if (
+            row - this.origin.row > 0 &&
+            data[target] === this.id &&
+            data[target - roiMap.width] !== this.id
+          ) {
+            let value = data[target - roiMap.width];
+            surroundingIDs.add(value);
+          }
+          if (
+            roiMap.height - row - this.origin.row > 1 &&
+            data[target] === this.id &&
+            data[target + roiMap.width] !== this.id
+          ) {
+            let value = data[target + roiMap.width];
+            surroundingIDs.add(value);
+          }
+        }
+      }
+
+      return Array.from(surroundingIDs); // the selection takes the whole rectangle
     });
   }
 
@@ -222,62 +394,130 @@ export class Roi {
     });
   }
 
+  get ellipse(): Ellipse {
+    return this.#getComputed('ellipse', () => {
+      const ellipse = getEllipse(this);
+      return ellipse;
+    });
+  }
+
+  /**
+   * Number of holes in the ROI and their total surface.
+   * Used to calculate fillRatio.
+   *
+   * @returns the surface of holes in ROI
+   */
   get holesInfo() {
     return this.#getComputed('holesInfo', () => {
-      return getHolesInfo(this);
-    });
-  }
-
-  getExternalIDs(): {
-    externalIDs: number[];
-    externalLengths: number[];
-  } {
-    // take all the borders and remove the internal one ...
-    let borders = this.borderIDs;
-    let lengths = this.borderLengths;
-
-    this.#computed.externalLengths = [];
-    this.#computed.externalIDs = [];
-
-    let internals = this.internalIDs;
-
-    for (let i = 0; i < borders.length; i++) {
-      if (!internals.includes(borders[i])) {
-        this.#computed.externalIDs.push(borders[i]);
-        this.#computed.externalLengths.push(lengths[i]);
+      let surface = 0;
+      const data = this.map.data;
+      for (let column = 1; column < this.width - 1; column++) {
+        for (let row = 1; row < this.height - 1; row++) {
+          let target = this.computeIndex(row, column);
+          if (
+            this.internalIDs.includes(data[target]) &&
+            data[target] !== this.id
+          ) {
+            surface++;
+          }
+        }
       }
-    }
-    const externalIDs = this.#computed.externalIDs;
-    const externalLengths = this.#computed.externalLengths;
-    return { externalIDs, externalLengths };
-  }
-  //TODO Should be merged together in one borders property
-  get borderIDs() {
-    return this.#getComputed('borderIDs', () => {
-      return this._computeBorderIDs().ids;
+      return {
+        number: this.internalIDs.length - 1,
+        surface,
+      };
     });
   }
 
-  get borderLengths() {
-    return this.#getComputed('borderLengths', () => {
-      return this._computeBorderIDs().lengths;
+  /**
+   *Calculates and caches border's length and their IDs
+   *
+   * @returns borders' length and their IDs
+   */
+  get borders() {
+    return this.#getComputed('borders', () => {
+      const roiMap = this.map;
+      const data = roiMap.data;
+      let surroudingIDs = new Set<number>(); // allows to get a unique list without indexOf
+      let surroundingBorders = new Map();
+      let visitedData = new Set();
+      let dx = [+1, 0, -1, 0];
+      let dy = [0, +1, 0, -1];
+
+      for (
+        let column = this.origin.column;
+        column <= this.origin.column + this.width;
+        column++
+      ) {
+        for (
+          let row = this.origin.row;
+          row <= this.origin.row + this.height;
+          row++
+        ) {
+          let target = column + row * roiMap.width;
+          if (data[target] === this.id) {
+            for (let dir = 0; dir < 4; dir++) {
+              let newX = column + dx[dir];
+              let newY = row + dy[dir];
+              if (
+                newX >= 0 &&
+                newY >= 0 &&
+                newX < roiMap.width &&
+                newY < roiMap.height
+              ) {
+                let neighbour = newX + newY * roiMap.width;
+
+                if (
+                  data[neighbour] !== this.id &&
+                  !visitedData.has(neighbour)
+                ) {
+                  visitedData.add(neighbour);
+                  surroudingIDs.add(data[neighbour]);
+                  let surroundingBorder = surroundingBorders.get(
+                    data[neighbour],
+                  );
+                  if (!surroundingBorder) {
+                    surroundingBorders.set(data[neighbour], 1);
+                  } else {
+                    surroundingBorders.set(
+                      data[neighbour],
+                      ++surroundingBorder,
+                    );
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      let id: number[] = Array.from(surroudingIDs);
+      return id.map((id) => {
+        return {
+          connectedID: id,
+          length: surroundingBorders.get(id),
+        };
+      });
     });
   }
   /**
-   * Getter that calculates fill ratio of the ROI
+   * Calculates fill ratio of the ROI
    */
   get fillRatio() {
     return this.surface / (this.surface + this.holesInfo.surface);
   }
   /**
-   * Getter that calculates sphericity of the ROI
+   * Calculates sphericity of the ROI
    */
   get sphericity() {
     return (2 * Math.sqrt(this.surface * Math.PI)) / this.perimeter;
   }
 
+  get filledSurface() {
+    return this.surface + this.holesInfo.surface;
+  }
+
   /**
-   * Getter that calculates solidity of the ROI
+   * Calculates solidity of the ROI
    */
   get solidity() {
     return this.surface / getConvexHull(this.getMask()).surface;
@@ -288,7 +528,9 @@ export class Roi {
       return getConvexHull(this.getMask());
     });
   }
-
+  /**
+   * Calculates minimum bounding rectangle
+   */
   get mbr() {
     return this.#getComputed('mbr', () => {
       return getMbr(this.getMask());
@@ -326,13 +568,14 @@ export class Roi {
       perimeter: this.perimeter,
       convexHull: this.convexHull,
       mbr: this.mbr,
+      filledSurface: this.filledSurface,
       centroid: this.centroid,
     };
   }
 
   get centroid() {
     return this.#getComputed('centroid', () => {
-      const roiMap = this.getMap();
+      const roiMap = this.map;
       const data = roiMap.data;
       let sumColumn = 0;
       let sumRow = 0;
@@ -353,6 +596,7 @@ export class Roi {
     });
   }
 
+  //  A helper function to cache already calculated properties
   #getComputed<T extends keyof Computed>(
     property: T,
     callback: () => Computed[T],
@@ -365,247 +609,15 @@ export class Roi {
     return this.#computed[property] as Computed[T];
   }
   //TODO Make this private
+
+  /**
+   * Calculates the correct index on the map of ROI
+   *
+   * @param y
+   * @param x
+   */
   computeIndex(y: number, x: number): number {
-    const roiMap = this.getMap();
+    const roiMap = this.map;
     return (y + this.origin.row) * roiMap.width + x + this.origin.column;
   }
-}
-
-/**
- *
- * @param roi -ROI
- * @returns object which tells how many pixels are exposed externally to how many sides
- */
-function getPerimeterInfo(roi: Roi) {
-  const roiMap = roi.getMap();
-  const data = roiMap.data;
-  let one = 0;
-  let two = 0;
-  let three = 0;
-  let four = 0;
-
-  for (let column = 0; column < roi.width; column++) {
-    for (let row = 0; row < roi.height; row++) {
-      let target = roi.computeIndex(row, column);
-      if (data[target] === roi.id) {
-        let nbAround = 0;
-        if (column === 0) {
-          nbAround++;
-        } else if (roi.externalIDs.includes(data[target - 1])) {
-          nbAround++;
-        }
-
-        if (column === roiMap.width - 1) {
-          nbAround++;
-        } else if (roi.externalIDs.includes(data[target + 1])) {
-          nbAround++;
-        }
-
-        if (row === 0) {
-          nbAround++;
-        } else if (roi.externalIDs.includes(data[target - roiMap.width])) {
-          nbAround++;
-        }
-
-        if (row === roiMap.height - 1) {
-          nbAround++;
-        } else if (roi.externalIDs.includes(data[target + roiMap.width])) {
-          nbAround++;
-        }
-        switch (nbAround) {
-          case 1:
-            one++;
-            break;
-          case 2:
-            two++;
-            break;
-          case 3:
-            three++;
-            break;
-          case 4:
-            four++;
-            break;
-          default:
-        }
-      }
-    }
-  }
-  return { one, two, three, four };
-}
-
-/**
- *
- * @param roi - ROI
- * @returns the surface of holes in ROI
- */
-function getHolesInfo(roi: Roi) {
-  let surface = 0;
-  const data = roi.getMap().data;
-  for (let column = 1; column < roi.width - 1; column++) {
-    for (let row = 1; row < roi.height - 1; row++) {
-      let target = roi.computeIndex(row, column);
-      if (roi.internalIDs.includes(data[target]) && data[target] !== roi.id) {
-        surface++;
-      }
-    }
-  }
-  return {
-    number: roi.internalIDs.length - 1,
-    surface,
-  };
-}
-
-function getInternalIDs(roi: Roi) {
-  let internal = [roi.id];
-  let roiMap = roi.getMap();
-  let data = roiMap.data;
-
-  if (roi.height > 2) {
-    for (let column = 0; column < roi.width; column++) {
-      let target = roi.computeIndex(0, column);
-      if (internal.includes(data[target])) {
-        let id = data[target + roiMap.width];
-        if (!internal.includes(id) && !roi.boxIDs.includes(id)) {
-          internal.push(id);
-        }
-      }
-    }
-  }
-
-  let array = new Array(4);
-  for (let column = 1; column < roi.width - 1; column++) {
-    for (let row = 1; row < roi.height - 1; row++) {
-      let target = roi.computeIndex(row, column);
-      if (internal.includes(data[target])) {
-        // we check if one of the neighbour is not yet in
-
-        array[0] = data[target - 1];
-        array[1] = data[target + 1];
-        array[2] = data[target - roiMap.width];
-        array[3] = data[target + roiMap.width];
-
-        for (let i = 0; i < 4; i++) {
-          let id = array[i];
-          if (!internal.includes(id) && !roi.boxIDs.includes(id)) {
-            internal.push(id);
-          }
-        }
-      }
-    }
-  }
-
-  return internal;
-}
-
-function getBoxIDs(roi: Roi): number[] {
-  let surroundingIDs = new Set<number>(); // allows to get a unique list without indexOf
-
-  const roiMap = roi.getMap();
-  const data = roiMap.data;
-
-  // we check the first line and the last line
-  for (let row of [0, roi.height - 1]) {
-    for (let column = 0; column < roi.width; column++) {
-      let target = roi.computeIndex(row, column);
-      if (
-        column - roi.origin.column > 0 &&
-        data[target] === roi.id &&
-        data[target - 1] !== roi.id
-      ) {
-        let value = data[target - 1];
-        surroundingIDs.add(value);
-      }
-      if (
-        roiMap.width - column - roi.origin.column > 1 &&
-        data[target] === roi.id &&
-        data[target + 1] !== roi.id
-      ) {
-        let value = data[target + 1];
-        surroundingIDs.add(value);
-      }
-    }
-  }
-
-  // we check the first column and the last column
-  for (let column of [0, roi.width - 1]) {
-    for (let row = 0; row < roi.height; row++) {
-      let target = roi.computeIndex(row, column);
-      if (
-        row - roi.origin.row > 0 &&
-        data[target] === roi.id &&
-        data[target - roiMap.width] !== roi.id
-      ) {
-        let value = data[target - roiMap.width];
-        surroundingIDs.add(value);
-      }
-      if (
-        roiMap.height - row - roi.origin.row > 1 &&
-        data[target] === roi.id &&
-        data[target + roiMap.width] !== roi.id
-      ) {
-        let value = data[target + roiMap.width];
-        surroundingIDs.add(value);
-      }
-    }
-  }
-
-  return Array.from(surroundingIDs); // the selection takes the whole rectangle
-}
-
-/**
- *
- * @param roi - ROI
- * @returns borders' length and their IDs
- */
-function getBorders(roi: Roi): { ids: number[]; lengths: number[] } {
-  const roiMap = roi.getMap();
-  const data = roiMap.data;
-  let surroudingIDs = new Set<number>(); // allows to get a unique list without indexOf
-  let surroundingBorders = new Map();
-  let visitedData = new Set();
-  let dx = [+1, 0, -1, 0];
-  let dy = [0, +1, 0, -1];
-
-  for (
-    let column = roi.origin.column;
-    column <= roi.origin.column + roi.width;
-    column++
-  ) {
-    for (let row = roi.origin.row; row <= roi.origin.row + roi.height; row++) {
-      let target = column + row * roiMap.width;
-      if (data[target] === roi.id) {
-        for (let dir = 0; dir < 4; dir++) {
-          let newX = column + dx[dir];
-          let newY = row + dy[dir];
-          if (
-            newX >= 0 &&
-            newY >= 0 &&
-            newX < roiMap.width &&
-            newY < roiMap.height
-          ) {
-            let neighbour = newX + newY * roiMap.width;
-
-            if (data[neighbour] !== roi.id && !visitedData.has(neighbour)) {
-              visitedData.add(neighbour);
-              surroudingIDs.add(data[neighbour]);
-              let surroundingBorder = surroundingBorders.get(data[neighbour]);
-              if (!surroundingBorder) {
-                surroundingBorders.set(data[neighbour], 1);
-              } else {
-                surroundingBorders.set(data[neighbour], ++surroundingBorder);
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-  let ids: number[] = Array.from(surroudingIDs);
-  let borderLengths = ids.map((id) => {
-    return surroundingBorders.get(id);
-  });
-  return {
-    ids,
-    lengths: borderLengths,
-  };
 }
