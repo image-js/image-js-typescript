@@ -48,8 +48,8 @@ test('empty mask', () => {
 test('mask with only 1 pixel', () => {
   let mask = testUtils.createMask(`0 1 0`);
   const result = mask.getFeret();
-  //   // the minimum diameter points are not as expected,
-  //   // but this is a very edge case so it does not matter too much
+  // the minimum diameter points are not as expected,
+  // but this is a very edge case so it does not matter too much
   expect(result).toBeDeepCloseTo(
     {
       minDiameter: {
