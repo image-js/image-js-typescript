@@ -96,16 +96,7 @@ export function getFeret(mask: Mask): Feret {
   let minWidth = Number.POSITIVE_INFINITY;
   let minWidthAngle = 0;
   let minLinePoints: Point[] = [];
-  let minLines: [[Point, Point], [Point, Point]] = [
-    [
-      { column: 0, row: 0 },
-      { column: 0, row: 0 },
-    ],
-    [
-      { column: 0, row: 0 },
-      { column: 0, row: 0 },
-    ],
-  ];
+  let minLines: [[Point, Point], [Point, Point]] | undefined;
   for (let i = 0; i < hullPoints.length; i++) {
     let angle = getAngle(
       hullPoints[i],
@@ -144,7 +135,7 @@ export function getFeret(mask: Mask): Feret {
     points: rotate(minWidthAngle, minLinePoints),
     length: minWidth,
     angle: toDegrees(minWidthAngle),
-    lines: minLines,
+    lines: minLines as [[Point, Point], [Point, Point]],
   };
 
   // Compute maximum diameter
