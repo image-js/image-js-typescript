@@ -119,7 +119,7 @@ export function getFeret(mask: Mask): Feret {
       minWidth = currentWidth;
       minWidthAngle = angle;
       minLinePoints = currentMinLinePoints;
-      const { min: currentMin, max: currentMax } =
+      const { minIndex: currentMin, maxIndex: currentMax } =
         findPointsOfExtremeColumns(rotatedPoints);
       minLines = getMinLines(
         minWidthAngle,
@@ -157,7 +157,7 @@ export function getFeret(mask: Mask): Feret {
   const maxAngle = getAngle(maxLinePoints[0], maxLinePoints[1]);
   let rotatedMaxPoints = rotate(-maxAngle, hullPoints);
 
-  const { min: currentMin, max: currentMax } =
+  const { minIndex: currentMin, maxIndex: currentMax } =
     findPointsOfExtremeRows(rotatedMaxPoints);
   let maxLines = getMaxLines(
     maxAngle,
@@ -181,8 +181,8 @@ export function getFeret(mask: Mask): Feret {
 }
 
 function findPointsOfExtremeColumns(points: Point[]): {
-  min: number;
-  max: number;
+  minIndex: number;
+  maxIndex: number;
 } {
   let maxIndex = 0;
   let minIndex = 0;
@@ -195,11 +195,11 @@ function findPointsOfExtremeColumns(points: Point[]): {
       minIndex = i;
     }
   }
-  return { min: minIndex, max: maxIndex };
+  return { minIndex, maxIndex };
 }
 function findPointsOfExtremeRows(points: Point[]): {
-  min: number;
-  max: number;
+  minIndex: number;
+  maxIndex: number;
 } {
   let maxIndex = 0;
   let minIndex = 0;
@@ -211,7 +211,7 @@ function findPointsOfExtremeRows(points: Point[]): {
       minIndex = i;
     }
   }
-  return { min: minIndex, max: maxIndex };
+  return { minIndex, maxIndex };
 }
 
 function getMinLines(
