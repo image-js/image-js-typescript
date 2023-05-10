@@ -128,9 +128,9 @@ export function getFeret(mask: Mask): Feret {
       minWidth = currentWidth;
       minWidthAngle = angle;
       minLinePoints = currentMinLinePoints;
-      const { minIndex: currentMin, maxIndex: currentMax } =
+      const { min: currentMin, max: currentMax } =
         findPointsOfExtremeColumns(rotatedPoints);
-      minLines = formMinLines(
+      minLines = getMinLines(
         minWidthAngle,
         currentMin,
         currentMax,
@@ -166,9 +166,9 @@ export function getFeret(mask: Mask): Feret {
   const maxAngle = getAngle(maxLinePoints[0], maxLinePoints[1]);
   let rotatedMaxPoints = rotate(-maxAngle, hullPoints);
 
-  const { minIndex: currentMin, maxIndex: currentMax } =
+  const { min: currentMin, max: currentMax } =
     findPointsOfExtremeRows(rotatedMaxPoints);
-  let maxLines = formMaxLines(
+  let maxLines = getMaxLines(
     maxAngle,
     currentMin,
     currentMax,
@@ -190,40 +190,40 @@ export function getFeret(mask: Mask): Feret {
 }
 
 function findPointsOfExtremeColumns(points: Point[]): {
-  minIndex: number;
-  maxIndex: number;
+  min: number;
+  max: number;
 } {
-  let max = 0;
-  let min = 0;
+  let maxIndex = 0;
+  let minIndex = 0;
 
   for (let i = 0; i < points.length; i++) {
-    if (points[i].column > points[max].column) {
-      max = i;
+    if (points[i].column > points[maxIndex].column) {
+      maxIndex = i;
     }
-    if (points[i].column < points[min].column) {
-      min = i;
+    if (points[i].column < points[minIndex].column) {
+      minIndex = i;
     }
   }
-  return { minIndex: min, maxIndex: max };
+  return { min: minIndex, max: maxIndex };
 }
 function findPointsOfExtremeRows(points: Point[]): {
-  minIndex: number;
-  maxIndex: number;
+  min: number;
+  max: number;
 } {
-  let max = 0;
-  let min = 0;
+  let maxIndex = 0;
+  let minIndex = 0;
   for (let i = 0; i < points.length; i++) {
-    if (points[i].row > points[max].row) {
-      max = i;
+    if (points[i].row > points[maxIndex].row) {
+      maxIndex = i;
     }
-    if (points[i].row < points[min].row) {
-      min = i;
+    if (points[i].row < points[minIndex].row) {
+      minIndex = i;
     }
   }
-  return { minIndex: min, maxIndex: max };
+  return { min: minIndex, max: maxIndex };
 }
 
-function formMinLines(
+function getMinLines(
   angle: number,
   min: number,
   max: number,
@@ -253,7 +253,7 @@ function formMinLines(
     [Point, Point],
   ];
 }
-function formMaxLines(
+function getMaxLines(
   angle: number,
   min: number,
   max: number,
