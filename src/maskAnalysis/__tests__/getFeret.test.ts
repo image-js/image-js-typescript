@@ -62,10 +62,10 @@ test('mask with only 1 pixel', () => {
         lines: [
           [
             { column: 1, row: 0 },
-            { column: 1, row: 1.0000000000000002 },
+            { column: 1, row: 1 },
           ],
           [
-            { column: 2, row: -6.123233995736766e-17 },
+            { column: 2, row: 0 },
             { column: 2, row: 1 },
           ],
         ],
@@ -80,11 +80,11 @@ test('mask with only 1 pixel', () => {
         lines: [
           [
             { column: 1.5, row: -0.5 },
-            { column: 0.49999999999999994, row: 0.49999999999999994 },
+            { column: 0.5, row: 0.5 },
           ],
           [
             { column: 2.5, row: 0.5 },
-            { column: 1.4999999999999998, row: 1.5 },
+            { column: 1.5, row: 1.5 },
           ],
         ],
       },
@@ -111,12 +111,12 @@ test('mask 3x3', () => {
         ],
         lines: [
           [
-            { column: -0.5000000000000001, row: 1.4999999999999998 },
+            { column: -0.5, row: 1.5 },
             { column: 1.5, row: 3.5 },
           ],
           [
-            { column: 1.5, row: -0.5000000000000002 },
-            { column: 3.5, row: 1.5000000000000002 },
+            { column: 1.5, row: -0.5 },
+            { column: 3.5, row: 1.5 },
           ],
         ],
       },
@@ -129,12 +129,12 @@ test('mask 3x3', () => {
         ],
         lines: [
           [
-            { column: 0.5000000000000002, row: -0.5000000000000001 },
-            { column: -0.5, row: 2.4999999999999996 },
+            { column: 0.5, row: -0.5 },
+            { column: -0.5, row: 2.5 },
           ],
           [
-            { column: 3.5, row: 0.5000000000000001 },
-            { column: 2.4999999999999996, row: 3.5 },
+            { column: 3.5, row: 0.5 },
+            { column: 2.5, row: 3.5 },
           ],
         ],
       },
