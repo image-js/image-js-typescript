@@ -38,8 +38,7 @@ exports[`3x3 mask 1`] = `
       "aspectRatio": 0.554700196225229,
       "maxDiameter": {
         "angle": -33.690067525979785,
-        "length": 3.605551275463989,
-        "lines": [
+        "calliperLines": [
           [
             {
               "column": -0.923076923076923,
@@ -61,6 +60,7 @@ exports[`3x3 mask 1`] = `
             },
           ],
         ],
+        "length": 3.605551275463989,
         "points": [
           {
             "column": 0,
@@ -74,8 +74,7 @@ exports[`3x3 mask 1`] = `
       },
       "minDiameter": {
         "angle": 180,
-        "length": 1.9999999999999996,
-        "lines": [
+        "calliperLines": [
           [
             {
               "column": 3,
@@ -97,6 +96,7 @@ exports[`3x3 mask 1`] = `
             },
           ],
         ],
+        "length": 1.9999999999999996,
         "points": [
           {
             "column": 3,
@@ -182,8 +182,7 @@ exports[`3x3 mask 1`] = `
       "aspectRatio": 0.7071067811865475,
       "maxDiameter": {
         "angle": 45.00000000000001,
-        "length": 1.4142135623730951,
-        "lines": [
+        "calliperLines": [
           [
             {
               "column": 0.5000000000000001,
@@ -205,6 +204,7 @@ exports[`3x3 mask 1`] = `
             },
           ],
         ],
+        "length": 1.4142135623730951,
         "points": [
           {
             "column": 0,
@@ -218,8 +218,7 @@ exports[`3x3 mask 1`] = `
       },
       "minDiameter": {
         "angle": 90,
-        "length": 1,
-        "lines": [
+        "calliperLines": [
           [
             {
               "column": 0,
@@ -241,6 +240,7 @@ exports[`3x3 mask 1`] = `
             },
           ],
         ],
+        "length": 1,
         "points": [
           {
             "column": 0,
@@ -339,8 +339,7 @@ exports[`3x3 mask 2`] = `
       "aspectRatio": 0.5547001962252291,
       "maxDiameter": {
         "angle": -33.690067525979785,
-        "length": 3.605551275463989,
-        "lines": [
+        "calliperLines": [
           [
             {
               "column": -0.6153846153846154,
@@ -362,6 +361,7 @@ exports[`3x3 mask 2`] = `
             },
           ],
         ],
+        "length": 3.605551275463989,
         "points": [
           {
             "column": 0,
@@ -375,8 +375,7 @@ exports[`3x3 mask 2`] = `
       },
       "minDiameter": {
         "angle": 0,
-        "length": 2,
-        "lines": [
+        "calliperLines": [
           [
             {
               "column": 0,
@@ -398,6 +397,7 @@ exports[`3x3 mask 2`] = `
             },
           ],
         ],
+        "length": 2,
         "points": [
           {
             "column": 0,

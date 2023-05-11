@@ -11,7 +11,7 @@ test('empty mask', () => {
           { column: 0, row: 0 },
           { column: 0, row: 0 },
         ],
-        lines: [
+        calliperLines: [
           [
             { column: 0, row: 0 },
             { column: 0, row: 0 },
@@ -29,7 +29,7 @@ test('empty mask', () => {
           { column: 0, row: 0 },
           { column: 0, row: 0 },
         ],
-        lines: [
+        calliperLines: [
           [
             { column: 0, row: 0 },
             { column: 0, row: 0 },
@@ -59,7 +59,7 @@ test('mask with only 1 pixel', () => {
           { column: 1, row: 0 },
           { column: 2, row: 1 },
         ],
-        lines: [
+        calliperLines: [
           [
             { column: 1, row: 0 },
             { column: 1, row: 1 },
@@ -77,7 +77,7 @@ test('mask with only 1 pixel', () => {
           { column: 1, row: 0 },
           { column: 2, row: 1 },
         ],
-        lines: [
+        calliperLines: [
           [
             { column: 1.5, row: -0.5 },
             { column: 0.5, row: 0.5 },
@@ -109,7 +109,7 @@ test('mask 3x3', () => {
           { column: 0, row: 2 },
           { column: 3, row: 1 },
         ],
-        lines: [
+        calliperLines: [
           [
             { column: -0.5, row: 1.5 },
             { column: 1.5, row: 3.5 },
@@ -127,7 +127,7 @@ test('mask 3x3', () => {
           { column: 0, row: 1 },
           { column: 3, row: 2 },
         ],
-        lines: [
+        calliperLines: [
           [
             { column: 0.5, row: -0.5 },
             { column: -0.5, row: 2.5 },
@@ -164,7 +164,7 @@ test('mask 4x4', () => {
           { column: 1, row: 0 },
           { column: 3, row: 0 },
         ],
-        lines: [
+        calliperLines: [
           [
             { column: 1, row: 0 },
             { column: 1, row: 4 },
@@ -182,7 +182,7 @@ test('mask 4x4', () => {
           { column: 1, row: 0 },
           { column: 3, row: 4 },
         ],
-        lines: [
+        calliperLines: [
           [
             { column: 2.6, row: -0.8 },
             { column: -0.6, row: 0.8 },
@@ -220,7 +220,7 @@ test('mask 5x5', () => {
           { column: 3, row: 5 },
           { column: 0, row: 2 },
         ],
-        lines: [
+        calliperLines: [
           [
             { column: 2.5, row: 5.5 },
             { column: 5.5, row: 2.5 },
@@ -238,7 +238,7 @@ test('mask 5x5', () => {
           { column: 0, row: 2 },
           { column: 5, row: 3 },
         ],
-        lines: [
+        calliperLines: [
           [
             { column: 0.5, row: -0.5 },
             { column: -0.5, row: 4.5 },
@@ -276,7 +276,7 @@ test('triangle 5x5', () => {
           { column: 0, row: 5 },
           { column: 0, row: 0 },
         ],
-        lines: [
+        calliperLines: [
           [
             { column: 0, row: 5 },
             { column: 6, row: 5 },
@@ -294,7 +294,7 @@ test('triangle 5x5', () => {
           { column: 0, row: 0 },
           { column: 6, row: 3 },
         ],
-        lines: [
+        calliperLines: [
           [
             { column: 0.4, row: -0.8 },
             { column: -2, row: 4 },
@@ -330,7 +330,7 @@ test('square triangle 3x3', () => {
           { column: 1, row: 3 },
           { column: 0, row: 0 },
         ],
-        lines: [
+        calliperLines: [
           [
             { column: 0.5, row: 3.5 },
             { column: 3.5, row: 0.5 },
@@ -348,7 +348,7 @@ test('square triangle 3x3', () => {
           { column: 0, row: 3 },
           { column: 3, row: 0 },
         ],
-        lines: [
+        calliperLines: [
           [
             { column: -1.5, row: 1.5 },
             { column: 0.5, row: 3.5 },
@@ -386,7 +386,7 @@ test('complex figure', () => {
         ],
         length: 4.903,
         angle: -168.69,
-        lines: [
+        calliperLines: [
           [
             { column: 9.538, row: 1.3077 },
             { column: 0.115, row: -0.5769 },
@@ -404,7 +404,7 @@ test('complex figure', () => {
           { column: 0, row: 0 },
           { column: 9, row: 4 },
         ],
-        lines: [
+        calliperLines: [
           [
             { column: 0.9484, row: -2.134 },
             { column: -1.4845, row: 3.34 },
