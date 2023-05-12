@@ -133,6 +133,14 @@ test('Mask to RGB', () => {
   ]);
 });
 
+test('conversion not implemented', () => {
+  const image = testUtils.createGreyImage([[0, 255, 0, 255, 0, 255]]);
+
+  expect(() => image.convertColor('BINARY')).toThrow(
+    /conversion from GREY to BINARY not implemented/,
+  );
+});
+
 test('cannot convert to same colorModel', () => {
   const image = testUtils.createRgbImage([[10, 20, 30, 40, 60, 70]]);
 
