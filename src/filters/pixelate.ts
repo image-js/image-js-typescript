@@ -1,10 +1,12 @@
 import { Image, Point } from '..';
 
 /**
+ *Function to pixelate an image
  *
- * @param image
- * @param cellsize
- * @param out
+ * @param image - image to be pixelated
+ * @param cellsize - range of pixelated area
+ * @param out - optional parameter for cloning an image
+ * @returns pixelated Image
  */
 export function pixelate(image: Image, cellsize: number, out?: Image): Image {
   if (out === undefined) {
@@ -32,10 +34,18 @@ function getCenter(width: number, height: number, origin: Point): Point {
   return center;
 }
 
+/**
+ * function that pixelates image
+ *
+ * @param image - image to pixelate
+ * @param cellsize - range of pixels to pixelate
+ * @returns pixelatedImage
+ */
 function getPixelization(image: Image, cellsize: number): Image {
   for (let channel = 0; channel < image.channels; channel++) {
     for (let i = 0; i < image.width; i += cellsize) {
       for (let j = 0; j < image.height; j += cellsize) {
+        //first case: image gets pixelated without any small parts remaining
         if (
           image.height - (j + cellsize) >= 0 &&
           image.width - (i + cellsize) >= 0
@@ -53,8 +63,10 @@ function getPixelization(image: Image, cellsize: number): Image {
             }
           }
         } else {
+          //pixelating bottom and right borders
           let remainingWidth = image.width % cellsize;
           let remainingHeight = image.height % cellsize;
+          //bottom border
           if (
             i >= image.width - remainingWidth - 1 &&
             j <= image.height - remainingHeight - 1
@@ -72,6 +84,7 @@ function getPixelization(image: Image, cellsize: number): Image {
               }
             }
           } else if (
+            //right border
             j >= image.height - remainingHeight - 1 &&
             i <= image.width - remainingWidth - 1
           ) {
@@ -88,6 +101,7 @@ function getPixelization(image: Image, cellsize: number): Image {
               }
             }
           } else {
+            //corner
             const center = getCenter(image.width, image.height, {
               column: i,
               row: j,
