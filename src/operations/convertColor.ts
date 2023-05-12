@@ -180,8 +180,8 @@ export function convertBinaryToRgb(mask: Mask, newImage: Image): void {
   const black = new Array(newImage.components).fill(0);
   const white = new Array(newImage.components).fill(newImage.maxValue);
   if (newImage.alpha) {
-    black.push(0);
-    white.push(0);
+    black.push(newImage.maxValue);
+    white.push(newImage.maxValue);
   }
   for (let i = 0; i < mask.size; i++) {
     newImage.setPixelByIndex(i, mask.getBitByIndex(i) ? white : black);

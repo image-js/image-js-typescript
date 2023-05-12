@@ -104,26 +104,26 @@ test('Mask to GREY', () => {
 });
 
 test('Mask to RGBA', () => {
-  const mask = testUtils.createMask([
-    [0, 0],
-    [1, 0],
-    [0, 1],
-  ]);
+  const mask = testUtils.createMask(`
+    0 0
+    1 0
+    0 1
+  `);
 
   const img = mask.convertColor('RGBA');
   expect(img).toMatchImageData([
-    [0, 0, 0, 0, 0, 0, 0, 0],
-    [255, 255, 255, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 255, 255, 255, 0],
+    [0, 0, 0, 255, 0, 0, 0, 255],
+    [255, 255, 255, 255, 0, 0, 0, 255],
+    [0, 0, 0, 255, 255, 255, 255, 255],
   ]);
 });
 
 test('Mask to RGB', () => {
-  const mask = testUtils.createMask([
-    [0, 0],
-    [1, 0],
-    [0, 1],
-  ]);
+  const mask = testUtils.createMask(`
+    0 0
+    1 0
+    0 1
+  `);
 
   const img = mask.convertColor('RGB');
   expect(img).toMatchImageData([
