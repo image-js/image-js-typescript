@@ -1,11 +1,38 @@
 import { Image, Point } from '..';
+
 /**
  *
  * @param image
  * @param cellsize
  * @param out
  */
-export function pixelate(image: Image, cellsize: number) {
+export function pixelate(image: Image, cellsize: number, out?: Image): Image {
+  if (out === undefined) {
+    return getPixelization(image, cellsize);
+  } else {
+    const newImage = image.clone();
+    return getPixelization(newImage, cellsize);
+  }
+}
+
+/**
+ *Find the center of a rectangle to be pixelated
+ *
+ * @param width - width of a rectangle to change
+ * @param height - height of a rectangle to change
+ * @param origin - top left corner of a rectangle
+ * @returns Point
+ */
+function getCenter(width: number, height: number, origin: Point): Point {
+  const center = {
+    column: Math.floor((origin.column + width - 1) / 2),
+    row: Math.floor((origin.row + height - 1) / 2),
+  };
+
+  return center;
+}
+
+function getPixelization(image: Image, cellsize: number): Image {
   for (let channel = 0; channel < image.channels; channel++) {
     for (let i = 0; i < image.width; i += cellsize) {
       for (let j = 0; j < image.height; j += cellsize) {
@@ -80,13 +107,4 @@ export function pixelate(image: Image, cellsize: number) {
   }
 
   return image;
-}
-
-function getCenter(width: number, height: number, origin: Point): Point {
-  const center = {
-    column: Math.floor((origin.column + width - 1) / 2),
-    row: Math.floor((origin.row + height - 1) / 2),
-  };
-
-  return center;
 }
