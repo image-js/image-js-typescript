@@ -1,5 +1,4 @@
-import { Image } from '..';
-
+import { Image, Point } from '..';
 /**
  *
  * @param image
@@ -14,10 +13,12 @@ export function pixelate(image: Image, cellsize: number) {
           image.height - (j + cellsize) >= 0 &&
           image.width - (i + cellsize) >= 0
         ) {
-          let centerRow = Math.floor((j + j + cellsize - 1) / 2);
-          let centerColumn = Math.floor((i + i + cellsize - 1) / 2);
+          const center = getCenter(cellsize, cellsize, {
+            column: i,
+            row: j,
+          });
 
-          const value = image.getValue(centerColumn, centerRow, channel);
+          const value = image.getValue(center.column, center.row, channel);
 
           for (let n = i; n < i + cellsize; n++) {
             for (let k = j; k < j + cellsize; k++) {
@@ -31,10 +32,12 @@ export function pixelate(image: Image, cellsize: number) {
             i >= image.width - remainingWidth - 1 &&
             j <= image.height - remainingHeight - 1
           ) {
-            let centerColumn = Math.floor((i + image.width - 1) / 2);
-            let centerRow = Math.floor((j + j + cellsize - 1) / 2);
+            const center = getCenter(image.width, cellsize, {
+              column: i,
+              row: j,
+            });
 
-            const value = image.getValue(centerColumn, centerRow, channel);
+            const value = image.getValue(center.column, center.row, channel);
 
             for (let n = i; n < image.width; n++) {
               for (let k = j; k < j + cellsize; k++) {
@@ -45,10 +48,12 @@ export function pixelate(image: Image, cellsize: number) {
             j >= image.height - remainingHeight - 1 &&
             i <= image.width - remainingWidth - 1
           ) {
-            let centerColumn = Math.floor((i + i + cellsize - 1) / 2);
-            let centerRow = Math.floor((j + image.height - 1) / 2);
+            const center = getCenter(cellsize, image.height, {
+              column: i,
+              row: j,
+            });
 
-            const value = image.getValue(centerColumn, centerRow, channel);
+            const value = image.getValue(center.column, center.row, channel);
 
             for (let n = i; n < i + cellsize; n++) {
               for (let k = j; k < image.height; k++) {
@@ -56,10 +61,12 @@ export function pixelate(image: Image, cellsize: number) {
               }
             }
           } else {
-            let centerColumn = Math.floor((i + image.width - 1) / 2);
-            let centerRow = Math.floor((j + image.height - 1) / 2);
+            const center = getCenter(image.width, image.height, {
+              column: i,
+              row: j,
+            });
 
-            const value = image.getValue(centerColumn, centerRow, channel);
+            const value = image.getValue(center.column, center.row, channel);
 
             for (let n = i; n < image.width; n++) {
               for (let k = j; k < image.height; k++) {
@@ -73,4 +80,13 @@ export function pixelate(image: Image, cellsize: number) {
   }
 
   return image;
+}
+
+function getCenter(width: number, height: number, origin: Point): Point {
+  const center = {
+    column: Math.floor((origin.column + width - 1) / 2),
+    row: Math.floor((origin.row + height - 1) / 2),
+  };
+
+  return center;
 }
