@@ -1,20 +1,52 @@
 import { Image, Point } from '..';
+import { getOutputImage } from '../utils/getOutputImage';
+
+export interface PixelateOptions {
+  /**
+   *  range of pixelated area
+   */
+  cellSize: number;
+  /**
+   * Image to which to output.
+   */
+  out?: Image;
+}
 
 /**
  *Function to pixelate an image
  *
  * @param image - image to be pixelated
- * @param cellsize - range of pixelated area
- * @param out - optional parameter for cloning an image
+ * @param options
  * @returns pixelated Image
  */
-export function pixelate(image: Image, cellsize: number, out?: Image): Image {
-  if (out === undefined) {
-    return getPixelization(image, cellsize);
-  } else {
-    const newImage = image.clone();
-    return getPixelization(newImage, cellsize);
+export function pixelate(image: Image, options: PixelateOptions): Image {
+  const { cellSize } = options;
+  const newImage = getOutputImage(image, options);
+
+  for (let channel = 0; channel < image.channels; channel++) {
+    for (let i = 0; i < image.width; i += cellSize) {
+      for (let j = 0; j < image.height; j += cellSize) {
+        const currentCellWidth = Math.min(cellSize, image.width - i);
+        const currentCellHeight = Math.min(cellSize, image.height - j);
+        //first case: image gets pixelated without any small parts remaining
+
+        const center = getCenter(currentCellWidth, currentCellHeight, {
+          column: i,
+          row: j,
+        });
+
+        const value = image.getValue(center.column, center.row, channel);
+
+        for (let n = i; n < i + currentCellWidth; n++) {
+          for (let k = j; k < j + currentCellHeight; k++) {
+            newImage.setValue(n, k, channel, value);
+          }
+        }
+      }
+    }
   }
+
+  return newImage;
 }
 
 /**
@@ -27,98 +59,9 @@ export function pixelate(image: Image, cellsize: number, out?: Image): Image {
  */
 function getCenter(width: number, height: number, origin: Point): Point {
   const center = {
-    column: Math.floor((origin.column + width - 1) / 2),
-    row: Math.floor((origin.row + height - 1) / 2),
+    column: Math.floor((origin.column + origin.column + width - 1) / 2),
+    row: Math.floor((origin.row + origin.row + height - 1) / 2),
   };
 
   return center;
-}
-
-/**
- * function that pixelates image
- *
- * @param image - image to pixelate
- * @param cellsize - range of pixels to pixelate
- * @returns pixelatedImage
- */
-function getPixelization(image: Image, cellsize: number): Image {
-  for (let channel = 0; channel < image.channels; channel++) {
-    for (let i = 0; i < image.width; i += cellsize) {
-      for (let j = 0; j < image.height; j += cellsize) {
-        //first case: image gets pixelated without any small parts remaining
-        if (
-          image.height - (j + cellsize) >= 0 &&
-          image.width - (i + cellsize) >= 0
-        ) {
-          const center = getCenter(cellsize, cellsize, {
-            column: i,
-            row: j,
-          });
-
-          const value = image.getValue(center.column, center.row, channel);
-
-          for (let n = i; n < i + cellsize; n++) {
-            for (let k = j; k < j + cellsize; k++) {
-              image.setValue(n, k, channel, value);
-            }
-          }
-        } else {
-          //pixelating bottom and right borders
-          let remainingWidth = image.width % cellsize;
-          let remainingHeight = image.height % cellsize;
-          //bottom border
-          if (
-            i >= image.width - remainingWidth - 1 &&
-            j <= image.height - remainingHeight - 1
-          ) {
-            const center = getCenter(image.width, cellsize, {
-              column: i,
-              row: j,
-            });
-
-            const value = image.getValue(center.column, center.row, channel);
-
-            for (let n = i; n < image.width; n++) {
-              for (let k = j; k < j + cellsize; k++) {
-                image.setValue(n, k, channel, value);
-              }
-            }
-          } else if (
-            //right border
-            j >= image.height - remainingHeight - 1 &&
-            i <= image.width - remainingWidth - 1
-          ) {
-            const center = getCenter(cellsize, image.height, {
-              column: i,
-              row: j,
-            });
-
-            const value = image.getValue(center.column, center.row, channel);
-
-            for (let n = i; n < i + cellsize; n++) {
-              for (let k = j; k < image.height; k++) {
-                image.setValue(n, k, channel, value);
-              }
-            }
-          } else {
-            //corner
-            const center = getCenter(image.width, image.height, {
-              column: i,
-              row: j,
-            });
-
-            const value = image.getValue(center.column, center.row, channel);
-
-            for (let n = i; n < image.width; n++) {
-              for (let k = j; k < image.height; k++) {
-                image.setValue(n, k, channel, value);
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
-  return image;
 }
