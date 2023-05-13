@@ -1,6 +1,6 @@
 import { pixelate } from '../pixelate';
 
-describe('pixelization of an image', () => {
+describe('pixelization of images', () => {
   it('pixelate a simple grey image', () => {
     let img = testUtils.createGreyImage([
       [1, 1, 2],
@@ -8,15 +8,14 @@ describe('pixelization of an image', () => {
       [6, 7, 8],
     ]);
 
-    let result = pixelate(img, 2);
-
+    let result = pixelate(img, { cellSize: 2 });
     expect(result).toMatchImageData([
       [1, 1, 2],
       [1, 1, 2],
       [6, 6, 8],
     ]);
   });
-  it('pixelate a simple grey image', () => {
+  it('pixelate a bigger grey image', () => {
     let img = testUtils.createGreyImage([
       [1, 1, 2, 2, 2],
       [2, 3, 4, 2, 1],
@@ -25,7 +24,7 @@ describe('pixelization of an image', () => {
       [1, 9, 9, 9, 9],
     ]);
 
-    let result = pixelate(img, 3);
+    let result = pixelate(img, { cellSize: 3 });
 
     expect(result).toMatchImageData([
       [3, 3, 3, 2, 2],
@@ -33,6 +32,25 @@ describe('pixelization of an image', () => {
       [3, 3, 3, 2, 2],
       [9, 9, 9, 0, 0],
       [9, 9, 9, 0, 0],
+    ]);
+  });
+  it('pixelate an RGBA image', () => {
+    let img = testUtils.createRgbaImage([
+      [1, 1, 2, 2],
+      [2, 3, 4, 2],
+      [6, 7, 8, 3],
+      [2, 9, 4, 0],
+      [1, 9, 9, 9],
+    ]);
+
+    let result = pixelate(img, { cellSize: 3 });
+
+    expect(result).toMatchImageData([
+      [2, 3, 4, 2],
+      [2, 3, 4, 2],
+      [2, 3, 4, 2],
+      [2, 9, 4, 0],
+      [2, 9, 4, 0],
     ]);
   });
 });
