@@ -13,8 +13,17 @@ export interface PixelateOptions {
 }
 
 interface CenterOptions {
+  /*
+   * width of a region to look for center
+   */
   width: number;
+  /*
+   * height of a region to look for center
+   */
   height: number;
+  /*
+   * top left point of a region which serves as point of origin
+   */
   origin: Point;
 }
 
@@ -22,7 +31,7 @@ interface CenterOptions {
  *Function to pixelate an image
  *
  * @param image - image to be pixelated
- * @param options
+ * @param options - PixelateOptions
  * @returns pixelated Image
  */
 export function pixelate(image: Image, options: PixelateOptions): Image {
@@ -66,10 +75,8 @@ export function pixelate(image: Image, options: PixelateOptions): Image {
 /**
  *Find the center of a rectangle to be pixelated
  *
- * @param width - width of a rectangle to change
- * @param height - height of a rectangle to change
- * @param origin - top left corner of a rectangle
- * @param options
+ *
+ * @param options - CenterOptions
  * @returns Point
  */
 function getCenter(options: CenterOptions): Point {
