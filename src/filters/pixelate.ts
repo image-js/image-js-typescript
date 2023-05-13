@@ -12,6 +12,12 @@ export interface PixelateOptions {
   out?: Image;
 }
 
+interface CenterOptions {
+  width: number;
+  height: number;
+  origin: Point;
+}
+
 /**
  *Function to pixelate an image
  *
@@ -24,22 +30,30 @@ export function pixelate(image: Image, options: PixelateOptions): Image {
   const newImage = getOutputImage(image, options);
 
   for (let channel = 0; channel < image.channels; channel++) {
-    for (let i = 0; i < image.width; i += cellSize) {
-      for (let j = 0; j < image.height; j += cellSize) {
-        const currentCellWidth = Math.min(cellSize, image.width - i);
-        const currentCellHeight = Math.min(cellSize, image.height - j);
+    for (let column = 0; column < image.width; column += cellSize) {
+      for (let row = 0; row < image.height; row += cellSize) {
+        const currentCellWidth = Math.min(cellSize, image.width - column);
+        const currentCellHeight = Math.min(cellSize, image.height - row);
         //first case: image gets pixelated without any small parts remaining
 
-        const center = getCenter(currentCellWidth, currentCellHeight, {
-          column: i,
-          row: j,
+        const center = getCenter({
+          width: currentCellWidth,
+          height: currentCellHeight,
+          origin: {
+            column,
+            row,
+          },
         });
 
         const value = image.getValue(center.column, center.row, channel);
 
-        for (let n = i; n < i + currentCellWidth; n++) {
-          for (let k = j; k < j + currentCellHeight; k++) {
-            newImage.setValue(n, k, channel, value);
+        for (
+          let newColumn = column;
+          newColumn < column + currentCellWidth;
+          newColumn++
+        ) {
+          for (let newRow = row; newRow < row + currentCellHeight; newRow++) {
+            newImage.setValue(newColumn, newRow, channel, value);
           }
         }
       }
@@ -55,12 +69,17 @@ export function pixelate(image: Image, options: PixelateOptions): Image {
  * @param width - width of a rectangle to change
  * @param height - height of a rectangle to change
  * @param origin - top left corner of a rectangle
+ * @param options
  * @returns Point
  */
-function getCenter(width: number, height: number, origin: Point): Point {
+function getCenter(options: CenterOptions): Point {
   const center = {
-    column: Math.floor((origin.column + origin.column + width - 1) / 2),
-    row: Math.floor((origin.row + origin.row + height - 1) / 2),
+    column: Math.floor(
+      (options.origin.column + options.origin.column + options.width - 1) / 2,
+    ),
+    row: Math.floor(
+      (options.origin.row + options.origin.row + options.height - 1) / 2,
+    ),
   };
 
   return center;
