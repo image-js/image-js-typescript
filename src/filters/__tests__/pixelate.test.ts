@@ -53,4 +53,56 @@ describe('pixelization of images', () => {
       [2, 9, 4, 0],
     ]);
   });
+  it('pixelate an RGBA image', () => {
+    let img = testUtils.createRgbaImage([
+      [1, 1, 2, 2],
+      [2, 3, 4, 2],
+      [6, 7, 8, 3],
+      [2, 9, 4, 0],
+      [1, 9, 9, 9],
+    ]);
+
+    let result = pixelate(img, { cellSize: 3 });
+
+    expect(result).toMatchImageData([
+      [2, 3, 4, 2],
+      [2, 3, 4, 2],
+      [2, 3, 4, 2],
+      [2, 9, 4, 0],
+      [2, 9, 4, 0],
+    ]);
+  });
+  it('pixelate an RGBA image', () => {
+    let img = testUtils.createRgbaImage([
+      [1, 1, 2, 2],
+      [2, 3, 4, 2],
+      [6, 7, 8, 3],
+      [2, 9, 4, 0],
+      [1, 9, 9, 9],
+    ]);
+
+    let result = pixelate(img, { cellSize: 3 });
+
+    expect(result).toMatchImageData([
+      [2, 3, 4, 2],
+      [2, 3, 4, 2],
+      [2, 3, 4, 2],
+      [2, 9, 4, 0],
+      [2, 9, 4, 0],
+    ]);
+  });
+  it('throws an error', () => {
+    let img = testUtils.createRgbaImage([
+      [1, 1, 2, 2],
+      [2, 3, 4, 2],
+      [6, 7, 8, 3],
+      [2, 9, 4, 0],
+      [1, 9, 9, 9],
+    ]);
+    expect(() => {
+      img.pixelate({ cellSize: 1 });
+    }).toThrow(
+      new Error('invalid option value. cellSize should be bigger than 2'),
+    );
+  });
 });
