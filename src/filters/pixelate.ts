@@ -36,6 +36,9 @@ interface CenterOptions {
  */
 export function pixelate(image: Image, options: PixelateOptions): Image {
   const { cellSize } = options;
+  if (cellSize < 2) {
+    throw new Error('invalid option value. cellSize should be bigger than 2');
+  }
   const newImage = getOutputImage(image, options);
 
   for (let channel = 0; channel < image.channels; channel++) {
