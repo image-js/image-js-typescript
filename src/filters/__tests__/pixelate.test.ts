@@ -8,7 +8,7 @@ describe('pixelization of images', () => {
       [6, 7, 8],
     ]);
 
-    let result = pixelate(img, { cellSize: 2 });
+    let result = img.pixelate({ cellSize: 2 });
     expect(result).toMatchImageData([
       [1, 1, 2],
       [1, 1, 2],
