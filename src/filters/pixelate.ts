@@ -43,7 +43,6 @@ export function pixelate(image: Image, options: PixelateOptions): Image {
       for (let row = 0; row < image.height; row += cellSize) {
         const currentCellWidth = Math.min(cellSize, image.width - column);
         const currentCellHeight = Math.min(cellSize, image.height - row);
-        //first case: image gets pixelated without any small parts remaining
 
         const center = getCenter({
           width: currentCellWidth,
