@@ -37,7 +37,7 @@ interface CenterOptions {
 export function pixelate(image: Image, options: PixelateOptions): Image {
   const { cellSize } = options;
   if (cellSize < 2) {
-    throw new Error('invalid option value. cellSize should be bigger than 2');
+    throw new RangeError('cellSize must be greater than 1');
   }
   const newImage = getOutputImage(image, options);
 
