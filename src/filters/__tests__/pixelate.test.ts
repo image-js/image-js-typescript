@@ -53,42 +53,23 @@ describe('pixelization of images', () => {
       [2, 9, 4, 0],
     ]);
   });
-  it('pixelate an RGBA image', () => {
+
+  it('pixelate an RGBA H-like image', () => {
     let img = testUtils.createRgbaImage([
-      [1, 1, 2, 2],
-      [2, 3, 4, 2],
-      [6, 7, 8, 3],
-      [2, 9, 4, 0],
-      [1, 9, 9, 9],
+      [5, 1, 2, 5],
+      [5, 5, 5, 5],
+      [4, 4, 4, 4],
+      [4, 9, 0, 4],
+      [4, 9, 0, 4],
     ]);
 
     let result = pixelate(img, { cellSize: 3 });
-
     expect(result).toMatchImageData([
-      [2, 3, 4, 2],
-      [2, 3, 4, 2],
-      [2, 3, 4, 2],
-      [2, 9, 4, 0],
-      [2, 9, 4, 0],
-    ]);
-  });
-  it('pixelate an RGBA image', () => {
-    let img = testUtils.createRgbaImage([
-      [1, 1, 2, 2],
-      [2, 3, 4, 2],
-      [6, 7, 8, 3],
-      [2, 9, 4, 0],
-      [1, 9, 9, 9],
-    ]);
-
-    let result = pixelate(img, { cellSize: 3 });
-
-    expect(result).toMatchImageData([
-      [2, 3, 4, 2],
-      [2, 3, 4, 2],
-      [2, 3, 4, 2],
-      [2, 9, 4, 0],
-      [2, 9, 4, 0],
+      [5, 5, 5, 5],
+      [5, 5, 5, 5],
+      [5, 5, 5, 5],
+      [4, 9, 0, 4],
+      [4, 9, 0, 4],
     ]);
   });
   it('throws a Range error', () => {
