@@ -91,7 +91,7 @@ describe('pixelization of images', () => {
       [2, 9, 4, 0],
     ]);
   });
-  it('throws an error', () => {
+  it('throws a Range error', () => {
     let img = testUtils.createRgbaImage([
       [1, 1, 2, 2],
       [2, 3, 4, 2],
@@ -101,8 +101,18 @@ describe('pixelization of images', () => {
     ]);
     expect(() => {
       img.pixelate({ cellSize: 1 });
-    }).toThrow(
-      new Error('invalid option value. cellSize should be bigger than 2'),
-    );
+    }).toThrow(new RangeError('cellSize must be greater than 1'));
+  });
+  it('throws a Type error', () => {
+    let img = testUtils.createRgbaImage([
+      [1, 1, 2, 2],
+      [2, 3, 4, 2],
+      [6, 7, 8, 3],
+      [2, 9, 4, 0],
+      [1, 9, 9, 9],
+    ]);
+    expect(() => {
+      img.pixelate({ cellSize: 2.3 });
+    }).toThrow(new TypeError('cellSize must be an integer'));
   });
 });
