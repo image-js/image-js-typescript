@@ -36,6 +36,9 @@ interface CenterOptions {
  */
 export function pixelate(image: Image, options: PixelateOptions): Image {
   const { cellSize } = options;
+  if (!Number.isInteger(cellSize)) {
+    throw new TypeError('cellSize must be an integer');
+  }
   if (cellSize < 2) {
     throw new RangeError('cellSize must be greater than 1');
   }
