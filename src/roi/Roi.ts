@@ -119,6 +119,8 @@ export class Roi {
 
   /**
    * Diameter of a circle of equal perimeter
+   *
+   * @returns ped value
    */
   get ped() {
     return this.perimeter / Math.PI;
@@ -187,7 +189,9 @@ export class Roi {
   //TODO externalIds should be an array of {id: number, length: number}
 
   /**
-   * Return an array of ROIs IDs that touch the current ROI.
+   * Returns an array of ROIs IDs that touch the current ROI.
+   *
+   * @returns array of IDs
    */
   get externalBorders(): Border[] {
     return this.#getComputed('externalBorders', () => {
@@ -216,7 +220,6 @@ export class Roi {
   /**
    * Calculates and caches the number of sides by which each pixel is touched externally
    *
-   * @param roi -ROI
    * @returns object which tells how many pixels are exposed externally to how many sides
    */
   get perimeterInfo() {
@@ -287,7 +290,10 @@ export class Roi {
    * The perimeter is calculated using the sum of all the external borders of the ROI to which we subtract
    * (2 - √2) * the number of pixels that have 2 external borders
    * 2 * (2 - √2) * the number of pixels that have 3 external borders
+   *
+   * @returns perimeter value
    */
+
   get perimeter() {
     let info = this.perimeterInfo;
     const delta = 2 - Math.sqrt(2);
@@ -302,6 +308,8 @@ export class Roi {
   /**
    * An array of tuples, each tuple being the x and y coordinates of the ROI point.
    * the current ROI points
+   *
+   * @returns array of points
    */
   get points() {
     return this.#getComputed('points', () => {
@@ -379,6 +387,8 @@ export class Roi {
 
   /**
    * Returns the diameter of a circle of equal projection area
+   *
+   * @returns eqpc value
    */
   get eqpc() {
     return 2 * Math.sqrt(this.surface / Math.PI);
@@ -491,12 +501,16 @@ export class Roi {
   }
   /**
    * Calculates fill ratio of the ROI
+   *
+   * @returns fill ratio value
    */
   get fillRatio() {
     return this.surface / (this.surface + this.holesInfo.surface);
   }
   /**
    * Calculates sphericity of the ROI
+   *
+   * @returns sphericity value
    */
   get sphericity() {
     return (2 * Math.sqrt(this.surface * Math.PI)) / this.perimeter;
@@ -508,6 +522,8 @@ export class Roi {
 
   /**
    * Calculates solidity of the ROI
+   *
+   * @returns solidity value
    */
   get solidity() {
     return this.surface / getConvexHull(this.getMask()).surface;
@@ -520,6 +536,8 @@ export class Roi {
   }
   /**
    * Calculates minimum bounding rectangle
+   *
+   * @returns an object of mbr
    */
   get mbr() {
     return this.#getComputed('mbr', () => {
@@ -538,6 +556,7 @@ export class Roi {
     });
   }
   /**
+   * returns an object with all the data about ROI
    *
    * @returns calculated properties as one object
    */
@@ -603,8 +622,9 @@ export class Roi {
   /**
    * Calculates the correct index on the map of ROI
    *
-   * @param y
-   * @param x
+   * @param y - map row
+   * @param x - map column
+   * @returns index of ROI map
    */
   #computeIndex(y: number, x: number): number {
     const roiMap = this.map;
