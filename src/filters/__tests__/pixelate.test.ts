@@ -15,6 +15,21 @@ describe('pixelization of images', () => {
       [6, 6, 8],
     ]);
   });
+  it('pixelate a simple grey image with xMedian', () => {
+    let img = testUtils.createGreyImage([
+      [1, 1, 2],
+      [2, 3, 4],
+      [6, 7, 8],
+    ]);
+
+    let result = img.pixelate({ cellSize: 2, algorithm: 'median' });
+
+    expect(result).toMatchImageData([
+      [1, 1, 2],
+      [1, 1, 2],
+      [6, 6, 8],
+    ]);
+  });
   it('pixelate a bigger grey image', () => {
     let img = testUtils.createGreyImage([
       [1, 1, 2, 2, 2],
@@ -68,6 +83,25 @@ describe('pixelization of images', () => {
       [5, 5, 5, 5],
       [5, 5, 5, 5],
       [5, 5, 5, 5],
+      [4, 9, 0, 4],
+      [4, 9, 0, 4],
+    ]);
+  });
+  it('pixelate an RGBA H-like image with xMean', () => {
+    let img = testUtils.createRgbaImage([
+      [5, 1, 2, 5],
+      [5, 5, 5, 5],
+      [4, 4, 4, 4],
+      [4, 9, 0, 4],
+      [4, 9, 0, 4],
+    ]);
+
+    let result = pixelate(img, { cellSize: 3, algorithm: 'mean' });
+
+    expect(result).toMatchImageData([
+      [4, 3, 3, 4],
+      [4, 3, 3, 4],
+      [4, 3, 3, 4],
       [4, 9, 0, 4],
       [4, 9, 0, 4],
     ]);
