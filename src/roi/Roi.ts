@@ -14,14 +14,14 @@ import { getBorderPoints } from './getBorderPoints';
 import { getMask, GetMaskOptions } from './getMask';
 import { Ellipse, getEllipse } from './properties/getEllipse';
 /**
- * Interface for borders of ROI
+ * Interface for borders of ROI.
  */
 interface Border {
   connectedID: number; // refers to the roiID of the contiguous ROI
   length: number;
 }
 /**
- * Interface with cached values of computed properties
+ * Interface with cached values of computed properties.
  */
 interface Computed {
   perimeter: number;
@@ -72,7 +72,7 @@ export class Roi {
    */
   public readonly surface: number;
   /**
-   * Cached values of properties to improve performance
+   * Cached values of properties to improve performance.
    */
   #computed: Partial<Computed>;
 
@@ -115,7 +115,7 @@ export class Roi {
   /**
    * Generates a mask of an ROI. You can specify the kind of mask you want using the `kind` option.
    *
-   * @param options - Get Mask options
+   * @param options - Get Mask options.
    * @returns The ROI mask.
    */
   public getMask(options?: GetMaskOptions): Mask {
@@ -222,7 +222,7 @@ export class Roi {
   }
 
   /**
-   * Calculates and caches the number of sides by which each pixel is touched externally
+   * Calculates and caches the number of sides by which each pixel is touched externally.
    *
    * @returns object which tells how many pixels are exposed externally to how many sides
    */
@@ -291,7 +291,7 @@ export class Roi {
 
   /**
    * Perimeter of the ROI.
-   * The perimeter is calculated using the sum of all the external borders of the ROI to which we subtract
+   * The perimeter is calculated using the sum of all the external borders of the ROI to which we subtract:
    * (2 - √2) * the number of pixels that have 2 external borders
    * 2 * (2 - √2) * the number of pixels that have 3 external borders
    *
@@ -311,9 +311,9 @@ export class Roi {
   }
   /**
    *
-   * the current ROI points
+   * the current ROI points.
    *
-   * @returns array of points(array of tuples, each tuple being the x and y coordinates of the ROI point.)
+   * @returns array of points(array of tuples, each tuple being the x and y coordinates of the ROI point).
    */
   get points() {
     return this.#getComputed('points', () => {
@@ -334,12 +334,12 @@ export class Roi {
   }
   get boxIDs() {
     return this.#getComputed('boxIDs', () => {
-      let surroundingIDs = new Set<number>(); // allows to get a unique list without indexOf
+      let surroundingIDs = new Set<number>(); // allows to get a unique list without indexOf.
 
       const roiMap = this.map;
       const data = roiMap.data;
 
-      // we check the first line and the last line
+      // we check the first line and the last line.
       for (let row of [0, this.height - 1]) {
         for (let column = 0; column < this.width; column++) {
           let target = this.#computeIndex(row, column);
@@ -362,7 +362,7 @@ export class Roi {
         }
       }
 
-      // we check the first column and the last column
+      // we check the first column and the last column.
       for (let column of [0, this.width - 1]) {
         for (let row = 0; row < this.height; row++) {
           let target = this.#computeIndex(row, column);
@@ -385,14 +385,14 @@ export class Roi {
         }
       }
 
-      return Array.from(surroundingIDs); // the selection takes the whole rectangle
+      return Array.from(surroundingIDs); // the selection takes the whole rectangle.
     });
   }
 
   /**
-   * Computes the diameter of a circle of equal projection area. It is a diameter of a circle that has the same surface as the ROI
+   * Computes the diameter of a circle of equal projection area. It is a diameter of a circle that has the same surface as the ROI.
    *
-   * @returns eqpc value in pixels
+   * @returns eqpc value in pixels.
    */
   get eqpc() {
     return 2 * Math.sqrt(this.surface / Math.PI);
@@ -413,7 +413,7 @@ export class Roi {
    * Number of holes in the ROI and their total surface.
    * Used to calculate fillRatio.
    *
-   * @returns the surface of holes in ROI
+   * @returns the surface of holes in ROI.
    */
   get holesInfo() {
     return this.#getComputed('holesInfo', () => {
@@ -438,15 +438,15 @@ export class Roi {
   }
 
   /**
-   *Calculates and caches border's length and their IDs
+   *Calculates and caches border's length and their IDs.
    *
-   * @returns borders' length and their IDs
+   * @returns borders' length and their IDs.
    */
   get borders() {
     return this.#getComputed('borders', () => {
       const roiMap = this.map;
       const data = roiMap.data;
-      let surroudingIDs = new Set<number>(); // allows to get a unique list without indexOf
+      let surroudingIDs = new Set<number>(); // allows to get a unique list without indexOf.
       let surroundingBorders = new Map();
       let visitedData = new Set();
       let dx = [+1, 0, -1, 0];
@@ -508,16 +508,16 @@ export class Roi {
     });
   }
   /**
-   * Computes fill ratio of the ROI. It is calculated by dividing ROI's actual surface over the surface combined with holes, to see how holes affect its surface
+   * Computes fill ratio of the ROI. It is calculated by dividing ROI's actual surface over the surface combined with holes, to see how holes affect its surface.
    *
-   * @returns fill ratio value
+   * @returns fill ratio value.
    */
   get fillRatio() {
     return this.surface / (this.surface + this.holesInfo.surface);
   }
   /**
    * Computes sphericity of the ROI.
-   * Sphericity is a measure of the degree to which a particle approximates the shape of a sphere, and is independent of its size.The value is always between 0 and 1. The less spheric the ROI is the smaller is the number.
+   * Sphericity is a measure of the degree to which a particle approximates the shape of a sphere, and is independent of its size. The value is always between 0 and 1. The less spheric the ROI is the smaller is the number.
    *
    * @returns sphericity value
    */
@@ -527,7 +527,7 @@ export class Roi {
   /**
    * Computes surface combined with the surface of the holes.
    *
-   * @returns surface with holes in pixels
+   * @returns surface with holes in pixels.
    */
   get filledSurface() {
     return this.surface + this.holesInfo.surface;
@@ -558,7 +558,7 @@ export class Roi {
    * Computes minimum bounding rectangle.
    * In digital image processing, the bounding box is merely the coordinates of the rectangular border that fully encloses a digital image when it is placed over a page, a canvas, a screen or other similar bidimensional background.
    *
-   * @returns an object of mbr
+   * @returns an object of mbr.
    */
   get mbr() {
     return this.#getComputed('mbr', () => {
@@ -587,9 +587,9 @@ export class Roi {
     });
   }
   /**
-   * A JSON object with all the data about ROI
+   * A JSON object with all the data about ROI.
    *
-   * @returns calculated properties as one object
+   * @returns calculated properties as one object.
    */
   toJSON() {
     return {
@@ -613,7 +613,7 @@ export class Roi {
     };
   }
   /**
-   * Computes a center point of the current ROI
+   * Computes a center point of the current ROI.
    *
    * @returns point
    */
@@ -640,7 +640,7 @@ export class Roi {
     });
   }
 
-  //  A helper function to cache already calculated properties
+  //  A helper function to cache already calculated properties.
   #getComputed<T extends keyof Computed>(
     property: T,
     callback: () => Computed[T],
@@ -655,7 +655,7 @@ export class Roi {
   //TODO Make this private
 
   /**
-   * Calculates the correct index on the map of ROI
+   * Calculates the correct index on the map of ROI.
    *
    * @param y - map row
    * @param x - map column
