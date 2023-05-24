@@ -55,15 +55,15 @@ export function pixelate(image: Image, options: PixelateOptions): Image {
       for (let row = 0; row < image.height; row += cellSize) {
         const currentCellWidth = Math.min(cellSize, image.width - column);
         const currentCellHeight = Math.min(cellSize, image.height - row);
-        let arrayOfValues = getArrayOfValues(image, channel, {
+        let valuesOfSector = getArrayOfValues(image, channel, {
           width: currentCellWidth,
           height: currentCellHeight,
           origin: { column, row },
         });
         if (algorithm === 'mean') {
-          value = xMean(arrayOfValues);
+          value = xMean(valuesOfSector);
         } else if (algorithm === 'median') {
-          value = xMedian(arrayOfValues);
+          value = xMedian(valuesOfSector);
         } else {
           let center = getCenter({
             width: currentCellWidth,
@@ -118,16 +118,16 @@ function getArrayOfValues(
 ) {
   let array = [];
   for (
-    let i = options.origin.column;
-    i < options.origin.column + options.width;
-    i++
+    let column = options.origin.column;
+    column < options.origin.column + options.width;
+    column++
   ) {
     for (
-      let j = options.origin.row;
-      j < options.origin.row + options.height;
-      j++
+      let row = options.origin.row;
+      row < options.origin.row + options.height;
+      row++
     ) {
-      array.push(image.getValue(i, j, channel));
+      array.push(image.getValue(row, row, channel));
     }
   }
   return array;
