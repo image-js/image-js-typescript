@@ -37,8 +37,6 @@ interface Computed {
   points: number[][];
   holesInfo: { number: number; surface: number };
   boxIDs: number[];
-  eqpc: number;
-  ped: number;
   externalBorders: Border[];
   roundness: number;
   convexHull: { points: Point[]; surface: number; perimeter: number };
