@@ -127,7 +127,7 @@ function getArrayOfValues(
       row < options.origin.row + options.height;
       row++
     ) {
-      array.push(image.getValue(row, row, channel));
+      array.push(image.getValue(column, row, channel));
     }
   }
   return array;
