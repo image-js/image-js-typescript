@@ -1,8 +1,4 @@
-import { toBeDeepCloseTo } from 'jest-matcher-deep-close-to';
-
 import { getAngle, getClockwiseAngle } from '../getAngle';
-
-expect.extend({ toBeDeepCloseTo });
 
 test.each([
   [
