@@ -548,7 +548,7 @@ export class Roi {
 
   get centroid() {
     return this.#getComputed('centroid', () => {
-      const roiMap = this.getMap();
+      const roiMap = this.map;
       const data = roiMap.data;
       let sumColumn = 0;
       let sumRow = 0;
