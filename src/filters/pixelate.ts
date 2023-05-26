@@ -66,15 +66,12 @@ export function pixelate(image: Image, options: PixelateOptions): Image {
           height: currentCellHeight,
           origin: { column, row },
         });
-        let center = getCenter({
+        const center = cellCenter({
           width: currentCellWidth,
           height: currentCellHeight,
-          origin: {
-            column,
-            row,
-          },
+          origin: { column, row },
         });
-        let value: number = image.getValue(center.column, center.row, channel);
+        let value: number;
         switch (algorithm) {
           case 'mean':
             value = cellMean(valuesOfSector);
@@ -113,7 +110,7 @@ export function pixelate(image: Image, options: PixelateOptions): Image {
  * @param options - CenterOptions
  * @returns Point
  */
-function getCenter(options: CenterOptions): Point {
+function cellCenter(options: CenterOptions): Point {
   const center = {
     column: Math.floor(
       (options.origin.column + options.origin.column + options.width - 1) / 2,
@@ -122,7 +119,6 @@ function getCenter(options: CenterOptions): Point {
       (options.origin.row + options.origin.row + options.height - 1) / 2,
     ),
   };
-
   return center;
 }
 
