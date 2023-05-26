@@ -41,7 +41,7 @@ interface CenterOptions {
  * @returns pixelated Image
  */
 export function pixelate(image: Image, options: PixelateOptions): Image {
-  const { cellSize, algorithm } = options;
+  const { cellSize, algorithm = 'center' } = options;
   if (!Number.isInteger(cellSize)) {
     throw new TypeError('cellSize must be an integer');
   }
@@ -60,21 +60,29 @@ export function pixelate(image: Image, options: PixelateOptions): Image {
           height: currentCellHeight,
           origin: { column, row },
         });
-        if (algorithm === 'mean') {
-          value = xMean(valuesOfSector);
-        } else if (algorithm === 'median') {
-          value = xMedian(valuesOfSector);
-        } else {
-          let center = getCenter({
-            width: currentCellWidth,
-            height: currentCellHeight,
-            origin: {
-              column,
-              row,
-            },
-          });
-          value = image.getValue(center.column, center.row, channel);
+        let center = getCenter({
+          width: currentCellWidth,
+          height: currentCellHeight,
+          origin: {
+            column,
+            row,
+          },
+        });
+        switch (algorithm) {
+          case 'mean':
+            value = xMean(valuesOfSector);
+            break;
+          case 'median':
+            value = xMedian(valuesOfSector);
+            break;
+          case 'center':
+            value = image.getValue(center.column, center.row, channel);
+            break;
+          default:
+            value = image.getValue(center.column, center.row, channel);
+            break;
         }
+
         for (
           let newColumn = column;
           newColumn < column + currentCellWidth;
