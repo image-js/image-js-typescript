@@ -4,7 +4,7 @@ import {
 } from 'ml-spectra-processing';
 
 import { Image, Point } from '..';
-import { assert } from '../utils/assert';
+import { assertUnreachable } from '../utils/assert';
 import { getOutputImage } from '../utils/getOutputImage';
 
 export interface PixelateOptions {
@@ -84,7 +84,7 @@ export function pixelate(image: Image, options: PixelateOptions): Image {
             value = image.getValue(center.column, center.row, channel);
             break;
           default:
-            assert(algorithm);
+            assertUnreachable(algorithm);
             break;
         }
 
