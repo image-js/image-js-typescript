@@ -28,8 +28,7 @@ export interface DrawCircleOnImageOptions {
 }
 
 /**
- *
- *Draw a circle defined by center and radius.
+ * Draw a circle defined by center and radius.
  * @param image - Image to process.
  * @param center - Circle center point.
  * @param radius - Circle radius.

@@ -18,9 +18,8 @@ export interface Ellipse {
   surface: number;
 }
 /**
- *Calculates ellipse on around ROI.
+ * Calculates ellipse on around ROI.
  * @param roi - Region of interest.
- * @param surface - The surface of ROI that ellipse should match.
  * @returns Ellipse.
  */
 export function getEllipse(roi: Roi): Ellipse {

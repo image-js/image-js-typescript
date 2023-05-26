@@ -28,7 +28,7 @@ interface CenterOptions {
 }
 
 /**
- *Function to pixelate an image.
+ * Function to pixelate an image.
  * @param image - Image to be pixelated.
  * @param options - PixelateOptions.
  * @returns Pixelated Image.

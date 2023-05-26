@@ -34,7 +34,7 @@ export interface Mbr {
    */
   angle: number;
   /**
-   *Ratio between width and height.
+   * Ratio between width and height.
    */
   aspectRatio: number;
 }

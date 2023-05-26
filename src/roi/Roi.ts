@@ -417,7 +417,7 @@ export class Roi {
   }
 
   /**
-   *Calculates and caches border's length and their IDs.
+   * Calculates and caches border's length and their IDs.
    * @returns Borders' length and their IDs.
    */
   get borders() {

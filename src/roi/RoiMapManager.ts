@@ -47,7 +47,7 @@ export class RoiMapManager implements RoiManager {
   }
 
   /**
-   *Return the ROI map of the RoiMapManager.
+   * Return the ROI map of the RoiMapManager.
    * @returns - The ROI map.
    */
   public getMap(): RoiMap {
