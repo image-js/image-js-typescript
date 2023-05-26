@@ -131,3 +131,16 @@ describe('pixelization of images', () => {
     }).toThrow(new TypeError('cellSize must be an integer'));
   });
 });
+it('throws a Type error', () => {
+  let img = testUtils.createRgbaImage([
+    [1, 1, 2, 2],
+    [2, 3, 4, 2],
+    [6, 7, 8, 3],
+    [2, 9, 4, 0],
+    [1, 9, 9, 9],
+  ]);
+  expect(() => {
+    //@ts-expect-error error testing
+    img.pixelate({ cellSize: 2, algorithm: 'test' });
+  }).toThrow(new Error(`unreachable: test`));
+});
