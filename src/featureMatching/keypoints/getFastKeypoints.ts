@@ -60,7 +60,7 @@ export interface FastKeypoint {
 /**
  * Find the features in a GREY image according to the FAST (Features from Accelerated Segment Test) algorithm.
  * Based on the paper Machine Learning for High-Speed Corner Detection.
- * DOI: https://doi.org/10.1007/11744023_34
+ * DOI: https://doi.org/10.1007/11744023_34.
  *
  * @param image - The image to process.
  * @param options - Get FAST keypoints options.

@@ -40,13 +40,13 @@ export interface GaussianBlurXYOptions extends GaussianBlurBaseOptions {
    */
   sigmaY: number;
   /**
-   * Size of the X axis kernel
+   * Size of the X axis kernel.
    *
    * @default 2 * Math.ceil(2 * sigmaX) + 1
    */
   sizeX?: number;
   /**
-   * Size of the Y axis kernel
+   * Size of the Y axis kernel.
    *
    * @default 2 * Math.ceil(2 * sigmaY) + 1
    */

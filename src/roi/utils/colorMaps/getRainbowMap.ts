@@ -5,11 +5,11 @@ import { rgbToNumber } from '../rgbToNumber';
 
 export interface GetRainbowMapOptions {
   /**
-   * Number of black ROIs
+   * Number of black ROIs.
    */
   nbNegative: number;
   /**
-   * Number of white ID ROIs
+   * Number of white ID ROIs.
    */
   nbPositive: number;
   /**
@@ -23,7 +23,7 @@ export interface GetRainbowMapOptions {
 /**
  * Return a map where ROIs are all different hues.
  *
- * @param options - Get temperature map options
+ * @param options - Get temperature map options.
  * @returns The colored map.
  */
 export function getRainbowMap(options: GetRainbowMapOptions): Uint32Array {

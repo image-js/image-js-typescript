@@ -8,7 +8,7 @@ import { RoiMapManager } from '.';
 
 export const RoisColorMode = {
   /**
-   * Only two acceptable values: red or green
+   * Only two acceptable values: red or green.
    */
   BINARY: 'binary',
   /**

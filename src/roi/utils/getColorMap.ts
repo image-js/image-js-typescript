@@ -7,15 +7,15 @@ import { getSaturationMap } from './colorMaps/getSaturationMap';
 
 export interface GetColorMapOptions {
   /**
-   * Number of black ROIs
+   * Number of black ROIs.
    */
   nbNegative: number;
   /**
-   * Number of white ID ROIs
+   * Number of white ID ROIs.
    */
   nbPositive: number;
   /**
-   * Specify the mode: what colors to use in the color map
+   * Specify the mode: what colors to use in the color map.
    *
    * @default 'binary'
    */

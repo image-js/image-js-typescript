@@ -67,7 +67,7 @@ export class Roi {
    */
   public readonly surface: number;
   /**
-   * Cached values of properties to improve performance
+   * Cached values of properties to improve performance.
    */
   #computed: Partial<Computed>;
 
@@ -110,7 +110,7 @@ export class Roi {
   /**
    * Generates a mask of an ROI. You can specify the kind of mask you want using the `kind` option.
    *
-   * @param options - Get Mask options
+   * @param options - Get Mask options.
    * @returns The ROI mask.
    */
   public getMask(options?: GetMaskOptions): Mask {
@@ -118,7 +118,7 @@ export class Roi {
   }
 
   /**
-   * Diameter of a circle of equal perimeter
+   * Diameter of a circle of equal perimeter.
    */
   get ped() {
     return this.#getComputed('ped', () => {
@@ -141,7 +141,7 @@ export class Roi {
    * Return an array of ROIs IDs that are included in the current ROI.
    * This will be useful to know if there are some holes in the ROI.
    *
-   * @returns internalIDs
+   * @returns InternalIDs.
    */
   get internalIDs() {
     return this.#getComputed('internalIDs', () => {
@@ -216,10 +216,10 @@ export class Roi {
   }
 
   /**
-   * Calculates and caches the number of sides by which each pixel is touched externally
+   * Calculates and caches the number of sides by which each pixel is touched externally.
    *
-   * @param roi -ROI
-   * @returns object which tells how many pixels are exposed externally to how many sides
+   * @param roi -ROI.
+   * @returns Object which tells how many pixels are exposed externally to how many sides.
    */
   get perimeterInfo() {
     return this.#getComputed('perimeterInfo', () => {
@@ -288,7 +288,7 @@ export class Roi {
    * Perimeter of the ROI.
    * The perimeter is calculated using the sum of all the external borders of the ROI to which we subtract
    * (2 - √2) * the number of pixels that have 2 external borders
-   * 2 * (2 - √2) * the number of pixels that have 3 external borders
+   * 2 * (2 - √2) * the number of pixels that have 3 external borders.
    */
   get perimeter() {
     let info = this.perimeterInfo;
@@ -303,7 +303,7 @@ export class Roi {
   }
   /**
    * An array of tuples, each tuple being the x and y coordinates of the ROI point.
-   * the current ROI points
+   * The current ROI points.
    */
   get points() {
     return this.#getComputed('points', () => {
@@ -380,7 +380,7 @@ export class Roi {
   }
 
   /**
-   * Returns the diameter of a circle of equal projection area
+   * Returns the diameter of a circle of equal projection area.
    */
   get eqpc() {
     return this.#getComputed('eqpc', () => {
@@ -399,7 +399,7 @@ export class Roi {
    * Number of holes in the ROI and their total surface.
    * Used to calculate fillRatio.
    *
-   * @returns the surface of holes in ROI
+   * @returns The surface of holes in ROI.
    */
   get holesInfo() {
     return this.#getComputed('holesInfo', () => {
@@ -424,9 +424,9 @@ export class Roi {
   }
 
   /**
-   *Calculates and caches border's length and their IDs
+   *Calculates and caches border's length and their IDs.
    *
-   * @returns borders' length and their IDs
+   * @returns Borders' length and their IDs.
    */
   get borders() {
     return this.#getComputed('borders', () => {
@@ -494,13 +494,13 @@ export class Roi {
     });
   }
   /**
-   * Calculates fill ratio of the ROI
+   * Calculates fill ratio of the ROI.
    */
   get fillRatio() {
     return this.surface / (this.surface + this.holesInfo.surface);
   }
   /**
-   * Calculates sphericity of the ROI
+   * Calculates sphericity of the ROI.
    */
   get sphericity() {
     return (2 * Math.sqrt(this.surface * Math.PI)) / this.perimeter;
@@ -511,7 +511,7 @@ export class Roi {
   }
 
   /**
-   * Calculates solidity of the ROI
+   * Calculates solidity of the ROI.
    */
   get solidity() {
     return this.surface / getConvexHull(this.getMask()).surface;
@@ -523,7 +523,7 @@ export class Roi {
     });
   }
   /**
-   * Calculates minimum bounding rectangle
+   * Calculates minimum bounding rectangle.
    */
   get mbr() {
     return this.#getComputed('mbr', () => {
@@ -543,7 +543,7 @@ export class Roi {
   }
   /**
    *
-   * @returns calculated properties as one object
+   * @returns Calculated properties as one object.
    */
   toJSON() {
     return {
@@ -605,7 +605,7 @@ export class Roi {
   //TODO Make this private
 
   /**
-   * Calculates the correct index on the map of ROI
+   * Calculates the correct index on the map of ROI.
    *
    * @param y
    * @param x

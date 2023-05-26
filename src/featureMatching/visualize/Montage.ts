@@ -148,7 +148,7 @@ export class Montage {
    *
    * @param matches - Matches to draw.
    * @param sourceKeypoints - Source keypoints.
-   * @param destinationKeypoints  - Destination keypoints
+   * @param destinationKeypoints  - Destination keypoints.
    * @param options - Draw matches options.
    */
   public drawMatches(

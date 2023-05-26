@@ -5,7 +5,7 @@ import { maskToOutputMask } from '../utils/getOutputImage';
 
 export interface MultipleFloodFillOptions {
   /**
-   * Points from which to start the flood fill
+   * Points from which to start the flood fill.
    *
    * @default [0]
    */

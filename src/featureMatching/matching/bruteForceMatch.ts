@@ -12,7 +12,7 @@ export interface BruteForceMatchOptions {
    */
   sort?: boolean;
   /**
-   * Number of best matches to return
+   * Number of best matches to return.
    *
    * @default source.length
    */

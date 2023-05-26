@@ -37,7 +37,7 @@ export interface Ssim {
  * "The resultant SSIM index is a decimal value between -1 and 1,
  * where 1 indicates perfect similarity, 0 indicates no similarity,
  * and -1 indicates perfect anti-correlation." -
- * https://en.wikipedia.org/wiki/Structural_similarity
+ * https://en.wikipedia.org/wiki/Structural_similarity.
  *
  * @param image - First image.
  * @param otherImage - Second image.

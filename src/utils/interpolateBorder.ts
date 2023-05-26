@@ -20,7 +20,7 @@ export type BorderInterpolationFunction = (
 /**
  * Pick the border interpolation algorithm.
  * The different algorithms are illustrated here:
- * https://vovkos.github.io/doxyrest-showcase/opencv/sphinx_rtd_theme/enum_cv_BorderTypes.html
+ * https://vovkos.github.io/doxyrest-showcase/opencv/sphinx_rtd_theme/enum_cv_BorderTypes.html.
  *
  * @param type - The border type.
  * @param value - A pixel value if BorderType.CONSTANT is used.

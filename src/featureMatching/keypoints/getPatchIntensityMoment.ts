@@ -21,7 +21,7 @@ export interface GetPatchIntensityMomentOptions {
 /**
  * Compute the pq order intensity moment of the circular patch with given radius in the image,
  * relatively to the origin defined in the options.
- * Original article: {@link https://doi.org/10.1006/cviu.1998.0719}
+ * Original article: {@link https://doi.org/10.1006/cviu.1998.0719}.
  *
  * @see {@link https://en.wikipedia.org/wiki/Image_moment}
  * @param image - Image to process.

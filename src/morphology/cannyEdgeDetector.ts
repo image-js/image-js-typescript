@@ -205,8 +205,8 @@ export function cannyEdgeDetector(
 /**
  * Return a 0 to 3 value indicating the four main directions (horizontal, upward diagonal, vertical, downward diagonal).
  *
- * @param x - The x coordinate
- * @param y - The y coordinate
+ * @param x - The x coordinate.
+ * @param y - The y coordinate.
  * @returns The direction as a 0 to 4 value.
  */
 export function getDirection(x: number, y: number): number {

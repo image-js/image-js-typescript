@@ -36,7 +36,7 @@ export interface DrawCircleOnImageOptions {
  * @param center - Circle center point.
  * @param radius - Circle radius.
  * @param options - Draw circle options.
- * @returns The original drawn image
+ * @returns The original drawn image.
  */
 export function drawCircleOnImage(
   image: Image,

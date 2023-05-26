@@ -5,7 +5,7 @@ import { Mask } from '../Mask';
  * Validate an array of channels.
  *
  * @param channels - Array of channels.
- * @param image - The image being processed
+ * @param image - The image being processed.
  */
 export function validateChannels(channels: number[], image: Image): void {
   for (const channel of channels) {

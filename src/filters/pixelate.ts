@@ -3,7 +3,7 @@ import { getOutputImage } from '../utils/getOutputImage';
 
 export interface PixelateOptions {
   /**
-   *  range of pixelated area
+   *  Range of pixelated area.
    */
   cellSize: number;
   /**
@@ -28,11 +28,11 @@ interface CenterOptions {
 }
 
 /**
- *Function to pixelate an image
+ *Function to pixelate an image.
  *
- * @param image - image to be pixelated
- * @param options - PixelateOptions
- * @returns pixelated Image
+ * @param image - Image to be pixelated.
+ * @param options - PixelateOptions.
+ * @returns Pixelated Image.
  */
 export function pixelate(image: Image, options: PixelateOptions): Image {
   const { cellSize } = options;
@@ -78,11 +78,11 @@ export function pixelate(image: Image, options: PixelateOptions): Image {
 }
 
 /**
- *Find the center of a rectangle to be pixelated
+ *Find the center of a rectangle to be pixelated.
  *
  *
- * @param options - CenterOptions
- * @returns Point
+ * @param options - CenterOptions.
+ * @returns Point.
  */
 function getCenter(options: CenterOptions): Point {
   const center = {

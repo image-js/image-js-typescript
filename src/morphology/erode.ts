@@ -6,7 +6,7 @@ import checkProcessable from '../utils/checkProcessable';
 export interface ErodeOptions {
   /**
    * Matrix with odd dimensions (e.g. 1 by 3). The kernel can only have ones and zeros.
-   * Accessing a value: kernel[row][column]
+   * Accessing a value: kernel[row][column].
    *
    * @default [[1, 1, 1], [1, 1, 1], [1, 1, 1]]
    */
@@ -25,8 +25,8 @@ export function erode(image: Mask, options?: ErodeOptions): Mask;
  * Erosion is one of two fundamental operations (with dilatation) in morphological
  * Image processing from which all other morphological operations are based (from Wikipedia).
  * Replaces each value with it's local minimum among the pixels with a kernel value of 1.
- * http://docs.opencv.org/2.4/doc/tutorials/imgproc/erosion_dilatation/erosion_dilatation.html
- * https://en.wikipedia.org/wiki/Erosion_(morphology)
+ * Http://docs.opencv.org/2.4/doc/tutorials/imgproc/erosion_dilatation/erosion_dilatation.html
+ * https://en.wikipedia.org/wiki/Erosion_(morphology).
  *
  * @param image - The image to erode.
  * @param options - Erode options.

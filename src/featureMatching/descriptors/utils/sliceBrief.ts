@@ -18,7 +18,7 @@ export interface SliceBriefOptions {
 /**
  * Slice a Brief to keep only the desired keypoints and the corresponding descriptors.
  *
- * @param brief - Brief to process
+ * @param brief - Brief to process.
  * @param options - Slice Brief options.
  * @returns The desired keypoints + descriptors.
  */

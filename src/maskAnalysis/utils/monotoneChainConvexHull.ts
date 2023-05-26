@@ -11,7 +11,7 @@ interface McchOptions {
 
 /**
  * Computes the convex hull of a binary image using Andrew's Monotone Chain Algorithm
- * http://www.algorithmist.com/index.php/Monotone_Chain_Convex_Hull
+ * http://www.algorithmist.com/index.php/Monotone_Chain_Convex_Hull.
  *
  * @param points - An array of points.
  * @param options - MCCH Algorithm options.

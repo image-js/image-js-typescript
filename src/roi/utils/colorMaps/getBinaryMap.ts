@@ -9,11 +9,11 @@ import { rgbToNumber } from '../rgbToNumber';
 
 export interface GetBinaryMapOptions {
   /**
-   * Number of black ROIs
+   * Number of black ROIs.
    */
   nbNegative: number;
   /**
-   * Number of white ID ROIs
+   * Number of white ID ROIs.
    */
   nbPositive: number;
   /**
@@ -23,13 +23,13 @@ export interface GetBinaryMapOptions {
    */
   roiKind?: RoiKind;
   /**
-   * Hue of white ROIs
+   * Hue of white ROIs.
    *
    * @default 120
    */
   whiteHue?: number;
   /**
-   * Hue of black ROIs
+   * Hue of black ROIs.
    *
    * @default 0
    */

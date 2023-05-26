@@ -31,7 +31,7 @@ export interface ResizeOptions {
    */
   preserveAspectRatio?: boolean;
   /**
-   * Method to use to interpolate the new pixels
+   * Method to use to interpolate the new pixels.
    *
    * @default 'bilinear'
    */

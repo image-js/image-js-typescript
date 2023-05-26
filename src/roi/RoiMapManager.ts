@@ -25,12 +25,12 @@ export interface RoiMap {
    */
   data: Int16Array;
   /**
-   * Number of distinct positive values in the ROI map
+   * Number of distinct positive values in the ROI map.
    *
    */
   nbPositive: number;
   /**
-   * Number of distinct negative values in the ROI map
+   * Number of distinct negative values in the ROI map.
    *
    */
   nbNegative: number;
@@ -69,7 +69,7 @@ export class RoiMapManager implements RoiManager {
   /**
    * Returns the ROI map as a correct width and height matrix.
    *
-   * @returns The ROI map matrix
+   * @returns The ROI map matrix.
    */
   public getMapMatrix(): number[][] {
     return Matrix.from1DArray(

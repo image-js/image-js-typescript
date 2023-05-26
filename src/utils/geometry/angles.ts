@@ -1,7 +1,7 @@
 import { difference, dot, normalize, Point } from './points';
 
 /**
- * Convert radians to degrees
+ * Convert radians to degrees.
  *
  * @param radians - Angle in radians.
  * @returns  Angle in degrees.

@@ -577,7 +577,7 @@ export class Image {
   /**
    * Modify all the values of the image using the given callback.
    *
-   * @param cb - Callback that modifies a given value-
+   * @param cb - Callback that modifies a given value-.
    */
   public changeEach(cb: (value: number) => number): void {
     for (let i = 0; i < this.data.length; i++) {
@@ -620,8 +620,8 @@ export class Image {
   /**
    * Subtract other from an image.
    *
-   * @param other - Image to subtract
-   * @param options - Inversion options
+   * @param other - Image to subtract.
+   * @param options - Inversion options.
    * @returns The subtracted image.
    */
   public subtract(other: Image, options: SubtractImageOptions = {}): Image {
@@ -732,7 +732,7 @@ export class Image {
    * Draw a circle defined by center and radius onto an image.
    *
    * @param center - Circle center.
-   * @param radius - Circle radius
+   * @param radius - Circle radius.
    * @param options - Draw circle options.
    * @returns The image with the circle drawing.
    */
@@ -798,7 +798,7 @@ export class Image {
    * Crop the input image to a desired size.
    *
    * @param [options] - Crop options.
-   * @returns The new cropped image
+   * @returns The new cropped image.
    */
   public crop(options?: CropOptions): Image {
     return crop(this, options);
@@ -888,7 +888,7 @@ export class Image {
   /**
    * Flip the image.
    *
-   * @param options - Flip options
+   * @param options - Flip options.
    * @returns The flipped image.
    */
   public flip(options?: FlipOptions): Image {
@@ -898,7 +898,7 @@ export class Image {
   /**
    *   Invert the colors of the image.
    *
-   * @param options - Inversion options
+   * @param options - Inversion options.
    * @returns The inverted image.
    */
   public invert(options?: InvertOptions): Image {
@@ -1046,7 +1046,7 @@ export class Image {
   /**
    * Apply morphological gradient to an image.
    *
-   * @param options - morphological gradient options.
+   * @param options - Morphological gradient options.
    * @returns The processed image.
    */
   public morphologicalGradient(options?: MorphologicalGradientOptions): Image {

@@ -171,7 +171,7 @@ export function convertBinaryToGrey(mask: Mask, newImage: Image): void {
 }
 
 /**
- * Convert mask to RGB or RGBA
+ * Convert mask to RGB or RGBA.
  *
  * @param mask - Mask to convert.
  * @param newImage - Converted image.

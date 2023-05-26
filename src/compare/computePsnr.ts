@@ -5,7 +5,7 @@ import { computeRmse } from './computeRmse';
 /**
  * Compute the Peak signal-to-noise ratio (PSNR) between two images.
  * The larger the PSNR, the more similar the images.
- * https://en.wikipedia.org/wiki/Peak_signal-to-noise_ratio
+ * Https://en.wikipedia.org/wiki/Peak_signal-to-noise_ratio.
  *
  * @param image - First image.
  * @param otherImage - Second image.

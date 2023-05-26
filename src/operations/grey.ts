@@ -42,10 +42,10 @@ export type GreyAlgorithm = (typeof GreyAlgorithm)[keyof typeof GreyAlgorithm];
  * Call back that converts the RGB channels to grey. It is clamped afterwards.
  *
  * @callback GreyAlgorithmCallback
- * @param {number} red - value of the red channel
- * @param {number} green - value of the green channel
- * @param {number} blue - value of the blue channel
- * @returns {number} value of the grey channel
+ * @param {number} red - Value of the red channel.
+ * @param {number} green - Value of the green channel.
+ * @param {number} blue - Value of the blue channel.
+ * @returns {number} Value of the grey channel.
  */
 export type GreyAlgorithmCallback = (
   red: number,
@@ -84,7 +84,7 @@ export interface GreyOptions {
  * The source image has to be RGB or RGBA.
  * If there is an alpha channel you have to specify what to do:
  * - keepAlpha :  keep the alpha channel, you will get a GREYA image
- * - mergeAlpha : multiply each pixel of the image by the alpha, you will get a GREY image
+ * - mergeAlpha : multiply each pixel of the image by the alpha, you will get a GREY image.
  *
  * @param image - Original color image to convert to grey.
  * @param options - The grey conversion options.

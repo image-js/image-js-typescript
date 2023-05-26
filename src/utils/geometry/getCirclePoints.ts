@@ -82,7 +82,7 @@ export function getFilledCirclePoints(
 /**
  * Get the coordinates of the points on a line.
  *
- * @param from - Starting point
+ * @param from - Starting point.
  * @param to - End point.
  * @returns The coordinates of the points on the line.
  */

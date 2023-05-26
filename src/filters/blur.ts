@@ -34,7 +34,7 @@ export interface BlurOptions {
  * Blur an image. The pixel in the center becomes an average of the surrounding ones.
  *
  * @param image - Image to blur.
- * @param options - Blur options
+ * @param options - Blur options.
  * @returns The blurred image.
  */
 export function blur(image: Image, options: BlurOptions): Image {

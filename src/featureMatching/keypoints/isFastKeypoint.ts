@@ -21,7 +21,7 @@ export interface IsFastKeypointOptions {
  * Determine wether a pixel in an image is a corner according to the FAST algorithm.
  *
  * @param origin - Pixel to process.
- * @param image - Image to process
+ * @param image - Image to process.
  * @param circlePoints - Coordinates of the points on the circle.
  * @param compassPoints - Compass points for quick test.
  * @param options - Is FAST keypoint options.

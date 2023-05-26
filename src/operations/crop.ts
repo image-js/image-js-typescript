@@ -26,9 +26,9 @@ export interface CropOptions {
 /**
  * Crop the input image to a desired size.
  *
- * @param image - Image to crop
+ * @param image - Image to crop.
  * @param [options] - Crop options.
- * @returns The new cropped image
+ * @returns The new cropped image.
  * @example
  * var cropped = image.crop({
  *   row:20,

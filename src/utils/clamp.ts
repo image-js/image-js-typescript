@@ -5,7 +5,7 @@ import { assert } from './assert';
 export type ClampFunction = (value: number) => number;
 
 /**
- * Get the clamp function for an image (depends on the image bit depth)
+ * Get the clamp function for an image (depends on the image bit depth).
  *
  * @param image - The image for which the clamp function is needed.
  * @returns The clamp function.

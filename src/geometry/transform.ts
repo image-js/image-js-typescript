@@ -18,7 +18,7 @@ export interface TransformOptions {
    */
   height?: number;
   /**
-   * Method to use to interpolate the new pixels
+   * Method to use to interpolate the new pixels.
    *
    * @default 'bilinear'
    */

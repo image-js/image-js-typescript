@@ -20,7 +20,7 @@ export interface Point {
 }
 
 /**
- * Calculates a new point that is the difference p1 - p2
+ * Calculates a new point that is the difference p1 - p2.
  *
  * @param p1 - First point.
  * @param p2 - Second Point.
@@ -31,7 +31,7 @@ export function difference(p1: Point, p2: Point): Point {
 }
 
 /**
- * Calculates a new point that is the sum p1 + p2
+ * Calculates a new point that is the sum p1 + p2.
  *
  * @param p1 - First point.
  * @param p2 - Second Point.
@@ -57,7 +57,7 @@ export function normalize(point: Point): Point {
  * The rotation is clockwise and the reference is (0,0).
  *
  * @param radians - Angle in radians.
- * @param points - Source points
+ * @param points - Source points.
  * @returns The points after rotation.
  */
 export function rotate(radians: number, points: readonly Point[]): Point[] {

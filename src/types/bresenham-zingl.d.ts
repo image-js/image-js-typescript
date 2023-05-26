@@ -3,7 +3,7 @@ declare module 'bresenham-zingl' {
   type SetPixelAlpha = (x: number, y: number, alpha: number) => void;
 
   /**
-   * Line segment rasterisation
+   * Line segment rasterisation.
    *
    * @param x0 - Starting point x coordinate.
    * @param y0 - Starting point y coordinate.
@@ -20,7 +20,7 @@ declare module 'bresenham-zingl' {
   ): void;
 
   /**
-   * Draw anti-aliased line
+   * Draw anti-aliased line.
    *
    * @param x0 - Starting point x coordinate.
    * @param y0 - Starting point y coordinate.
@@ -37,12 +37,12 @@ declare module 'bresenham-zingl' {
   ): void;
 
   /**
-   * Circle rasterisation
+   * Circle rasterisation.
    *
-   * @param xm - Circle center x
-   * @param ym - Circle center y
-   * @param r - Circle radius
-   * @param setPixel - Set pixel function
+   * @param xm - Circle center x.
+   * @param ym - Circle center y.
+   * @param r - Circle radius.
+   * @param setPixel - Set pixel function.
    */
   export function circle(
     xm: number,

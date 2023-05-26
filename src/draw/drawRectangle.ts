@@ -19,7 +19,7 @@ export interface DrawRectangleOptions<OutType> {
    */
   width?: number;
   /**
-   * Specify the width of the rectangle
+   * Specify the width of the rectangle.
    *
    * @default image.height
    */

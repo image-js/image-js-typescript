@@ -109,13 +109,13 @@ export class Mask {
 
   /**
    * The number of color channels in the image, excluding the alpha channel.
-   * (always 1)
+   * (always 1).
    */
   public readonly components: number;
 
   /**
    * The number of channels in the mask, including the alpha channel.
-   * (always 1)
+   * (always 1).
    */
   public readonly channels: number;
 
@@ -469,7 +469,7 @@ export class Mask {
   /**
    * Invert the colors of the mask.
    *
-   * @param options - Inversion options
+   * @param options - Inversion options.
    * @returns The inverted mask.
    */
   public invert(options?: InvertOptions): Mask {
@@ -479,8 +479,8 @@ export class Mask {
   /**
    * Subtract other from a mask.
    *
-   * @param other - Image to subtract
-   * @param options - Inversion options
+   * @param other - Image to subtract.
+   * @param options - Inversion options.
    * @returns The subtracted mask.
    */
   public subtract(other: Mask, options?: SubtractImageOptions): Mask {
@@ -550,7 +550,7 @@ export class Mask {
   /**
    * Erode a Mask.
    *
-   * @param options - Erode options
+   * @param options - Erode options.
    * @returns The eroded mask.
    */
   public erode(options?: ErodeOptions): Mask {
@@ -718,7 +718,7 @@ export class Mask {
    * Copy the mask to another one by specifying the location in the target mask.
    *
    * @param target - The target mask.
-   * @param options - copyTo options.
+   * @param options - CopyTo options.
    * @returns The target with the source copied to it.
    */
   public copyTo(target: Mask, options: CopyToOptions<Mask> = {}): Mask {
@@ -756,9 +756,9 @@ function printData(mask: Mask): string {
 }
 
 /**
- * Verify the channel value of a mask
+ * Verify the channel value of a mask.
  *
- * @param channel - The channel value
+ * @param channel - The channel value.
  */
 function checkChannel(channel: number) {
   if (channel !== 0) {

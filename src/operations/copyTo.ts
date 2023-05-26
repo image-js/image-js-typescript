@@ -30,7 +30,7 @@ export function copyTo(
  *
  * @param source - The source image.
  * @param target - The target image.
- * @param options - copyTo options.
+ * @param options - CopyTo options.
  * @returns The target with the source copied to it.
  */
 export function copyTo(
