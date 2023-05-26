@@ -87,7 +87,7 @@ describe('pixelization of images', () => {
       [4, 9, 0, 4],
     ]);
   });
-  it('pixelate an RGBA H-like image with xMean', () => {
+  it('pixelate an RGBA H-like image with mean algorithm', () => {
     let img = testUtils.createRgbaImage([
       [5, 1, 2, 5],
       [5, 5, 5, 5],
@@ -97,11 +97,10 @@ describe('pixelization of images', () => {
     ]);
 
     let result = pixelate(img, { cellSize: 3, algorithm: 'mean' });
-
     expect(result).toMatchImageData([
-      [4, 3, 3, 4],
-      [4, 3, 3, 4],
-      [4, 3, 3, 4],
+      [5, 3, 4, 5],
+      [5, 3, 4, 5],
+      [5, 3, 4, 5],
       [4, 9, 0, 4],
       [4, 9, 0, 4],
     ]);

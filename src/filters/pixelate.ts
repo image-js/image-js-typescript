@@ -131,7 +131,7 @@ function getCellMean(image: Image, channel: number, options: GetValueOptions) {
       sum += image.getValue(column, row, channel);
     }
   }
-  return Math.floor(sum / (options.width * options.height));
+  return Math.round(sum / (options.width * options.height));
 }
 /**
  * Computes a median value for the current sector
@@ -146,13 +146,22 @@ function getCellMedian(
   channel: number,
   options: GetValueOptions,
 ) {
-  let valuesOfSector = getArrayOfValues(image, channel, {
-    width: options.width,
-    height: options.height,
-    origin: { column: options.origin.column, row: options.origin.row },
-  });
+  let array = [];
+  for (
+    let column = options.origin.column;
+    column < options.origin.column + options.width;
+    column++
+  ) {
+    for (
+      let row = options.origin.row;
+      row < options.origin.row + options.height;
+      row++
+    ) {
+      array.push(image.getValue(column, row, channel));
+    }
+  }
 
-  return xMedian(valuesOfSector);
+  return xMedian(array);
 }
 /**
  *  Chooses which algorithm to use for pixelization and returns a function to use for computation
@@ -172,33 +181,4 @@ function getCellValueFunction(algorithm: 'center' | 'mean' | 'median') {
       assertUnreachable(algorithm);
       break;
   }
-}
-/**
- * Computes an array of values necessary to calculate the median
- *
- * @param image - image used by filter
- * @param channel - current channel of an image
- * @param options - GetValueOptions
- * @returns array of values in the current sector
- */
-function getArrayOfValues(
-  image: Image,
-  channel: number,
-  options: GetValueOptions,
-) {
-  let array = [];
-  for (
-    let column = options.origin.column;
-    column < options.origin.column + options.width;
-    column++
-  ) {
-    for (
-      let row = options.origin.row;
-      row < options.origin.row + options.height;
-      row++
-    ) {
-      array.push(image.getValue(column, row, channel));
-    }
-  }
-  return array;
 }
