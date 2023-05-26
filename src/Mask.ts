@@ -107,14 +107,12 @@ export class Mask {
   public readonly colorModel: ImageColorModel;
 
   /**
-   * The number of color channels in the image, excluding the alpha channel.
-   * (always 1).
+   * The number of color channels in the image, excluding the alpha channel (always 1).
    */
   public readonly components: number;
 
   /**
-   * The number of channels in the mask, including the alpha channel.
-   * (always 1).
+   * The number of channels in the mask, including the alpha channel (always 1).
    */
   public readonly channels: number;
 
@@ -205,7 +203,7 @@ export class Mask {
   }
 
   /**
-   * Geta pixel of the mask.
+   * Get a pixel of the mask.
    * @param column - Column index.
    * @param row - Row index.
    * @returns The pixel.
@@ -221,7 +219,7 @@ export class Mask {
    * Set a pixel.
    * @param column - Column index.
    * @param row - Row index.
-   * @param value - The pixelvalue.
+   * @param value - The pixel value.
    */
   public setPixel(column: number, row: number, value: number[]): void {
     const index = row * this.width + column;
@@ -252,7 +250,7 @@ export class Mask {
   /**
    * Set a pixel using its index.
    * @param index - Index of the pixel.
-   * @param value - Newvalue of the pixel to set.
+   * @param value - New value of the pixel to set.
    */
   public setPixelByIndex(index: number, value: number[]): void {
     this.data[index] = value[0];
@@ -502,7 +500,7 @@ export class Mask {
 
   /**
    * Get the corners of the minimum bounding rectangle of a shape defined in a mask.
-   * @returns Array of boder points.
+   * @returns Array of border points.
    */
   public getMbr(): Mbr {
     return getMbr(this);
@@ -672,7 +670,7 @@ export class Mask {
   /**
    * Copy the mask to another one by specifying the location in the target mask.
    * @param target - The target mask.
-   * @param options - CopyTo options.
+   * @param options - Options.
    * @returns The target with the source copied to it.
    */
   public copyTo(target: Mask, options: CopyToOptions<Mask> = {}): Mask {

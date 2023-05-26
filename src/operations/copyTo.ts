@@ -28,7 +28,7 @@ export function copyTo(
  * Copy the image to another one by specifying the location in the target image.
  * @param source - The source image.
  * @param target - The target image.
- * @param options - CopyTo options.
+ * @param options - Options.
  * @returns The target with the source copied to it.
  */
 export function copyTo(

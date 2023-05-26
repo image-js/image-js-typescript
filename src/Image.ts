@@ -551,9 +551,10 @@ export class Image {
   public clone(): Image {
     return Image.createFrom(this, { data: this.data.slice() });
   }
+
   /**
    * Modify all the values of the image using the given callback.
-   * @param cb - Callback that modifies a given value-.
+   * @param cb - Callback that modifies a given value.
    */
   public changeEach(cb: (value: number) => number): void {
     for (let i = 0; i < this.data.length; i++) {

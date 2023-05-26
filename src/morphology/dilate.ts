@@ -23,8 +23,8 @@ export function dilate(image: Mask, options?: DilateOptions): Mask;
  * Dilatation is one of two fundamental operations (with erosion) in morphological
  * image processing from which all other morphological operations are based (from Wikipedia).
  * Replaces each value with it's local maximum among the pixels with a kernel value of 1.
- * Http://docs.opencv.org/2.4/doc/tutorials/imgproc/erosion_dilatation/erosion_dilatation.html
- * https://en.wikipedia.org/wiki/Dilation_(morphology).
+ * @see {@link http://docs.opencv.org/2.4/doc/tutorials/imgproc/erosion_dilatation/erosion_dilatation.html}
+ * @see {@link https://en.wikipedia.org/wiki/Dilation_(morphology)}
  * @param image - Image to dilate.
  * @param options - Dilate options.
  * @returns Dilated image.

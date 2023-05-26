@@ -23,8 +23,8 @@ export function erode(image: Mask, options?: ErodeOptions): Mask;
  * Erosion is one of two fundamental operations (with dilatation) in morphological
  * Image processing from which all other morphological operations are based (from Wikipedia).
  * Replaces each value with it's local minimum among the pixels with a kernel value of 1.
- * Http://docs.opencv.org/2.4/doc/tutorials/imgproc/erosion_dilatation/erosion_dilatation.html
- * https://en.wikipedia.org/wiki/Erosion_(morphology).
+ * @see {@link http://docs.opencv.org/2.4/doc/tutorials/imgproc/erosion_dilatation/erosion_dilatation.html}
+ * @see {@link https://en.wikipedia.org/wiki/Erosion_(morphology)}
  * @param image - The image to erode.
  * @param options - Erode options.
  * @returns - The eroded image.

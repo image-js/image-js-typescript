@@ -77,7 +77,7 @@ export function pixelate(image: Image, options: PixelateOptions): Image {
 }
 
 /**
- *Find the center of a rectangle to be pixelated.
+ * Find the center of a rectangle to be pixelated.
  * @param options - CenterOptions.
  * @returns Point.
  */

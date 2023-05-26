@@ -24,7 +24,7 @@ export function topHat(image: Mask, options?: TopHatOptions): Mask;
  * top-hat transform is an operation that extracts small elements and details from given images.
  * The white top-hat transform is defined as the difference between the input image and its opening by some structuring element.
  * Top-hat transforms are used for various image processing tasks, such as feature extraction, background equalization, image enhancement, and others. (Wikipedia)
- * http://docs.opencv.org/2.4/doc/tutorials/imgproc/opening_closing_hats/opening_closing_hats.html.
+ * @see {@link http://docs.opencv.org/2.4/doc/tutorials/imgproc/opening_closing_hats/opening_closing_hats.html}
  * @param image - Image to process.
  * @param options - Top hat options.
  * @returns The top-hatted image.

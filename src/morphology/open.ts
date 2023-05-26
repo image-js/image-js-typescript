@@ -23,7 +23,7 @@ export function open(image: Mask, options?: OpenOptions): Mask;
  * Together with closing, the opening serves in computer vision and image processing as a basic workhorse of morphological noise removal.
  * Opening removes small objects from the foreground (usually taken as the bright pixels) of an image,
  * placing them in the background, while closing removes small holes in the foreground, changing small islands of background into foreground. (Wikipedia)
- * http://docs.opencv.org/2.4/doc/tutorials/imgproc/opening_closing_hats/opening_closing_hats.html.
+ * @see {@link http://docs.opencv.org/2.4/doc/tutorials/imgproc/opening_closing_hats/opening_closing_hats.html}
  * @param image - Image to process.
  * @param options - Open options.
  * @returns The opened image.
