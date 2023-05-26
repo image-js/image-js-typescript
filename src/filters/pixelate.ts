@@ -21,7 +21,7 @@ export interface PixelateOptions {
   out?: Image;
 }
 
-interface CenterOptions {
+interface GetValueOptions {
   /*
    * width of a region to look for center
    */
@@ -94,7 +94,7 @@ export function pixelate(image: Image, options: PixelateOptions): Image {
 function getCellCenter(
   image: Image,
   channel: number,
-  options: CenterOptions,
+  options: GetValueOptions,
 ): number {
   const center = {
     column: Math.floor(
@@ -108,7 +108,7 @@ function getCellCenter(
   return value;
 }
 
-function getCellMean(image: Image, channel: number, options: CenterOptions) {
+function getCellMean(image: Image, channel: number, options: GetValueOptions) {
   let sum = 0;
 
   for (
@@ -127,7 +127,11 @@ function getCellMean(image: Image, channel: number, options: CenterOptions) {
   return Math.floor(sum / (options.width * options.height));
 }
 
-function getCellMedian(image: Image, channel: number, options: CenterOptions) {
+function getCellMedian(
+  image: Image,
+  channel: number,
+  options: GetValueOptions,
+) {
   let valuesOfSector = getArrayOfValues(image, channel, {
     width: options.width,
     height: options.height,
@@ -137,10 +141,24 @@ function getCellMedian(image: Image, channel: number, options: CenterOptions) {
   return xMedian(valuesOfSector);
 }
 
+function getCellValueFunction(algorithm: 'center' | 'mean' | 'median') {
+  switch (algorithm) {
+    case 'mean':
+      return getCellMean;
+    case 'median':
+      return getCellMedian;
+    case 'center':
+      return getCellCenter;
+    default:
+      assertUnreachable(algorithm);
+      break;
+  }
+}
+
 function getArrayOfValues(
   image: Image,
   channel: number,
-  options: CenterOptions,
+  options: GetValueOptions,
 ) {
   let array = [];
   for (
@@ -157,18 +175,4 @@ function getArrayOfValues(
     }
   }
   return array;
-}
-
-function getCellValueFunction(algorithm: 'center' | 'mean' | 'median') {
-  switch (algorithm) {
-    case 'mean':
-      return getCellMean;
-    case 'median':
-      return getCellMedian;
-    case 'center':
-      return getCellCenter;
-    default:
-      assertUnreachable(algorithm);
-      break;
-  }
 }
