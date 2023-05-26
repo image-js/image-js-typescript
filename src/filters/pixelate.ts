@@ -14,6 +14,8 @@ export interface PixelateOptions {
   cellSize: number;
   /**
    * algorithm to use.
+   *
+   * @default center
    */
   algorithm?: 'center' | 'median' | 'mean';
   /**
