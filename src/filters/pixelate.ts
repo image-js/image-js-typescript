@@ -4,6 +4,7 @@ import {
 } from 'ml-spectra-processing';
 
 import { Image, Point } from '..';
+import { assert } from '../utils/assert';
 import { getOutputImage } from '../utils/getOutputImage';
 
 export interface PixelateOptions {
@@ -52,7 +53,7 @@ export function pixelate(image: Image, options: PixelateOptions): Image {
     throw new RangeError('cellSize must be greater than 1');
   }
   const newImage = getOutputImage(image, options);
-  let value: number;
+
   for (let channel = 0; channel < image.channels; channel++) {
     for (let column = 0; column < image.width; column += cellSize) {
       for (let row = 0; row < image.height; row += cellSize) {
@@ -71,6 +72,7 @@ export function pixelate(image: Image, options: PixelateOptions): Image {
             row,
           },
         });
+        let value: number = image.getValue(center.column, center.row, channel);
         switch (algorithm) {
           case 'mean':
             value = cellMean(valuesOfSector);
@@ -82,7 +84,7 @@ export function pixelate(image: Image, options: PixelateOptions): Image {
             value = image.getValue(center.column, center.row, channel);
             break;
           default:
-            value = image.getValue(center.column, center.row, channel);
+            assert(algorithm);
             break;
         }
 
