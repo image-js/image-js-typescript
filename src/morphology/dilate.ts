@@ -7,13 +7,11 @@ export interface DilateOptions {
   /**
    * Matrix with odd dimensions (e.g. 1 by 3). The kernel can only have ones and zeros.
    * Accessing a value: kernel[row][column].
-   *
    * @default [[1, 1, 1], [1, 1, 1], [1, 1, 1]]
    */
   kernel?: number[][];
   /**
    * Number of iterations of the algorithm.
-   *
    * @default 1
    */
   iterations?: number;
@@ -27,7 +25,6 @@ export function dilate(image: Mask, options?: DilateOptions): Mask;
  * Replaces each value with it's local maximum among the pixels with a kernel value of 1.
  * Http://docs.opencv.org/2.4/doc/tutorials/imgproc/erosion_dilatation/erosion_dilatation.html
  * https://en.wikipedia.org/wiki/Dilation_(morphology).
- *
  * @param image - Image to dilate.
  * @param options - Dilate options.
  * @returns Dilated image.

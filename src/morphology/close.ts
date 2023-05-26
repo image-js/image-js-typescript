@@ -6,13 +6,11 @@ export interface CloseOptions {
   /**
    * 3x3 matrix. The kernel can only have ones and zeros.
    * Accessing a value: kernel[row][column].
-   *
    * @default [[1, 1, 1], [1, 1, 1], [1, 1, 1]]
    */
   kernel?: number[][];
   /**
    * Number of iterations of the algorithm.
-   *
    * @default 1
    */
   iterations?: number;
@@ -25,7 +23,6 @@ export function close(image: Mask, options?: CloseOptions): Mask;
  * In image processing, closing is, together with opening, the basic workhorse of morphological noise removal.
  * Opening removes small objects, while closing removes small holes.
  * Http://docs.opencv.org/2.4/doc/tutorials/imgproc/opening_closing_hats/opening_closing_hats.html.
- *
  * @param image - Image to process.
  * @param options - Close options.
  * @returns Closed image.

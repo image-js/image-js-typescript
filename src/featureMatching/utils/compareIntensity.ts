@@ -5,7 +5,6 @@ import { sum } from '../../utils/geometry/points';
 export interface CompareIntensityOptions {
   /**
    * Origin of the points coordinates relative to the top-left corner.
-   *
    * @default Center of the image.
    */
   origin?: Point;
@@ -13,7 +12,6 @@ export interface CompareIntensityOptions {
 
 /**
  * Compare the intensity of two pixels of a GREY image.
- *
  * @param image - Source image of the pixels.
  * @param p1 - First point.
  * @param p2 - Second point.

@@ -14,19 +14,16 @@ export interface GetSaturationMapOptions {
   nbPositive: number;
   /**
    * Specify which ROIs to color.
-   *
    * @default 'bw'
    */
   roiKind?: RoiKind;
   /**
    * Hue of white ROIs.
-   *
    * @default 0
    */
   whiteHue?: number;
   /**
    * Hue of black ROIs.
-   *
    * @default 240
    */
   blackHue?: number;
@@ -34,7 +31,6 @@ export interface GetSaturationMapOptions {
 
 /**
  * Return a map where ROIs are different shades of red (positive) or blue (negative) depending on the ROI index. It it the saturation of the HSV color model that is varied.
- *
  * @param options - Get temperature map options.
  * @returns The colored map.
  */

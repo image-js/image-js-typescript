@@ -4,7 +4,6 @@ declare module 'bresenham-zingl' {
 
   /**
    * Line segment rasterisation.
-   *
    * @param x0 - Starting point x coordinate.
    * @param y0 - Starting point y coordinate.
    * @param x1 - Ending point x coordinate.
@@ -21,7 +20,6 @@ declare module 'bresenham-zingl' {
 
   /**
    * Draw anti-aliased line.
-   *
    * @param x0 - Starting point x coordinate.
    * @param y0 - Starting point y coordinate.
    * @param x1 - Ending point x coordinate.
@@ -38,7 +36,6 @@ declare module 'bresenham-zingl' {
 
   /**
    * Circle rasterisation.
-   *
    * @param xm - Circle center x.
    * @param ym - Circle center y.
    * @param r - Circle radius.

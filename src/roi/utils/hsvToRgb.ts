@@ -14,7 +14,6 @@ export interface RgbColor {
  * - Hue: angle in the color wheel (from red to purple), in range 0->359
  * - Saturation: how strong the color is (from white to bright color), in range 0-255
  * - Value: basically the brightness (from black to intense color), in range 0-255.
- *
  * @param hsv - The HSV color.
  * @returns The RGB color.
  */

@@ -5,7 +5,6 @@ import { setBlendedPixel } from '../utils/setBlendedPixel';
 export interface CopyToOptions<OutType> {
   /**
    * Origin for the crop relative to the top-left corner of the image.
-   *
    * @default {row: 0, column: 0}
    */
   origin?: Point;
@@ -27,7 +26,6 @@ export function copyTo(
 ): Mask;
 /**
  * Copy the image to another one by specifying the location in the target image.
- *
  * @param source - The source image.
  * @param target - The target image.
  * @param options - CopyTo options.

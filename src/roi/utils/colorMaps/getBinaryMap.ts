@@ -18,19 +18,16 @@ export interface GetBinaryMapOptions {
   nbPositive: number;
   /**
    * Specify which ROIs to color.
-   *
    * @default 'bw'
    */
   roiKind?: RoiKind;
   /**
    * Hue of white ROIs.
-   *
    * @default 120
    */
   whiteHue?: number;
   /**
    * Hue of black ROIs.
-   *
    * @default 0
    */
   blackHue?: number;
@@ -38,7 +35,6 @@ export interface GetBinaryMapOptions {
 
 /**
  * Return a map where ROIs are red (negative) or green (positive) depending on the ROI index.
- *
  * @param options - Color maps options.
  * @returns The colored map.
  */

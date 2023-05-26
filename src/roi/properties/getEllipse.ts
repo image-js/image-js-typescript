@@ -19,7 +19,6 @@ export interface Ellipse {
 }
 /**
  *Calculates ellipse on around ROI.
- *
  * @param roi - Region of interest.
  * @param surface - The surface of ROI that ellipse should match.
  * @returns Ellipse.

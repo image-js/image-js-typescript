@@ -14,7 +14,6 @@ export interface GetRainbowMapOptions {
   nbPositive: number;
   /**
    * Specify which ROIs to color.
-   *
    * @default 'bw'
    */
   roiKind?: RoiKind;
@@ -22,7 +21,6 @@ export interface GetRainbowMapOptions {
 
 /**
  * Return a map where ROIs are all different hues.
- *
  * @param options - Get temperature map options.
  * @returns The colored map.
  */

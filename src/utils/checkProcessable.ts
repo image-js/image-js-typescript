@@ -13,7 +13,6 @@ interface CheckOptions {
 
 /**
  * This method checks if a process can be applied on the current image.
- *
  * @param image - Image for which compatibility has to be checked.
  * @param options - Check processable options.
  */

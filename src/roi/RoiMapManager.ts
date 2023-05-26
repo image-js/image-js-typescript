@@ -48,7 +48,6 @@ export class RoiMapManager implements RoiManager {
 
   /**
    *Return the ROI map of the RoiMapManager.
-   *
    * @returns - The ROI map.
    */
   public getMap(): RoiMap {
@@ -57,7 +56,6 @@ export class RoiMapManager implements RoiManager {
 
   /**
    * Return the value at the given coordinates in an ROI map.
-   *
    * @param column - Column of the value.
    * @param row - Row of the value.
    * @returns The value at the given coordinates.
@@ -68,7 +66,6 @@ export class RoiMapManager implements RoiManager {
 
   /**
    * Returns the ROI map as a correct width and height matrix.
-   *
    * @returns The ROI map matrix.
    */
   public getMapMatrix(): number[][] {

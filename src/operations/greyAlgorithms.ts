@@ -3,7 +3,6 @@ import { assert } from '../utils/assert';
 
 /**
  * Converts R, G and B values to a single value using Luma 709 standard({@link https://en.wikipedia.org/wiki/Luma_(video)}).
- *
  * @param red - Red value of current pixel.
  * @param green - Green value of current pixel.
  * @param blue - Blue value of current pixel.
@@ -21,7 +20,6 @@ export function luma709(red: number, green: number, blue: number): number {
 }
 /**
  *  Converts R, G and B values to a single value using Luma 601 standard({@link https://en.wikipedia.org/wiki/Luma_(video)}).
- *
  * @param red - Red value of current pixel.
  * @param green - Green value of current pixel.
  * @param blue - Blue value of current pixel.
@@ -34,7 +32,6 @@ export function luma601(red: number, green: number, blue: number): number {
 }
 /**
  * Return the maximal value between red, green and blue.
- *
  * @param red - Red value of current pixel.
  * @param green - Green value of current pixel.
  * @param blue - Blue value of current pixel.
@@ -45,7 +42,6 @@ export function max(red: number, green: number, blue: number): number {
 }
 /**
  * Return the minimal value between red, green and blue.
- *
  * @param red - Red value of current pixel.
  * @param green - Green value of current pixel.
  * @param blue - Blue value of current pixel.
@@ -56,7 +52,6 @@ export function min(red: number, green: number, blue: number): number {
 }
 /**
  * Return the average of red, green and blue.
- *
  * @param red - Red value of current pixel.
  * @param green - Green value of current pixel.
  * @param blue - Blue value of current pixel.
@@ -67,7 +62,6 @@ export function average(red: number, green: number, blue: number): number {
 }
 /**
  * Return the average between the max and min values of red, green and blue.
- *
  * @param red - Red value of current pixel.
  * @param green - Green value of current pixel.
  * @param blue - Blue value of current pixel.
@@ -78,7 +72,6 @@ export function minmax(red: number, green: number, blue: number): number {
 }
 /**
  * Return the red value.
- *
  * @param red - Red value of current pixel.
  * @returns - Corresponding gray value.
  */
@@ -87,7 +80,6 @@ export function red(red: number): number {
 }
 /**
  * Return the green value.
- *
  * @param red - Red value of current pixel.
  * @param green - Green value of current pixel.
  * @returns - Corresponding gray value.
@@ -97,7 +89,6 @@ export function green(red: number, green: number): number {
 }
 /**
  * Return the blue value.
- *
  * @param red - Red value of current pixel.
  * @param green - Green value of current pixel.
  * @param blue - Blue value of current pixel.
@@ -108,7 +99,6 @@ export function blue(red: number, green: number, blue: number): number {
 }
 /**
  * Return the minimum of the inverses of red, green and blue.
- *
  * @param red - Red value of current pixel.
  * @param green - Green value of current pixel.
  * @param blue - Blue value of current pixel.
@@ -129,7 +119,6 @@ export function black(
 }
 /**
  * Returns the cyan component of a pixel.
- *
  * @param red - Red value of current pixel.
  * @param green - Green value of current pixel.
  * @param blue - Blue value of current pixel.
@@ -150,7 +139,6 @@ export function cyan(
 }
 /**
  * Returns the magenta component of a pixel.
- *
  * @param red - Red value of current pixel.
  * @param green - Green value of current pixel.
  * @param blue - Blue value of current pixel.
@@ -172,7 +160,6 @@ export function magenta(
 }
 /**
  * Returns the yellow component of a pixel.
- *
  * @param red - Red value of current pixel.
  * @param green - Green value of current pixel.
  * @param blue - Blue value of current pixel.
@@ -194,7 +181,6 @@ export function yellow(
 }
 /**
  * Returns the hue of a pixel as a value between 0 and 255.
- *
  * @param red - Red value of current pixel.
  * @param green - Green value of current pixel.
  * @param blue - Blue value of current pixel.
@@ -229,7 +215,6 @@ export function hue(
 
 /**
  * Returns the saturation component of a pixel.
- *
  * @param red - Red value of current pixel.
  * @param green - Green value of current pixel.
  * @param blue - Blue value of current pixel.
@@ -251,7 +236,6 @@ export function saturation(
 
 /**
  * Returns the lightness of a pixel.
- *
  * @param red - Red value of current pixel.
  * @param green - Green value of current pixel.
  * @param blue - Blue value of current pixel.

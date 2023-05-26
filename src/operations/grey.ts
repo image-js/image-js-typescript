@@ -40,7 +40,6 @@ export type GreyAlgorithm = (typeof GreyAlgorithm)[keyof typeof GreyAlgorithm];
 
 /**
  * Call back that converts the RGB channels to grey. It is clamped afterwards.
- *
  * @callback GreyAlgorithmCallback
  * @param {number} red - Value of the red channel.
  * @param {number} green - Value of the green channel.
@@ -57,19 +56,16 @@ export type GreyAlgorithmCallback = (
 export interface GreyOptions {
   /**
    * Specify the grey algorithm to use.
-   *
    * @default 'luma709'
    */
   algorithm?: GreyAlgorithm | GreyAlgorithmCallback;
   /**
    * Specify wether to keep an alpha channel in the new image or not.
-   *
    * @default false
    */
   keepAlpha?: boolean;
   /**
    * Specify wether to merge the alpha channel with the gray pixel or not.
-   *
    * @default true
    */
   mergeAlpha?: boolean;
@@ -85,7 +81,6 @@ export interface GreyOptions {
  * If there is an alpha channel you have to specify what to do:
  * - keepAlpha :  keep the alpha channel, you will get a GREYA image
  * - mergeAlpha : multiply each pixel of the image by the alpha, you will get a GREY image.
- *
  * @param image - Original color image to convert to grey.
  * @param options - The grey conversion options.
  * @returns The resulting grey image.

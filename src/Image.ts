@@ -125,7 +125,6 @@ export type ImageCoordinates =
 export interface ImageOptions {
   /**
    * Number of bits per value in each channel.
-   *
    * @default `8`.
    */
   bitDepth?: BitDepth;
@@ -137,14 +136,12 @@ export interface ImageOptions {
 
   /**
    * Color model of the created image.
-   *
    * @default 'RGB'.
    */
   colorModel?: ImageColorModel;
 
   /**
    * Origin of the image relative to a parent image (top-left corner).
-   *
    * @default {row: 0, column: 0}
    */
   origin?: Point;
@@ -214,7 +211,6 @@ export class Image {
 
   /**
    * Construct a new Image knowing its dimensions.
-   *
    * @param width - Image width.
    * @param height - Image height.
    * @param options - Image options.
@@ -283,7 +279,6 @@ export class Image {
 
   /**
    * Create a new Image based on the properties of an existing one.
-   *
    * @param other - Reference image.
    * @param options - Image options.
    * @returns New image.
@@ -309,7 +304,6 @@ export class Image {
 
   /**
    * Get all the channels of a pixel.
-   *
    * @param column - Column index.
    * @param row - Row index.
    * @returns Channels of the pixel.
@@ -325,7 +319,6 @@ export class Image {
 
   /**
    * Set all the channels of a pixel.
-   *
    * @param column - Column index.
    * @param row - Row index.
    * @param value - New color of the pixel to set.
@@ -339,7 +332,6 @@ export class Image {
 
   /**
    * Set all the channels of a pixel if the coordinates are inside the image.
-   *
    * @param column - Column index.
    * @param row - Row index.
    * @param value - New color of the pixel to set.
@@ -352,7 +344,6 @@ export class Image {
 
   /**
    * Get all the channels of a pixel using its index.
-   *
    * @param index - Index of the pixel.
    * @returns Channels of the pixel.
    */
@@ -367,7 +358,6 @@ export class Image {
 
   /**
    * Set all the channels of a pixel using its index.
-   *
    * @param index - Index of the pixel.
    * @param value - New channel values of the pixel to set.
    */
@@ -380,7 +370,6 @@ export class Image {
 
   /**
    * Get the value of a specific pixel channel. Select pixel using coordinates.
-   *
    * @param column - Column index.
    * @param row - Row index.
    * @param channel - Channel index.
@@ -392,7 +381,6 @@ export class Image {
 
   /**
    * Set the value of a specific pixel channel. Select pixel using coordinates.
-   *
    * @param column - Column index.
    * @param row - Row index.
    * @param channel - Channel index.
@@ -409,7 +397,6 @@ export class Image {
 
   /**
    * Get the value of a specific pixel channel. Select pixel using index.
-   *
    * @param index - Index of the pixel.
    * @param channel - Channel index.
    * @returns Value of the channel of the pixel.
@@ -419,7 +406,6 @@ export class Image {
   }
   /**
    * Set the value of a specific pixel channel. Select pixel using index.
-   *
    * @param index - Index of the pixel.
    * @param channel - Channel index.
    * @param value - Value to set.
@@ -430,7 +416,6 @@ export class Image {
 
   /**
    * Get the value of a specific pixel channel. Select pixel using a point.
-   *
    * @param point - Coordinates of the desired pixel.
    * @param channel - Channel index.
    * @returns Value of the channel of the pixel.
@@ -441,7 +426,6 @@ export class Image {
 
   /**
    * Set the value of a specific pixel channel. Select pixel using a point.
-   *
    * @param point - Coordinates of the pixel.
    * @param channel - Channel index.
    * @param value - Value to set.
@@ -452,7 +436,6 @@ export class Image {
 
   /**
    * Find the min and max values of each channel of the image.
-   *
    * @returns An object with arrays of the min and max values.
    */
   public minMax(): { min: number[]; max: number[] } {
@@ -461,7 +444,6 @@ export class Image {
 
   /**
    * Return the raw image data.
-   *
    * @returns The raw data.
    */
   public getRawImage() {
@@ -493,7 +475,6 @@ export class Image {
 
   /**
    * Fill the image with a value or a color.
-   *
    * @param value - Value or color.
    * @returns The image instance.
    */
@@ -520,7 +501,6 @@ export class Image {
 
   /**
    * Fill one channel with a value.
-   *
    * @param channel - The channel to fill.
    * @param value - The new value.
    * @returns The image instance.
@@ -536,7 +516,6 @@ export class Image {
 
   /**
    * Get one channel of the image as an array.
-   *
    * @param channel - The channel to fill.
    * @returns Array with the channel values.
    */
@@ -551,7 +530,6 @@ export class Image {
 
   /**
    * Fill the alpha channel with the specified value.
-   *
    * @param value - New channel value.
    * @returns The image instance.
    */
@@ -568,7 +546,6 @@ export class Image {
 
   /**
    * Create a copy of this image.
-   *
    * @returns The image clone.
    */
   public clone(): Image {
@@ -576,7 +553,6 @@ export class Image {
   }
   /**
    * Modify all the values of the image using the given callback.
-   *
    * @param cb - Callback that modifies a given value-.
    */
   public changeEach(cb: (value: number) => number): void {
@@ -587,7 +563,6 @@ export class Image {
 
   /**
    * Get the coordinates of a point in the image. The reference is the top-left corner.
-   *
    * @param coordinates - The point for which you want the coordinates.
    * @param round - Whether the coordinates should be rounded. This is useful when you want the center of the image.
    * @returns Coordinates of the point in the format [column, row].
@@ -619,7 +594,6 @@ export class Image {
   // COMPARE
   /**
    * Subtract other from an image.
-   *
    * @param other - Image to subtract.
    * @param options - Inversion options.
    * @returns The subtracted image.
@@ -636,7 +610,6 @@ export class Image {
 
   /**
    * Compute the mean pixel of an image.
-   *
    * @returns The mean pixel.
    */
   public mean(): number[] {
@@ -645,7 +618,6 @@ export class Image {
 
   /**
    * Compute the median pixel of an image.
-   *
    * @returns The median pixel.
    */
   public median(): number[] {
@@ -654,7 +626,6 @@ export class Image {
 
   /**
    * Compute the variance of each channel of an image.
-   *
    * @returns The variance of the channels of the image.
    */
   public variance(): number[] {
@@ -665,7 +636,6 @@ export class Image {
 
   /**
    * Draw a set of points on an image.
-   *
    * @param points - Array of points.
    * @param options - Draw points on Image options.
    * @returns New mask.
@@ -676,7 +646,6 @@ export class Image {
 
   /**
    * Draw a line defined by two points onto an image.
-   *
    * @param from - Line starting point.
    * @param to - Line ending point.
    * @param options - Draw Line options.
@@ -692,7 +661,6 @@ export class Image {
 
   /**
    * Draw a rectangle defined by position of the top-left corner, width and height.
-   *
    * @param options - Draw rectangle options.
    * @returns The image with the rectangle drawing.
    */
@@ -702,7 +670,6 @@ export class Image {
 
   /**
    * Draw a polyline defined by an array of points on an image.
-   *
    * @param points - Polyline array of points.
    * @param options - Draw polyline options.
    * @returns The image with the polyline drawing.
@@ -716,7 +683,6 @@ export class Image {
 
   /**
    * Draw a polygon defined by an array of points onto an image.
-   *
    * @param points - Polygon vertices.
    * @param options - Draw Line options.
    * @returns The image with the polygon drawing.
@@ -730,7 +696,6 @@ export class Image {
 
   /**
    * Draw a circle defined by center and radius onto an image.
-   *
    * @param center - Circle center.
    * @param radius - Circle radius.
    * @param options - Draw circle options.
@@ -746,7 +711,6 @@ export class Image {
 
   /**
    * Draw a marker on the image.
-   *
    * @param point - Marker center point.
    * @param options - Draw marker options.
    * @returns The image with the marker drawing.
@@ -757,7 +721,6 @@ export class Image {
 
   /**
    * Draw markers on the image.
-   *
    * @param points - Markers center points.
    * @param options - Draw marker options.
    * @returns The image with the markers drawing.
@@ -796,7 +759,6 @@ export class Image {
 
   /**
    * Crop the input image to a desired size.
-   *
    * @param [options] - Crop options.
    * @returns The new cropped image.
    */
@@ -807,7 +769,6 @@ export class Image {
   /**
    * Crops the image based on the alpha channel
    * This removes lines and columns where the alpha channel is lower than a threshold value.
-   *
    * @param options - Crop alpha options.
    * @returns The cropped image.
    */
@@ -817,7 +778,6 @@ export class Image {
 
   /**
    * Extract the pixels of an image, as specified in a mask.
-   *
    * @param mask - The mask defining which pixels to keep.
    * @param options - Extract options.
    * @returns The extracted image.
@@ -828,7 +788,6 @@ export class Image {
 
   /**
    * Paint a mask onto an image and the given position and with the given color.
-   *
    * @param mask - Mask to paint on the image.
    * @param options - Paint mask options.
    * @returns The painted image.
@@ -856,7 +815,6 @@ export class Image {
 
   /**
    * Compute direct convolution of an image and return an array with the raw values.
-   *
    * @param kernel - Kernel used for the convolution.
    * @param options - Convolution options.
    * @returns Array with the raw convoluted values.
@@ -878,7 +836,6 @@ export class Image {
 
   /**
    * Apply a gaussian filter to an image.
-   *
    * @param options - Gaussian blur options.
    * @returns The blurred image.
    */
@@ -887,7 +844,6 @@ export class Image {
   }
   /**
    * Flip the image.
-   *
    * @param options - Flip options.
    * @returns The flipped image.
    */
@@ -897,7 +853,6 @@ export class Image {
 
   /**
    *   Invert the colors of the image.
-   *
    * @param options - Inversion options.
    * @returns The inverted image.
    */
@@ -907,7 +862,6 @@ export class Image {
 
   /**
    * Calculate a new image that is the hypotenuse between the current image and the other.
-   *
    * @param other - Other image.
    * @param options - Hypotenuse options.
    * @returns Hypotenuse of the two images.
@@ -918,7 +872,6 @@ export class Image {
 
   /**
    * Apply a gradient filter to an image.
-   *
    * @param options - Gradient filter options.
    * @returns The gradient image.
    */
@@ -928,7 +881,6 @@ export class Image {
 
   /**
    * Apply a derivative filter to an image.
-   *
    * @param options - Derivative filter options.
    * @returns The processed image.
    */
@@ -938,7 +890,6 @@ export class Image {
 
   /**
    * Level the image using the optional input and output value. This function allows you to enhance the image's contrast.
-   *
    * @param options - Level options.
    * @returns The levelled image.
    */
@@ -948,7 +899,6 @@ export class Image {
 
   /**
    * Correct the colors in an image using the reference colors.
-   *
    * @param measuredColors - Colors from the image, which will be compared to the reference.
    * @param referenceColors - Reference colors.
    * @returns Image with the colors corrected.
@@ -987,7 +937,6 @@ export class Image {
   // MORPHOLOGY
   /**
    * Erode an image.
-   *
    * @param options - Erode options.
    * @returns The eroded image.
    */
@@ -996,7 +945,6 @@ export class Image {
   }
   /**
    * Dilate an image.
-   *
    * @param options - Dilate options.
    * @returns The dilated image.
    */
@@ -1005,7 +953,6 @@ export class Image {
   }
   /**
    * Open an image.
-   *
    * @param options - Open options.
    * @returns The opened image.
    */
@@ -1015,7 +962,6 @@ export class Image {
 
   /**
    * Close an image.
-   *
    * @param options - Close options.
    * @returns The closed image.
    */
@@ -1025,7 +971,6 @@ export class Image {
 
   /**
    * Top hat of an image.
-   *
    * @param options - Top hat options.
    * @returns The top-hatted image.
    */
@@ -1035,7 +980,6 @@ export class Image {
 
   /**
    * Bottom hat of an image.
-   *
    * @param options - Bottom hat options.
    * @returns The bottom-hatted image.
    */
@@ -1045,7 +989,6 @@ export class Image {
 
   /**
    * Apply morphological gradient to an image.
-   *
    * @param options - Morphological gradient options.
    * @returns The processed image.
    */
@@ -1055,7 +998,6 @@ export class Image {
 
   /**
    * Apply Canny edge detection to an image.
-   *
    * @param options - Canny edge detection options.
    * @returns The processed image.
    */
@@ -1066,7 +1008,6 @@ export class Image {
 
 /**
  * Create data array and set alpha channel to max value if applicable.
- *
  * @param size - Number of pixels.
  * @param channels - Number of channels.
  * @param alpha - Specify if there is alpha channel.
@@ -1106,7 +1047,6 @@ function createPixelArray(
 
 /**
  * Returns the image data as a formatted string.
- *
  * @param img - The image instance.
  * @returns Formatted string containing the image data.
  */

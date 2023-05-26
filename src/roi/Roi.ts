@@ -89,7 +89,6 @@ export class Roi {
   }
   /**
    * Return the value at the given coordinates in an ROI map.
-   *
    * @param column - Column of the value.
    * @param row - Row of the value.
    * @returns The value at the given coordinates.
@@ -100,7 +99,6 @@ export class Roi {
 
   /**
    * Returns the ratio between the width and the height of the bounding rectangle of the ROI.
-   *
    * @returns The width by height ratio.
    */
   public getRatio(): number {
@@ -109,7 +107,6 @@ export class Roi {
 
   /**
    * Generates a mask of an ROI. You can specify the kind of mask you want using the `kind` option.
-   *
    * @param options - Get Mask options.
    * @returns The ROI mask.
    */
@@ -129,7 +126,6 @@ export class Roi {
   /**
    * Return an array with the coordinates of the pixels that are on the border of the ROI.
    * The points are defined as [column, row].
-   *
    * @param options - Get border points options.
    * @returns The array of border pixels.
    */
@@ -140,7 +136,6 @@ export class Roi {
   /**
    * Return an array of ROIs IDs that are included in the current ROI.
    * This will be useful to know if there are some holes in the ROI.
-   *
    * @returns InternalIDs.
    */
   get internalIDs() {
@@ -217,7 +212,6 @@ export class Roi {
 
   /**
    * Calculates and caches the number of sides by which each pixel is touched externally.
-   *
    * @param roi -ROI.
    * @returns Object which tells how many pixels are exposed externally to how many sides.
    */
@@ -398,7 +392,6 @@ export class Roi {
   /**
    * Number of holes in the ROI and their total surface.
    * Used to calculate fillRatio.
-   *
    * @returns The surface of holes in ROI.
    */
   get holesInfo() {
@@ -425,7 +418,6 @@ export class Roi {
 
   /**
    *Calculates and caches border's length and their IDs.
-   *
    * @returns Borders' length and their IDs.
    */
   get borders() {
@@ -606,7 +598,6 @@ export class Roi {
 
   /**
    * Calculates the correct index on the map of ROI.
-   *
    * @param y
    * @param x
    */

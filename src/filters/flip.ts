@@ -7,7 +7,6 @@ import flipY from './flipY';
 export interface FlipOptions {
   /**
    * Image to which the resulting image has to be put.
-   *
    * @default 'horizontal'
    */
   axis?: 'horizontal' | 'vertical' | 'both';
@@ -19,8 +18,7 @@ export interface FlipOptions {
 
 /**
  *
- * Apply a flip filter to an image.
- *
+ *Apply a flip filter to an image.
  * @param image - Image to process.
  * @param options - Flip options.
  * @returns - The processed image.

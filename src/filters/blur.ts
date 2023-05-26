@@ -14,13 +14,11 @@ export interface BlurOptions {
   height: number;
   /**
    * Explicit how to handle the borders.
-   *
    * @default 'reflect101'
    */
   borderType?: BorderType;
   /**
    * Value of the border if BorderType is 'constant'.
-   *
    * @default 0
    */
   borderValue?: number;
@@ -32,7 +30,6 @@ export interface BlurOptions {
 
 /**
  * Blur an image. The pixel in the center becomes an average of the surrounding ones.
- *
  * @param image - Image to blur.
  * @param options - Blur options.
  * @returns The blurred image.

@@ -41,7 +41,6 @@ export interface Mbr {
 
 /**
  * Get the four corners of the minimum bounding rectangle of an ROI.
- *
  * @param mask - The ROI to process.
  * @returns The array of corners.
  */

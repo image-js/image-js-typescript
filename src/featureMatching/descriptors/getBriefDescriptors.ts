@@ -23,13 +23,11 @@ export interface GetBriefDescriptorsOptions {
   pointsDistributionOptions?: Omit<GetGaussianPointsOptions, 'nbPoints'>;
   /**
    * Size of the patch around the keypoint used to compute the descriptor.
-   *
    * @default 31
    */
   patchSize?: number;
   /**
    * Number of bits of the final descriptor. Typically a power or 2: 128, 256, 512.
-   *
    * @default 256
    */
   descriptorLength?: number;
@@ -46,7 +44,6 @@ export type Brief = {
  * The rBRIEF descriptors are presented in these articles:
  * - ORB article: DOI: 10.1109/ICCV.2011.6126544
  * - rBRIEF article: DOI: 10.1007/978-3-642-15561-1_56.
- *
  * @param image - Source image of the keypoints.
  * @param keypoints - Keypoints for which the descriptors are wanted.
  * @param options - Get rotated BRIEF descriptors options.

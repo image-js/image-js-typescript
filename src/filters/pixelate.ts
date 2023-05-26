@@ -29,7 +29,6 @@ interface CenterOptions {
 
 /**
  *Function to pixelate an image.
- *
  * @param image - Image to be pixelated.
  * @param options - PixelateOptions.
  * @returns Pixelated Image.
@@ -79,8 +78,6 @@ export function pixelate(image: Image, options: PixelateOptions): Image {
 
 /**
  *Find the center of a rectangle to be pixelated.
- *
- *
  * @param options - CenterOptions.
  * @returns Point.
  */

@@ -8,13 +8,11 @@ export interface GetHarrisScoreOptions {
   /**
    * Size of the window to compute the Harris score.
    * Should be an odd number so that the window can be centered on the corner.
-   *
    * @default 7
    */
   windowSize?: number;
   /**
    * Constant for the score computation. Should be between 0.04 and 0.06 (empirical values).
-   *
    * @default 0.04
    */
   harrisConstant?: number;
@@ -30,7 +28,6 @@ export interface GetHarrisScoreOptions {
  * - the score is highly negative: you have an edge
  * - the abolute value of the score is small: the region is flat
  * - the score is highly positive: you have a corner.
- *
  * @param image - Image to which the corner belongs. It must be a greyscale image with only one channel.
  * @param origin - Center of the window, where the corner should be.
  * @param options - Get Harris score options.
