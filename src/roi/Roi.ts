@@ -241,33 +241,25 @@ export class Roi {
             let nbAround = 0;
             if (column === 0) {
               nbAround++;
-
             } else if (externalIDs.has(data[target - 1])) {
-
               nbAround++;
             }
 
             if (column === roiMap.width - 1) {
               nbAround++;
-
             } else if (externalIDs.has(data[target + 1])) {
-
               nbAround++;
             }
 
             if (row === 0) {
               nbAround++;
-
             } else if (externalIDs.has(data[target - roiMap.width])) {
-
               nbAround++;
             }
 
             if (row === roiMap.height - 1) {
               nbAround++;
-
             } else if (externalIDs.has(data[target + roiMap.width])) {
-
               nbAround++;
             }
             switch (nbAround) {
@@ -396,12 +388,10 @@ export class Roi {
     });
   }
 
-
   get ellipse(): Ellipse {
     return this.#getComputed('ellipse', () => {
       const ellipse = getEllipse(this);
       return ellipse;
-
     });
   }
 
