@@ -325,7 +325,7 @@ export class Image {
 
   public getColumn(column: number): number[][] {
     let columnValues = [];
-    for (let i = 1; i < this.channels; i++) {
+    for (let i = 0; i < this.channels; i++) {
       let channelValues = [];
       for (let j = 0; j < this.height; j++) {
         channelValues.push(this.getValue(column, j, i));
@@ -337,7 +337,7 @@ export class Image {
 
   public getRow(row: number): number[][] {
     let rowValues = [];
-    for (let i = 1; i < this.channels; i++) {
+    for (let i = 0; i < this.channels; i++) {
       let channelValues = [];
       for (let j = 0; j < this.width; j++) {
         channelValues.push(this.getValue(j, row, i));
