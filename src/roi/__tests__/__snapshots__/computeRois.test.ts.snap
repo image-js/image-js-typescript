@@ -71,8 +71,8 @@ exports[`3x3 mask 1`] = `
     "id": 1,
     "mbr": {
       "angle": -0,
-      "aspectRatio": 1.4999999999999998,
-      "height": 2.9999999999999996,
+      "aspectRatio": 0.6666666666666667,
+      "height": 2,
       "perimeter": 10,
       "points": [
         {
@@ -93,7 +93,7 @@ exports[`3x3 mask 1`] = `
         },
       ],
       "surface": 5.999999999999999,
-      "width": 2,
+      "width": 2.9999999999999996,
     },
     "origin": {
       "column": 0,
@@ -286,8 +286,8 @@ exports[`3x3 mask 2`] = `
     "id": -1,
     "mbr": {
       "angle": -0,
-      "aspectRatio": 1.4999999999999998,
-      "height": 2.9999999999999996,
+      "aspectRatio": 0.6666666666666667,
+      "height": 2,
       "perimeter": 10,
       "points": [
         {
@@ -308,7 +308,7 @@ exports[`3x3 mask 2`] = `
         },
       ],
       "surface": 5.999999999999999,
-      "width": 2,
+      "width": 2.9999999999999996,
     },
     "origin": {
       "column": 0,
