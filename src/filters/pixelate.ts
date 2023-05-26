@@ -1,4 +1,7 @@
-import { xMean, xMedian } from 'ml-spectra-processing';
+import {
+  xMean as cellMean,
+  xMedian as cellMedian,
+} from 'ml-spectra-processing';
 
 import { Image, Point } from '..';
 import { getOutputImage } from '../utils/getOutputImage';
@@ -70,10 +73,10 @@ export function pixelate(image: Image, options: PixelateOptions): Image {
         });
         switch (algorithm) {
           case 'mean':
-            value = xMean(valuesOfSector);
+            value = cellMean(valuesOfSector);
             break;
           case 'median':
-            value = xMedian(valuesOfSector);
+            value = cellMedian(valuesOfSector);
             break;
           case 'center':
             value = image.getValue(center.column, center.row, channel);
