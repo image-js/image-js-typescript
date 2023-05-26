@@ -83,13 +83,13 @@ export function pixelate(image: Image, options: PixelateOptions): Image {
 }
 
 /**
- *Find the center of a rectangle to be pixelated
+ *Computes the center value for the current sector
  *
  *
  * @param image - image used for the algorithm
  * @param channel - image channel toto find center value of
- * @param options - CenterOptions
- * @returns Point
+ * @param options - GetValueOptions
+ * @returns center value
  */
 function getCellCenter(
   image: Image,
@@ -107,7 +107,14 @@ function getCellCenter(
   const value = image.getValue(center.column, center.row, channel);
   return value;
 }
-
+/**
+ * Computes mean value for the current sector
+ *
+ * @param image - image used for algorithm
+ * @param channel - current channel of an image
+ * @param options - GetValueOptions
+ * @returns mean value
+ */
 function getCellMean(image: Image, channel: number, options: GetValueOptions) {
   let sum = 0;
 
@@ -126,7 +133,14 @@ function getCellMean(image: Image, channel: number, options: GetValueOptions) {
   }
   return Math.floor(sum / (options.width * options.height));
 }
-
+/**
+ * Computes a median value for the current sector
+ *
+ * @param image - image used algorithm
+ * @param channel - current channel of an image
+ * @param options - GetValueOptions
+ * @returns median value
+ */
 function getCellMedian(
   image: Image,
   channel: number,
@@ -140,7 +154,12 @@ function getCellMedian(
 
   return xMedian(valuesOfSector);
 }
-
+/**
+ *  Chooses which algorithm to use for pixelization and returns a function to use for computation
+ *
+ * @param algorithm - string with the name of an algorithm
+ * @returns function
+ */
 function getCellValueFunction(algorithm: 'center' | 'mean' | 'median') {
   switch (algorithm) {
     case 'mean':
@@ -154,7 +173,14 @@ function getCellValueFunction(algorithm: 'center' | 'mean' | 'median') {
       break;
   }
 }
-
+/**
+ * Computes an array of values necessary to calculate the median
+ *
+ * @param image - image used by filter
+ * @param channel - current channel of an image
+ * @param options - GetValueOptions
+ * @returns array of values in the current sector
+ */
 function getArrayOfValues(
   image: Image,
   channel: number,
