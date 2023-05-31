@@ -14,15 +14,15 @@ import { getBorderPoints } from './getBorderPoints';
 import { getMask, GetMaskOptions } from './getMask';
 import { Ellipse, getEllipse } from './properties/getEllipse';
 /**
- * Interface for borders of ROI.
+ * Properties of borders of ROI.
+ *
+ * @param connectedID - Refers  to the roiID of the contiguous ROI.
+ * @param number - Length of the border with connectedID.
  */
 interface Border {
-  connectedID: number; // refers to the roiID of the contiguous ROI
+  connectedID: number;
   length: number;
 }
-/**
- * Interface with cached values of computed properties.
- */
 interface Computed {
   perimeter: number;
   borders: Border[]; // external and internal ids which are not equal to the current roi ID
@@ -125,7 +125,7 @@ export class Roi {
   /**
    * Computes the diameter of a circle that has the same perimeter as the particle image.
    *
-   * @returns ped value in pixels
+   * @returns Ped value in pixels.
    */
   get ped() {
     return this.perimeter / Math.PI;
@@ -146,7 +146,7 @@ export class Roi {
    * Returns an array of ROIs IDs that are included in the current ROI.
    * This will be useful to know if there are some holes in the ROI.
    *
-   * @returns internalIDs
+   * @returns InternalIDs.
    */
   get internalIDs() {
     return this.#getComputed('internalIDs', () => {
@@ -171,7 +171,7 @@ export class Roi {
         for (let row = 1; row < this.height - 1; row++) {
           let target = this.#computeIndex(row, column);
           if (internal.includes(data[target])) {
-            // we check if one of the neighbour is not yet in
+            // We check if one of the neighbor is not yet in.
 
             array[0] = data[target - 1];
             array[1] = data[target + 1];
@@ -195,11 +195,11 @@ export class Roi {
   /**
    * Returns an array of ROIs IDs that touch the current ROI.
    *
-   * @returns array of Borders
+   * @returns The array of Borders.
    */
   get externalBorders(): Border[] {
     return this.#getComputed('externalBorders', () => {
-      // take all the borders and remove the internal one ...
+      // Takes all the borders and removes the internal one ...
       let borders = this.borders;
 
       let externalBorders = [];
@@ -224,7 +224,7 @@ export class Roi {
   /**
    * Calculates and caches the number of sides by which each pixel is touched externally.
    *
-   * @returns object which tells how many pixels are exposed externally to how many sides
+   * @returns An object which tells how many pixels are exposed externally to how many sides.
    */
   get perimeterInfo() {
     return this.#getComputed('perimeterInfo', () => {
@@ -295,7 +295,7 @@ export class Roi {
    * (2 - √2) * the number of pixels that have 2 external borders
    * 2 * (2 - √2) * the number of pixels that have 3 external borders
    *
-   * @returns perimeter value in pixels
+   * @returns Perimeter value in pixels.
    */
 
   get perimeter() {
@@ -311,9 +311,9 @@ export class Roi {
   }
   /**
    *
-   * the current ROI points.
+   * Computes current ROI points.
    *
-   * @returns array of points(array of tuples, each tuple being the x and y coordinates of the ROI point).
+   * @returns Array of points(array of tuples, each tuple being the x and y coordinates of the ROI point).
    */
   get points() {
     return this.#getComputed('points', () => {
@@ -334,12 +334,12 @@ export class Roi {
   }
   get boxIDs() {
     return this.#getComputed('boxIDs', () => {
-      let surroundingIDs = new Set<number>(); // allows to get a unique list without indexOf.
+      let surroundingIDs = new Set<number>(); // Allows to get a unique list without indexOf.
 
       const roiMap = this.map;
       const data = roiMap.data;
 
-      // we check the first line and the last line.
+      // We check the first line and the last line.
       for (let row of [0, this.height - 1]) {
         for (let column = 0; column < this.width; column++) {
           let target = this.#computeIndex(row, column);
@@ -362,7 +362,7 @@ export class Roi {
         }
       }
 
-      // we check the first column and the last column.
+      // We check the first column and the last column.
       for (let column of [0, this.width - 1]) {
         for (let row = 0; row < this.height; row++) {
           let target = this.#computeIndex(row, column);
@@ -385,14 +385,14 @@ export class Roi {
         }
       }
 
-      return Array.from(surroundingIDs); // the selection takes the whole rectangle.
+      return Array.from(surroundingIDs); // The selection takes the whole rectangle.
     });
   }
 
   /**
    * Computes the diameter of a circle of equal projection area. It is a diameter of a circle that has the same surface as the ROI.
    *
-   * @returns eqpc value in pixels.
+   * @returns Eqpc value in pixels.
    */
   get eqpc() {
     return 2 * Math.sqrt(this.surface / Math.PI);
@@ -413,7 +413,7 @@ export class Roi {
    * Number of holes in the ROI and their total surface.
    * Used to calculate fillRatio.
    *
-   * @returns the surface of holes in ROI.
+   * @returns The surface of holes in ROI.
    */
   get holesInfo() {
     return this.#getComputed('holesInfo', () => {
@@ -440,13 +440,13 @@ export class Roi {
   /**
    *Calculates and caches border's length and their IDs.
    *
-   * @returns borders' length and their IDs.
+   * @returns Borders' length and their IDs.
    */
   get borders() {
     return this.#getComputed('borders', () => {
       const roiMap = this.map;
       const data = roiMap.data;
-      let surroudingIDs = new Set<number>(); // allows to get a unique list without indexOf.
+      let surroudingIDs = new Set<number>(); // Allows to get a unique list without indexOf.
       let surroundingBorders = new Map();
       let visitedData = new Set();
       let dx = [+1, 0, -1, 0];
@@ -510,7 +510,7 @@ export class Roi {
   /**
    * Computes fill ratio of the ROI. It is calculated by dividing ROI's actual surface over the surface combined with holes, to see how holes affect its surface.
    *
-   * @returns fill ratio value.
+   * @returns Fill ratio value.
    */
   get fillRatio() {
     return this.surface / (this.surface + this.holesInfo.surface);
@@ -519,7 +519,7 @@ export class Roi {
    * Computes sphericity of the ROI.
    * Sphericity is a measure of the degree to which a particle approximates the shape of a sphere, and is independent of its size. The value is always between 0 and 1. The less spheric the ROI is the smaller is the number.
    *
-   * @returns sphericity value
+   * @returns Sphericity value.
    */
   get sphericity() {
     return (2 * Math.sqrt(this.surface * Math.PI)) / this.perimeter;
@@ -527,7 +527,7 @@ export class Roi {
   /**
    * Computes surface combined with the surface of the holes.
    *
-   * @returns surface with holes in pixels.
+   * @returns Surface with holes in pixels.
    */
   get filledSurface() {
     return this.surface + this.holesInfo.surface;
@@ -537,17 +537,18 @@ export class Roi {
    *The solidity describes the extent to which a shape is convex or concave.
    * The solidity of a completely convex shape is 1, the farther the it deviates from 1, the greater the extent of concavity in the shape of the ROI.
    *
-   * @returns solidity value
+   * @returns Solidity value.
    */
   get solidity() {
     return this.surface / getConvexHull(this.getMask()).surface;
   }
-  //TODO Should be refactored to not need creating a new Mask
+  //TODO Should be refactored to not need creating a new Mask.
+
   /**
    *Computes convex hull. It is the smallest convex set that contains it.
    *
    * @see https://en.wikipedia.org/wiki/Convex_hull
-   * @returns convexHull
+   * @returns Convex Hull.
    */
   get convexHull() {
     return this.#getComputed('convexHull', () => {
@@ -558,7 +559,7 @@ export class Roi {
    * Computes minimum bounding rectangle.
    * In digital image processing, the bounding box is merely the coordinates of the rectangular border that fully encloses a digital image when it is placed over a page, a canvas, a screen or other similar bidimensional background.
    *
-   * @returns an object of mbr.
+   * @returns An object of MBR.
    */
   get mbr() {
     return this.#getComputed('mbr', () => {
@@ -578,7 +579,7 @@ export class Roi {
    *  In simpler words, the method corresponds to the measurement by a slide gauge (slide gauge principle).
    * In general it is defined as the distance between two parallel tangents of the particle at an arbitrary angle. The minimum Feret diameter is often used as the diameter equivalent to a sieve analysis.
    *
-   * @returns Feret Diameters(minimum diameter,maximum diameter)
+   * @returns Feret Diameters(minimum diameter,maximum diameter).
    */
 
   get feret(): Feret {
@@ -589,7 +590,7 @@ export class Roi {
   /**
    * A JSON object with all the data about ROI.
    *
-   * @returns calculated properties as one object.
+   * @returns Calculated properties as one object.
    */
   toJSON() {
     return {
@@ -615,7 +616,7 @@ export class Roi {
   /**
    * Computes a center point of the current ROI.
    *
-   * @returns point
+   * @returns Point.
    */
   get centroid() {
     return this.#getComputed('centroid', () => {
@@ -652,14 +653,14 @@ export class Roi {
     }
     return this.#computed[property] as Computed[T];
   }
-  //TODO Make this private
+  //TODO Make this private.
 
   /**
    * Calculates the correct index on the map of ROI.
    *
-   * @param y - map row
-   * @param x - map column
-   * @returns index of ROI map
+   * @param y - Map row
+   * @param x - Map column
+   * @returns Index of ROI map.
    */
   #computeIndex(y: number, x: number): number {
     const roiMap = this.map;
