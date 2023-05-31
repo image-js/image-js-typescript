@@ -16,8 +16,8 @@ import { Ellipse, getEllipse } from './properties/getEllipse';
 /**
  * Properties of borders of ROI.
  *
- * @param connectedID - Refers  to the roiID of the contiguous ROI.
- * @param number - Length of the border with connectedID.
+ * connectedID - Refers  to the roiID of the contiguous ROI.
+ * number - Length of the border with connectedID.
  */
 interface Border {
   connectedID: number;
@@ -146,7 +146,7 @@ export class Roi {
    * Returns an array of ROIs IDs that are included in the current ROI.
    * This will be useful to know if there are some holes in the ROI.
    *
-   * @returns InternalIDs.
+   * @returns internalIDs
    */
   get internalIDs() {
     return this.#getComputed('internalIDs', () => {
@@ -312,7 +312,7 @@ export class Roi {
    *
    * Computes current ROI points.
    *
-   * @returns Array of points(array of tuples, each tuple being the x and y coordinates of the ROI point).
+   * @returns Array of points. It's an array of tuples, each tuple being the x and y coordinates of the ROI point.
    */
   get points() {
     return this.#getComputed('points', () => {
@@ -412,7 +412,7 @@ export class Roi {
    * Number of holes in the ROI and their total surface.
    * Used to calculate fillRatio.
    *
-   * @returns The surface of holes in ROI.
+   * @returns The surface of holes in ROI in pixels.
    */
   get holesInfo() {
     return this.#getComputed('holesInfo', () => {
@@ -445,7 +445,7 @@ export class Roi {
     return this.#getComputed('borders', () => {
       const roiMap = this.map;
       const data = roiMap.data;
-      let surroudingIDs = new Set<number>(); // Allows to get a unique list without indexOf.
+      let surroudingIDs = new Set<number>();
       let surroundingBorders = new Map();
       let visitedData = new Set();
       let dx = [+1, 0, -1, 0];
@@ -524,9 +524,10 @@ export class Roi {
     return (2 * Math.sqrt(this.surface * Math.PI)) / this.perimeter;
   }
   /**
-   * Computes surface combined with the surface of the holes.
+   * Computes the surface of the ROI, including the surface of the holes.
    *
-   * @returns Surface with holes in pixels.
+   *
+   * @returns Surface including holes measured in pixels.
    */
   get filledSurface() {
     return this.surface + this.holesInfo.surface;
@@ -547,7 +548,7 @@ export class Roi {
    *Computes convex hull. It is the smallest convex set that contains it.
    *
    * @see https://en.wikipedia.org/wiki/Convex_hull
-   * @returns Convex Hull.
+   * @returns Convex hull.
    */
   get convexHull() {
     return this.#getComputed('convexHull', () => {
@@ -555,10 +556,10 @@ export class Roi {
     });
   }
   /**
-   * Computes minimum bounding rectangle.
+   * Computes the minimum bounding rectangle.
    * In digital image processing, the bounding box is merely the coordinates of the rectangular border that fully encloses a digital image when it is placed over a page, a canvas, a screen or other similar bidimensional background.
    *
-   * @returns An object of MBR.
+   * @returns The minimum bounding rectangle.
    */
   get mbr() {
     return this.#getComputed('mbr', () => {
@@ -578,7 +579,7 @@ export class Roi {
    *  In simpler words, the method corresponds to the measurement by a slide gauge (slide gauge principle).
    * In general it is defined as the distance between two parallel tangents of the particle at an arbitrary angle. The minimum Feret diameter is often used as the diameter equivalent to a sieve analysis.
    *
-   * @returns Feret Diameters(minimum diameter,maximum diameter).
+   * @returns The maximum and minimum Feret Diameters.
    */
 
   get feret(): Feret {
@@ -613,9 +614,9 @@ export class Roi {
     };
   }
   /**
-   * Computes a center point of the current ROI.
+   * Computes a center of mass of the current ROI.
    *
-   * @returns Point.
+   * @returns point
    */
   get centroid() {
     return this.#getComputed('centroid', () => {
@@ -659,7 +660,7 @@ export class Roi {
    *
    * @param y - Map row
    * @param x - Map column
-   * @returns Index of ROI map.
+   * @returns Index within the ROI map.
    */
   #computeIndex(y: number, x: number): number {
     const roiMap = this.map;
