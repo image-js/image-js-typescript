@@ -172,7 +172,6 @@ export class Roi {
           let target = this.#computeIndex(row, column);
           if (internal.includes(data[target])) {
             // We check if one of the neighbor is not yet in.
-
             array[0] = data[target - 1];
             array[1] = data[target + 1];
             array[2] = data[target - roiMap.width];
