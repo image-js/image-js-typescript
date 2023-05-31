@@ -16,11 +16,15 @@ import { Ellipse, getEllipse } from './properties/getEllipse';
 /**
  * Properties of borders of ROI.
  *
- * connectedID - Refers  to the roiID of the contiguous ROI.
- * number - Length of the border with connectedID.
  */
 interface Border {
+  /**
+   * Refers  to the roiID of the contiguous ROI.
+   */
   connectedID: number;
+  /**
+   * Length of the border with connectedID.
+   */
   length: number;
 }
 interface Computed {
@@ -590,7 +594,7 @@ export class Roi {
   /**
    * A JSON object with all the data about ROI.
    *
-   * @returns Calculated properties as one object.
+   * @returns All current ROI properties as one object.
    */
   toJSON() {
     return {
