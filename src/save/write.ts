@@ -28,6 +28,7 @@ export type WriteOptionsJpeg = WriteOptions & EncodeOptionsJpeg;
  * @param path - Path or file URL where the image should be written.
  * @param image - Image to save.
  * @param options - Write options.
+ * @returns A promise that resolves when the image is written.
  */
 export async function write(
   path: string | URL,
@@ -40,6 +41,7 @@ export async function write(
  * @param path - Path or file URL where the image should be written.
  * @param image - Image to save.
  * @param options - Encode options for png images.
+ * @returns A promise that resolves when the image is written.
  */
 export async function write(
   path: string | URL,
@@ -52,6 +54,7 @@ export async function write(
  * @param path - Path or file URL where the image should be written.
  * @param image - Image to save.
  * @param options - Encode options for jpeg images.
+ * @returns A promise that resolves when the image is written.
  */
 export async function write(
   path: string | URL,

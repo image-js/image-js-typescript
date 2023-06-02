@@ -15,7 +15,7 @@ export interface CompareIntensityOptions {
  * @param image - Source image of the pixels.
  * @param p1 - First point.
  * @param p2 - Second point.
- * @param options
+ * @param options - Options.
  * @returns Wether p1 is darker that p2.
  */
 export function compareIntensity(

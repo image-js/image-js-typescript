@@ -38,7 +38,6 @@ export interface WriteCanvasOptions {
 /**
  * Draw the image in an HTML canvas.
  * @param image - The image to draw.
- * @param imageOrMask
  * @param canvas - The HTML canvas.
  * @param options - Write canvas options.
  */
@@ -49,6 +48,9 @@ export function writeCanvas(
 ): void {
   if (image.colorModel !== 'RGBA') {
     image = image.convertColor('RGBA');
+  }
+  if (image.bitDepth !== 8 && image instanceof Image) {
+    image = image.convertBitDepth(8);
   }
   const {
     resizeCanvas = true,
