@@ -1,6 +1,7 @@
 import { decode } from 'tiff';
 
 import { BitDepth, Image } from '../Image';
+import { getMetadata } from './getMetadata';
 
 type TiffIfd = ReturnType<typeof decode>[number];
 
@@ -41,7 +42,7 @@ function getImageFromIFD(ifd: TiffIfd): Image {
       // TODO: handle other bit depths
       bitDepth: 16,
       // TODO: implement metadata
-      //meta: getMetadata(ifd),
+      meta: getMetadata(ifd),
     });
   } else {
     return new Image(ifd.width, ifd.height, {
@@ -57,7 +58,7 @@ function getImageFromIFD(ifd: TiffIfd): Image {
           : ifd.alpha
           ? 'GREYA'
           : 'GREY',
-      // meta: getMetadata(ifd),
+      meta: getMetadata(ifd),
     });
   }
 }
