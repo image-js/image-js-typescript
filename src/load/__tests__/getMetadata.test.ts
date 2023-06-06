@@ -1,4 +1,3 @@
-import { decode } from '../decode';
 import { decodeJpeg } from '../decodeJpeg';
 import { decodeTiff } from '../decodeTiff';
 
