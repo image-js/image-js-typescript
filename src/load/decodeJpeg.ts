@@ -1,7 +1,8 @@
-import { decode } from 'jpeg-js';
 import { decode as decodeExif } from 'fast-jpeg';
+import { decode } from 'jpeg-js';
 
 import { Image } from '../Image';
+
 import { getMetadata } from './getMetadata';
 
 /**
