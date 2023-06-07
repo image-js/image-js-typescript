@@ -43,6 +43,7 @@ import {
   InvertOptions,
   level,
   LevelOptions,
+  medianFilter,
 } from './filters';
 import {
   Point,
@@ -976,6 +977,10 @@ export class Image {
     options?: TransformRotateOptions,
   ): Image {
     return transformRotate(this, angle, options);
+  }
+
+  public medianFilter() {
+    return medianFilter(this);
   }
 
   // MORPHOLOGY
