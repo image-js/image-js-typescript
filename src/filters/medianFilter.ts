@@ -42,8 +42,7 @@ export function medianFilter(
     kernel = new Uint8Array(size);
   }
 
-  for (let channel = 1; channel <= channels; channel++) {
-    let c = channel;
+  for (let channel = 0; channel < channels; channel++) {
     for (let y = kHeight; y < image.height - kHeight; y++) {
       for (let x = kWidth; x < image.width - kWidth; x++) {
         let n = 0;
@@ -52,26 +51,32 @@ export function medianFilter(
             kernel[n++] = image.getValue(x + i, y + j, channel);
           }
         }
-        newImage.setValue(y, x, c, xMedian(kernel));
+        newImage.setValue(y, x, channel, xMedian(kernel));
       }
     }
   }
+
   // if (newImage.alpha && !channels.includes(newImage.channels)) {
   //   for (
   //     let i = newImage.components;
-  //     i < data.length;
+  //     i < image.data.length;
   //     i = i + newImage.channels
   //   ) {
-  //     data[i] = newImage.data[i];
+  //     image.data[i] = newImage.data[i];
   //   }
   // }
 
-  setBorder(kWidth, kHeight, newImage);
+  setBorder(kWidth, kHeight, image, newImage);
 
   return newImage;
 }
 
-function setBorder(kWidth: number, kHeight: number, image: Image) {
+function setBorder(
+  kWidth: number,
+  kHeight: number,
+  image: Image,
+  newImage: Image,
+) {
   let leftRightSize = kWidth;
   let topBottomSize = kHeight;
   let channels = image.channels;
@@ -80,11 +85,11 @@ function setBorder(kWidth: number, kHeight: number, image: Image) {
     for (let k = 0; k < channels; k++) {
       let value = image.getValue(i, topBottomSize, k);
       for (let j = 0; j < topBottomSize; j++) {
-        image.setValue(i, j, k, value);
+        newImage.setValue(i, j, k, value);
       }
       value = image.getValue(i, image.height - topBottomSize - 1, k);
       for (let j = image.height - topBottomSize; j < image.height; j++) {
-        image.setValue(i, j, k, value);
+        newImage.setValue(i, j, k, value);
       }
     }
   }
@@ -93,15 +98,15 @@ function setBorder(kWidth: number, kHeight: number, image: Image) {
     for (let k = 0; k < channels; k++) {
       let value = image.getValue(leftRightSize, j, k);
       for (let i = 0; i < leftRightSize; i++) {
-        image.setValue(i, j, k, value);
+        newImage.setValue(i, j, k, value);
       }
       value = image.getValue(image.width - leftRightSize - 1, j, k);
 
       for (let i = image.width - leftRightSize; i < image.width; i++) {
-        image.setValue(i, j, k, value);
+        newImage.setValue(i, j, k, value);
       }
     }
   }
 
-  return image;
+  return newImage;
 }
