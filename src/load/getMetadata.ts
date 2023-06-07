@@ -10,6 +10,11 @@ export interface ImageMetadata {
   exif: Record<string, unknown>;
 }
 
+/**
+ * Get metadata from an IFD.
+ * @param ifd - The IFD.
+ * @returns The metadata.
+ */
 export function getMetadata(ifd: TiffIfd) {
   return {
     tiff: {
