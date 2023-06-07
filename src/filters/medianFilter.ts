@@ -2,16 +2,18 @@ import { xMedian } from 'ml-spectra-processing';
 
 import { Image } from '../Image';
 import checkProcessable from '../utils/checkProcessable';
-// import { validateChannels } from '../utils/validators';
+//import { validateChannels } from '../utils/validators';
 
 /**
+ *Some description
  *
- * @param image
- * @param data
- * @param options
- * @param options.radius
- * @param options.border
- * @param options.channels
+ * @param image - some
+ * @param data - some
+ * @param options - some
+ * @param options.radius - some
+ * @param options.border - some
+ * @param options.channels - some
+ * @returns image
  */
 export function medianFilter(
   image: Image,
@@ -52,10 +54,7 @@ export function medianFilter(
             kernel[n++] = data[index];
           }
         }
-
-        let index = (y * image.width + x) * image.channels + c;
-
-        newImage.data[index] = xMedian(kernel);
+        newImage.setValue(y, x, c, xMedian(kernel));
       }
     }
   }
@@ -69,53 +68,42 @@ export function medianFilter(
   //   }
   // }
 
-  // setBorder(kWidth, kHeight, newImage);
+  setBorder(kWidth, kHeight, newImage);
 
   return newImage;
 }
 
-// function setBorder(kWidth: number, kHeight: number, image: Image) {
-//   let leftRightSize = kWidth;
-//   let topBottomSize = kHeight;
-//   let channels = image.channels;
+function setBorder(kWidth: number, kHeight: number, image: Image) {
+  let leftRightSize = kWidth;
+  let topBottomSize = kHeight;
+  let channels = image.channels;
 
-//   for (let i = leftRightSize; i < image.width - leftRightSize; i++) {
-//     for (let k = 0; k < channels; k++) {
-//       let value =
-//         image.color[k] ||
-//         image.data[(i + image.width * topBottomSize) * channels + k];
-//       for (let j = 0; j < topBottomSize; j++) {
-//         image.data[(j * image.width + i) * channels + k] = value;
-//       }
-//       value =
-//         color[k] ||
-//         image.data[
-//           (i + image.width * (image.height - topBottomSize - 1)) * channels + k
-//         ];
-//       for (let j = image.height - topBottomSize; j < image.height; j++) {
-//         image.data[(j * image.width + i) * channels + k] = value;
-//       }
-//     }
-//   }
+  for (let i = leftRightSize; i < image.width - leftRightSize; i++) {
+    for (let k = 0; k < channels; k++) {
+      let value = image.getValue(i, topBottomSize, k);
+      for (let j = 0; j < topBottomSize; j++) {
+        image.setValue(i, j, k, value);
+      }
+      value = image.getValue(i, image.height - topBottomSize - 1, k);
+      for (let j = image.height - topBottomSize; j < image.height; j++) {
+        image.setValue(i, j, k, value);
+      }
+    }
+  }
 
-//   for (let j = 0; j < image.height; j++) {
-//     for (let k = 0; k < channels; k++) {
-//       let value =
-//         color[k] ||
-//         image.data[(j * image.width + leftRightSize) * channels + k];
-//       for (let i = 0; i < leftRightSize; i++) {
-//         image.data[(j * image.width + i) * channels + k] = value;
-//       }
-//       value =
-//         color[k] ||
-//         image.data[
-//           (j * image.width + image.width - leftRightSize - 1) * channels + k
-//         ];
-//       for (let i = this.width - leftRightSize; i < image.width; i++) {
-//         image.data[(j * image.width + i) * channels + k] = value;
-//       }
-//     }
-//   }
+  for (let j = 0; j < image.height; j++) {
+    for (let k = 0; k < channels; k++) {
+      let value = image.getValue(leftRightSize, j, k);
+      for (let i = 0; i < leftRightSize; i++) {
+        image.setValue(i, j, k, value);
+      }
+      value = image.getValue(image.width - leftRightSize - 1, j, k);
 
-//   return image;
-// }
+      for (let i = image.width - leftRightSize; i < image.width; i++) {
+        image.setValue(i, j, k, value);
+      }
+    }
+  }
+
+  return image;
+}
