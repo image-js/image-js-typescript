@@ -2,7 +2,7 @@ import { decode } from 'tiff';
 
 import { BitDepth, Image } from '../Image';
 
-import { getMetadata, getMetadata } from './getMetadata';
+import { getMetadata } from './getMetadata';
 
 type TiffIfd = ReturnType<typeof decode>[number];
 
