@@ -17,7 +17,6 @@ import checkProcessable from '../utils/checkProcessable';
  */
 export function medianFilter(
   image: Image,
-  data: number[],
   options: { radius?: number; border?: string; channels?: number } = {},
 ) {
   let { radius = 1, channels = image.channels } = options;
@@ -50,8 +49,7 @@ export function medianFilter(
         let n = 0;
         for (let j = -kHeight; j <= kHeight; j++) {
           for (let i = -kWidth; i <= kWidth; i++) {
-            let index = ((y + j) * image.width + x + i) * image.channels + c;
-            kernel[n++] = data[index];
+            kernel[n++] = image.getValue(x + i, y + j, channel);
           }
         }
         newImage.setValue(y, x, c, xMedian(kernel));
