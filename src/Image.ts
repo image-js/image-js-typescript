@@ -104,6 +104,7 @@ import {
   threshold,
   ThresholdOptions,
 } from './index';
+import { ImageMetadata } from './load/getMetadata';
 
 export type ImageDataArray = Uint8Array | Uint16Array | Uint8ClampedArray;
 
