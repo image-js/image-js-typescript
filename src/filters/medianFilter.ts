@@ -5,13 +5,13 @@ import checkProcessable from '../utils/checkProcessable';
 //import { validateChannels } from '../utils/validators';
 
 /**
- *Some description
+ * Apply a median filter to the image.
  *
- * @param image - image to be filtered
- * @param options - options to add
- * @param options.radius - size of the area to calculate median from
- * @param options.channels - number of channels of the image
- * @returns image
+ * @param image - Image to be filtered.
+ * @param options - Options to apply for median filter.
+ * @param options.radius - Size of the area to calculate median value from.
+ * @param options.channels - Number of channels.
+ * @returns Image after median filter.
  */
 export function medianFilter(
   image: Image,

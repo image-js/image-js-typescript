@@ -941,6 +941,17 @@ export class Image {
   ): Image {
     return correctColor(this, measuredColors, referenceColors);
   }
+  /**
+   * Apply a median filter to the image.
+   *
+   * @param options - Options to apply for median filter.
+   * @param options.radius - Size of the area to calculate median value from.
+   * @param options.channels - Number of channels.
+   * @returns Image after median filter.
+   */
+  public medianFilter(options?: { radius?: number; channels?: number }) {
+    return medianFilter(this, options);
+  }
 
   // GEOMETRY
 
@@ -964,10 +975,6 @@ export class Image {
     options?: TransformRotateOptions,
   ): Image {
     return transformRotate(this, angle, options);
-  }
-
-  public medianFilter(options?: { radius?: number; channels?: number }) {
-    return medianFilter(this, options);
   }
 
   // MORPHOLOGY
