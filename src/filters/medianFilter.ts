@@ -7,17 +7,15 @@ import checkProcessable from '../utils/checkProcessable';
 /**
  *Some description
  *
- * @param image - some
- * @param data - some
- * @param options - some
- * @param options.radius - some
- * @param options.border - some
- * @param options.channels - some
+ * @param image - image to be filtered
+ * @param options - options to add
+ * @param options.radius - size of the area to calculate median from
+ * @param options.channels - number of channels of the image
  * @returns image
  */
 export function medianFilter(
   image: Image,
-  options: { radius?: number; border?: string; channels?: number } = {},
+  options: { radius?: number; channels?: number } = {},
 ) {
   let { radius = 1, channels = image.channels } = options;
 
