@@ -979,8 +979,8 @@ export class Image {
     return transformRotate(this, angle, options);
   }
 
-  public medianFilter() {
-    return medianFilter(this);
+  public medianFilter(options?: { radius?: number; channels?: number }) {
+    return medianFilter(this, options);
   }
 
   // MORPHOLOGY
