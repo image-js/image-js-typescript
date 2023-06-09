@@ -51,7 +51,8 @@ export function medianFilter(
             kernel[n++] = image.getValue(x + i, y + j, channel);
           }
         }
-        newImage.setValue(y, x, channel, xMedian(kernel));
+
+        newImage.setValue(x, y, channel, xMedian(kernel));
       }
     }
   }
@@ -65,9 +66,7 @@ export function medianFilter(
   //     image.data[i] = newImage.data[i];
   //   }
   // }
-
   setBorder(kWidth, kHeight, image, newImage);
-
   return newImage;
 }
 
@@ -79,15 +78,20 @@ function setBorder(
 ) {
   let leftRightSize = kWidth;
   let topBottomSize = kHeight;
+
   let channels = image.channels;
 
   for (let i = leftRightSize; i < image.width - leftRightSize; i++) {
     for (let k = 0; k < channels; k++) {
-      let value = image.getValue(i, topBottomSize, k);
+      let value = newImage.getValue(i, topBottomSize, k);
+      console.log(value);
       for (let j = 0; j < topBottomSize; j++) {
         newImage.setValue(i, j, k, value);
       }
-      value = image.getValue(i, image.height - topBottomSize - 1, k);
+      value =
+        newImage.getValue(i, image.height - topBottomSize - 1, k) ||
+        newImage.getValue(i, image.height - topBottomSize, k);
+      console.log(value);
       for (let j = image.height - topBottomSize; j < image.height; j++) {
         newImage.setValue(i, j, k, value);
       }
@@ -96,12 +100,15 @@ function setBorder(
 
   for (let j = 0; j < image.height; j++) {
     for (let k = 0; k < channels; k++) {
-      let value = image.getValue(leftRightSize, j, k);
+      let value = newImage.getValue(leftRightSize, j, k);
+      console.log(value);
       for (let i = 0; i < leftRightSize; i++) {
         newImage.setValue(i, j, k, value);
       }
-      value = image.getValue(image.width - leftRightSize - 1, j, k);
-
+      value =
+        newImage.getValue(image.width - leftRightSize - 1, j, k) ||
+        newImage.getValue(image.width - leftRightSize, j, k);
+      console.log(value);
       for (let i = image.width - leftRightSize; i < image.width; i++) {
         newImage.setValue(i, j, k, value);
       }
