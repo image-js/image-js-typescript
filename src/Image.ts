@@ -46,6 +46,7 @@ import {
   pixelate,
   PixelateOptions,
   medianFilter,
+  MedianFilterOptions,
 } from './filters';
 import {
   Point,
@@ -998,9 +999,12 @@ export class Image {
    * @param options - Options to apply for median filter.
    * @param options.radius - Size of the area to calculate median value from.
    * @param options.channels - Number of channels.
+   * @param options.cellSize
+   * @param options.borderType
+   * @param options.borderValue
    * @returns Image after median filter.
    */
-  public medianFilter(options?: { radius?: number; channels?: number }) {
+  public medianFilter(options: MedianFilterOptions) {
     return medianFilter(this, options);
   }
 
