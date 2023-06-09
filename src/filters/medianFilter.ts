@@ -11,28 +11,28 @@ import checkProcessable from '../utils/checkProcessable';
  * @param options - Options to apply for median filter.
  * @param options.radius - Size of the area to calculate median value from.
  * @param options.channels - Number of channels.
+ * @param options.cellSize
  * @returns Image after median filter.
  */
 export function medianFilter(
   image: Image,
-  options: { radius?: number; channels?: number } = {},
+  options: { cellSize?: number; channels?: number } = {},
 ) {
-  let { radius = 1, channels = image.channels } = options;
+  let { cellSize = 1, channels = image.channels } = options;
 
   checkProcessable(image, {
     bitDepth: [8, 16],
   });
 
-  if (radius < 1) {
+  if (cellSize < 1) {
     throw new RangeError('radius must be greater than 0');
   }
 
   // validateChannels(options.channels as number[], image);
 
-  let kWidth = radius;
-  let kHeight = radius;
+  let kSize = cellSize;
   let newImage = Image.createFrom(image);
-  let size = (kWidth * 2 + 1) * (kHeight * 2 + 1);
+  let size = (kSize * 2 + 1) * (kSize * 2 + 1);
   let kernel;
   if (image.bitDepth === 16) {
     kernel = new Uint16Array(size);
@@ -41,16 +41,24 @@ export function medianFilter(
   }
 
   for (let channel = 0; channel < channels; channel++) {
-    for (let y = kHeight; y < image.height - kHeight; y++) {
-      for (let x = kWidth; x < image.width - kWidth; x++) {
+    for (let row = kSize; row < image.height - kSize; row++) {
+      for (let column = kSize; column < image.width - kSize; column++) {
         let n = 0;
-        for (let j = -kHeight; j <= kHeight; j++) {
-          for (let i = -kWidth; i <= kWidth; i++) {
-            kernel[n++] = image.getValue(x + i, y + j, channel);
+        for (let cellSizeRow = -kSize; cellSizeRow <= kSize; cellSizeRow++) {
+          for (
+            let cellSizeColumn = -kSize;
+            cellSizeColumn <= kSize;
+            cellSizeColumn++
+          ) {
+            kernel[n++] = image.getValue(
+              column + cellSizeColumn,
+              row + cellSizeRow,
+              channel,
+            );
           }
         }
 
-        newImage.setValue(x, y, channel, xMedian(kernel));
+        newImage.setValue(column, row, channel, xMedian(kernel));
       }
     }
   }
@@ -64,51 +72,49 @@ export function medianFilter(
   //     image.data[i] = newImage.data[i];
   //   }
   // }
-  setBorder(kWidth, kHeight, image, newImage);
+  setBorder(kSize, image, newImage);
   return newImage;
 }
 
-function setBorder(
-  kWidth: number,
-  kHeight: number,
-  image: Image,
-  newImage: Image,
-) {
-  let leftRightSize = kWidth;
-  let topBottomSize = kHeight;
+function setBorder(kSize: number, image: Image, newImage: Image) {
+  let borderSize = kSize;
 
   let channels = image.channels;
 
-  for (let i = leftRightSize; i < image.width - leftRightSize; i++) {
-    for (let k = 0; k < channels; k++) {
-      let value = newImage.getValue(i, topBottomSize, k);
+  for (let column = borderSize; column < image.width - borderSize; column++) {
+    for (let channel = 0; channel < channels; channel++) {
+      let value = newImage.getValue(column, borderSize, channel);
 
-      for (let j = 0; j < topBottomSize; j++) {
-        newImage.setValue(i, j, k, value);
+      for (let row = 0; row < borderSize; row++) {
+        newImage.setValue(column, row, channel, value);
       }
       value =
-        newImage.getValue(i, image.height - topBottomSize - 1, k) ||
-        image.getValue(i, image.height - topBottomSize, k);
+        newImage.getValue(column, image.height - borderSize - 1, channel) ||
+        image.getValue(column, image.height - borderSize, channel);
 
-      for (let j = image.height - topBottomSize; j < image.height; j++) {
-        newImage.setValue(i, j, k, value);
+      for (let row = image.height - borderSize; row < image.height; row++) {
+        newImage.setValue(column, row, channel, value);
       }
     }
   }
 
-  for (let j = 0; j < image.height; j++) {
-    for (let k = 0; k < channels; k++) {
-      let value = newImage.getValue(leftRightSize, j, k);
+  for (let row = 0; row < image.height; row++) {
+    for (let channel = 0; channel < channels; channel++) {
+      let value = newImage.getValue(borderSize, row, channel);
 
-      for (let i = 0; i < leftRightSize; i++) {
-        newImage.setValue(i, j, k, value);
+      for (let column = 0; column < borderSize; column++) {
+        newImage.setValue(column, row, channel, value);
       }
       value =
-        newImage.getValue(image.width - leftRightSize - 1, j, k) ||
-        image.getValue(image.width - leftRightSize, j, k);
+        newImage.getValue(image.width - borderSize - 1, row, channel) ||
+        image.getValue(image.width - borderSize, row, channel);
 
-      for (let i = image.width - leftRightSize; i < image.width; i++) {
-        newImage.setValue(i, j, k, value);
+      for (
+        let column = image.width - borderSize;
+        column < image.width;
+        column++
+      ) {
+        newImage.setValue(column, row, channel, value);
       }
     }
   }
