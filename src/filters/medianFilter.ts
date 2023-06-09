@@ -24,7 +24,7 @@ export function medianFilter(
   });
 
   if (radius < 1) {
-    throw new Error('radius must be greater than 0');
+    throw new RangeError('radius must be greater than 0');
   }
 
   // validateChannels(options.channels as number[], image);
