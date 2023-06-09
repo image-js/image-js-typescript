@@ -84,14 +84,14 @@ function setBorder(
   for (let i = leftRightSize; i < image.width - leftRightSize; i++) {
     for (let k = 0; k < channels; k++) {
       let value = newImage.getValue(i, topBottomSize, k);
-      console.log(value);
+
       for (let j = 0; j < topBottomSize; j++) {
         newImage.setValue(i, j, k, value);
       }
       value =
         newImage.getValue(i, image.height - topBottomSize - 1, k) ||
-        newImage.getValue(i, image.height - topBottomSize, k);
-      console.log(value);
+        image.getValue(i, image.height - topBottomSize, k);
+
       for (let j = image.height - topBottomSize; j < image.height; j++) {
         newImage.setValue(i, j, k, value);
       }
@@ -101,14 +101,14 @@ function setBorder(
   for (let j = 0; j < image.height; j++) {
     for (let k = 0; k < channels; k++) {
       let value = newImage.getValue(leftRightSize, j, k);
-      console.log(value);
+
       for (let i = 0; i < leftRightSize; i++) {
         newImage.setValue(i, j, k, value);
       }
       value =
         newImage.getValue(image.width - leftRightSize - 1, j, k) ||
-        newImage.getValue(image.width - leftRightSize, j, k);
-      console.log(value);
+        image.getValue(image.width - leftRightSize, j, k);
+
       for (let i = image.width - leftRightSize; i < image.width; i++) {
         newImage.setValue(i, j, k, value);
       }
