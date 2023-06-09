@@ -22,7 +22,6 @@ describe('create new images', () => {
 
   it('should create a 16-bit image', () => {
     const img = new Image(10, 20, { bitDepth: 16 });
-    console.log(img.getRawImage().data);
     expect(img).toMatchObject({
       width: 10,
       height: 20,
