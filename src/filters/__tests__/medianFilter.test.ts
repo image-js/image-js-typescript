@@ -23,7 +23,7 @@ test('grey image 5x5', () => {
     [10, 2, 20, 4, 5],
   ]);
   const result2 = image2.medianFilter();
-  console.log(result2);
+
   expect(result2).toMatchImageData([
     [10, 10, 4, 5, 5],
     [10, 10, 4, 5, 5],
@@ -42,7 +42,7 @@ test('RGBA image 1x5', () => {
     [1, 2, 3, 4],
   ]);
   const result = image.medianFilter();
-  console.log(result);
+
   expect(result).toMatchImageData([
     [1, 2, 3, 4],
     [1, 2, 3, 4],
@@ -55,6 +55,6 @@ test('RGBA image 1x5', () => {
 test('grey horizontal', () => {
   const image = testUtils.createGreyImage([[1, 2, 3, 4]]);
   const result = image.medianFilter();
-  console.log(result);
+
   expect(result).toMatchImageData([[2, 2, 3, 3]]);
 });
