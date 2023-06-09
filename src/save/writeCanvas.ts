@@ -1,10 +1,10 @@
+import { Mask } from '..';
 import { Image } from '../Image';
 import { assert } from '../utils/assert';
 
 export interface WriteCanvasOptions {
   /**
    * If set to `true`, the canvas element will be resized to fit the image.
-   *
    * @default true
    */
   resizeCanvas?: boolean;
@@ -37,18 +37,20 @@ export interface WriteCanvasOptions {
 // TODO: Create nodejs version that throws an error
 /**
  * Draw the image in an HTML canvas.
- *
  * @param image - The image to draw.
  * @param canvas - The HTML canvas.
  * @param options - Write canvas options.
  */
 export function writeCanvas(
-  image: Image,
+  image: Image | Mask,
   canvas: HTMLCanvasElement,
   options: WriteCanvasOptions = {},
 ): void {
   if (image.colorModel !== 'RGBA') {
     image = image.convertColor('RGBA');
+  }
+  if (image.bitDepth !== 8 && image instanceof Image) {
+    image = image.convertBitDepth(8);
   }
   const {
     resizeCanvas = true,

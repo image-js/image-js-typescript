@@ -33,11 +33,14 @@ export interface Mbr {
    * Angle between the rectangle and a horizontal line in radians.
    */
   angle: number;
+  /**
+   * Ratio between width and height.
+   */
+  aspectRatio: number;
 }
 
 /**
  * Get the four corners of the minimum bounding rectangle of an ROI.
- *
  * @param mask - The ROI to process.
  * @returns The array of corners.
  */

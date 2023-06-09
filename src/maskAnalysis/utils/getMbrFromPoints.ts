@@ -6,8 +6,7 @@ import { getMbrAngle } from './getMbrAngle';
 
 /**
  * Get the four corners of the minimum bounding rectangle from a set of points defining a simple convex polygon.
- * https://www.researchgate.net/profile/Lennert_Den_Boer2/publication/303783472_A_Fast_Algorithm_for_Generating_a_Minimal_Bounding_Rectangle/links/5751a14108ae6807fafb2aa5.pdf
- *
+ * @see {@link https://www.researchgate.net/profile/Lennert_Den_Boer2/publication/303783472_A_Fast_Algorithm_for_Generating_a_Minimal_Bounding_Rectangle/links/5751a14108ae6807fafb2aa5.pdf}
  * @param points - Points from which to compute the MBR.
  * @returns The array of corners.
  */
@@ -20,6 +19,7 @@ export function getMbrFromPoints(points: readonly Point[]): Mbr {
       height: 0,
       surface: 0,
       perimeter: 0,
+      aspectRatio: 0,
     };
   }
   if (points.length === 1) {
@@ -30,6 +30,7 @@ export function getMbrFromPoints(points: readonly Point[]): Mbr {
       angle: 0,
       width: 0,
       height: 0,
+      aspectRatio: 1,
     };
   }
 
@@ -89,16 +90,22 @@ export function getMbrFromPoints(points: readonly Point[]): Mbr {
   }
 
   const mbrRotated = rotate(minSurfaceAngle, mbr);
-  const width = mbr[0].column - mbr[2].column;
-  const height = mbr[0].row - mbr[2].row;
+  const sides = [
+    Math.hypot(mbr[0].column - mbr[1].column, mbr[0].row - mbr[1].row),
+    Math.hypot(mbr[0].column - mbr[3].column, mbr[0].row - mbr[3].row),
+  ];
+  const maxSide = Math.max(...sides);
+  const minSide = Math.min(...sides);
   const mbrAngle = getMbrAngle(mbrRotated);
+  const ratio = minSide / maxSide;
 
   return {
     points: mbrRotated,
     surface: minSurface,
     angle: mbrAngle,
-    width,
-    height,
-    perimeter: 2 * width + 2 * height,
+    width: maxSide,
+    height: minSide,
+    perimeter: 2 * maxSide + 2 * minSide,
+    aspectRatio: ratio,
   };
 }

@@ -2,10 +2,10 @@ import {
   DirectConvolution,
   BorderType as ConvolutionBorderType,
 } from 'ml-convolution';
-import { Matrix } from 'ml-matrix';
 
 import { Image } from '../Image';
 import { getClamp, ClampFunction } from '../utils/clamp';
+import { extendBorders } from '../utils/extendBorders';
 import { getIndex } from '../utils/getIndex';
 import { getOutputImage } from '../utils/getOutputImage';
 import {
@@ -18,19 +18,16 @@ import { round } from '../utils/round';
 export interface ConvolutionOptions {
   /**
    * Specify how the borders should be handled.
-   *
    * @default 'reflect101'
    */
   borderType?: BorderType;
   /**
    * Value of the border if BorderType is 'constant'.
-   *
    * @default 0
    */
   borderValue?: number;
   /**
    * Whether the kernel should be normalized.
-   *
    * @default false
    */
   normalize?: boolean;
@@ -42,7 +39,6 @@ export interface ConvolutionOptions {
 
 /**
  * Apply a direct convolution on an image using the specified kernel. The convolution corresponds of a weighted average of the surrounding pixels, the weights being defined in the kernel.
- *
  * @param image - The image to process.
  * @param kernel - Kernel to use for the convolution. Should be a 2D matrix with odd number of rows and columns.
  * @param options - Convolution options.
@@ -76,7 +72,6 @@ export function directConvolution(
 
 /**
  * Compute direct convolution of an image and return an array with the raw values.
- *
  * @param image - Image to process.
  * @param kernel - 2D kernel used for the convolution.
  * @param options - Convolution options.
@@ -114,7 +109,6 @@ export function rawDirectConvolution(
 
 /**
  * Compute the separable convolution of an image.
- *
  * @param image - Image to convolute.
  * @param kernelX - Kernel along x axis.
  * @param kernelY - Kernel along y axis.
@@ -128,140 +122,65 @@ export function separableConvolution(
   options: ConvolutionOptions = {},
 ): Image {
   const { normalize, borderType = 'reflect101', borderValue = 0 } = options;
-  const interpolateBorder = getBorderInterpolation(borderType, borderValue);
   if (normalize) {
     [kernelX, kernelY] = normalizeSeparatedKernel(kernelX, kernelY);
   }
+
   const doubleKernelOffsetX = kernelX.length - 1;
   const kernelOffsetX = doubleKernelOffsetX / 2;
   const doubleKernelOffsetY = kernelY.length - 1;
   const kernelOffsetY = doubleKernelOffsetY / 2;
 
-  const { width, height, channels } = image;
-
-  const cutWidth = width - doubleKernelOffsetX;
+  const extendedImage = extendBorders(image, {
+    horizontal: kernelOffsetX,
+    vertical: kernelOffsetY,
+    borderType,
+    borderValue,
+  });
 
   const newImage = Image.createFrom(image);
   const clamp = getClamp(newImage);
 
   const rowConvolution = new DirectConvolution(
-    width,
+    extendedImage.width,
     kernelX,
     ConvolutionBorderType.CUT,
   );
   const columnConvolution = new DirectConvolution(
-    height,
+    extendedImage.height,
     kernelY,
     ConvolutionBorderType.CUT,
   );
 
-  const rowData = new Float64Array(width);
-  const columnData = new Float64Array(height);
-  const convolvedData = new Float64Array(cutWidth * height);
+  const rowData = new Float64Array(extendedImage.width);
+  const columnData = new Float64Array(extendedImage.height);
+  const convolvedData = new Float64Array(
+    // Use `image.width` because convolution with BorderType.CUT reduces the size of the convolved data.
+    image.width * extendedImage.height,
+  );
 
-  for (let channel = 0; channel < channels; channel++) {
-    for (let row = 0; row < height; row++) {
-      for (let column = 0; column < width; column++) {
-        rowData[column] = image.getValue(column, row, channel);
+  for (let channel = 0; channel < extendedImage.channels; channel++) {
+    for (let row = 0; row < extendedImage.height; row++) {
+      for (let column = 0; column < extendedImage.width; column++) {
+        rowData[column] = extendedImage.getValue(column, row, channel);
       }
       const convolvedRow = rowConvolution.convolve(rowData);
-      for (let column = 0; column < cutWidth; column++) {
-        convolvedData[row * cutWidth + column] = convolvedRow[column];
+      for (let column = 0; column < image.width; column++) {
+        convolvedData[row * image.width + column] = convolvedRow[column];
       }
     }
 
-    for (let column = 0; column < cutWidth; column++) {
-      const wOffset = column + kernelOffsetX;
-      for (let row = 0; row < height; row++) {
-        columnData[row] = convolvedData[row * cutWidth + column];
+    for (let column = 0; column < image.width; column++) {
+      for (let row = 0; row < extendedImage.height; row++) {
+        columnData[row] = convolvedData[row * image.width + column];
       }
-      const result = columnConvolution.convolve(columnData);
-      for (let i = 0; i < result.length; i++) {
-        const index = (i + kernelOffsetY) * width + wOffset;
-        newImage.setValueByIndex(index, channel, round(clamp(result[i])));
-      }
-    }
-  }
-
-  // Calculate kernel from separated kernels.
-
-  const matrixX = Matrix.rowVector(kernelX);
-  const matrixY = Matrix.columnVector(kernelY);
-  const kernel = matrixY.mmul(matrixX).to2DArray();
-
-  // Apply convolution on the left and right borders
-  for (let channel = 0; channel < channels; channel++) {
-    for (let bY = 0; bY < height; bY++) {
-      for (let bX = 0; bX < kernelOffsetX; bX++) {
-        const index = bY * width + bX;
-
-        const bXopp = width - bX - 1;
-        const bYopp = height - bY - 1;
-        const indexOpp = bYopp * width + bXopp;
-        newImage.setValueByIndex(
-          index,
+      const convolvedColumn = columnConvolution.convolve(columnData);
+      for (let row = 0; row < image.height; row++) {
+        newImage.setValue(
+          column,
+          row,
           channel,
-          computeConvolutionValue(
-            bX,
-            bY,
-            channel,
-            image,
-            kernel,
-            interpolateBorder,
-            { clamp },
-          ),
-        );
-        newImage.setValueByIndex(
-          indexOpp,
-          channel,
-          computeConvolutionValue(
-            bXopp,
-            bYopp,
-            channel,
-            image,
-            kernel,
-            interpolateBorder,
-            { clamp },
-          ),
-        );
-      }
-    }
-  }
-
-  // apply the convolution on the top and bottom borders
-  for (let channel = 0; channel < channels; channel++) {
-    for (let bX = 0; bX < width; bX++) {
-      for (let bY = 0; bY < kernelOffsetY; bY++) {
-        const index = bY * width + bX;
-        const bXopp = width - bX - 1;
-        const bYopp = height - bY - 1;
-        const indexOpp = bYopp * width + bXopp;
-
-        newImage.setValueByIndex(
-          index,
-          channel,
-          computeConvolutionValue(
-            bX,
-            bY,
-            channel,
-            image,
-            kernel,
-            interpolateBorder,
-            { clamp },
-          ),
-        );
-        newImage.setValueByIndex(
-          indexOpp,
-          channel,
-          computeConvolutionValue(
-            bXopp,
-            bYopp,
-            channel,
-            image,
-            kernel,
-            interpolateBorder,
-            { clamp },
-          ),
+          round(clamp(convolvedColumn[row])),
         );
       }
     }
@@ -283,7 +202,6 @@ export interface ComputeConvolutionValueOptions {
 
 /**
  * Compute the convolution of a value of a pixel in an image.
- *
  * @param column - Column of the pixel.
  * @param row - Row of the pixel.
  * @param channel - Channel to process.
@@ -336,7 +254,6 @@ export function computeConvolutionValue(
 
 /**
  * Normalize a separated kernel.
- *
  * @param kernelX - Horizontal component of the separated kernel.
  * @param kernelY - Vertical component of the separated kernel.
  * @returns The normalized kernel.

@@ -12,7 +12,6 @@ export interface ConvertColorOptions {
 
 /**
  * Convert image to a different color model.
- *
  * @param image - Image to convert.
  * @param colorModel - New color model.
  * @param options - Convert color options.
@@ -28,7 +27,7 @@ export function convertColor(
     ['GREYA', ['GREY', 'RGB', 'RGBA']],
     ['RGB', ['GREY', 'GREYA', 'RGBA']],
     ['RGBA', ['GREY', 'GREYA', 'RGB']],
-    ['BINARY', ['GREY']],
+    ['BINARY', ['GREY', 'RGB', 'RGBA']],
   ]);
 
   if (image.colorModel === colorModel) {
@@ -68,16 +67,21 @@ export function convertColor(
       copyAlpha(image, output);
     }
     return output;
-  } else {
+  } else if (colorModel === 'GREY') {
     const output = maskToOutputImage(image, options);
     convertBinaryToGrey(image, output);
     return output;
+  } else {
+    const img = new Image(image.width, image.height, {
+      colorModel,
+    });
+    convertBinaryToRgb(image, img);
+    return img;
   }
 }
 
 /**
  * Copy alpha channel of source to dest.
- *
  * @param source - Source image.
  * @param dest - Destination image.
  */
@@ -103,7 +107,6 @@ export function copyAlpha(source: Image, dest: Image): void {
 
 /**
  * Convert grey image to other color model.
- *
  * @param image - Image to convert.
  * @param newImage - Converted image.
  */
@@ -117,7 +120,6 @@ function convertGreyToAny(image: Image, newImage: Image): void {
 
 /**
  * Convert RGB image to RGB. Allows to use convert with an RGB target whatever the image color model is.
- *
  * @param image - Image to convert.
  * @param newImage - Converted image.
  */
@@ -131,7 +133,6 @@ function convertRgbToRgb(image: Image, newImage: Image): void {
 
 /**
  * Convert RGB image to GREY.
- *
  * @param image - Image to convert.
  * @param newImage - Converted image.
  */
@@ -150,7 +151,6 @@ function convertRgbToGrey(image: Image, newImage: Image): void {
 
 /**
  * Convert Mask to GREY.
- *
  * @param mask - Mask to convert.
  * @param newImage - Converted image.
  */
@@ -161,5 +161,22 @@ export function convertBinaryToGrey(mask: Mask, newImage: Image): void {
       0,
       mask.getBitByIndex(i) ? newImage.maxValue : 0,
     );
+  }
+}
+
+/**
+ * Convert mask to RGB or RGBA.
+ * @param mask - Mask to convert.
+ * @param newImage - Converted image.
+ */
+export function convertBinaryToRgb(mask: Mask, newImage: Image): void {
+  const black = new Array(newImage.components).fill(0);
+  const white = new Array(newImage.components).fill(newImage.maxValue);
+  if (newImage.alpha) {
+    black.push(newImage.maxValue);
+    white.push(newImage.maxValue);
+  }
+  for (let i = 0; i < mask.size; i++) {
+    newImage.setPixelByIndex(i, mask.getBitByIndex(i) ? white : black);
   }
 }

@@ -8,7 +8,6 @@ import { sortByColumnRow } from './points';
 /**
  * Get the coordinates of the points on a circle. The reference is the center of the circle.
  * The first point is the right one and they are then sorted clockwise.
- *
  * @param radius - Radius of the circle.
  * @returns The coordinates of the points on a circle of given diameter.
  */
@@ -33,16 +32,17 @@ export function getCirclePoints(radius: number): Point[] {
   return firstQuarter.concat(secondQuarter, thirdQuarter, fourthQuarter);
 }
 
+const zeroPoint: Point = { row: 0, column: 0 };
+
 /**
  * Get the coordinates of the points in a circle of given radius. The points are sorted by column then row.
- *
  * @param radius - Radius of the circle.
- * @param center - Center of the cirlce.
+ * @param center - Center of the circle.
  * @returns The coordinates of the points in a circle of given radius.
  */
 export function getFilledCirclePoints(
   radius: number,
-  center: Point = { column: 0, row: 0 },
+  center: Point = zeroPoint,
 ): Point[] {
   let circlePoints: Point[] = [];
 
@@ -79,8 +79,7 @@ export function getFilledCirclePoints(
 
 /**
  * Get the coordinates of the points on a line.
- *
- * @param from - Starting point
+ * @param from - Starting point.
  * @param to - End point.
  * @returns The coordinates of the points on the line.
  */
@@ -105,7 +104,6 @@ export function getLinePoints(from: Point, to: Point): Point[] {
 /**
  * Get the coordinates of the points that are on right, bottom, left and top at a given radius. The reference is the origin of the circle.
  * First point is the most on the right, then points are in clockwise order.
- *
  * @param radius - Radius of the circle.
  * @returns The coordinates of the compass points.
  */

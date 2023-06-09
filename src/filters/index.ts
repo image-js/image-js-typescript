@@ -11,3 +11,5 @@ export * from './level';
 export * from './or';
 export * from './flip';
 export * from './medianFilter';
+export * from './pixelate';
+

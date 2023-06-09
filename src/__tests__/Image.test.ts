@@ -91,6 +91,7 @@ describe('create new images', () => {
       /invalid bitDepth: 20/,
     );
   });
+
   it('should throw with bit depth 8 but data 16', () => {
     const data = new Uint16Array([1, 2, 3, 4]);
     expect(() => new Image(2, 2, { colorModel: 'GREY', data })).toThrow(
@@ -340,4 +341,36 @@ test('check custom inspect with image too large', () => {
   const image = new Image(25, 25, { colorModel: 'GREYA' });
 
   expect(inspect(image)).toMatchSnapshot();
+});
+
+test('check getColumn and getRow methods on an RGBA image', () => {
+  const image = testUtils.createRgbaImage([
+    [1, 2, 3, 1],
+    [1, 2, 3, 1],
+    [11, 2, 2, 2],
+    [1, 3, 3, 3],
+    [1, 6, 4, 3],
+  ]);
+
+  const resultRow = image.getRow(2);
+  const resultColumn = image.getColumn(0);
+  expect(resultRow).toStrictEqual([[11], [2], [2], [2]]);
+  expect(resultColumn).toStrictEqual([
+    [1, 1, 11, 1, 1],
+    [2, 2, 2, 3, 6],
+    [3, 3, 2, 3, 4],
+    [1, 1, 2, 3, 3],
+  ]);
+});
+test('check getColumn and getRow methods', () => {
+  const image = testUtils.createGreyImage([
+    [1, 5, 1],
+    [1, 2, 1],
+    [11, 2, 2],
+  ]);
+
+  const resultRow = image.getRow(2);
+  const resultColumn = image.getColumn(0);
+  expect(resultRow).toStrictEqual([[11, 2, 2]]);
+  expect(resultColumn).toStrictEqual([[1, 1, 11]]);
 });

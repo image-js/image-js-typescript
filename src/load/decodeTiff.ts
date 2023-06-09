@@ -2,11 +2,12 @@ import { decode } from 'tiff';
 
 import { BitDepth, Image } from '../Image';
 
+import { getMetadata } from './getMetadata';
+
 type TiffIfd = ReturnType<typeof decode>[number];
 
 /**
  * Decode a TIFF. See the tiff module.
- *
  * @param buffer - The data to decode.
  * @returns The decoded image.
  */
@@ -18,7 +19,6 @@ export function decodeTiff(buffer: Uint8Array): Image {
 
 /**
  * Create image from a single IFD.
- *
  * @param ifd - The IFD.
  * @returns The decoded image.
  */
@@ -40,8 +40,7 @@ function getImageFromIFD(ifd: TiffIfd): Image {
       colorModel: ifd.alpha ? 'RGBA' : 'RGB',
       // TODO: handle other bit depths
       bitDepth: 16,
-      // TODO: implement metadata
-      //meta: getMetadata(ifd),
+      meta: getMetadata(ifd),
     });
   } else {
     return new Image(ifd.width, ifd.height, {
@@ -57,7 +56,7 @@ function getImageFromIFD(ifd: TiffIfd): Image {
           : ifd.alpha
           ? 'GREYA'
           : 'GREY',
-      // meta: getMetadata(ifd),
+      meta: getMetadata(ifd),
     });
   }
 }
