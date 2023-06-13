@@ -81,4 +81,12 @@ test('error handling', () => {
       borderValue: 1,
     });
   }).toThrow(new Error('cellSize must be an odd number'));
+
+  expect(() => {
+    image.medianFilter({
+      borderType: 'constant',
+      cellSize: 0,
+      borderValue: 1,
+    });
+  }).toThrow(new RangeError('cellSize must be greater than 0'));
 });
