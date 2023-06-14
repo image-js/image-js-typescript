@@ -50,11 +50,7 @@ export function medianFilter(image: Image, options: MedianFilterOptions) {
   let newImage = Image.createFrom(image);
   let size = (kSize * 2 + 1) * (kSize * 2 + 1);
   let cellValues;
-  if (image.bitDepth === 16) {
-    cellValues = new Uint16Array(size);
-  } else {
-    cellValues = new Uint8Array(size);
-  }
+  cellValues = new Uint16Array(size);
 
   for (let channel = 0; channel < image.channels; channel++) {
     for (let row = 0; row < image.height; row++) {
