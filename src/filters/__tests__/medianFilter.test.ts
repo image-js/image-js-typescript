@@ -6,9 +6,10 @@ test('grey image 5x5', () => {
     [1, 2, 3, 4, 5],
     [1, 2, 3, 4, 5],
   ]);
+
   const result = image.medianFilter({
     borderType: 'reflect101',
-    cellSize: 1,
+    cellSize: 3,
     borderValue: 0,
   });
 
@@ -35,11 +36,11 @@ test('grey image 5x5 with bigger values', () => {
   });
 
   expect(result).toMatchImageData([
-    [2, 10, 4, 5, 4],
-    [2, 10, 4, 5, 4],
-    [2, 10, 4, 5, 4],
-    [2, 10, 4, 5, 4],
-    [2, 10, 4, 5, 4],
+    [10, 2, 20, 4, 5],
+    [10, 2, 20, 4, 5],
+    [10, 2, 20, 4, 5],
+    [10, 2, 20, 4, 5],
+    [10, 2, 20, 4, 5],
   ]);
 });
 test('grey image 5x5 with different borderType and borderValue', () => {
@@ -52,10 +53,9 @@ test('grey image 5x5 with different borderType and borderValue', () => {
   ]);
   const result = image.medianFilter({
     borderType: 'constant',
-    cellSize: 3,
+    cellSize: 7,
     borderValue: 1,
   });
-
   expect(result).toMatchImageData([
     [1, 1, 1, 1, 1],
     [1, 2, 2, 2, 1],

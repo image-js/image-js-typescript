@@ -30,7 +30,7 @@ export interface MedianFilterOptions {
  * @returns Image after median filter.
  */
 export function medianFilter(image: Image, options: MedianFilterOptions) {
-  let { cellSize = 1, borderType = 'reflect101', borderValue } = options;
+  let { cellSize = 3, borderType = 'reflect101', borderValue } = options;
 
   checkProcessable(image, {
     bitDepth: [8, 16],
@@ -48,7 +48,7 @@ export function medianFilter(image: Image, options: MedianFilterOptions) {
   let interpolateBorder = getBorderInterpolation(borderType, borderValue);
   let kSize = cellSize;
   let newImage = Image.createFrom(image);
-  let size = (kSize * 2 + 1) * (kSize * 2 + 1);
+  let size = kSize ** 2;
   let cellValues;
   cellValues = new Uint16Array(size);
 
@@ -56,11 +56,11 @@ export function medianFilter(image: Image, options: MedianFilterOptions) {
     for (let row = 0; row < image.height; row++) {
       for (let column = 0; column < image.width; column++) {
         let n = 0;
-        for (let cellRow = -kSize; cellRow <= kSize; cellRow++) {
-          for (let cellColumn = -kSize; cellColumn <= kSize; cellColumn++) {
+        for (let cellRow = 0; cellRow < kSize; cellRow++) {
+          for (let cellColumn = 0; cellColumn < kSize; cellColumn++) {
             cellValues[n++] = interpolateBorder(
-              column + cellColumn,
-              row + cellRow,
+              column + cellColumn - (kSize - 1) / 2,
+              row + cellRow - (kSize - 1) / 2,
               channel,
               image,
             );
