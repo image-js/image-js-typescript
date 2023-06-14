@@ -14,7 +14,7 @@ export interface MedianFilterOptions {
   /**
    * Value of border.
    */
-  borderValue: number;
+  borderValue?: number;
   /**
    * The radius of the cell to extract median value from. Must be odd.
    *
@@ -44,7 +44,10 @@ export function medianFilter(image: Image, options: MedianFilterOptions) {
     throw new RangeError('cellSize must be an odd number');
   }
 
-  let interpolateBorder = getBorderInterpolation(borderType, borderValue);
+  let interpolateBorder = getBorderInterpolation(
+    borderType,
+    borderValue as number,
+  );
   let kSize = cellSize;
   let newImage = Image.createFrom(image);
   let size = kSize ** 2;
