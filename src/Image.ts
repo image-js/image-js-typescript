@@ -997,11 +997,6 @@ export class Image {
    * Apply a median filter to the image.
    *
    * @param options - Options to apply for median filter.
-   * @param options.radius - Size of the area to calculate median value from.
-   * @param options.channels - Number of channels.
-   * @param options.cellSize
-   * @param options.borderType
-   * @param options.borderValue
    * @returns Image after median filter.
    */
   public medianFilter(options: MedianFilterOptions) {
