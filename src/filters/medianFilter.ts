@@ -16,14 +16,14 @@ export interface MedianFilterOptions {
    */
   borderValue: number;
   /**
-   * The radius of the cell to extract xMedian from. Must be odd.
+   * The radius of the cell to extract median value from. Must be odd.
    *
    * @default 1
    */
   cellSize: number;
 }
 /**
- * Apply a median filter to the image.
+ * Calculate a new image that replaces all pixel values by the median value inside the square area set in the options
  *
  * @param image - Image to be filtered.
  * @param options - MedianFilterOptions
@@ -44,7 +44,6 @@ export function medianFilter(image: Image, options: MedianFilterOptions) {
     throw new RangeError('cellSize must be an odd number');
   }
 
-  // validateChannels(options.channels as number[], image);
   let interpolateBorder = getBorderInterpolation(borderType, borderValue);
   let kSize = cellSize;
   let newImage = Image.createFrom(image);
