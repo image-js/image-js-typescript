@@ -39,11 +39,14 @@ export function histogram(
     channel = 0;
   }
   validateChannel(channel, image);
+
+  const hist = new Uint32Array(maxSlots);
+
   let bitShift = 0;
-  bitShift = image.bitDepth - maxSlots;
-  const hist = new Uint32Array(image.maxValue + 1);
+  bitShift = image.maxValue - maxSlots + 1;
   for (let i = 0; i < image.size; i++) {
     hist[image.getValueByIndex(i, channel) >> bitShift]++;
   }
+
   return hist;
 }
