@@ -80,7 +80,7 @@ test('error handling', () => {
       cellSize: 2,
       borderValue: 1,
     });
-  }).toThrow(new Error('cellSize must be an odd number'));
+  }).toThrow(new RangeError('cellSize must be an odd number'));
 
   expect(() => {
     image.medianFilter({

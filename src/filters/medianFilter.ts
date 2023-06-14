@@ -41,7 +41,7 @@ export function medianFilter(image: Image, options: MedianFilterOptions) {
   }
 
   if (cellSize % 2 === 0) {
-    throw new Error('cellSize must be an odd number');
+    throw new RangeError('cellSize must be an odd number');
   }
 
   // validateChannels(options.channels as number[], image);
@@ -49,32 +49,28 @@ export function medianFilter(image: Image, options: MedianFilterOptions) {
   let kSize = cellSize;
   let newImage = Image.createFrom(image);
   let size = (kSize * 2 + 1) * (kSize * 2 + 1);
-  let kernel;
+  let cellValues;
   if (image.bitDepth === 16) {
-    kernel = new Uint16Array(size);
+    cellValues = new Uint16Array(size);
   } else {
-    kernel = new Uint8Array(size);
+    cellValues = new Uint8Array(size);
   }
 
   for (let channel = 0; channel < image.channels; channel++) {
     for (let row = 0; row < image.height; row++) {
       for (let column = 0; column < image.width; column++) {
         let n = 0;
-        for (let cellSizeRow = -kSize; cellSizeRow <= kSize; cellSizeRow++) {
-          for (
-            let cellSizeColumn = -kSize;
-            cellSizeColumn <= kSize;
-            cellSizeColumn++
-          ) {
-            kernel[n++] = interpolateBorder(
-              column + cellSizeColumn,
-              row + cellSizeRow,
+        for (let cellRow = -kSize; cellRow <= kSize; cellRow++) {
+          for (let cellColumn = -kSize; cellColumn <= kSize; cellColumn++) {
+            cellValues[n++] = interpolateBorder(
+              column + cellColumn,
+              row + cellRow,
               channel,
               image,
             );
           }
         }
-        newImage.setValue(column, row, channel, xMedian(kernel));
+        newImage.setValue(column, row, channel, xMedian(cellValues));
       }
     }
   }
