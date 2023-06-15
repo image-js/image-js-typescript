@@ -53,3 +53,15 @@ test('throw if channel option is missing', () => {
     /channel option is mandatory for multi-channel images/,
   );
 });
+test('throw if maxSlots is not a power of 2', () => {
+  const image = testUtils.createGreyImage([
+    [0, 0, 0, 0, 0],
+    [0, 255, 255, 255, 0],
+    [0, 255, 255, 255, 0],
+    [0, 255, 255, 255, 0],
+    [0, 0, 0, 0, 0],
+  ]);
+  expect(() => image.histogram({ maxSlots: 7 })).toThrowError(
+    'maxSlots must be a power of 2, for example: 64, 256, 1024',
+  );
+});
