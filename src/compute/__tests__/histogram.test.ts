@@ -34,6 +34,19 @@ test('binary image', () => {
   expect(histogram[255]).toBe(9);
 });
 
+test('binary image', () => {
+  const image = testUtils.createGreyImage([
+    [0, 0, 0, 0, 0],
+    [0, 255, 255, 255, 0],
+    [0, 255, 255, 255, 0],
+    [0, 255, 255, 255, 0],
+    [0, 0, 0, 0, 0],
+  ]);
+  const histogram = image.histogram({ channel: 0, maxSlots: 64 });
+  expect(histogram[0]).toBe(16);
+  expect(histogram[63]).toBe(9);
+});
+
 test('throw if channel option is missing', () => {
   const image = testUtils.load('opencv/test.png');
   expect(() => image.histogram()).toThrow(
