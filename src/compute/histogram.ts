@@ -43,7 +43,8 @@ export function histogram(
   const hist = new Uint32Array(maxSlots);
 
   let bitShift = 0;
-  bitShift = image.maxValue - maxSlots + 1;
+  let bitSlots = Math.log2(maxSlots);
+  bitShift = image.bitDepth - bitSlots;
   for (let i = 0; i < image.size; i++) {
     hist[image.getValueByIndex(i, channel) >> bitShift]++;
   }
