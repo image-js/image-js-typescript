@@ -1,3 +1,5 @@
+import { createImageFromData } from '../../../test/createImageFromData';
+
 test('RGBA image - channel 0', () => {
   const image = testUtils.createRgbaImage([
     [230, 80, 120, 255],
@@ -34,7 +36,25 @@ test('binary image', () => {
   expect(histogram[255]).toBe(9);
 });
 
-test('binary image', () => {
+test('grey 16-bit image with 2 slots', () => {
+  const image = createImageFromData(
+    [
+      [0, 0, 0, 0, 0],
+      [0, 40000, 255, 255, 0],
+      [0, 255, 255, 255, 0],
+      [0, 255, 255, 255, 0],
+      [0, 0, 0, 0, 0],
+    ],
+    'GREY',
+    { bitDepth: 16 },
+  );
+  const histogram = image.histogram({ maxSlots: 2 });
+
+  expect(histogram[0]).toBe(24);
+  expect(histogram[1]).toBe(1);
+});
+
+test('binary image with 64 slots', () => {
   const image = testUtils.createGreyImage([
     [0, 0, 0, 0, 0],
     [0, 255, 255, 255, 0],
