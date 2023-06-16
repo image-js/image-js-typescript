@@ -15,7 +15,7 @@ export interface HistogramOptions {
    *
    * @default 256
    */
-  maxSlots?: number;
+  slots?: number;
 }
 
 /**
@@ -29,10 +29,10 @@ export function histogram(
   image: Image,
   options: HistogramOptions = {},
 ): Uint32Array {
-  let { channel, maxSlots = 256 } = options;
-  if (!(maxSlots !== 0 && (maxSlots & (maxSlots - 1)) === 0)) {
+  let { channel, slots = 256 } = options;
+  if (!(slots !== 0 && (slots & (slots - 1)) === 0)) {
     throw new RangeError(
-      'maxSlots must be a power of 2, for example: 64, 256, 1024',
+      'slots must be a power of 2, for example: 64, 256, 1024',
     );
   }
   if (typeof channel !== 'number') {
@@ -45,10 +45,10 @@ export function histogram(
   }
   validateChannel(channel, image);
 
-  const hist = new Uint32Array(maxSlots);
+  const hist = new Uint32Array(slots);
 
   let bitShift = 0;
-  let bitSlots = Math.log2(maxSlots);
+  let bitSlots = Math.log2(slots);
   bitShift = image.bitDepth - bitSlots;
   for (let i = 0; i < image.size; i++) {
     hist[image.getValueByIndex(i, channel) >> bitShift]++;
