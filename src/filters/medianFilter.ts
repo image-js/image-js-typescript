@@ -23,7 +23,7 @@ export interface MedianFilterOptions {
   cellSize: number;
 }
 /**
- * Calculate a new image that replaces all pixel values by the median value inside the square area set in the options
+ * Calculate a new image that replaces all pixel values by the median of neighbouring pixels.
  *
  * @param image - Image to be filtered.
  * @param options - MedianFilterOptions
