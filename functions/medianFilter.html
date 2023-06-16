@@ -1,4 +1,4 @@
-<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>pixelate | image-js</title><meta name="description" content="Documentation for image-js"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script async src="../assets/search.js" id="search-script"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css"/><script src="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.js"></script><script src="https://cdn.jsdelivr.net/npm/katex/dist/contrib/auto-render.min.js"></script><script>
+<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>medianFilter | image-js</title><meta name="description" content="Documentation for image-js"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script async src="../assets/search.js" id="search-script"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css"/><script src="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.js"></script><script src="https://cdn.jsdelivr.net/npm/katex/dist/contrib/auto-render.min.js"></script><script>
 					window.__typeDocPluginKatexOptions={"delimiters":[{"left":"$","right":"$","display":true}],"fleqn":"true","leqno":"false"};
 					window.addEventListener('load', () => window.renderMathInElement(document.body, window.__typeDocPluginKatexOptions));
 				</script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
@@ -16,30 +16,30 @@
 <div class="tsd-page-title">
 <ul class="tsd-breadcrumb">
 <li><a href="../modules.html">image-js</a></li>
-<li><a href="pixelate.html">pixelate</a></li></ul>
-<h1>Function pixelate</h1></div>
+<li><a href="medianFilter.html">medianFilter</a></li></ul>
+<h1>Function medianFilter</h1></div>
 <section class="tsd-panel">
 <ul class="tsd-signatures tsd-kind-function">
-<li class="tsd-signature tsd-anchor-link" id="pixelate">pixelate<span class="tsd-signature-symbol">(</span>image<span class="tsd-signature-symbol">: </span><a href="../classes/Image.html" class="tsd-signature-type" data-tsd-kind="Class">Image</a>, options<span class="tsd-signature-symbol">: </span><a href="../interfaces/PixelateOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">PixelateOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../classes/Image.html" class="tsd-signature-type" data-tsd-kind="Class">Image</a><a href="#pixelate" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" id="icon-anchor-a"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" id="icon-anchor-b"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" id="icon-anchor-c"></path></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="medianFilter">median<wbr/>Filter<span class="tsd-signature-symbol">(</span>image<span class="tsd-signature-symbol">: </span><a href="../classes/Image.html" class="tsd-signature-type" data-tsd-kind="Class">Image</a>, options<span class="tsd-signature-symbol">: </span><a href="../interfaces/MedianFilterOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">MedianFilterOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../classes/Image.html" class="tsd-signature-type" data-tsd-kind="Class">Image</a><a href="#medianFilter" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" id="icon-anchor-a"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" id="icon-anchor-b"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" id="icon-anchor-c"></path></svg></a></li>
 <li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Function to pixelate an image.</p>
+<div class="tsd-comment tsd-typography"><p>Calculate a new image that replaces all pixel values by the median of neighbouring pixels.</p>
 
-<h3>Returns</h3><p>Pixelated Image.</p>
+<h3>Returns</h3><p>Image after median filter.</p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
 <h5>image: <a href="../classes/Image.html" class="tsd-signature-type" data-tsd-kind="Class">Image</a></h5>
-<div class="tsd-comment tsd-typography"><p>Image to be pixelated.</p>
+<div class="tsd-comment tsd-typography"><p>Image to be filtered.</p>
 </div></li>
 <li>
-<h5>options: <a href="../interfaces/PixelateOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">PixelateOptions</a></h5>
-<div class="tsd-comment tsd-typography"><p>PixelateOptions.</p>
+<h5>options: <a href="../interfaces/MedianFilterOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">MedianFilterOptions</a></h5>
+<div class="tsd-comment tsd-typography"><p>MedianFilterOptions</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Image.html" class="tsd-signature-type" data-tsd-kind="Class">Image</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/image-js/image-js-typescript/blob/4b99fe6/src/filters/pixelate.ts#L44">filters/pixelate.ts:44</a></li></ul></aside></li></ul></section></div>
+<li>Defined in <a href="https://github.com/image-js/image-js-typescript/blob/4b99fe6/src/filters/medianFilter.ts#L32">filters/medianFilter.ts:32</a></li></ul></aside></li></ul></section></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
 <details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
@@ -204,14 +204,14 @@
 <li class="tsd-kind-function"><a href="level.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>level</a></li>
 <li class="tsd-kind-function"><a href="mean.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>mean</a></li>
 <li class="tsd-kind-function"><a href="median.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>median</a></li>
-<li class="tsd-kind-function"><a href="medianFilter.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>median<wbr/>Filter</a></li>
+<li class="current tsd-kind-function"><a href="medianFilter.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>median<wbr/>Filter</a></li>
 <li class="tsd-kind-function"><a href="merge.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>merge</a></li>
 <li class="tsd-kind-function"><a href="morphologicalGradient.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>morphological<wbr/>Gradient</a></li>
 <li class="tsd-kind-function"><a href="open.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>open</a></li>
 <li class="tsd-kind-function"><a href="or.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>or</a></li>
 <li class="tsd-kind-function"><a href="paintMaskOnImage.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>paint<wbr/>Mask<wbr/>On<wbr/>Image</a></li>
 <li class="tsd-kind-function"><a href="paintMaskOnMask.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>paint<wbr/>Mask<wbr/>On<wbr/>Mask</a></li>
-<li class="current tsd-kind-function"><a href="pixelate.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>pixelate</a></li>
+<li class="tsd-kind-function"><a href="pixelate.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>pixelate</a></li>
 <li class="tsd-kind-function"><a href="rawDirectConvolution.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>raw<wbr/>Direct<wbr/>Convolution</a></li>
 <li class="tsd-kind-function"><a href="read.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>read</a></li>
 <li class="tsd-kind-function"><a href="readCanvas.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>read<wbr/>Canvas</a></li>
