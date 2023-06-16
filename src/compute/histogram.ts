@@ -10,6 +10,11 @@ export interface HistogramOptions {
    * @default 0
    */
   channel?: number;
+  /**
+   * The number of slots that histogram can have.
+   *
+   * @default 256
+   */
   maxSlots?: number;
 }
 
