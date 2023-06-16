@@ -48,21 +48,26 @@ export function medianFilter(image: Image, options: MedianFilterOptions) {
     borderType,
     borderValue as number,
   );
-  let kSize = cellSize;
+
   let newImage = Image.createFrom(image);
-  let size = kSize ** 2;
-  let cellValues;
-  cellValues = new Uint16Array(size);
+  let size = cellSize ** 2;
+  let cellValues = new Uint16Array(size);
+
+  let halfCellSize = (cellSize - 1) / 2;
 
   for (let channel = 0; channel < image.channels; channel++) {
     for (let row = 0; row < image.height; row++) {
       for (let column = 0; column < image.width; column++) {
         let n = 0;
-        for (let cellRow = 0; cellRow < kSize; cellRow++) {
-          for (let cellColumn = 0; cellColumn < kSize; cellColumn++) {
+        for (let cellRow = -halfCellSize; cellRow <= halfCellSize; cellRow++) {
+          for (
+            let cellColumn = -halfCellSize;
+            cellColumn <= halfCellSize;
+            cellColumn++
+          ) {
             cellValues[n++] = interpolateBorder(
-              column + cellColumn - (kSize - 1) / 2,
-              row + cellRow - (kSize - 1) / 2,
+              column + cellColumn,
+              row + cellRow,
               channel,
               image,
             );
