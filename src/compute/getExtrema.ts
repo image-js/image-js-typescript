@@ -3,17 +3,38 @@ import { assertUnreachable } from '../utils/assert';
 import checkProcessable from '../utils/checkProcessable';
 
 interface ExtremaOptions {
+  /**
+   * Chooses what kind of extremum to compute.
+   *
+   * @default 'maximum'
+   */
   kind?: 'minimum' | 'maximum';
+  /**
+   * Uses mask to check if a point belongs to a ROI or not
+   */
   mask?: Mask;
+  /**
+   * Chooses what kind of coverage algorithm to use to compute the extremum.
+   *
+   * @default 'star'
+   */
   algorithm?: 'cross' | 'square' | 'star';
+  /**
+   * Maximum number of points that can be equal to the extremum
+   */
   maxEquals?: number;
 }
 /**
+ * Checks the surrounding values of a point. If they are all bigger or smaller than the pixel in question then this point is considered an extremum.
  *
- * @param image
- * @param options
+ * @param image - Image to find extrema from.
+ * @param options - ExtremaOptions
+ * @returns Array of Points.
  */
-export default function getExtrema(image: Image, options: ExtremaOptions) {
+export default function getExtrema(
+  image: Image,
+  options: ExtremaOptions,
+): Point[] {
   let { kind = 'maximum', mask, algorithm = 'star', maxEquals = 2 } = options;
   checkProcessable(image, {
     bitDepth: [8, 16],
