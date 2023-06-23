@@ -2,26 +2,28 @@ import { Image } from '../..';
 
 import { Point } from './points';
 
+interface FilterPointsOptions {
+  /**
+   * The number of points that should be removed if they are close to extremum.
+   */
+  removeClosePoints: number;
+  /**Shows what kind of extremum is being computed */
+  kind: 'minimum' | 'maximum';
+}
 /**
  * Finds extreme values of an image which are not stacked together.
  *
  * @param points - Array of points that should be combined to improve.
- * @param removeClosePoints
- * @param image
- * @param removeClosePoints - the number of points that should be removed if they are close to extremum.
- * @param removeClosePoints.image
- * @param removeClosePoints.extremum
- * @param removeClosePoints.kind
+ * @param image - Image which extrema are calculated from.
+ * @param options - FilterPointsOptions
  * @returns Array of Points.
  */
 export function filterPoints(
   points: Point[],
   image: Image,
-  {
-    removeClosePoints = 0,
-    kind = 'maximum',
-  }: { removeClosePoints: number; kind: 'minimum' | 'maximum' },
+  options: FilterPointsOptions,
 ) {
+  let { removeClosePoints = 0, kind = 'maximum' } = options;
   const isMax = kind === 'maximum';
 
   let sortedPoints = points
