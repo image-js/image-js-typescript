@@ -1,5 +1,4 @@
 import { Image, Mask } from '..';
-import { assertUnreachable } from '../utils/assert';
 import checkProcessable from '../utils/checkProcessable';
 
 interface ExtremaOptions {
@@ -28,23 +27,50 @@ export default function getExtrema(image: Image, options: ExtremaOptions = {}) {
   });
   algorithm *= 4;
 
+  let maskExpectedValue = extremum ? 0 : 1;
+
   let dx = [+1, 0, -1, 0, +1, +1, -1, -1, +2, 0, -2, 0, +2, +2, -2, -2];
   let dy = [0, +1, 0, -1, +1, -1, +1, -1, 0, +2, 0, -2, +2, -2, +2, -2];
 
   let shift = algorithm <= 8 ? 1 : 2;
   let points: number[][] = [];
-
-  let extremumFunction = getExtremaFunction(extremum);
-  extremumFunction(
-    image,
-    mask as Mask,
-    dx,
-    dy,
-    shift,
-    points,
-    algorithm,
-    maxEquals,
-  );
+  for (let channel = 0; channel < image.channels; channel++) {
+    for (let currentY = shift; currentY < image.height - shift; currentY++) {
+      for (let currentX = shift; currentX < image.width - shift; currentX++) {
+        if (mask && mask.getBit(currentX, currentY) !== maskExpectedValue) {
+          continue;
+        }
+        let counter = 0;
+        let nbEquals = 0;
+        let currentValue = image.getValue(currentX, currentY, channel);
+        for (let dir = 0; dir < algorithm; dir++) {
+          if (extremum === 'minimum') {
+            // we search for minima
+            if (
+              image.getValue(currentX + dx[dir], currentY + dy[dir], channel) >
+              currentValue
+            ) {
+              counter++;
+            }
+          } else if (
+            image.getValue(currentX + dx[dir], currentY + dy[dir], channel) <
+            currentValue
+          ) {
+            counter++;
+          }
+          if (
+            image.getValue(currentX + dx[dir], currentY + dy[dir], channel) ===
+            currentValue
+          ) {
+            nbEquals++;
+          }
+        }
+        if (counter + nbEquals === algorithm && nbEquals <= maxEquals) {
+          points.push([currentX, currentY]);
+        }
+      }
+    }
+  }
 
   // TODO How to make a more performant and general way
   // we don't deal correctly here with groups of points that should be grouped if at the
@@ -71,98 +97,4 @@ export default function getExtrema(image: Image, options: ExtremaOptions = {}) {
   }
 
   return points;
-}
-
-function getMaxima(
-  image: Image,
-  mask: Mask,
-  dx: number[],
-  dy: number[],
-  shift: number,
-  points: number[][],
-  algorithm: number,
-  maxEquals: number,
-) {
-  for (let channel = 0; channel < image.channels; channel++) {
-    for (let currentY = shift; currentY < image.height - shift; currentY++) {
-      for (let currentX = shift; currentX < image.width - shift; currentX++) {
-        if (mask && mask.getBit(currentX, currentY) !== 1) {
-          continue;
-        }
-        let counter = 0;
-        let nbEquals = 0;
-        let currentValue = image.getValue(currentX, currentY, channel);
-        for (let dir = 0; dir < algorithm; dir++) {
-          if (
-            // we search for minima
-            image.getValue(currentX + dx[dir], currentY + dy[dir], channel) <
-            currentValue
-          ) {
-            counter++;
-          }
-          if (
-            image.getValue(currentX + dx[dir], currentY + dy[dir], channel) ===
-            currentValue
-          ) {
-            nbEquals++;
-          }
-        }
-        if (counter + nbEquals === algorithm && nbEquals <= maxEquals) {
-          points.push([currentX, currentY]);
-        }
-      }
-    }
-  }
-}
-function getMinima(
-  image: Image,
-  mask: Mask,
-  dx: number[],
-  dy: number[],
-  shift: number,
-  points: number[][],
-  algorithm: number,
-  maxEquals: number,
-) {
-  for (let channel = 0; channel < image.channels; channel++) {
-    for (let currentY = shift; currentY < image.height - shift; currentY++) {
-      for (let currentX = shift; currentX < image.width - shift; currentX++) {
-        if (mask && mask.getBit(currentX, currentY) !== 0) {
-          continue;
-        }
-        let counter = 0;
-        let nbEquals = 0;
-        let currentValue = image.getValue(currentX, currentY, channel);
-        for (let dir = 0; dir < algorithm; dir++) {
-          // we search for minima
-          if (
-            image.getValue(currentX + dx[dir], currentY + dy[dir], channel) >
-            currentValue
-          ) {
-            counter++;
-          }
-
-          if (
-            image.getValue(currentX + dx[dir], currentY + dy[dir], channel) ===
-            currentValue
-          ) {
-            nbEquals++;
-          }
-        }
-        if (counter + nbEquals === algorithm && nbEquals <= maxEquals) {
-          points.push([currentX, currentY]);
-        }
-      }
-    }
-  }
-}
-function getExtremaFunction(extremum: 'minimum' | 'maximum') {
-  switch (extremum) {
-    case 'minimum':
-      return getMinima;
-    case 'maximum':
-      return getMaxima;
-    default:
-      assertUnreachable(extremum);
-  }
 }
