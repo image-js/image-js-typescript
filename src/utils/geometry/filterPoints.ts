@@ -1,12 +1,16 @@
 import { Point } from './points';
+
 /**
  * Finds extreme values of an image which are not stacked together.
  *
  * @param points - Array of points that should be combined to improve.
+ * @param removeClosePoints.removeClosePoints
  * @param removeClosePoints - the number of points that should be removed if they are close to extremum.
+ * @param removeClosePoints.image
+ * @param removeClosePoints.extremum
  * @returns Array of Points.
  */
-export function combinePoints(points: Point[], removeClosePoints: number) {
+export function filterPoints(points: Point[], removeClosePoints = 0) {
   if (removeClosePoints > 0) {
     for (let i = 0; i < points.length; i++) {
       for (let j = i + 1; j < points.length; j++) {
