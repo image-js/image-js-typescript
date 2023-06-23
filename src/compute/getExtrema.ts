@@ -82,10 +82,8 @@ export default function getExtrema(image: Image, options: ExtremaOptions = {}) {
     for (let i = 0; i < points.length; i++) {
       for (let j = i + 1; j < points.length; j++) {
         if (
-          Math.sqrt(
-            Math.pow(points[i][0] - points[j][0], 2) +
-              Math.pow(points[i][1] - points[j][1], 2),
-          ) < removeClosePoints
+          Math.hypot(points[i][0] - points[j][0], points[i][1] - points[j][1]) <
+          removeClosePoints
         ) {
           points[i][0] = (points[i][0] + points[j][0]) >> 1;
           points[i][1] = (points[i][1] + points[j][1]) >> 1;
