@@ -25,13 +25,14 @@ export default function getExtrema(image: Image, options: ExtremaOptions = {}) {
     bitDepth: [8, 16],
     components: 1,
   });
-  algorithm *= 4;
 
   let maskExpectedValue = extremum ? 0 : 1;
 
   const dx = [+1, 0, -1, 0, +1, +1, -1, -1, +2, 0, -2, 0];
   const dy = [0, +1, 0, -1, +1, -1, +1, -1, 0, +2, 0, -2];
 
+  dx.length = algorithm * 4;
+  dy.length = algorithm * 4;
   let shift = algorithm <= 8 ? 1 : 2;
   let points: number[][] = [];
   for (let channel = 0; channel < image.channels; channel++) {
@@ -43,7 +44,7 @@ export default function getExtrema(image: Image, options: ExtremaOptions = {}) {
         let counter = 0;
         let nbEquals = 0;
         let currentValue = image.getValue(currentX, currentY, channel);
-        for (let dir = 0; dir < algorithm; dir++) {
+        for (let dir = 0; dir < dx.length; dir++) {
           if (extremum === 'minimum') {
             // we search for minima
             if (
@@ -65,7 +66,7 @@ export default function getExtrema(image: Image, options: ExtremaOptions = {}) {
             nbEquals++;
           }
         }
-        if (counter + nbEquals === algorithm && nbEquals <= maxEquals) {
+        if (counter + nbEquals === dx.length && nbEquals <= maxEquals) {
           points.push([currentX, currentY]);
         }
       }
