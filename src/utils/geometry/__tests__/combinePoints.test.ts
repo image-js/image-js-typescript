@@ -1,7 +1,7 @@
 import getExtrema from '../../../compute/getExtrema';
 import { combinePoints } from '../combinePoints';
 
-test('minimum of grey image from legacy code', () => {
+test('combine minimum points after getExtrema function', () => {
   let image = testUtils.createGreyImage([
     [5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
     [5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
@@ -16,14 +16,14 @@ test('minimum of grey image from legacy code', () => {
   ]);
 
   let points = getExtrema(image, { kind: 'minimum' });
-  let result = combinePoints(points, 0);
+  let result = combinePoints(points, 1);
   expect(result).toStrictEqual([
     { column: 3, row: 2 },
     { column: 6, row: 7 },
   ]);
 });
 
-test('combine points for grey image', () => {
+test('combine maximum points after getExtrema function', () => {
   let image = testUtils.createGreyImage([
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
