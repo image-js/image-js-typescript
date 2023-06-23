@@ -6,7 +6,6 @@ interface ExtremaOptions {
   kind?: 'minimum' | 'maximum';
   mask?: Mask;
   algorithm?: 'cross' | 'square' | 'star';
-  removeClosePoints: number;
   maxEquals?: number;
 }
 /**
