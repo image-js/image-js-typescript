@@ -1,29 +1,56 @@
+import { Image } from '../..';
+
 import { Point } from './points';
 
 /**
  * Finds extreme values of an image which are not stacked together.
  *
  * @param points - Array of points that should be combined to improve.
- * @param removeClosePoints.removeClosePoints
+ * @param removeClosePoints
+ * @param image
  * @param removeClosePoints - the number of points that should be removed if they are close to extremum.
  * @param removeClosePoints.image
  * @param removeClosePoints.extremum
+ * @param removeClosePoints.kind
  * @returns Array of Points.
  */
-export function filterPoints(points: Point[], removeClosePoints = 0) {
+export function filterPoints(
+  points: Point[],
+  image: Image,
+  {
+    removeClosePoints = 0,
+    kind = 'maximum',
+  }: { removeClosePoints: number; kind: 'minimum' | 'maximum' },
+) {
+  const isMax = kind === 'maximum';
+
+  let sortedPoints = points
+    .sort((a, b) => {
+      return Math.min(
+        image.getValue(a.column, a.row, 0),
+        image.getValue(b.column, b.row, 0),
+      );
+    })
+    .reverse();
+
   if (removeClosePoints > 0) {
-    for (let i = 0; i < points.length; i++) {
-      for (let j = i + 1; j < points.length; j++) {
+    for (let i = 0; i < sortedPoints.length; i++) {
+      for (let j = i + 1; j < sortedPoints.length; j++) {
         if (
           Math.hypot(
-            points[i].column - points[j].column,
-            points[i].row - points[j].row,
-          ) < removeClosePoints
+            sortedPoints[i].column - sortedPoints[j].column,
+            sortedPoints[i].row - points[j].row,
+          ) < removeClosePoints &&
+          image.getValue(sortedPoints[i].column, sortedPoints[i].row, 0) >=
+            image.getValue(sortedPoints[j].column, sortedPoints[j].row, 0)
         ) {
-          points[i].column = (points[i].column + points[j].column) >> 1;
-          points[i].row = (points[i].row + points[j].row) >> 1;
-          points.splice(j, 1);
-          j--;
+          if (isMax) {
+            sortedPoints.splice(j, 1);
+            j--;
+          } else {
+            sortedPoints.splice(i, 1);
+            i--;
+          }
         }
       }
     }
