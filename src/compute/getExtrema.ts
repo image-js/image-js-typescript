@@ -29,8 +29,8 @@ export default function getExtrema(image: Image, options: ExtremaOptions = {}) {
 
   let maskExpectedValue = extremum ? 0 : 1;
 
-  let dx = [+1, 0, -1, 0, +1, +1, -1, -1, +2, 0, -2, 0, +2, +2, -2, -2];
-  let dy = [0, +1, 0, -1, +1, -1, +1, -1, 0, +2, 0, -2, +2, -2, +2, -2];
+  const dx = [+1, 0, -1, 0, +1, +1, -1, -1, +2, 0, -2, 0];
+  const dy = [0, +1, 0, -1, +1, -1, +1, -1, 0, +2, 0, -2];
 
   let shift = algorithm <= 8 ? 1 : 2;
   let points: number[][] = [];
