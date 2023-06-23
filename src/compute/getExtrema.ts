@@ -1,11 +1,12 @@
 import { Image, Mask } from '..';
 import checkProcessable from '../utils/checkProcessable';
+import { combinePoints } from '../utils/geometry/combinePoints';
 
 interface ExtremaOptions {
-  extremum?: 'minimum' | 'maximum';
+  kind?: 'minimum' | 'maximum';
   mask?: Mask;
-  algorithm?: number;
-  removeClosePoints?: number;
+  algorithm?: 'cross' | 'square' | 'star';
+  removeClosePoints: number;
   maxEquals?: number;
 }
 /**
@@ -13,11 +14,11 @@ interface ExtremaOptions {
  * @param image
  * @param options
  */
-export default function getExtrema(image: Image, options: ExtremaOptions = {}) {
+export default function getExtrema(image: Image, options: ExtremaOptions) {
   let {
-    extremum = 'maximum',
+    kind = 'maximum',
     mask,
-    algorithm = 3,
+    algorithm = 'star',
     removeClosePoints = 0,
     maxEquals = 2,
   } = options;
@@ -25,15 +26,31 @@ export default function getExtrema(image: Image, options: ExtremaOptions = {}) {
     bitDepth: [8, 16],
     components: 1,
   });
+  let getMinimum = false;
+  if (kind === 'minimum') {
+    getMinimum = true;
+  }
+  let maskExpectedValue = getMinimum ? 0 : 1;
 
-  let maskExpectedValue = extremum ? 0 : 1;
-
-  const dx = [+1, 0, -1, 0, +1, +1, -1, -1, +2, 0, -2, 0];
-  const dy = [0, +1, 0, -1, +1, -1, +1, -1, 0, +2, 0, -2];
-
-  dx.length = algorithm * 4;
-  dy.length = algorithm * 4;
-  let shift = algorithm <= 8 ? 1 : 2;
+  const dx = [+1, 0, -1, 0, +1, +1, -1, -1, +2, 0, -2, 0, +2, +2, -2, -2];
+  const dy = [0, +1, 0, -1, +1, -1, +1, -1, 0, +2, 0, -2, +2, -2, +2, -2];
+  switch (algorithm) {
+    case 'cross':
+      dx.length = 4;
+      dy.length = 4;
+      break;
+    case 'square':
+      dx.length = 8;
+      dy.length = 8;
+      break;
+    case 'star':
+      dx.length = 16;
+      dy.length = 16;
+      break;
+    default:
+      break;
+  }
+  let shift = dx.length <= 8 ? 1 : 2;
   let points: number[][] = [];
   for (let channel = 0; channel < image.channels; channel++) {
     for (let currentY = shift; currentY < image.height - shift; currentY++) {
@@ -45,7 +62,7 @@ export default function getExtrema(image: Image, options: ExtremaOptions = {}) {
         let nbEquals = 0;
         let currentValue = image.getValue(currentX, currentY, channel);
         for (let dir = 0; dir < dx.length; dir++) {
-          if (extremum === 'minimum') {
+          if (getMinimum) {
             // we search for minima
             if (
               image.getValue(currentX + dx[dir], currentY + dy[dir], channel) >
@@ -79,21 +96,6 @@ export default function getExtrema(image: Image, options: ExtremaOptions = {}) {
   // Seems that we would ened to calculate a matrix and then split this matrix in 'independant matrices'
   // Or to assign a cluster to each point and regroup them if 2 clusters are close to each other
   // later approach seems much better
-  if (removeClosePoints > 0) {
-    for (let i = 0; i < points.length; i++) {
-      for (let j = i + 1; j < points.length; j++) {
-        if (
-          Math.hypot(points[i][0] - points[j][0], points[i][1] - points[j][1]) <
-          removeClosePoints
-        ) {
-          points[i][0] = (points[i][0] + points[j][0]) >> 1;
-          points[i][1] = (points[i][1] + points[j][1]) >> 1;
-          points.splice(j, 1);
-          j--;
-        }
-      }
-    }
-  }
-
+  combinePoints(points, removeClosePoints);
   return points;
 }
