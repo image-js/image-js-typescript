@@ -44,3 +44,45 @@ test('maximum of grey image from legacy code', () => {
     { column: 6, row: 7 },
   ]);
 });
+
+test('maximum with cross algorithm', () => {
+  let image = testUtils.createGreyImage([
+    [0, 0, 0],
+    [0, 1, 0],
+    [0, 0, 0],
+  ]);
+
+  let result = getExtrema(image, { kind: 'maximum', algorithm: 'cross' });
+
+  expect(result).toStrictEqual([{ column: 1, row: 1 }]);
+});
+
+test('maximum with square algorithm', () => {
+  let image = testUtils.createGreyImage([
+    [0, 0, 0, 1, 1],
+    [0, 1, 0, 0, 0],
+    [0, 0, 0, 0, 0],
+    [2, 3, 4, 0, 0],
+    [0, 0, 0, 0, 0],
+  ]);
+
+  let result = getExtrema(image, { kind: 'maximum', algorithm: 'square' });
+  expect(result).toStrictEqual([
+    { column: 1, row: 1 },
+    { column: 2, row: 3 },
+  ]);
+});
+
+test('testing for error handling', () => {
+  let image = testUtils.createGreyImage([
+    [0, 0, 0, 1, 1],
+    [0, 1, 0, 0, 0],
+    [0, 0, 0, 0, 0],
+    [2, 3, 4, 0, 0],
+    [0, 0, 0, 0, 0],
+  ]);
+  //@ts-expect-error error testing
+  expect(() => getExtrema(image, { algorithm: 'blah' })).toThrow(
+    /unreachable: blah/,
+  );
+});
