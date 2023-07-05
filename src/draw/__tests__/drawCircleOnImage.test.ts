@@ -18,6 +18,23 @@ test('draw circle image', () => {
   expect(expected).not.toBe(image);
 });
 
+test('floating point values', () => {
+  const image = testUtils.createRgbImage([
+    [100, 150, 200, 100, 150, 0, 0, 100, 150],
+    [100, 200, 5, 3, 200, 0, 3, 200, 0],
+    [150, 200, 255, 6, 150, 0, 200, 255, 6],
+  ]);
+
+  const center = { row: 0.99, column: 0.99 };
+  const radius = 1;
+  const expected = image.drawCircle(center, radius, { color: [255, 0, 0] });
+  expect(expected).toMatchImageData([
+    [100, 150, 200, 255, 0, 0, 0, 100, 150],
+    [255, 0, 0, 3, 200, 0, 255, 0, 0],
+    [150, 200, 255, 255, 0, 0, 200, 255, 6],
+  ]);
+  expect(expected).not.toBe(image);
+});
 test('draw filled circle image', () => {
   const image = testUtils.createRgbImage([
     [100, 150, 200, 100, 150, 0, 0, 100, 150],
@@ -119,20 +136,6 @@ test('negative radius error', () => {
     });
   }).toThrow('circle radius must be positive');
 });
-test('non-integer radius error', () => {
-  const image = testUtils.createGreyImage([
-    [0, 0, 0],
-    [0, 0, 0],
-    [0, 0, 0],
-  ]);
-  const center = { row: 1, column: 1 };
-  const radius = 0.5;
-  expect(() => {
-    image.drawCircle(center, radius, {
-      color: [1],
-    });
-  }).toThrow('circle radius must be an integer');
-});
 
 test('draw grey filled circle, radius=0', () => {
   const image = testUtils.createGreyImage([
@@ -217,6 +220,42 @@ test('big image not filled', () => {
   const expected = image.drawCircle(center, radius, {
     color: [1],
   });
+  expect(expected).toMatchImageData([
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0],
+    [0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0],
+    [0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0],
+    [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+    [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+    [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+    [0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0],
+    [0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0],
+    [0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  ]);
+  expect(expected).not.toBe(image);
+});
+
+test('larger floating point radius', () => {
+  const image = testUtils.createGreyImage([
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  ]);
+  const center = { row: 5.1, column: 6.05 };
+  const radius = 4.2;
+  const expected = image.drawCircle(center, radius, {
+    color: [1],
+  });
+
   expect(expected).toMatchImageData([
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0],

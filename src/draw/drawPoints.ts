@@ -1,10 +1,10 @@
 import { Image } from '../Image';
 import { Mask } from '../Mask';
-import checkProcessable from '../utils/checkProcessable';
+import checkProcessable from '../utils/validators/checkProcessable';
 import { Point } from '../utils/geometry/points';
 import { getDefaultColor } from '../utils/getDefaultColor';
 import { getOutputImage, maskToOutputMask } from '../utils/getOutputImage';
-import { validateColor } from '../utils/validators';
+import { validateColor } from '../utils/validators/validators';
 
 export interface DrawPointsOptions {
   /**
@@ -20,7 +20,7 @@ export interface DrawPointsOptions {
   /**
    * Image to which the resulting image has to be put.
    */
-  out?: Image;
+  out?: Image | Mask;
 }
 
 export function drawPoints(
@@ -62,8 +62,8 @@ export function drawPoints(
 
   for (const point of points) {
     newImage.setVisiblePixel(
-      origin.column + point.column,
-      origin.row + point.row,
+      Math.round(origin.column + point.column),
+      Math.round(origin.row + point.row),
       color,
     );
   }

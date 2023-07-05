@@ -1,4 +1,9 @@
+export * from './align';
+export * from './compare';
 export * from './compute';
+export * from './correctColor';
+export * from './draw';
+export * from './featureMatching';
 export * from './filters';
 export * from './geometry';
 export * from './Image';
@@ -8,6 +13,7 @@ export * from './morphology';
 export * from './operations';
 export * from './roi';
 export * from './save';
+export * from './utils/constants/channelLabels';
 export * from './utils/constants/colorModels';
 export { BorderType } from './utils/interpolateBorder';
 export { InterpolationType } from './utils/interpolatePixel';

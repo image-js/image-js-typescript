@@ -1,6 +1,7 @@
 import { Image, Mask, Point } from '..';
 import { getOutputImage, maskToOutputMask } from '../utils/getOutputImage';
 import { setBlendedPixel } from '../utils/setBlendedPixel';
+import { checkPointIsInteger } from '../utils/validators/checkPointIsInteger';
 
 export interface CopyToOptions<OutType> {
   /**
@@ -26,6 +27,8 @@ export function copyTo(
 ): Mask;
 /**
  * Copy the image to another one by specifying the location in the target image.
+ * If the source image exceeds the boundaries of the target image, the excess pixels
+ * are ignored. The result image will have the same dimensions as the target image.
  * @param source - The source image.
  * @param target - The target image.
  * @param options - Options.
@@ -42,6 +45,8 @@ export function copyTo(
   if (source.colorModel !== target.colorModel) {
     throw new RangeError('source and target must have the same color model');
   }
+
+  checkPointIsInteger(origin, 'Origin');
 
   let result: Image | Mask;
   if (target instanceof Image) {

@@ -46,8 +46,59 @@ test('GREY image', () => {
   expect(result).not.toBe(image);
 });
 
+test('floating point values', () => {
+  const image = testUtils.createGreyImage([
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+  ]);
+  const points = [
+    { row: 0, column: 0 },
+    { row: 2.99, column: 2.8 },
+    { row: 2.9, column: 0 },
+  ];
+  const result = image.drawPoints(points, {
+    color: [1],
+  });
+
+  expect(result).toMatchImageData([
+    [1, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [1, 0, 0, 1],
+  ]);
+  expect(result).not.toBe(image);
+});
+
 test('out parameter set to self', () => {
   const image = testUtils.createGreyImage([
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+  ]);
+  const points = [
+    { row: 0, column: 0 },
+    { row: 1, column: 1 },
+    { row: 2, column: 2 },
+  ];
+  const result = image.drawPoints(points, {
+    color: [1],
+    out: image,
+  });
+
+  expect(result).toMatchImageData([
+    [1, 0, 0, 0],
+    [0, 1, 0, 0],
+    [0, 0, 1, 0],
+    [0, 0, 0, 0],
+  ]);
+  expect(result).toBe(image);
+});
+
+test('out parameter set to self (mask)', () => {
+  const image = testUtils.createMask([
     [0, 0, 0, 0],
     [0, 0, 0, 0],
     [0, 0, 0, 0],

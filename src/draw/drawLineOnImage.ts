@@ -1,11 +1,11 @@
 import { line } from 'bresenham-zingl';
 
 import { Image } from '../Image';
-import checkProcessable from '../utils/checkProcessable';
+import checkProcessable from '../utils/validators/checkProcessable';
 import { Point } from '../utils/geometry/points';
 import { getDefaultColor } from '../utils/getDefaultColor';
 import { getOutputImage } from '../utils/getOutputImage';
-import { validateColor } from '../utils/validators';
+import { validateColor } from '../utils/validators/validators';
 
 export interface DrawLineOnImageOptions {
   /**
@@ -39,7 +39,7 @@ export function drawLineOnImage(
   options: DrawLineOnImageOptions = {},
 ): Image {
   const newImage = getOutputImage(image, options, { clone: true });
-  const {
+  let {
     strokeColor: color = getDefaultColor(newImage),
     origin = { column: 0, row: 0 },
   } = options;
