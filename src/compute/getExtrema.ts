@@ -1,11 +1,10 @@
 import { Image, Mask, Point } from '..';
-import { assertUnreachable } from '../utils/assert';
-import checkProcessable from '../utils/checkProcessable';
+import { assertUnreachable } from '../utils/validators/assert';
+import checkProcessable from '../utils/validators/checkProcessable';
 
 interface ExtremaOptions {
   /**
    * Chooses what kind of extremum to compute.
-   *
    * @default 'maximum'
    */
   kind?: 'minimum' | 'maximum';
@@ -15,7 +14,6 @@ interface ExtremaOptions {
   mask?: Mask;
   /**
    * Chooses what kind of coverage algorithm to use to compute the extremum.
-   *
    * @default 'star'
    */
   algorithm?: 'cross' | 'square' | 'star';
@@ -26,7 +24,6 @@ interface ExtremaOptions {
 }
 /**
  * Checks the surrounding values of a point. If they are all bigger or smaller than the pixel in question then this point is considered an extremum.
- *
  * @param image - Image to find extrema from.
  * @param options - ExtremaOptions
  * @returns Array of Points.
