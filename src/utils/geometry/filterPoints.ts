@@ -7,8 +7,13 @@ interface FilterPointsOptions {
    * The number of points that should be removed if they are close to extremum.
    */
   removeClosePoints: number;
-  /**Shows what kind of extremum is being computed */
+  /**Shows what kind of extremum is being computed. */
   kind: 'minimum' | 'maximum';
+  /**
+   * Channel number of an image where the extremum should be found.
+   * @default 0
+   */
+  channel?: number;
 }
 /**
  * Finds extreme values of an image which are not stacked together.
@@ -22,12 +27,20 @@ export function filterPoints(
   image: Image,
   options: FilterPointsOptions,
 ) {
-  let { removeClosePoints = 0, kind = 'maximum' } = options;
+  let { removeClosePoints = 0, kind = 'maximum', channel } = options;
+  if (image.channels > 1 && channel === undefined) {
+    throw new Error(
+      'image channel must be specified or image must have only one channel',
+    );
+  } else {
+    channel = 0;
+  }
   const isMax = kind === 'maximum';
 
   let sortedPoints = points.slice().sort((a, b) => {
     return (
-      image.getValue(a.column, a.row, 0) - image.getValue(b.column, b.row, 0)
+      image.getValue(a.column, a.row, channel as number) -
+      image.getValue(b.column, b.row, channel as number)
     );
   });
   if (!isMax) {
@@ -42,21 +55,15 @@ export function filterPoints(
             sortedPoints[i].column - sortedPoints[j].column,
             sortedPoints[i].row - sortedPoints[j].row,
           ) < removeClosePoints &&
-          image.getValue(sortedPoints[i].column, sortedPoints[i].row, 0) >=
-            image.getValue(sortedPoints[j].column, sortedPoints[j].row, 0)
+          image.getValue(
+            sortedPoints[i].column,
+            sortedPoints[i].row,
+            channel,
+          ) >=
+            image.getValue(sortedPoints[j].column, sortedPoints[j].row, channel)
         ) {
           sortedPoints.splice(j, 1);
           j--;
-        } else if (
-          Math.hypot(
-            sortedPoints[i].column - sortedPoints[j].column,
-            sortedPoints[i].row - sortedPoints[j].row,
-          ) < removeClosePoints &&
-          image.getValue(sortedPoints[i].column, sortedPoints[i].row, 0) <=
-            image.getValue(sortedPoints[j].column, sortedPoints[j].row, 0)
-        ) {
-          sortedPoints.splice(i, 1);
-          i--;
         }
       }
     }
