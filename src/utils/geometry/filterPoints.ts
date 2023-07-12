@@ -30,6 +30,10 @@ export function filterPoints(
       image.getValue(a.column, a.row, 0) - image.getValue(b.column, b.row, 0)
     );
   });
+  if (!isMax) {
+    sortedPoints.reverse();
+  }
+
   if (removeClosePoints > 0) {
     for (let i = 0; i < sortedPoints.length; i++) {
       for (let j = i + 1; j < sortedPoints.length; j++) {
@@ -41,13 +45,18 @@ export function filterPoints(
           image.getValue(sortedPoints[i].column, sortedPoints[i].row, 0) >=
             image.getValue(sortedPoints[j].column, sortedPoints[j].row, 0)
         ) {
-          if (isMax) {
-            sortedPoints.splice(j, 1);
-            j--;
-          } else {
-            sortedPoints.splice(i, 1);
-            i--;
-          }
+          sortedPoints.splice(j, 1);
+          j--;
+        } else if (
+          Math.hypot(
+            sortedPoints[i].column - sortedPoints[j].column,
+            sortedPoints[i].row - sortedPoints[j].row,
+          ) < removeClosePoints &&
+          image.getValue(sortedPoints[i].column, sortedPoints[i].row, 0) <=
+            image.getValue(sortedPoints[j].column, sortedPoints[j].row, 0)
+        ) {
+          sortedPoints.splice(i, 1);
+          i--;
         }
       }
     }

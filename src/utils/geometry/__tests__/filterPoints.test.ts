@@ -22,9 +22,9 @@ test('combine minimum points after getExtrema function', () => {
     kind: 'minimum',
   });
   expect(result).toStrictEqual([
-    { column: 3, row: 2 },
-    { column: 6, row: 7 },
     { column: 3, row: 5 },
+    { column: 6, row: 7 },
+    { column: 3, row: 2 },
   ]);
 });
 
