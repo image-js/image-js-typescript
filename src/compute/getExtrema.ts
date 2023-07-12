@@ -19,6 +19,7 @@ interface ExtremaOptions {
   algorithm?: 'cross' | 'square' | 'star';
   /**
    * Maximum number of points that can be equal to the extremum
+   * @default 2
    */
   maxEquals?: number;
 }
