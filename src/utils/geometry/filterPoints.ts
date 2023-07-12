@@ -12,7 +12,6 @@ interface FilterPointsOptions {
 }
 /**
  * Finds extreme values of an image which are not stacked together.
- *
  * @param points - Array of points that should be combined to improve.
  * @param image - Image which extrema are calculated from.
  * @param options - FilterPointsOptions
@@ -26,22 +25,18 @@ export function filterPoints(
   let { removeClosePoints = 0, kind = 'maximum' } = options;
   const isMax = kind === 'maximum';
 
-  let sortedPoints = points
-    .sort((a, b) => {
-      return Math.min(
-        image.getValue(a.column, a.row, 0),
-        image.getValue(b.column, b.row, 0),
-      );
-    })
-    .reverse();
-
+  let sortedPoints = points.slice().sort((a, b) => {
+    return (
+      image.getValue(a.column, a.row, 0) - image.getValue(b.column, b.row, 0)
+    );
+  });
   if (removeClosePoints > 0) {
     for (let i = 0; i < sortedPoints.length; i++) {
       for (let j = i + 1; j < sortedPoints.length; j++) {
         if (
           Math.hypot(
             sortedPoints[i].column - sortedPoints[j].column,
-            sortedPoints[i].row - points[j].row,
+            sortedPoints[i].row - sortedPoints[j].row,
           ) < removeClosePoints &&
           image.getValue(sortedPoints[i].column, sortedPoints[i].row, 0) >=
             image.getValue(sortedPoints[j].column, sortedPoints[j].row, 0)
@@ -57,5 +52,5 @@ export function filterPoints(
       }
     }
   }
-  return points;
+  return sortedPoints;
 }
