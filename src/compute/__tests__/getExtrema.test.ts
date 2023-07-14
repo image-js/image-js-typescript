@@ -73,6 +73,32 @@ test('maximum with square algorithm', () => {
   ]);
 });
 
+test('maximum with square algorithm with a mask option', () => {
+  let image = testUtils.createGreyImage([
+    [0, 0, 0, 1, 1],
+    [0, 4, 0, 0, 0],
+    [0, 0, 0, 0, 0],
+    [2, 3, 4, 0, 0],
+    [0, 0, 0, 0, 0],
+  ]);
+  let mask = testUtils.createMask([
+    [0, 0, 0, 1, 1],
+    [0, 1, 0, 0, 0],
+    [0, 0, 0, 0, 0],
+    [1, 1, 1, 0, 0],
+    [0, 0, 0, 0, 0],
+  ]);
+  let result = getExtrema(image, {
+    mask,
+    kind: 'maximum',
+    algorithm: 'square',
+  });
+  expect(result).toStrictEqual([
+    { column: 1, row: 1 },
+    { column: 2, row: 3 },
+  ]);
+});
+
 test('testing for error handling', () => {
   let image = testUtils.createGreyImage([
     [0, 0, 0, 1, 1],
