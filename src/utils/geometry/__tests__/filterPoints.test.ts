@@ -58,7 +58,7 @@ test('combine maximum points after getExtrema function', () => {
     { column: 7, row: 6 },
   ]);
 });
-test('combine maximum points after getExtrema function', () => {
+test('test error handling', () => {
   let image = testUtils.createRgbaImage([
     [1, 1, 1, 1],
     [1, 1, 1, 1],
