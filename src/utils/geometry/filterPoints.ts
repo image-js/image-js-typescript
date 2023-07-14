@@ -7,12 +7,12 @@ interface FilterPointsOptions {
    * The number of points that should be removed if they are close to extremum.
    * @default 0
    */
-  removeClosePoints: number;
+  removeClosePoints?: number;
   /**
    * Shows what kind of extremum is being computed.
    * @default 'maximum'
    */
-  kind: 'minimum' | 'maximum';
+  kind?: 'minimum' | 'maximum';
   /**
    * Channel number of an image where the extremum should be found.
    * @default 0
