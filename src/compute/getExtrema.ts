@@ -10,6 +10,7 @@ interface ExtremaOptions {
   kind?: 'minimum' | 'maximum';
   /**
    * Uses mask to check if a point belongs to a ROI or not
+   * @default undefined
    */
   mask?: Mask;
   /**
@@ -70,24 +71,20 @@ export default function getExtrema(
         let nbEquals = 0;
         let currentValue = image.getValue(currentX, currentY, channel);
         for (let dir = 0; dir < dx.length; dir++) {
+          const currentAroundValue = image.getValue(
+            currentX + dx[dir],
+            currentY + dy[dir],
+            channel,
+          );
           if (searchingMinimum) {
             // we search for minima
-            if (
-              image.getValue(currentX + dx[dir], currentY + dy[dir], channel) >
-              currentValue
-            ) {
+            if (currentAroundValue > currentValue) {
               counter++;
             }
-          } else if (
-            image.getValue(currentX + dx[dir], currentY + dy[dir], channel) <
-            currentValue
-          ) {
+          } else if (currentAroundValue < currentValue) {
             counter++;
           }
-          if (
-            image.getValue(currentX + dx[dir], currentY + dy[dir], channel) ===
-            currentValue
-          ) {
+          if (currentAroundValue === currentValue) {
             nbEquals++;
           }
         }

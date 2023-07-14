@@ -5,9 +5,13 @@ import { Point } from './points';
 interface FilterPointsOptions {
   /**
    * The number of points that should be removed if they are close to extremum.
+   * @default 0
    */
   removeClosePoints: number;
-  /**Shows what kind of extremum is being computed. */
+  /**
+   * Shows what kind of extremum is being computed.
+   * @default 'maximum'
+   */
   kind: 'minimum' | 'maximum';
   /**
    * Channel number of an image where the extremum should be found.
@@ -28,13 +32,16 @@ export function filterPoints(
   options: FilterPointsOptions,
 ) {
   let { removeClosePoints = 0, kind = 'maximum', channel } = options;
-  if (image.channels > 1 && channel === undefined) {
-    throw new Error(
-      'image channel must be specified or image must have only one channel',
-    );
-  } else {
-    channel = 0;
+  if (channel === undefined) {
+    if (image.channels > 1) {
+      throw new Error(
+        'image channel must be specified or image must have only one channel',
+      );
+    } else {
+      channel = 0;
+    }
   }
+
   const isMax = kind === 'maximum';
 
   let sortedPoints = points.slice().sort((a, b) => {
