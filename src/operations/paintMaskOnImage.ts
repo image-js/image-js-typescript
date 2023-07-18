@@ -16,7 +16,7 @@ export interface PaintMaskOnImageOptions {
    * Color with which to blend the image pixel.
    * @default Opaque black.
    */
-  color?: Array<number | null>;
+  color?: (number | null)[];
   /**
    * Whether the given color should be blended with the original pixel.
    * @default true
@@ -101,9 +101,9 @@ export function paintMaskOnImage(
 }
 
 function checkColorIsNumberArray(
-  color: Array<number | null>,
+  color: (number | null)[],
 ): asserts color is number[] {
-  for (let channel of color) {
+  for (const channel of color) {
     if (typeof channel !== 'number') {
       throw new TypeError(
         'cannot have null channels in color if blend is true',
