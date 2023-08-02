@@ -113,7 +113,7 @@ export function waterShed(image: Image, options: WaterShedOptions) {
     strategy: PriorityQueue.BinaryHeapStrategy,
   });
   for (let i = 0; i < points.length; i++) {
-    let index = points[i].column + points[i].row * width;
+    const index = points[i].column + points[i].row * width;
     data[index] = i + 1;
     const intensity = currentImage.getValueByIndex(index, channel);
     if (
@@ -142,7 +142,7 @@ export function waterShed(image: Image, options: WaterShedOptions) {
           !mask ||
           mask.getBitByIndex(currentNeighbourIndex) === maskExpectedValue
         ) {
-          let intensity = currentImage.getValueByIndex(
+          const intensity = currentImage.getValueByIndex(
             currentNeighbourIndex,
             channel,
           );
