@@ -1,5 +1,6 @@
 import PriorityQueue from 'js-priority-queue';
 
+import { ThresholdAlgorithm, computeThreshold } from '..';
 import { Image } from '../Image';
 import { Mask } from '../Mask';
 import getExtrema from '../compute/getExtrema';
@@ -38,8 +39,9 @@ interface WaterShedOptions {
   mask?: Mask;
   /**
    * @param channel - Channel which the filter will be applied to.
+   * @default 0
    */
-  channel: number;
+  channel?: number;
   /**
    * @param fillMaxValue - Limit of filling. Maximum value that pixel can have.
    * @default image.maxValue
@@ -50,6 +52,11 @@ interface WaterShedOptions {
    * @default 'minimum'
    */
   kind?: 'minimum' | 'maximum';
+  /**
+   * Algorithm which calculates threshold of a grey image
+   * @default undefined
+   */
+  thresholdAlgorithm?: ThresholdAlgorithm;
 }
 /**
  * /**
@@ -70,9 +77,10 @@ export function waterShed(image: Image, options: WaterShedOptions) {
   let {
     points,
     mask,
-    channel,
+    channel = 0,
     fillMaxValue = image.maxValue,
     kind = 'minimum',
+    thresholdAlgorithm,
   } = options;
   let currentImage = image;
   checkProcessable(image, {
@@ -95,6 +103,9 @@ export function waterShed(image: Image, options: WaterShedOptions) {
     });
 
     points = filterPoints(points, image, { channel, kind });
+  }
+  if (thresholdAlgorithm !== undefined) {
+    fillMaxValue *= computeThreshold(image, thresholdAlgorithm);
   }
 
   let maskExpectedValue = isMinimum ? 0 : 1;
