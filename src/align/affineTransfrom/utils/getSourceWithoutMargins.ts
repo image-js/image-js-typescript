@@ -7,19 +7,20 @@ import { Image, Point } from '../../..';
  * @param destinationOrigin - Estimated origin of the destination image in the source image (relative to top-left corner).
  * @returns The source image without margins.
  */
-export function getSourceWitoutMargins(
+export function getSourceWithoutMargins(
   source: Image,
   destination: Image,
   destinationOrigin: Point,
 ): Image {
   const width = Math.min(
-    source.width,
-    destination.width - destinationOrigin.column,
+    destination.width,
+    source.width - destinationOrigin.column,
   );
   const height = Math.min(
-    source.height,
-    destination.height - destinationOrigin.row,
+    destination.height,
+    source.height - destinationOrigin.row,
   );
+
   return source.crop({
     origin: { row: destinationOrigin.row, column: destinationOrigin.column },
     width,

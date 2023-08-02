@@ -4,7 +4,7 @@ import { subtract } from '../compare/subtract';
 export interface AlignMinDifferenceOptions {
   /**
    * Initial step size by which the images will be translated.
-   * @default Math.min(source.width, source.height, Math.max(xSpan, ySpan))
+   * @default Math.max(Math.round(Math.min(source.width, source.height, Math.max(xSpan, ySpan)) / 10,),1,)
    */
   startStep?: number;
 }
@@ -17,7 +17,7 @@ export interface AlignMinDifferenceOptions {
  * @param destination - Image to align to.
  * @param options - Align images min difference options.
  * @returns Translation that minimizes the mean difference between the images.
- * Gives the origin ot the source image relatively to the top-left corner of the destination image.
+ * Gives the origin of the source image relatively to the top-left corner of the destination image.
  */
 export function alignMinDifference(
   source: Image,
@@ -26,9 +26,13 @@ export function alignMinDifference(
 ): Point {
   const xSpan = destination.width - source.width;
   const ySpan = destination.height - source.height;
-
   const {
-    startStep = Math.min(source.width, source.height, Math.max(xSpan, ySpan)),
+    startStep = Math.max(
+      Math.round(
+        Math.min(source.width, source.height, Math.max(xSpan, ySpan)) / 4,
+      ),
+      1,
+    ),
   } = options;
 
   if (xSpan < 0 || ySpan < 0) {
@@ -52,6 +56,8 @@ export function alignMinDifference(
   let endX = xSpan;
   let endY = ySpan;
   while (step >= 1) {
+    step = Math.round(step);
+
     for (let shiftX = startX; shiftX <= endX; shiftX += step) {
       for (let shiftY = startY; shiftY <= endY; shiftY += step) {
         const destinationCropped = destination.crop({
@@ -59,7 +65,10 @@ export function alignMinDifference(
           width: source.width,
           height: source.height,
         });
-        const imagesDiff = subtract(source, destinationCropped);
+
+        const imagesDiff = subtract(source, destinationCropped, {
+          absolute: true,
+        });
         const mean = imagesDiff.mean()[0];
         if (mean < bestMean) {
           bestMean = mean;
@@ -69,10 +78,10 @@ export function alignMinDifference(
       }
     }
     step /= 2;
-    startX = Math.max(0, bestShiftX - step);
-    startY = Math.max(0, bestShiftY - step);
-    endX = Math.min(xSpan, bestShiftX + step);
-    endY = Math.min(ySpan, bestShiftY + step);
+    startX = Math.round(Math.max(0, bestShiftX - step));
+    startY = Math.round(Math.max(0, bestShiftY - step));
+    endX = Math.round(Math.min(xSpan, bestShiftX + step));
+    endY = Math.round(Math.min(ySpan, bestShiftY + step));
   }
 
   return { row: bestShiftY, column: bestShiftX };
