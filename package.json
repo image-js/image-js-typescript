@@ -69,7 +69,7 @@
     "@types/jest": "^29.5.2",
     "@types/jest-image-snapshot": "^6.1.0",
     "@types/js-priority-queue": "^0.0.6",
-    "@types/node": "^20.2.5",
+    "@types/node": "^20.4.2",
     "@types/picomatch": "^2.3.0",
     "@types/react": "^18.2.8",
     "@types/react-dom": "^18.2.4",
