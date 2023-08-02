@@ -9,17 +9,17 @@ import { checkPointIsInteger } from '../utils/validators/checkPointIsInteger';
 export interface PaintMaskOnImageOptions {
   /**
    * Top-left corner of the mask relative to a parent image.
-   * @default {row: 0, column: 0}
+   * @default `{row: 0, column: 0}`
    */
   origin?: Point;
   /**
    * Color with which to blend the image pixel.
-   * @default Opaque black.
+   * @default `'Opaque black.'`
    */
   color?: Array<number | null>;
   /**
    * Whether the given color should be blended with the original pixel.
-   * @default true
+   * @default `true`
    */
   blend?: boolean;
   /**
