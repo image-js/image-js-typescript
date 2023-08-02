@@ -74,15 +74,9 @@ interface WaterShedOptions {
  * @returns map data
  */
 export function waterShed(image: Image, options: WaterShedOptions) {
-  let {
-    points,
-    mask,
-    channel = 0,
-    fillMaxValue = image.maxValue,
-    kind = 'minimum',
-    thresholdAlgorithm,
-  } = options;
-  let currentImage = image;
+  let { points, fillMaxValue = image.maxValue } = options;
+  const { mask, channel = 0, kind = 'minimum', thresholdAlgorithm } = options;
+  const currentImage = image;
   checkProcessable(image, {
     bitDepth: [8, 16],
     components: 1,
@@ -93,7 +87,7 @@ export function waterShed(image: Image, options: WaterShedOptions) {
      here water is expected to fill the minima first ...
     */
 
-  let isMinimum = kind === 'minimum';
+  const isMinimum = kind === 'minimum';
   // WaterShed is done from points in the image. We can either specify those points in options,
   // or it is gonna take the minimum locals of the image by default.
   if (!points) {
@@ -108,12 +102,12 @@ export function waterShed(image: Image, options: WaterShedOptions) {
     fillMaxValue *= computeThreshold(image, thresholdAlgorithm);
   }
 
-  let maskExpectedValue = isMinimum ? 0 : 1;
+  const maskExpectedValue = isMinimum ? 0 : 1;
 
-  let data = new Int16Array(currentImage.size);
-  let width = currentImage.width;
-  let height = currentImage.height;
-  let toProcess = new PriorityQueue({
+  const data = new Int16Array(currentImage.size);
+  const width = currentImage.width;
+  const height = currentImage.height;
+  const toProcess = new PriorityQueue({
     comparator: (a: PointWithIntensity, b: PointWithIntensity) =>
       a.intensity - b.intensity,
     strategy: PriorityQueue.BinaryHeapStrategy,
@@ -121,7 +115,7 @@ export function waterShed(image: Image, options: WaterShedOptions) {
   for (let i = 0; i < points.length; i++) {
     let index = points[i].column + points[i].row * width;
     data[index] = i + 1;
-    let intensity = currentImage.getValueByIndex(index, channel);
+    const intensity = currentImage.getValueByIndex(index, channel);
     if (
       (isMinimum && intensity <= fillMaxValue) ||
       (!isMinimum && intensity >= fillMaxValue)
@@ -137,13 +131,13 @@ export function waterShed(image: Image, options: WaterShedOptions) {
   const dys = [0, +1, 0, -1, +1, -1, +1, -1];
   // Then we iterate through each points
   while (toProcess.length > 0) {
-    let currentPoint = toProcess.dequeue();
-    let currentValueIndex = currentPoint.column + currentPoint.row * width;
+    const currentPoint = toProcess.dequeue();
+    const currentValueIndex = currentPoint.column + currentPoint.row * width;
     for (let dir = 0; dir < 4; dir++) {
-      let newX = currentPoint.column + dxs[dir];
-      let newY = currentPoint.row + dys[dir];
+      const newX = currentPoint.column + dxs[dir];
+      const newY = currentPoint.row + dys[dir];
       if (newX >= 0 && newY >= 0 && newX < width && newY < height) {
-        let currentNeighbourIndex = newX + newY * width;
+        const currentNeighbourIndex = newX + newY * width;
         if (
           !mask ||
           mask.getBitByIndex(currentNeighbourIndex) === maskExpectedValue
