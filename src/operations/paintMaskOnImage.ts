@@ -14,7 +14,7 @@ export interface PaintMaskOnImageOptions {
   origin?: Point;
   /**
    * Color with which to blend the image pixel.
-   * @default `'Opaque black.'`
+   * @default Opaque black.
    */
   color?: Array<number | null>;
   /**
