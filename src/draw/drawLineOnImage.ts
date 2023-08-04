@@ -10,7 +10,7 @@ import { validateColor } from '../utils/validators/validators';
 export interface DrawLineOnImageOptions {
   /**
    * Color of the line. Should be an array of N elements (e.g. R, G, B or G, A), N being the number of channels.
-   * @default black.
+   * @default A black pixel.
    */
   strokeColor?: number[];
   /**

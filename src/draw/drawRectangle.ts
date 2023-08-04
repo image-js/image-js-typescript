@@ -23,7 +23,7 @@ export interface DrawRectangleOptions<OutType> {
   height?: number;
   /**
    * Color of the rectangle's border. Should be an array of N elements (e.g. R, G, B or G, A), N being the number of channels.
-   * @default black.
+   * @default A black pixel.
    */
   strokeColor?: number[] | 'none';
   /**
