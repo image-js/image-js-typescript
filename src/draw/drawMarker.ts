@@ -23,7 +23,7 @@ export interface DrawMarkerOptions {
   filled?: boolean;
   /**
    * Circle border color array of N elements (e.g. R, G, B or G, A), N being the number of channels.
-   * @default `'black'`
+   * @default black.
    */
   color?: number[];
   /**

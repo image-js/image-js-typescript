@@ -9,7 +9,7 @@ import { validateColor } from '../utils/validators/validators';
 export interface DrawPointsOptions {
   /**
    * Color of the points. Should be an array of N elements (e.g. R, G, B or G, A), N being the number of channels.
-   * @default `'black'`
+   * @default black.
    */
   color?: number[];
   /**
