@@ -23,7 +23,7 @@ export interface MontageOptions {
   scale?: number;
   /**
    * How should the images be aligned: vertically or horizontally.
-   * @default 'horizontal'
+   * @default `'horizontal'`
    */
   disposition?: MontageDisposition;
 }

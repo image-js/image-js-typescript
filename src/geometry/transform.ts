@@ -25,7 +25,7 @@ export interface TransformOptions {
   interpolationType?: InterpolationType;
   /**
    * Specify how the borders should be handled.
-   * `@default `'constant'`
+   * @default `'constant'`
    */
   borderType?: BorderType;
   /**

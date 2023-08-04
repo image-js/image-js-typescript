@@ -5,7 +5,7 @@ import checkProcessable from '../utils/validators/checkProcessable';
 export interface GradientFilterBaseOptions {
   /**
    * Specify how the borders should be handled.
-   * `@default `'replicate'`
+   * @default `'replicate'`
    */
   borderType?: BorderType;
   /**

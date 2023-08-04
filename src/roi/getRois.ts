@@ -18,7 +18,7 @@ export interface GetRoisOptions {
   minSurface?: number;
   /**
    * Maximal surface of the ROIs to keep.
-   * @default `Number.MAX_SAFE_INTEGER``
+   * @default `Number.MAX_SAFE_INTEGER`
    */
   maxSurface?: number;
   /**
