@@ -178,9 +178,9 @@ export function waterShed(
       }
     }
   }
-  let result: number[][] = [];
+  const result: number[][] = [];
   for (let row = 0; row < image.height; row++) {
-    let rowValues = [];
+    const rowValues = [];
     for (let column = 0; column < image.width; column++) {
       rowValues.push(data[column + row * image.width]);
     }

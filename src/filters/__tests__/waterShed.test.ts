@@ -12,7 +12,7 @@ describe('Test WaterShed Roi generation', () => {
       [3, 3, 3, 3, 3],
     ]);
     const roiMapManager = waterShed(image, {});
-    let resultArray = new Int16Array([
+    const resultArray = new Int16Array([
       -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
       -1, -1, -1, -1, -1, -1, -1,
     ]);
