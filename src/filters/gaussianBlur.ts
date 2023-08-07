@@ -88,8 +88,8 @@ export function gaussianBlur(
       borderType,
     });
   } else {
-    throw new Error(
-      'sigma is undefined. you must define sigma or sigmaX and sigmaY',
+    throw new TypeError(
+      'you must either define sigma or sigmaX and sigmaY in the options argument',
     );
   }
 }
