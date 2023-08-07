@@ -103,7 +103,7 @@ test('x and y kernels', () => {
   expect(() => {
     return image.gaussianBlur(options);
   }).toThrowError(
-    'sigma is undefined. you must define sigma or sigmaX and sigmaY',
+    'you must either define sigma or sigmaX and sigmaY in the options argument',
   );
 });
 
