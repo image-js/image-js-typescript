@@ -94,6 +94,7 @@ test('x and y kernels', () => {
     [0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0],
   ]);
+  //@ts-expect-error checking the behavior if type error is ignored
   const options: GaussianBlurOptions = {
     size: 5,
     borderType: 'replicate',

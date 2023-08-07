@@ -20,7 +20,7 @@ export interface GaussianBlurSigmaOptions extends GaussianBlurBaseOptions {
   /**
    * The standard deviation. Specifies the width of the gaussian function in the case where it is the same for x and y.
    */
-  sigma?: number;
+  sigma: number;
   /**
    * Size of the kernel.
    * @default `2 * Math.ceil(2 * sigma) + 1`
@@ -32,11 +32,11 @@ export interface GaussianBlurXYOptions extends GaussianBlurBaseOptions {
   /**
    * The standard deviation for the x axis. Specifies the width of the gaussian function along x.
    */
-  sigmaX?: number;
+  sigmaX: number;
   /**
    * The standard deviation for the y axis. Specifies the width of the gaussian function along y.
    */
-  sigmaY?: number;
+  sigmaY: number;
   /**
    * Size of the X axis kernel.
    * @default `2 * Math.ceil(2 * sigmaX) + 1`
@@ -64,9 +64,9 @@ export function gaussianBlur(
   options: GaussianBlurOptions,
 ): Image {
   if ('sigma' in options) {
-    const { sigma, size = getSize(sigma as number), borderType } = options;
+    const { sigma, size = getSize(sigma), borderType } = options;
     const radius = getRadius(size);
-    const kernel = getKernel(radius, sigma as number);
+    const kernel = getKernel(radius, sigma);
     return separableConvolution(image, kernel, kernel, {
       borderType,
     });
@@ -74,16 +74,16 @@ export function gaussianBlur(
     const {
       sigmaX,
       sigmaY,
-      sizeX = getSize(sigmaX as number),
-      sizeY = getSize(sigmaY as number),
+      sizeX = getSize(sigmaX),
+      sizeY = getSize(sigmaY),
       borderType,
     } = options;
 
     const radiusX = getRadius(sizeX);
     const radiusY = getRadius(sizeY);
 
-    const kernelX = getKernel(radiusX, sigmaX as number);
-    const kernelY = getKernel(radiusY, sigmaY as number);
+    const kernelX = getKernel(radiusX, sigmaX);
+    const kernelY = getKernel(radiusY, sigmaY);
     return separableConvolution(image, kernelX, kernelY, {
       borderType,
     });
