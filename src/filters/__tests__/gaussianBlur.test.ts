@@ -86,6 +86,26 @@ test('x and y kernels', () => {
   ]);
 });
 
+test('x and y kernels', () => {
+  const image = testUtils.createGreyImage([
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0],
+    [0, 0, 255, 0, 0],
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0],
+  ]);
+  const options: GaussianBlurOptions = {
+    size: 5,
+    borderType: 'replicate',
+  };
+
+  expect(() => {
+    return image.gaussianBlur(options);
+  }).toThrowError(
+    'sigma is undefined. you must define sigma or sigmaX and sigmaY',
+  );
+});
+
 test.skip('gaussian blur should have same result as opencv', () => {
   const img = testUtils.load('opencv/test.png');
   const options: GaussianBlurOptions = {
