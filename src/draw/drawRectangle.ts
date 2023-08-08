@@ -62,8 +62,8 @@ export function drawRectangle(
     strokeColor = getDefaultColor(image),
     fillColor = 'none',
   } = options;
-  const width = Math.round(rectangleWidth ?? image.width);
-  const height = Math.round(rectangleHeight ?? image.width);
+  const width = Math.round(rectangleWidth);
+  const height = Math.round(rectangleHeight);
   const column = Math.round(origin.column);
   const row = Math.round(origin.row);
   let newImage: Image | Mask;

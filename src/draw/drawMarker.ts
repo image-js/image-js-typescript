@@ -89,8 +89,8 @@ export function drawMarker(
   }
   if (shape === 'square') {
     const origin = {
-      row: Math.round(point.row - size / 2),
-      column: Math.round(point.column - size / 2),
+      row: point.row - (size - 1) / 2,
+      column: point.column - (size - 1) / 2,
     };
     newImage.drawRectangle({
       origin,
