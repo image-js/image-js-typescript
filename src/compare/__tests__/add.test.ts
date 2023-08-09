@@ -23,7 +23,7 @@ test('add two different images whose sum exceeds the maxValue', () => {
   const other = testUtils.createRgbImage([
     [240, 200, 20, 20, 250, 20, 15, 15, 15],
   ]);
-  expect(add(image, other)).toMatchImageData([
+  expect(image.add(other)).toMatchImageData([
     [255, 255, 25, 30, 255, 30, 30, 30, 30],
   ]);
 });
