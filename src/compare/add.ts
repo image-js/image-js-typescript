@@ -12,7 +12,7 @@ import { validateForComparison } from '../utils/validators/validators';
 export function add(image: Image, otherImage: Image): Image {
   if (image instanceof Image) {
     checkProcessable(image, {
-      bitDepth: [1, 8, 16],
+      bitDepth: [8, 16],
       components: [1, 3],
       alpha: false,
     });
@@ -21,12 +21,12 @@ export function add(image: Image, otherImage: Image): Image {
   validateForComparison(image, otherImage);
 
   const newImage = image.clone();
+  const clamp = getClamp(image);
   for (let index = 0; index < image.size; index++) {
     for (let channel = 0; channel < image.channels; channel++) {
       const value =
         image.getValueByIndex(index, channel) +
         otherImage.getValueByIndex(index, channel);
-      const clamp = getClamp(image);
       newImage.setValueByIndex(index, channel, clamp(value));
     }
   }
