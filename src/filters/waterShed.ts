@@ -1,8 +1,7 @@
 import PriorityQueue from 'js-priority-queue';
-//import { xMultiply } from 'ml-spectra-processing';
+import { xMultiply } from 'ml-spectra-processing';
 
-import { RoiMapManager, fromMask } from '..';
-import { createMask } from '../../test/createMask';
+import { RoiMapManager } from '..';
 import { Image } from '../Image';
 import { Mask } from '../Mask';
 import getExtrema from '../compute/getExtrema';
@@ -99,7 +98,7 @@ export function waterShed(
 
   const maskExpectedValue = isMinimum ? 0 : 1;
 
-  const data = new Int16Array(currentImage.size);
+  let data = new Int16Array(currentImage.size);
   const width = currentImage.width;
   const height = currentImage.height;
   const toProcess = new PriorityQueue({
@@ -158,19 +157,18 @@ export function waterShed(
       }
     }
   }
-  const result: number[][] = [];
-  for (let row = 0; row < image.height; row++) {
-    const rowValues = [];
-    for (let column = 0; column < image.width; column++) {
-      rowValues.push(data[column + row * image.width]);
-    }
-    result.push(rowValues);
-  }
-  let resultMask = createMask(result);
+  let nbNegative = 0;
+  let nbPositive = points.length;
   if (isMinimum) {
-    resultMask = resultMask.invert();
+    xMultiply<Int16Array>(data, -1, { output: data });
+    [nbNegative, nbPositive] = [nbPositive, nbNegative];
   }
-  //console.log(resultMask.invert(), fromMask(resultMask).getRois());
 
-  return fromMask(resultMask);
+  return new RoiMapManager({
+    data,
+    nbPositive,
+    nbNegative,
+    width: image.width,
+    height: image.height,
+  });
 }
