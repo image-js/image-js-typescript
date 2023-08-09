@@ -1,4 +1,5 @@
 import { Image } from '..';
+import { getClamp } from '../utils/clamp';
 import checkProcessable from '../utils/validators/checkProcessable';
 import { validateForComparison } from '../utils/validators/validators';
 /**
@@ -25,8 +26,8 @@ export function add(image: Image, otherImage: Image): Image {
       const value =
         image.getValueByIndex(index, channel) +
         otherImage.getValueByIndex(index, channel);
-
-      newImage.setValueByIndex(index, channel, Math.min(value, image.maxValue));
+      const clamp = getClamp(image);
+      newImage.setValueByIndex(index, channel, clamp(value));
     }
   }
   return newImage;
