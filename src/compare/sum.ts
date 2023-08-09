@@ -6,7 +6,7 @@ import { validateForComparison } from '../utils/validators/validators';
  * Calculate a new image that is the sum between the current image and the otherImage.
  * @param image - Image to which to add.
  * @param otherImage - Image to add.
- * @returns The subtracted image.
+ * @returns The summed image.
  */
 export function sum(image: Image, otherImage: Image): Image {
   if (image instanceof Image) {
