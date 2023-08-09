@@ -98,7 +98,7 @@ export function waterShed(
 
   const maskExpectedValue = isMinimum ? 0 : 1;
 
-  let data = new Int16Array(currentImage.size);
+  const data = new Int16Array(currentImage.size);
   const width = currentImage.width;
   const height = currentImage.height;
   const toProcess = new PriorityQueue({

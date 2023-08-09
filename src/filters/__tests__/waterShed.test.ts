@@ -131,7 +131,7 @@ describe('Test WaterShed Roi generation', () => {
     });
   });
   it('waterShed through threshold mask and with inverted image', () => {
-    let image = createGreyImage([
+    const image = createGreyImage([
       [3, 3, 3, 3, 3, 3, 3, 3, 4, 4],
       [3, 3, 2, 2, 2, 3, 3, 8, 4, 4],
       [4, 3, 2, 1, 2, 2, 3, 3, 4, 4],
