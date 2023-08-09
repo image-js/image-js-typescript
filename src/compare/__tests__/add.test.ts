@@ -1,9 +1,9 @@
-import { sum } from '../sum';
+import { add } from '../add';
 
 test('add image to itself', () => {
   const image = testUtils.createRgbImage([[5, 5, 5, 10, 10, 10, 15, 15, 15]]);
   const other = image;
-  expect(sum(image, other)).toMatchImageData([
+  expect(add(image, other)).toMatchImageData([
     [10, 10, 10, 20, 20, 20, 30, 30, 30],
   ]);
 });
@@ -11,7 +11,7 @@ test('add image to itself', () => {
 test('add two different images', () => {
   const image = testUtils.createRgbImage([[5, 5, 5, 10, 10, 10, 15, 15, 15]]);
   const other = testUtils.createRgbImage([[0, 0, 0, 20, 20, 20, 15, 15, 15]]);
-  expect(sum(image, other)).toMatchImageData([
+  expect(add(image, other)).toMatchImageData([
     [5, 5, 5, 30, 30, 30, 30, 30, 30],
   ]);
 });
@@ -23,7 +23,7 @@ test('add two different images whose sum exceeds the maxValue', () => {
   const other = testUtils.createRgbImage([
     [240, 200, 20, 20, 250, 20, 15, 15, 15],
   ]);
-  expect(sum(image, other)).toMatchImageData([
+  expect(add(image, other)).toMatchImageData([
     [255, 255, 25, 30, 255, 30, 30, 30, 30],
   ]);
 });
@@ -36,7 +36,7 @@ test('different bitDepth should throw', () => {
     bitDepth: 8,
   });
   expect(() => {
-    return sum(image, other);
+    return add(image, other);
   }).toThrow('both images must have the same alpha and bitDepth');
 });
 
@@ -44,7 +44,7 @@ test('different size images should throw', () => {
   const image = testUtils.createRgbImage([[5, 5, 5, 10, 10, 10, 15, 15, 15]]);
   const other = testUtils.createRgbImage([[5, 5, 5, 10, 10, 10]]);
   expect(() => {
-    sum(image, other);
+    add(image, other);
   }).toThrow(`both images must have the same size`);
 });
 

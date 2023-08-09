@@ -8,7 +8,7 @@ import { validateForComparison } from '../utils/validators/validators';
  * @param otherImage - Image to add.
  * @returns The summed image.
  */
-export function sum(image: Image, otherImage: Image): Image {
+export function add(image: Image, otherImage: Image): Image {
   if (image instanceof Image) {
     checkProcessable(image, {
       bitDepth: [1, 8, 16],
