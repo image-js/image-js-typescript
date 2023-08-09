@@ -95,26 +95,6 @@ export function waterShed(
       mask,
     });
     points = filterPoints(points, image, { kind });
-    for (let i = 0; i < points.length; i++) {
-      switch (isMinimum) {
-        case true:
-          if (
-            image.getValue(points[i].column, points[i].row, 0) >= fillMaxValue
-          ) {
-            points.splice(i, 1);
-          }
-          break;
-        case false:
-          if (
-            image.getValue(points[i].column, points[i].row, 0) <= fillMaxValue
-          ) {
-            points.splice(i, 1);
-          }
-          break;
-        default:
-          throw new Error('unexpected value');
-      }
-    }
   }
 
   const maskExpectedValue = isMinimum ? 0 : 1;
