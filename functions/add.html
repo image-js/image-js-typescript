@@ -1,4 +1,4 @@
-<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>paintMaskOnImage | image-js</title><meta name="description" content="Documentation for image-js"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script defer src="../assets/main.js"></script><script async src="../assets/search.js" id="tsd-search-script"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css"/><script src="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.js"></script><script src="https://cdn.jsdelivr.net/npm/katex/dist/contrib/auto-render.min.js"></script><script>
+<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>add | image-js</title><meta name="description" content="Documentation for image-js"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script defer src="../assets/main.js"></script><script async src="../assets/search.js" id="tsd-search-script"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css"/><script src="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.js"></script><script src="https://cdn.jsdelivr.net/npm/katex/dist/contrib/auto-render.min.js"></script><script>
 					window.__typeDocPluginKatexOptions={"delimiters":[{"left":"$","right":"$","display":true}],"fleqn":"true","leqno":"false"};
 					window.addEventListener('load', () => window.renderMathInElement(document.body, window.__typeDocPluginKatexOptions));
 				</script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
@@ -16,37 +16,32 @@
 <div class="tsd-page-title">
 <ul class="tsd-breadcrumb">
 <li><a href="../modules.html">image-js</a></li>
-<li><a href="paintMaskOnImage.html">paintMaskOnImage</a></li></ul>
-<h1>Function paintMaskOnImage</h1></div>
+<li><a href="add.html">add</a></li></ul>
+<h1>Function add</h1></div>
 <section class="tsd-panel">
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="paintMaskOnImage"><span class="tsd-kind-call-signature">paint<wbr/>Mask<wbr/>On<wbr/>Image</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">image</span>, <span class="tsd-kind-parameter">mask</span>, <span class="tsd-kind-parameter">options</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../classes/Image.html" class="tsd-signature-type tsd-kind-class">Image</a><a href="#paintMaskOnImage" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><g stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" id="icon-anchor"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path></g></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="add"><span class="tsd-kind-call-signature">add</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">image</span>, <span class="tsd-kind-parameter">otherImage</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../classes/Image.html" class="tsd-signature-type tsd-kind-class">Image</a><a href="#add" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><g stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" id="icon-anchor"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path></g></svg></a></li>
 <li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Paint a mask onto an image and the given position and with the given color.</p>
+<div class="tsd-comment tsd-typography"><p>Calculate a new image that is the sum between the current image and the otherImage.</p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
 <h5><span class="tsd-kind-parameter">image</span>: <a href="../classes/Image.html" class="tsd-signature-type tsd-kind-class">Image</a></h5>
-<div class="tsd-comment tsd-typography"><p>Image on which to paint the mask.</p>
+<div class="tsd-comment tsd-typography"><p>Image to which to add.</p>
 </div>
 <div class="tsd-comment tsd-typography"></div></li>
 <li>
-<h5><span class="tsd-kind-parameter">mask</span>: <a href="../classes/Mask.html" class="tsd-signature-type tsd-kind-class">Mask</a></h5>
-<div class="tsd-comment tsd-typography"><p>Mask to paint on the image.</p>
-</div>
-<div class="tsd-comment tsd-typography"></div></li>
-<li>
-<h5><span class="tsd-kind-parameter">options</span>: <a href="../interfaces/PaintMaskOnImageOptions.html" class="tsd-signature-type tsd-kind-interface">PaintMaskOnImageOptions</a><span class="tsd-signature-symbol"> = {}</span></h5>
-<div class="tsd-comment tsd-typography"><p>Paint mask options.</p>
+<h5><span class="tsd-kind-parameter">otherImage</span>: <a href="../classes/Image.html" class="tsd-signature-type tsd-kind-class">Image</a></h5>
+<div class="tsd-comment tsd-typography"><p>Image to add.</p>
 </div>
 <div class="tsd-comment tsd-typography"></div></li></ul></div>
-<h4 class="tsd-returns-title">Returns <a href="../classes/Image.html" class="tsd-signature-type tsd-kind-class">Image</a></h4><p>The painted image.</p>
+<h4 class="tsd-returns-title">Returns <a href="../classes/Image.html" class="tsd-signature-type tsd-kind-class">Image</a></h4><p>The summed image.</p>
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/image-js/image-js-typescript/blob/09621e5/src/operations/paintMaskOnImage.ts#L38">operations/paintMaskOnImage.ts:38</a></li></ul></aside></li></ul></section></div>
+<li>Defined in <a href="https://github.com/image-js/image-js-typescript/blob/09621e5/src/compare/add.ts#L12">compare/add.ts:12</a></li></ul></aside></li></ul></section></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
@@ -194,7 +189,7 @@
 <li><a href="../variables/ThresholdAlgorithm-1.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-32"></use></svg><span>Threshold<wbr/>Algorithm</span></a></li>
 <li><a href="../variables/channelLabels.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-32"></use></svg><span>channel<wbr/>Labels</span></a></li>
 <li><a href="../variables/colorModels.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-32"></use></svg><span>color<wbr/>Models</span></a></li>
-<li><a href="add.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><g id="icon-64"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-function)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6"></rect><path d="M9.39 16V7.24H14.55V8.224H10.446V11.128H14.238V12.112H10.47V16H9.39Z" fill="var(--color-text)"></path></g></svg><span>add</span></a></li>
+<li><a href="add.html" class="current"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><g id="icon-64"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-function)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6"></rect><path d="M9.39 16V7.24H14.55V8.224H10.446V11.128H14.238V12.112H10.47V16H9.39Z" fill="var(--color-text)"></path></g></svg><span>add</span></a></li>
 <li><a href="alignMinDifference.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg><span>align<wbr/>Min<wbr/>Difference</span></a></li>
 <li><a href="and.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg><span>and</span></a></li>
 <li><a href="autoLevel.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg><span>auto<wbr/>Level</span></a></li>
@@ -277,7 +272,7 @@
 <li><a href="open.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg><span>open</span></a></li>
 <li><a href="or.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg><span>or</span></a></li>
 <li><a href="overlapImages.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg><span>overlap<wbr/>Images</span></a></li>
-<li><a href="paintMaskOnImage.html" class="current"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg><span>paint<wbr/>Mask<wbr/>On<wbr/>Image</span></a></li>
+<li><a href="paintMaskOnImage.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg><span>paint<wbr/>Mask<wbr/>On<wbr/>Image</span></a></li>
 <li><a href="paintMaskOnMask.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg><span>paint<wbr/>Mask<wbr/>On<wbr/>Mask</span></a></li>
 <li><a href="pixelate.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg><span>pixelate</span></a></li>
 <li><a href="rawDirectConvolution.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg><span>raw<wbr/>Direct<wbr/>Convolution</span></a></li>
