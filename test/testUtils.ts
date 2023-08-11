@@ -126,8 +126,9 @@ export function cleanTmpDir(dir: string): void {
 }
 
 /**
- *
- * @param string
+ * Creates an Int16Array from string
+ * @param string - represents Int16Array data
+ * @returns Int16Array
  */
 export function getInt16Array(string: string) {
   return new Int16Array(
