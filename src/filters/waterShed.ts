@@ -1,5 +1,4 @@
 import PriorityQueue from 'js-priority-queue';
-import { xMultiply } from 'ml-spectra-processing';
 
 import { RoiMapManager } from '..';
 import { Image } from '../Image';
@@ -42,11 +41,6 @@ interface WaterShedOptions {
    * @default 1
    */
   threshold?: number;
-  /**
-   * @param kind - kind of algorithm to use during algorithm, in case the image is inverted.
-   * @default 'minimum'
-   */
-  kind?: 'minimum' | 'maximum';
 }
 /**
  * This method allows to create a ROIMap using the water shed algorithm. By default this algorithm
@@ -56,8 +50,7 @@ interface WaterShedOptions {
  * Please take care about the value that has be in the mask ! In order to be coherent with the expected mask,
  * meaning that if it is a dark zone, the mask will be dark the normal behavior to fill a zone
  * is that the mask pixel is clear (value of 0) !
- * However if you work in the 'invert' mode, the mask value has to be 'set' and the method will look for
- * maxima.
+ * If you are looking for 'maxima' the image must be inverted before applying the algorithm
  * @param image - Image that the filter will be applied to.
  * @param options - WaterShedOptions
  * @returns RoiMapManager
@@ -67,36 +60,26 @@ export function waterShed(
   options: WaterShedOptions,
 ): RoiMapManager {
   let { points, threshold = 1 } = options;
-  const { mask, kind = 'minimum' } = options;
+  const { mask } = options;
   const currentImage = image;
   checkProcessable(image, {
     bitDepth: [8, 16],
     components: 1,
   });
 
-  /*
-     We need to invert the logic because we are always using method to look for maxima and not minima and
-     here water is expected to fill the minima first ...
-    */
-
-  const isMinimum = kind === 'minimum';
-
-  if (!isMinimum) {
-    threshold = 1 - threshold;
-  }
   const fillMaxValue = threshold * image.maxValue;
 
   // WaterShed is done from points in the image. We can either specify those points in options,
   // or it is gonna take the minimum locals of the image by default.
   if (!points) {
     points = getExtrema(image, {
-      kind,
+      kind: 'minimum',
       mask,
     });
-    points = filterPoints(points, image, { kind });
+    points = filterPoints(points, image, { kind: 'minimum' });
   }
 
-  const maskExpectedValue = isMinimum ? 0 : 1;
+  const maskExpectedValue = 0;
 
   const data = new Int16Array(currentImage.size);
   const width = currentImage.width;
@@ -108,12 +91,9 @@ export function waterShed(
   });
   for (let i = 0; i < points.length; i++) {
     const index = points[i].column + points[i].row * width;
-    data[index] = i + 1;
+    data[index] = -i - 1;
     const intensity = currentImage.getValueByIndex(index, 0);
-    if (
-      (isMinimum && intensity <= fillMaxValue) ||
-      (!isMinimum && intensity >= fillMaxValue)
-    ) {
+    if (intensity <= fillMaxValue) {
       toProcess.queue({
         column: points[i].column,
         row: points[i].row,
@@ -141,11 +121,7 @@ export function waterShed(
             currentNeighbourIndex,
             0,
           );
-          if (
-            ((isMinimum && intensity <= fillMaxValue) ||
-              (!isMinimum && intensity >= fillMaxValue)) &&
-            data[currentNeighbourIndex] === 0
-          ) {
+          if (intensity <= fillMaxValue && data[currentNeighbourIndex] === 0) {
             data[currentNeighbourIndex] = data[currentValueIndex];
             toProcess.queue({
               column: currentPoint.column + dxs[dir],
@@ -157,12 +133,8 @@ export function waterShed(
       }
     }
   }
-  let nbNegative = 0;
-  let nbPositive = points.length;
-  if (isMinimum) {
-    xMultiply<Int16Array>(data, -1, { output: data });
-    [nbNegative, nbPositive] = [nbPositive, nbNegative];
-  }
+  let nbNegative = points.length;
+  let nbPositive = 0;
 
   return new RoiMapManager({
     data,
