@@ -7,7 +7,7 @@ import { separableConvolution } from './convolution';
 interface GaussianBlurBaseOptions {
   /**
    * Specify how the borders should be handled.
-   * @default 'reflect101'
+   * @default `'reflect101'`
    */
   borderType?: BorderType;
   /**
@@ -23,7 +23,7 @@ export interface GaussianBlurSigmaOptions extends GaussianBlurBaseOptions {
   sigma: number;
   /**
    * Size of the kernel.
-   * @default 2 * Math.ceil(2 * sigma) + 1
+   * @default `2 * Math.ceil(2 * sigma) + 1`
    */
   size?: number;
 }
@@ -39,12 +39,12 @@ export interface GaussianBlurXYOptions extends GaussianBlurBaseOptions {
   sigmaY: number;
   /**
    * Size of the X axis kernel.
-   * @default 2 * Math.ceil(2 * sigmaX) + 1
+   * @default `2 * Math.ceil(2 * sigmaX) + 1`
    */
   sizeX?: number;
   /**
    * Size of the Y axis kernel.
-   * @default 2 * Math.ceil(2 * sigmaY) + 1
+   * @default `2 * Math.ceil(2 * sigmaY) + 1`
    */
   sizeY?: number;
 }
@@ -70,7 +70,7 @@ export function gaussianBlur(
     return separableConvolution(image, kernel, kernel, {
       borderType,
     });
-  } else {
+  } else if ('sigmaX' in options && 'sigmaY' in options) {
     const {
       sigmaX,
       sigmaY,
@@ -87,6 +87,10 @@ export function gaussianBlur(
     return separableConvolution(image, kernelX, kernelY, {
       borderType,
     });
+  } else {
+    throw new TypeError(
+      'you must either define sigma or sigmaX and sigmaY in the options argument',
+    );
   }
 }
 

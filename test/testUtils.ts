@@ -9,6 +9,10 @@ import { TestImagePath } from './TestImagePath';
 import { createImageFromData, CreateImageOptions } from './createImageFromData';
 import { createMask } from './createMask';
 
+
+
+
+
 /**
  * Return the path to a given image.
  * @param name - Test image name.
@@ -156,4 +160,5 @@ declare global {
   };
 }
 
-export { createMask } from './createMask';
+export {createMask} from './createMask';
+

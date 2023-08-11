@@ -15,7 +15,7 @@ export interface DrawPolygonOnMaskOptions extends DrawPolylineOnMaskOptions {
   filled?: boolean;
   /**
    * Origin of the rectangle relative to a parent image (top-left corner).
-   * @default {row: 0, column: 0}
+   * @default `{row: 0, column: 0}`
    */
   origin?: Point;
 }
@@ -53,7 +53,11 @@ export function drawPolygonOnMask(
   for (let row = 0; row < newMask.height; row++) {
     for (let column = 0; column < newMask.width; column++) {
       if (robustPointInPolygon(arrayPoints, [column, row]) === -1) {
-        newMask.setBit(origin.column + column, origin.row + row, 1);
+        newMask.setBit(
+          Math.round(origin.column) + column,
+          Math.round(origin.row) + row,
+          1,
+        );
       }
     }
   }

@@ -8,22 +8,22 @@ import { validateColor } from '../utils/validators/validators';
 export interface DrawMarkerOptions {
   /**
    * Marker size, Odd number greater than 1.
-   * @default 1
+   * @default `1`
    */
   size?: number;
   /**
    * Marker shape.
-   * @default 'cross'
+   * @default `'cross'`
    */
   shape?: 'circle' | 'triangle' | 'cross' | 'square';
   /**
    * Set marker as filled.
-   * @default false
+   * @default `false`
    */
   filled?: boolean;
   /**
    * Circle border color array of N elements (e.g. R, G, B or G, A), N being the number of channels.
-   * @default black
+   * @default A black pixel.
    */
   color?: number[];
   /**
@@ -49,9 +49,9 @@ export function drawMarker(
     color = getDefaultColor(newImage),
     filled = false,
     shape = 'cross',
-    size = 1,
+    size: markerSize = 1,
   } = options;
-
+  const size = Math.round(markerSize);
   validateColor(color, newImage);
   checkProcessable(newImage, {
     bitDepth: [8, 16],
@@ -89,8 +89,8 @@ export function drawMarker(
   }
   if (shape === 'square') {
     const origin = {
-      row: Math.floor(point.row - size / 2),
-      column: Math.floor(point.column - size / 2),
+      row: point.row - (size - 1) / 2,
+      column: point.column - (size - 1) / 2,
     };
     newImage.drawRectangle({
       origin,
