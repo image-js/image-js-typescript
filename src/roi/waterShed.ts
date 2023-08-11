@@ -59,8 +59,8 @@ export function waterShed(
   image: Image,
   options: WaterShedOptions,
 ): RoiMapManager {
-  let { points, threshold = 1 } = options;
-  const { mask } = options;
+  let { points } = options;
+  const { mask, threshold = 1 } = options;
   const currentImage = image;
   checkProcessable(image, {
     bitDepth: [8, 16],
@@ -133,8 +133,8 @@ export function waterShed(
       }
     }
   }
-  let nbNegative = points.length;
-  let nbPositive = 0;
+  const nbNegative = points.length;
+  const nbPositive = 0;
 
   return new RoiMapManager({
     data,
