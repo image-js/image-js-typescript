@@ -1,6 +1,6 @@
-import { readFileSync, mkdtempSync, rmSync } from 'fs';
-import { tmpdir } from 'os';
-import { join } from 'path';
+import { readFileSync, mkdtempSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 
 import { fromMask, Image, readSync } from '../src';
 import { Roi } from '../src/roi/Roi';
@@ -9,11 +9,8 @@ import { TestImagePath } from './TestImagePath';
 import { createImageFromData, CreateImageOptions } from './createImageFromData';
 import { createMask } from './createMask';
 
-export { createMask };
-
 /**
  * Return the path to a given image.
- *
  * @param name - Test image name.
  * @returns The path to the image.
  */
@@ -23,7 +20,6 @@ export function getPath(name: TestImagePath): string {
 
 /**
  * Returns a buffer of the given image.
- *
  * @param path - Path to the image.
  * @returns Buffer of the image.
  */
@@ -33,7 +29,6 @@ export function loadBuffer(path: TestImagePath): Uint8Array {
 
 /**
  * Load an image from the test/img directory.
- *
  * @param path - Path to the image.
  * @returns The image.
  */
@@ -42,7 +37,6 @@ export function load(path: TestImagePath): Image {
 }
 /**
  * Create an image from 8-bit Grey data.
- *
  * @param imageData - Raw image data.
  * @param options - Additional options to create the image.
  * @returns The grey image.
@@ -56,7 +50,6 @@ export function createGreyImage(
 
 /**
  * Create an image from 8-bit Greya data.
- *
  * @param imageData - Raw image data.
  * @returns The greya Image.
  */
@@ -65,7 +58,6 @@ export function createGreyaImage(imageData: number[][] | string): Image {
 }
 /**
  * Create an image from 8-bit RGB data.
- *
  * @param imageData - Raw image data.
  * @param options - Additional options to create the image.
  * @returns The RGB image.
@@ -86,7 +78,6 @@ export interface CreateRoiOptions {
 
 /**
  * Create an ROI from a mask data array or a string. The data should only contain one ROI!
- *
  * @param imageData - Raw mask data.
  * @param options - Create ROI options
  * @returns The corresponding ROI.
@@ -107,7 +98,6 @@ export function createRoi(
 
 /**
  * Create an image from 8-bit RGBA data.
- *
  * @param imageData - Raw image data.
  * @param options - Additional options to create the image.
  * @returns The RGBA image.
@@ -121,7 +111,6 @@ export function createRgbaImage(
 
 /**
  * Creates a new temporary directory.
- *
  * @returns The path to the created directory.
  */
 export function makeTmpDir(): string {
@@ -130,13 +119,24 @@ export function makeTmpDir(): string {
 
 /**
  * Delete a previously created temporary directory.
- *
  * @param dir - Path of the directory to remove.
  */
 export function cleanTmpDir(dir: string): void {
   rmSync(dir, { recursive: true, force: true });
 }
 
+/**
+ *
+ * @param string
+ */
+export function getInt16Array(string: string) {
+  return new Int16Array(
+    string
+      .split(/[\n\r ,]+/)
+      .filter(Boolean)
+      .map(Number),
+  );
+}
 declare global {
   // eslint-disable-next-line no-var
   var testUtils: {
@@ -151,5 +151,8 @@ declare global {
     createRoi: typeof createRoi;
     makeTmpDir: typeof makeTmpDir;
     cleanTmpDir: typeof cleanTmpDir;
+    getInt16Array: typeof getInt16Array;
   };
 }
+
+export { createMask } from './createMask';
