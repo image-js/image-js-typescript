@@ -1,4 +1,4 @@
-<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>crosscheck | image-js</title><meta name="description" content="Documentation for image-js"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script defer src="../assets/main.js"></script><script async src="../assets/search.js" id="tsd-search-script"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css"/><script src="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.js"></script><script src="https://cdn.jsdelivr.net/npm/katex/dist/contrib/auto-render.min.js"></script><script>
+<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>waterShed | image-js</title><meta name="description" content="Documentation for image-js"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script defer src="../assets/main.js"></script><script async src="../assets/search.js" id="tsd-search-script"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css"/><script src="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.js"></script><script src="https://cdn.jsdelivr.net/npm/katex/dist/contrib/auto-render.min.js"></script><script>
 					window.__typeDocPluginKatexOptions={"delimiters":[{"left":"$","right":"$","display":true}],"fleqn":"true","leqno":"false"};
 					window.addEventListener('load', () => window.renderMathInElement(document.body, window.__typeDocPluginKatexOptions));
 				</script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
@@ -16,34 +16,39 @@
 <div class="tsd-page-title">
 <ul class="tsd-breadcrumb">
 <li><a href="../modules.html">image-js</a></li>
-<li><a href="crosscheck.html">crosscheck</a></li></ul>
-<h1>Function crosscheck</h1></div>
+<li><a href="waterShed.html">waterShed</a></li></ul>
+<h1>Function waterShed</h1></div>
 <section class="tsd-panel">
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="crosscheck"><span class="tsd-kind-call-signature">crosscheck</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">srcDstMatches</span>, <span class="tsd-kind-parameter">dstSrcMatches</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/Match.html" class="tsd-signature-type tsd-kind-interface">Match</a><span class="tsd-signature-symbol">[]</span><a href="#crosscheck" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><g stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" id="icon-anchor"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path></g></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="waterShed"><span class="tsd-kind-call-signature">water<wbr/>Shed</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">image</span>, <span class="tsd-kind-parameter">options</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../classes/RoiMapManager.html" class="tsd-signature-type tsd-kind-class">RoiMapManager</a><a href="#waterShed" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><g stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" id="icon-anchor"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"></path></g></svg></a></li>
 <li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Return the indices of pairs the keypoints that are mutually the best match.
-This means that if B is the best match for A, A should be the best match for B.
-The distance of the resulting matches is the maximum distance between the two.</p>
+<div class="tsd-comment tsd-typography"><p>This method allows to create a ROIMap using the water shed algorithm. By default this algorithm
+will fill the holes and therefore the lowest value of the image (black zones).
+If no points are given, the function will look for all the minimal points.
+If no mask is given the algorithm will completely fill the image.
+Please take care about the value that has be in the mask ! In order to be coherent with the expected mask,
+meaning that if it is a dark zone, the mask will be dark the normal behavior to fill a zone
+is that the mask pixel is clear (value of 0) !
+If you are looking for &#39;maxima&#39; the image must be inverted before applying the algorithm</p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">srcDstMatches</span>: <a href="../interfaces/Match.html" class="tsd-signature-type tsd-kind-interface">Match</a><span class="tsd-signature-symbol">[]</span></h5>
-<div class="tsd-comment tsd-typography"><p>Best matches computed from source do destination.</p>
+<h5><span class="tsd-kind-parameter">image</span>: <a href="../classes/Image.html" class="tsd-signature-type tsd-kind-class">Image</a></h5>
+<div class="tsd-comment tsd-typography"><p>Image that the filter will be applied to.</p>
 </div>
 <div class="tsd-comment tsd-typography"></div></li>
 <li>
-<h5><span class="tsd-kind-parameter">dstSrcMatches</span>: <a href="../interfaces/Match.html" class="tsd-signature-type tsd-kind-interface">Match</a><span class="tsd-signature-symbol">[]</span></h5>
-<div class="tsd-comment tsd-typography"><p>Best matches computed from destination to source.</p>
+<h5><span class="tsd-kind-parameter">options</span>: <span class="tsd-signature-type ">WaterShedOptions</span></h5>
+<div class="tsd-comment tsd-typography"><p>WaterShedOptions</p>
 </div>
 <div class="tsd-comment tsd-typography"></div></li></ul></div>
-<h4 class="tsd-returns-title">Returns <a href="../interfaces/Match.html" class="tsd-signature-type tsd-kind-interface">Match</a><span class="tsd-signature-symbol">[]</span></h4><p>The pairs of keypoints that are mutually the best match.</p>
+<h4 class="tsd-returns-title">Returns <a href="../classes/RoiMapManager.html" class="tsd-signature-type tsd-kind-class">RoiMapManager</a></h4><p>RoiMapManager</p>
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/image-js/image-js-typescript/blob/ecab15e/src/featureMatching/matching/getCrosscheckMatches.ts#L30">featureMatching/matching/getCrosscheckMatches.ts:30</a></li></ul></aside></li></ul></section></div>
+<li>Defined in <a href="https://github.com/image-js/image-js-typescript/blob/ecab15e/src/roi/waterShed.ts#L58">roi/waterShed.ts:58</a></li></ul></aside></li></ul></section></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
@@ -218,7 +223,7 @@ The distance of the resulting matches is the maximum distance between the two.</
 <li><a href="copyTo.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg><span>copy<wbr/>To</span></a></li>
 <li><a href="correctColor.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg><span>correct<wbr/>Color</span></a></li>
 <li><a href="crop.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg><span>crop</span></a></li>
-<li><a href="crosscheck.html" class="current"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg><span>crosscheck</span></a></li>
+<li><a href="crosscheck.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg><span>crosscheck</span></a></li>
 <li><a href="decode.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg><span>decode</span></a></li>
 <li><a href="decodeJpeg.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg><span>decode<wbr/>Jpeg</span></a></li>
 <li><a href="decodePng.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg><span>decode<wbr/>Png</span></a></li>
@@ -292,7 +297,7 @@ The distance of the resulting matches is the maximum distance between the two.</
 <li><a href="topHat.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg><span>top<wbr/>Hat</span></a></li>
 <li><a href="transform.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg><span>transform</span></a></li>
 <li><a href="transformRotate.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg><span>transform<wbr/>Rotate</span></a></li>
-<li><a href="waterShed.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg><span>water<wbr/>Shed</span></a></li>
+<li><a href="waterShed.html" class="current"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg><span>water<wbr/>Shed</span></a></li>
 <li><a href="write.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg><span>write</span></a></li>
 <li><a href="writeCanvas.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg><span>write<wbr/>Canvas</span></a></li>
 <li><a href="writeSync.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg><span>write<wbr/>Sync</span></a></li></ul></nav></div></div></div>
