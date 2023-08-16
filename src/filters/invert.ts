@@ -1,5 +1,6 @@
 import { copyAlpha, Mask } from '..';
 import { Image } from '../Image';
+import { copyData } from '../utils/copyData';
 import { getOutputImage, maskToOutputMask } from '../utils/getOutputImage';
 
 export interface InvertOptions {
@@ -23,8 +24,16 @@ export function invert(
 ): Image | Mask {
   if (image instanceof Image) {
     const newImage = getOutputImage(image, options);
-    if (image.alpha) {
-      copyAlpha(image, newImage);
+    if (newImage !== image) {
+      copyData(image, newImage);
+    }
+
+    if (image.alpha && image.components === 3 && image.bitDepth === 8) {
+      const data = new Uint32Array(newImage.data.buffer);
+      for (let i = 0; i < data.length; i++) {
+        data[i] = data[i] ^ 0x00ffffff;
+      }
+      return newImage;
     }
 
     const { maxValue, size } = newImage;

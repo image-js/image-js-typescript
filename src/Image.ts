@@ -215,7 +215,7 @@ export class Image {
   /**
    * Typed array holding the image data.
    */
-  private readonly data: ImageDataArray;
+  readonly data: ImageDataArray;
 
   /**
    * Construct a new Image knowing its dimensions.
