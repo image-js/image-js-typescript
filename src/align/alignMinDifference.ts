@@ -1,4 +1,4 @@
-import { Image, Mask, Point } from '..';
+import { Image, Mask } from '..';
 import checkProcessable from '../utils/validators/checkProcessable';
 
 export interface AlignMinDifferenceOptions {
