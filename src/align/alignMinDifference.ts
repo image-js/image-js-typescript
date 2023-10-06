@@ -7,6 +7,11 @@ export interface AlignMinDifferenceOptions {
    * @default `Math.max(Math.round(Math.min(source.width, source.height, Math.max(xSpan, ySpan)) / 10,),1,)`
    */
   startStep?: number;
+  /**
+   * Mask specifying the pixels to consider for the similarity calculation.
+   * The mask must be the same size as the source image.
+   * @default `undefined`
+   */
   mask?: Mask;
 }
 
