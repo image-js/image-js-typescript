@@ -49,9 +49,10 @@ export interface LevelOptions {
  * @returns The levelled image.
  */
 export function level(image: Image, options: LevelOptions = {}) {
+  const minMax = image.minMax();
   let {
-    inputMin = image.minMax().min,
-    inputMax = image.minMax().max,
+    inputMin = minMax.min,
+    inputMax = minMax.max,
     outputMin = 0,
     outputMax = image.maxValue,
     gamma = 1,
