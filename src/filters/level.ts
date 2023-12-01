@@ -43,7 +43,7 @@ export interface LevelOptions {
 }
 
 /**
- * Level the image using the optional input and output value. The default options allow to enhance the image's contrast.
+ * Level the image using the optional input and output value. The default options allow to increase the image's contrast.
  * @param image - Image to process.
  * @param options - Level options.
  * @returns The levelled image.

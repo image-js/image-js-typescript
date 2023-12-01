@@ -938,11 +938,11 @@ export class Image {
   }
 
   /**
-   * Enhance the contrast of an image by spanning each channel on the range [0, image.maxValue].
-   * @param options - Enhance contrast options.
+   * Increase the contrast of an image by spanning each channel on the range [0, image.maxValue].
+   * @param options - Increase contrast options.
    * @returns The enhanced image.
    */
-  public enhanceContrast(options: IncreaseContrastOptions = {}): Image {
+  public increaseContrast(options: IncreaseContrastOptions = {}): Image {
     return increaseContrast(this, options);
   }
 
