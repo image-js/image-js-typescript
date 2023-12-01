@@ -75,6 +75,6 @@ test('out option', () => {
 });
 
 test('bigger image', () => {
-  const image = testUtils.load('featureMatching/id-crops/crop1.png');
+  const image = testUtils.load('featureMatching/id-crops/crop2.png');
   expect(increaseContrast(image)).toMatchImageSnapshot();
 });
