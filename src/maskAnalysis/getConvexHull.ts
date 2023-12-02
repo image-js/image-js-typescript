@@ -1,5 +1,4 @@
 import { Mask } from '../Mask';
-import { Point } from '../utils/geometry/points';
 import {
   getPolygonArea,
   getPolygonPerimeter,
@@ -7,24 +6,7 @@ import {
 
 import { getExtendedBorderPoints } from './utils/getExtendedBorderPoints';
 import { monotoneChainConvexHull as mcch } from './utils/monotoneChainConvexHull';
-
-/**
- * Convex Hull polygon of a mask.
- */
-export interface ConvexHull {
-  /**
-   * Vertices of the convex Hull in clockwise order.
-   */
-  points: Point[];
-  /**
-   * Perimeter of the convex Hull.
-   */
-  perimeter: number;
-  /**
-   * Surface of the convex Hull.
-   */
-  surface: number;
-}
+import { ConvexHull } from './maskAnalysis.types';
 
 /**
  * Get the vertices of the convex Hull polygon of a mask.

@@ -9,8 +9,9 @@ import { surroundingPixels } from '../../utils/surroundingPixels';
 import checkProcessable from '../../utils/validators/checkProcessable';
 
 import { getFastScore } from './getFastScore';
-import { getHarrisScore, GetHarrisScoreOptions } from './getHarrisScore';
+import { getHarrisScore } from './getHarrisScore';
 import { isFastKeypoint, IsFastKeypointOptions } from './isFastKeypoint';
+import { GetHarrisScoreOptions } from '../featureMatching.types';
 
 export interface GetFastKeypointsOptions extends IsFastKeypointOptions {
   /**

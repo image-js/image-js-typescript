@@ -1,4 +1,5 @@
 import { Image } from '../Image';
+import { BorderInterpolationFunction } from './utils.types';
 
 export const BorderType = {
   CONSTANT: 'constant',
@@ -9,13 +10,6 @@ export const BorderType = {
 } as const;
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export type BorderType = (typeof BorderType)[keyof typeof BorderType];
-
-export type BorderInterpolationFunction = (
-  column: number,
-  row: number,
-  channel: number,
-  image: Image,
-) => number;
 
 /**
  * Pick the border interpolation algorithm.

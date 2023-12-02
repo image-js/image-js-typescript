@@ -4,8 +4,9 @@ import { sum } from '../../utils/geometry/points';
 import { getOutputImage } from '../../utils/getOutputImage';
 import { FastKeypoint } from '../keypoints/getFastKeypoints';
 import { OrientedFastKeypoint } from '../keypoints/getOrientedFastKeypoints';
-import { getColors, GetColorsOptions } from '../utils/getColors';
+import { getColors } from '../utils/getColors';
 import { getKeypointColor } from '../utils/getKeypointColor';
+import { GetColorsOptions } from '../featureMatching.types';
 
 export interface DrawKeypointsOptions {
   /**
@@ -49,7 +50,7 @@ export interface DrawKeypointsOptions {
   showScoreOptions?: GetColorsOptions;
 }
 
-interface DrawOrientedKeypointsOptions extends DrawKeypointsOptions {
+export interface DrawOrientedKeypointsOptions extends DrawKeypointsOptions {
   /**
    * Show the orientation of the keypoints.
    * @default `false`

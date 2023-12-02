@@ -4,40 +4,7 @@ import { toDegrees } from '../utils/geometry/angles';
 import { rotate } from '../utils/geometry/points';
 
 import { getAngle } from './utils/getAngle';
-
-export interface FeretDiameter {
-  /**
-   * Start and end point of the Feret diameter.
-   */
-  points: Point[];
-  /**
-   * Length of the diameter.
-   */
-  length: number;
-  /**
-   * Angle between the diameter and a horizontal line in degrees.
-   */
-  angle: number;
-  /**
-   * Calliper lines that pass by endpoints of Feret diameters.
-   */
-  calliperLines: [[Point, Point], [Point, Point]];
-}
-export interface Feret {
-  /**
-   * Smaller Feret diameter.
-   */
-  minDiameter: FeretDiameter;
-  /**
-   * Bigger Feret diameter.
-   */
-  maxDiameter: FeretDiameter;
-  /**
-   * Ratio between the smaller and the bigger diameter.
-   * Expresses how elongated the shape is. This is a value between 0 and 1.
-   */
-  aspectRatio: number;
-}
+import { Feret, FeretDiameter } from './maskAnalysis.types';
 
 /**
  * Computes the Feret diameters.

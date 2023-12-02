@@ -1,8 +1,8 @@
 import { Point, rotate } from '../../utils/geometry/points';
-import { Mbr } from '../getMbr';
 
 import { getAngle } from './getAngle';
 import { getMbrAngle } from './getMbrAngle';
+import { Mbr } from '../maskAnalysis.types';
 
 /**
  * Get the four corners of the minimum bounding rectangle from a set of points defining a simple convex polygon.
