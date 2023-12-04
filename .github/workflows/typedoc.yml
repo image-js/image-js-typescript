@@ -1,4 +1,4 @@
-name: Deploy TypeDoc on GitHub pages
+name: Typedoc
 
 on:
   workflow_dispatch:
