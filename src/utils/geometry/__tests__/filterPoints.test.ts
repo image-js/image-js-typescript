@@ -1,4 +1,4 @@
-import getExtrema from '../../../compute/getExtrema';
+import { getExtrema } from '../../../compute/getExtrema';
 import { filterPoints } from '../filterPoints';
 
 test('combine minimum points after getExtrema function', () => {

@@ -2,7 +2,7 @@ import { Image } from '../..';
 
 import { Point } from './points';
 
-interface FilterPointsOptions {
+export interface FilterPointsOptions {
   /**
    * The number of points that should be removed if they are close to extremum.
    * @default `0`

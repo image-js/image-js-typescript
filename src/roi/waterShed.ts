@@ -3,7 +3,7 @@ import PriorityQueue from 'js-priority-queue';
 import { RoiMapManager } from '..';
 import { Image } from '../Image';
 import { Mask } from '../Mask';
-import getExtrema from '../compute/getExtrema';
+import { getExtrema } from '../compute/getExtrema';
 import { Point } from '../geometry';
 import { filterPoints } from '../utils/geometry/filterPoints';
 import checkProcessable from '../utils/validators/checkProcessable';
