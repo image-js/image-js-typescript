@@ -1,9 +1,9 @@
 import { Mask } from '../Mask';
 
+import { Mbr } from './maskAnalysis.types';
 import { getExtendedBorderPoints } from './utils/getExtendedBorderPoints';
 import { getMbrFromPoints } from './utils/getMbrFromPoints';
 import { monotoneChainConvexHull } from './utils/monotoneChainConvexHull';
-import { Mbr } from './maskAnalysis.types';
 
 /**
  * Get the four corners of the minimum bounding rectangle of an ROI.

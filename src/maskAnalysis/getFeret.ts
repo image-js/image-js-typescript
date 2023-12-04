@@ -3,8 +3,8 @@ import { Point } from '../geometry';
 import { toDegrees } from '../utils/geometry/angles';
 import { rotate } from '../utils/geometry/points';
 
-import { getAngle } from './utils/getAngle';
 import { Feret, FeretDiameter } from './maskAnalysis.types';
+import { getAngle } from './utils/getAngle';
 
 /**
  * Computes the Feret diameters.

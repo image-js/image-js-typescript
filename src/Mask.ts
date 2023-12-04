@@ -21,8 +21,10 @@ import {
   OrOptions,
 } from './filters';
 import { ConvexHull, Feret, GetBorderPointsOptions, Mbr } from './maskAnalysis';
-import { getMbr } from './maskAnalysis/getMbr';
 import { getBorderPoints } from './maskAnalysis/getBorderPoints';
+import { getConvexHull } from './maskAnalysis/getConvexHull';
+import { getFeret } from './maskAnalysis/getFeret';
+import { getMbr } from './maskAnalysis/getMbr';
 import {
   bottomHat,
   BottomHatOptions,
@@ -55,8 +57,6 @@ import {
 import { boolToNumber } from './utils/boolToNumber';
 import { colorModels, ImageColorModel } from './utils/constants/colorModels';
 import { Point } from './utils/geometry/points';
-import { getConvexHull } from './maskAnalysis/getConvexHull';
-import { getFeret } from './maskAnalysis/getFeret';
 
 export type BitValue = 1 | 0 | boolean;
 

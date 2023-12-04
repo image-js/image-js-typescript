@@ -1,5 +1,6 @@
 import { Image } from '../Image';
 import checkProcessable from '../utils/validators/checkProcessable';
+
 import { CropAlphaOptions } from './operations.types';
 
 /**

@@ -1,4 +1,5 @@
 import { Image } from '../../Image';
+import { GetColorsOptions } from '../featureMatching.types';
 import { FastKeypoint } from '../keypoints/getFastKeypoints';
 import { Match } from '../matching/bruteForceMatch';
 import { getColors } from '../utils/getColors';
@@ -7,7 +8,6 @@ import { sortByDistance } from '../utils/sortByDistance';
 
 import { Montage } from './Montage';
 import { scaleKeypoints } from './scaleKeypoints';
-import { GetColorsOptions } from '../featureMatching.types';
 
 export interface DrawMatchesOptions {
   /**

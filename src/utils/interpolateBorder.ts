@@ -1,4 +1,5 @@
 import { Image } from '../Image';
+
 import { BorderInterpolationFunction } from './utils.types';
 
 export const BorderType = {

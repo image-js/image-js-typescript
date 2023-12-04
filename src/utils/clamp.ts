@@ -1,7 +1,7 @@
 import { Image } from '../Image';
 
-import { assert } from './validators/assert';
 import { ClampFunction } from './utils.types';
+import { assert } from './validators/assert';
 
 /**
  * Get the clamp function for an image (depends on the image bit depth).

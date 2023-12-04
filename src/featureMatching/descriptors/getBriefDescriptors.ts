@@ -1,12 +1,12 @@
 import { Image } from '../../Image';
 import { GaussianBlurSigmaOptions } from '../../filters';
+import { GetGaussianPointsOptions } from '../../utils/utils.types';
 import checkProcessable from '../../utils/validators/checkProcessable';
 import { OrientedFastKeypoint } from '../keypoints/getOrientedFastKeypoints';
 import { compareIntensity } from '../utils/compareIntensity';
 import { getGaussianPoints } from '../utils/getGaussianPoints';
 
 import { getKeypointPatch } from './utils/getKeypointPatch';
-import { GetGaussianPointsOptions } from '../../utils/utils.types';
 
 export interface GetBriefDescriptorsOptions {
   /**

@@ -1,16 +1,16 @@
 import { Mask } from '../Mask';
-
+import { Feret, GetBorderPointsOptions, Mbr } from '../maskAnalysis';
+import { getConvexHull } from '../maskAnalysis/getConvexHull';
+import { getFeret } from '../maskAnalysis/getFeret';
+import { getMbr } from '../maskAnalysis/getMbr';
 import { Point } from '../utils/geometry/points';
 
 import { RoiMap } from './RoiMapManager';
 import { getBorderPoints } from './getBorderPoints';
 import { getMask, GetMaskOptions } from './getMask';
 import { getEllipse } from './properties/getEllipse';
-import { Feret, GetBorderPointsOptions, Mbr } from '../maskAnalysis';
 import { Border, Ellipse } from './roi.types';
-import { getConvexHull } from '../maskAnalysis/getConvexHull';
-import { getMbr } from '../maskAnalysis/getMbr';
-import { getFeret } from '../maskAnalysis/getFeret';
+
 
 /**
  * Properties of borders of ROI.

@@ -2,11 +2,11 @@ import { Image } from '../../Image';
 import { Point } from '../../geometry';
 import { sum } from '../../utils/geometry/points';
 import { getOutputImage } from '../../utils/getOutputImage';
+import { GetColorsOptions } from '../featureMatching.types';
 import { FastKeypoint } from '../keypoints/getFastKeypoints';
 import { OrientedFastKeypoint } from '../keypoints/getOrientedFastKeypoints';
 import { getColors } from '../utils/getColors';
 import { getKeypointColor } from '../utils/getKeypointColor';
-import { GetColorsOptions } from '../featureMatching.types';
 
 export interface DrawKeypointsOptions {
   /**

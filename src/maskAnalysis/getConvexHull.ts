@@ -4,9 +4,9 @@ import {
   getPolygonPerimeter,
 } from '../utils/geometry/polygons';
 
+import { ConvexHull } from './maskAnalysis.types';
 import { getExtendedBorderPoints } from './utils/getExtendedBorderPoints';
 import { monotoneChainConvexHull as mcch } from './utils/monotoneChainConvexHull';
-import { ConvexHull } from './maskAnalysis.types';
 
 /**
  * Get the vertices of the convex Hull polygon of a mask.
