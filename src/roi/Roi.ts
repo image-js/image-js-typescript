@@ -11,7 +11,6 @@ import { getMask, GetMaskOptions } from './getMask';
 import { getEllipse } from './properties/getEllipse';
 import { Border, Ellipse } from './roi.types';
 
-
 /**
  * Properties of borders of ROI.
  *
