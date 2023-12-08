@@ -1,5 +1,5 @@
 import { getExtrema } from '../../../compute/getExtrema';
-import { filterPoints } from '../filterPoints';
+import { removeClosePoints } from '../removeClosePoints';
 
 test('combine minimum points after getExtrema function', () => {
   const image = testUtils.createGreyImage([
@@ -17,8 +17,8 @@ test('combine minimum points after getExtrema function', () => {
 
   const points = getExtrema(image, { kind: 'minimum' });
 
-  const result = filterPoints(points, image, {
-    removeClosePoints: 2,
+  const result = removeClosePoints(points, image, {
+    distance: 2,
     kind: 'minimum',
     channel: 0,
   });
@@ -48,9 +48,9 @@ test('combine maximum points after getExtrema function', () => {
     algorithm: 'star',
   });
 
-  const result = filterPoints(points, image, {
+  const result = removeClosePoints(points, image, {
     kind: 'maximum',
-    removeClosePoints: 3,
+    distance: 3,
   });
   expect(result).toStrictEqual([
     { column: 2, row: 2 },
@@ -75,9 +75,9 @@ test('test error handling', () => {
       algorithm: 'star',
     });
 
-    const result = filterPoints(points, image, {
+    const result = removeClosePoints(points, image, {
       kind: 'maximum',
-      removeClosePoints: 0,
+      distance: 0,
     });
     return result;
   }).toThrowError(

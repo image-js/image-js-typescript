@@ -6,7 +6,7 @@ export * from './draw';
 export * from './featureMatching';
 export * from './filters';
 export * from './geometry';
-export * from './utils/geometry/filterPoints';
+export * from './utils/geometry';
 export * from './Image';
 export * from './load';
 export * from './Mask';

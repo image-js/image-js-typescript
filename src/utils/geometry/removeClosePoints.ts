@@ -7,7 +7,7 @@ export interface FilterPointsOptions {
    * The number of points that should be removed if they are close to extremum.
    * @default `0`
    */
-  removeClosePoints?: number;
+  distance?: number;
   /**
    * Shows what kind of extremum is being computed.
    * @default `'maximum'`
@@ -26,12 +26,12 @@ export interface FilterPointsOptions {
  * @param options - FilterPointsOptions
  * @returns Array of Points.
  */
-export function filterPoints(
+export function removeClosePoints(
   points: Point[],
   image: Image,
   options: FilterPointsOptions,
 ) {
-  const { removeClosePoints = 0, kind = 'maximum' } = options;
+  const { distance = 0, kind = 'maximum' } = options;
   let { channel } = options;
   if (channel === undefined) {
     if (image.channels > 1) {
@@ -55,14 +55,14 @@ export function filterPoints(
     sortedPoints.reverse();
   }
 
-  if (removeClosePoints > 0) {
+  if (distance > 0) {
     for (let i = 0; i < sortedPoints.length; i++) {
       for (let j = i + 1; j < sortedPoints.length; j++) {
         if (
           Math.hypot(
             sortedPoints[i].column - sortedPoints[j].column,
             sortedPoints[i].row - sortedPoints[j].row,
-          ) < removeClosePoints &&
+          ) < distance &&
           image.getValue(
             sortedPoints[i].column,
             sortedPoints[i].row,
