@@ -11,6 +11,11 @@ describe('Stack constructor', () => {
     expect(images).toHaveLength(1);
     expect(images[0]).toBeInstanceOf(Image);
     expect(images[0]).toBe(image);
+    expect(stack.size).toBe(1);
+    expect(stack.alpha).toBe(false);
+    expect(stack.colorModel).toBe('GREY');
+    expect(stack.bitDepth).toBe(8);
+    expect(stack.sameSize).toBe(true);
   });
 
   it('should throw if color model is different', () => {

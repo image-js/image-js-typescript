@@ -1,8 +1,14 @@
+import { BitDepth } from 'fast-png';
+
 import { Image } from './Image';
 import { Point } from './geometry';
 import { maxImage } from './stack/maxImage';
 import { minImage } from './stack/minImage';
-import { checkImagesValid } from './stack/utils/checkImagesValid';
+import {
+  checkImagesValid,
+  verifySameSize,
+} from './stack/utils/checkImagesValid';
+import { ImageColorModel } from './utils/constants/colorModels';
 
 export class Stack {
   /**
@@ -17,12 +23,22 @@ export class Stack {
    * Do the images have an alpha channel?
    */
   public readonly alpha: boolean;
+  /**
+   * The color model of the images.
+   */
+  public readonly colorModel: ImageColorModel;
+  /**
+   * The bit depth of the images.
+   */
+  public readonly bitDepth: BitDepth;
+  /**
+   * Wether all the images of the stack have the same size.
+   */
+  public readonly sameSize: boolean;
 
   /**
    * Create a new stack from an array of images.
    * The images must have the same bit depth and color model.
-   * This class extends the Array class, which gives you access to methods like
-   * forEach, map, reduce, ...
    * @param images - Array of images from which to create the stack.
    */
   public constructor(images: Image[]) {
@@ -30,6 +46,9 @@ export class Stack {
     this.images = images;
     this.size = images.length;
     this.alpha = images[0].alpha;
+    this.colorModel = images[0].colorModel;
+    this.bitDepth = images[0].bitDepth;
+    this.sameSize = verifySameSize(images);
   }
 
   *[Symbol.iterator](): IterableIterator<Image> {
@@ -138,8 +157,17 @@ export class Stack {
 
   /**
    * Add all the images of the stack and return a 16 bits image containing the sum.
+   * @param callback
    */
   // public sum(): Image {}
+
+  public map(callback: (image: Image) => Image): Stack {
+    return new Stack(this.images.map(callback));
+  }
+
+  public filter(callback: (image: Image) => boolean): Stack {
+    return new Stack(this.images.filter(callback));
+  }
 }
 
 export interface CropOptions {

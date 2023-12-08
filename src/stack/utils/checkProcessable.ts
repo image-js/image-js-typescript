@@ -6,7 +6,14 @@ interface CheckStackOptions {
    * @default `false`
    */
   sameSize?: boolean;
+  /**
+   * Verify that the images have or don't have an alpha channel.
+   */
   alpha?: boolean;
+  /**
+   *
+   */
+  bitDepth?: number | number[];
 }
 
 /**

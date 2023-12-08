@@ -16,3 +16,20 @@ export function checkImagesValid(images: Image[]) {
     }
   }
 }
+
+/**
+ * Checks if all the images of an array are the same size.
+ * @param images - Images array.
+ * @returns `true` if all images have the same size.
+ */
+export function verifySameSize(images: Image[]): boolean {
+  const width = images[0].width;
+  const height = images[0].height;
+
+  for (const image of images) {
+    if (image.width !== width || image.height !== height) {
+      return false;
+    }
+  }
+  return true;
+}
