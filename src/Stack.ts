@@ -4,6 +4,7 @@ import { Image } from './Image';
 import { Point } from './geometry';
 import { maxImage } from './stack/maxImage';
 import { meanImage } from './stack/meanImage';
+import { medianImage } from './stack/medianImage';
 import { minImage } from './stack/minImage';
 import {
   checkImagesValid,
@@ -141,8 +142,11 @@ export class Stack {
   /**
    * Return the image containing the median values of all the images in the stack for
    * each pixel.
+   * @returns The median image.
    */
-  // public medianImage(): Image {}
+  public medianImage(): Image {
+    return medianImage(this);
+  }
 
   /**
    * Return the image containing the average values of all the images in the stack for
