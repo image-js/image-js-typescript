@@ -81,3 +81,23 @@ describe('get values from stack', () => {
     expect(stack.getValueByIndex(0, 1, 0)).toBe(2);
   });
 });
+
+test('level the images with map', () => {
+  const image1 = testUtils.createGreyImage([[1, 2, 3, 4]]);
+  const image2 = testUtils.createGreyImage([[4, 5, 6, 7]]);
+  const stack = new Stack([image1, image2]);
+  const result = stack.map((image) => image.autoLevel());
+  expect(result).not.toBe(stack);
+  expect(result.getImage(0)).toMatchImageData([[0, 85, 170, 255]]);
+  expect(result.getImage(1)).toMatchImageData([[0, 85, 170, 255]]);
+});
+
+test('remove images too dark using filter', () => {
+  const image1 = testUtils.createGreyImage([[1, 2, 3, 4]]);
+  const image2 = testUtils.createGreyImage([[100, 100, 100, 100]]);
+  const stack = new Stack([image1, image2]);
+  const result = stack.filter((image) => image.mean()[0] > 10);
+  expect(result).not.toBe(stack);
+  expect(result.size).toBe(1);
+  expect(result.getImage(0)).toMatchImageData([[100, 100, 100, 100]]);
+});

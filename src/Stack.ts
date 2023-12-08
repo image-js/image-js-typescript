@@ -161,10 +161,20 @@ export class Stack {
    */
   // public sum(): Image {}
 
+  /**
+   * Map a function on all the images of the stack.
+   * @param callback - Function to apply on each image.
+   * @returns New stack with the modified images.
+   */
   public map(callback: (image: Image) => Image): Stack {
     return new Stack(this.images.map(callback));
   }
 
+  /**
+   * Filter the images in the stack.
+   * @param callback - Function to decide which images to keep.
+   * @returns New filtered stack.
+   */
   public filter(callback: (image: Image) => boolean): Stack {
     return new Stack(this.images.filter(callback));
   }
