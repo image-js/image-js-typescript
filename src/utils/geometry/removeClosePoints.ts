@@ -2,9 +2,9 @@ import { Image } from '../..';
 
 import { Point } from './points';
 
-export interface FilterPointsOptions {
+export interface RemoveClosePointsOptions {
   /**
-   * The number of points that should be removed if they are close to extremum.
+   * The minimum distance between points in the returned filtered points. If the distance is less or equal to 0, no point is removed.
    * @default `0`
    */
   distance?: number;
@@ -29,31 +29,20 @@ export interface FilterPointsOptions {
 export function removeClosePoints(
   points: Point[],
   image: Image,
-  options: FilterPointsOptions,
+  options?: RemoveClosePointsOptions,
 ) {
-  const { distance = 0, kind = 'maximum' } = options;
-  let { channel } = options;
-  if (channel === undefined) {
-    if (image.channels > 1) {
-      throw new Error(
-        'image channel must be specified or image must have only one channel',
-      );
-    } else {
-      channel = 0;
-    }
-  }
+  const distance = options?.distance || 0;
+  const kind = options?.kind || 'maximum';
 
+  if (options?.channel === undefined && image.channels > 1) {
+    throw new Error(
+      'image channel must be specified or image must have only one channel',
+    );
+  }
+  const channel = options?.channel || 0;
   const isMax = kind === 'maximum';
 
-  const sortedPoints = points.slice().sort((a, b) => {
-    return (
-      image.getValue(a.column, a.row, channel as number) -
-      image.getValue(b.column, b.row, channel as number)
-    );
-  });
-  if (!isMax) {
-    sortedPoints.reverse();
-  }
+  const sortedPoints = points.slice().sort(getSort(image, channel, isMax));
 
   if (distance > 0) {
     for (let i = 0; i < sortedPoints.length; i++) {
@@ -62,13 +51,7 @@ export function removeClosePoints(
           Math.hypot(
             sortedPoints[i].column - sortedPoints[j].column,
             sortedPoints[i].row - sortedPoints[j].row,
-          ) < distance &&
-          image.getValue(
-            sortedPoints[i].column,
-            sortedPoints[i].row,
-            channel,
-          ) >=
-            image.getValue(sortedPoints[j].column, sortedPoints[j].row, channel)
+          ) < distance
         ) {
           sortedPoints.splice(j, 1);
           j--;
@@ -76,5 +59,24 @@ export function removeClosePoints(
       }
     }
   }
+
   return sortedPoints;
+}
+
+function getSort(image: Image, channel: number, isDescending: boolean) {
+  if (isDescending) {
+    return function sortDescending(a: Point, b: Point) {
+      return (
+        image.getValue(b.column, b.row, channel) -
+        image.getValue(a.column, a.row, channel)
+      );
+    };
+  } else {
+    return function sortAscending(a: Point, b: Point) {
+      return (
+        image.getValue(a.column, a.row, channel) -
+        image.getValue(b.column, b.row, channel)
+      );
+    };
+  }
 }
