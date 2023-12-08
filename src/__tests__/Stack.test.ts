@@ -30,6 +30,15 @@ describe('Stack constructor', () => {
   });
 });
 
+test('iterator', () => {
+  const image = testUtils.createGreyImage([[1, 2, 3, 4]]);
+  const stack = new Stack([image]);
+
+  for (const image of stack) {
+    expect(image).toBeInstanceOf(Image);
+  }
+});
+
 test('clone', () => {
   const image = testUtils.createGreyImage([[1, 2, 3, 4]]);
   const stack = new Stack([image]);

@@ -32,6 +32,12 @@ export class Stack {
     this.alpha = images[0].alpha;
   }
 
+  *[Symbol.iterator](): IterableIterator<Image> {
+    for (const image of this.images) {
+      yield image;
+    }
+  }
+
   /**
    * Clone a stack.
    * @returns A new stack with the same images.
