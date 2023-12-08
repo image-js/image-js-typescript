@@ -1,5 +1,6 @@
 import { Image } from './Image';
 import { Point } from './geometry';
+import { maxImage } from './stack/maxImage';
 import { minImage } from './stack/minImage';
 import { checkImagesValid } from './stack/utils/checkImagesValid';
 
@@ -12,6 +13,10 @@ export class Stack {
    * The stack size.
    */
   public readonly size: number;
+  /**
+   * Do the images have an alpha channel?
+   */
+  public readonly alpha: boolean;
 
   /**
    * Create a new stack from an array of images.
@@ -24,6 +29,7 @@ export class Stack {
     checkImagesValid(images);
     this.images = images;
     this.size = images.length;
+    this.alpha = images[0].alpha;
   }
 
   /**
@@ -95,8 +101,11 @@ export class Stack {
   /**
    * Return the image containing the maximum values of all the images in the stack for
    * each pixel.
+   * @returns The maximum image.
    */
-  // public maxImage(): Image {}
+  public maxImage(): Image {
+    return maxImage(this);
+  }
 
   /**
    * Return the image containing the median values of all the images in the stack for

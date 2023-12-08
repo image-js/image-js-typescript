@@ -6,6 +6,7 @@ interface CheckStackOptions {
    * @default `false`
    */
   sameSize?: boolean;
+  alpha?: boolean;
 }
 
 /**
@@ -17,7 +18,7 @@ export function checkProcessable(
   stack: Stack,
   options: CheckStackOptions = {},
 ) {
-  const { sameSize = false } = options;
+  const { sameSize = false, alpha } = options;
   if (sameSize) {
     const width = stack.getImage(0).width;
     const height = stack.getImage(0).height;
@@ -30,5 +31,12 @@ export function checkProcessable(
         );
       }
     }
+  }
+  if (alpha !== undefined && alpha !== stack.alpha) {
+    throw new RangeError(
+      `stack images ${
+        alpha ? 'should' : 'should not'
+      } have an alpha channel to apply this algorithm`,
+    );
   }
 }
