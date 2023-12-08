@@ -1,4 +1,5 @@
 import { Stack } from '../../Stack';
+import { format } from '../../utils/validators/checkProcessable';
 
 interface CheckStackOptions {
   /**
@@ -26,6 +27,7 @@ export function checkProcessable(
   options: CheckStackOptions = {},
 ) {
   const { sameSize = false, alpha } = options;
+  let { bitDepth } = options;
   if (sameSize) {
     const width = stack.getImage(0).width;
     const height = stack.getImage(0).height;
@@ -45,5 +47,15 @@ export function checkProcessable(
         alpha ? 'should' : 'should not'
       } have an alpha channel to apply this algorithm`,
     );
+  }
+  if (bitDepth) {
+    if (!Array.isArray(bitDepth)) {
+      bitDepth = [bitDepth];
+    }
+    if (!bitDepth.includes(stack.bitDepth)) {
+      throw new RangeError(
+        `image bitDepth must be ${format(bitDepth)} to apply this algorithm`,
+      );
+    }
   }
 }

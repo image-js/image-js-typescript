@@ -14,6 +14,7 @@ describe('Stack constructor', () => {
     expect(stack.size).toBe(1);
     expect(stack.alpha).toBe(false);
     expect(stack.colorModel).toBe('GREY');
+    expect(stack.channels).toBe(1);
     expect(stack.bitDepth).toBe(8);
     expect(stack.sameSize).toBe(true);
   });

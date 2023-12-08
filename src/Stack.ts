@@ -3,6 +3,7 @@ import { BitDepth } from 'fast-png';
 import { Image } from './Image';
 import { Point } from './geometry';
 import { maxImage } from './stack/maxImage';
+import { meanImage } from './stack/meanImage';
 import { minImage } from './stack/minImage';
 import {
   checkImagesValid,
@@ -35,6 +36,10 @@ export class Stack {
    * Wether all the images of the stack have the same size.
    */
   public readonly sameSize: boolean;
+  /**
+   * The number of channels of the images.
+   */
+  public readonly channels: number;
 
   /**
    * Create a new stack from an array of images.
@@ -47,6 +52,7 @@ export class Stack {
     this.size = images.length;
     this.alpha = images[0].alpha;
     this.colorModel = images[0].colorModel;
+    this.channels = images[0].channels;
     this.bitDepth = images[0].bitDepth;
     this.sameSize = verifySameSize(images);
   }
@@ -141,8 +147,11 @@ export class Stack {
   /**
    * Return the image containing the average values of all the images in the stack for
    * each pixel.
+   * @returns The mean image.
    */
-  // public averageImage(): Image {}
+  public meanImage(): Image {
+    return meanImage(this);
+  }
 
   /**
    * Get the global histogram of the stack.
