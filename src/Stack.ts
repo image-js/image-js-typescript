@@ -1,5 +1,6 @@
 import { Image } from './Image';
 import { Point } from './geometry';
+import { minImage } from './stack/minImage';
 import { checkImagesValid } from './stack/utils/checkImagesValid';
 
 export class Stack {
@@ -85,8 +86,11 @@ export class Stack {
   /**
    * Return the image containing the minimum values of all the images in the stack for
    * each pixel.
+   * @returns The minimum image.
    */
-  // public minImage(): Image {}
+  public minImage(): Image {
+    return minImage(this);
+  }
 
   /**
    * Return the image containing the maximum values of all the images in the stack for

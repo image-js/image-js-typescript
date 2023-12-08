@@ -19,11 +19,12 @@ export function checkProcessable(
 ) {
   const { sameSize = false } = options;
   if (sameSize) {
-    const width = stack[0].width;
-    const height = stack[0].height;
+    const width = stack.getImage(0).width;
+    const height = stack.getImage(0).height;
 
-    for (let i = 1; i < stack.length; i++) {
-      if (stack[i].width !== width || stack[i].height !== height) {
+    for (let i = 1; i < stack.size; i++) {
+      const currentImage = stack.getImage(i);
+      if (currentImage.width !== width || currentImage.height !== height) {
         throw new RangeError(
           `images must all have same dimensions to apply this algorithm`,
         );
