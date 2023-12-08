@@ -42,6 +42,47 @@ export class Stack {
   }
 
   /**
+   * Get the image at the given index.
+   * @param index - The index of the image.
+   * @returns The image.
+   */
+  public getImage(index: number): Image {
+    return this.images[index];
+  }
+
+  /**
+   * Get a value from an image of the stack.
+   * @param stackIndex - Index of the image in the stack.
+   * @param row - Row index of the pixel.
+   * @param column - Column index of the pixel.
+   * @param channel - The channel to retrieve.
+   * @returns The value at the given position.
+   */
+  public getValue(
+    stackIndex: number,
+    row: number,
+    column: number,
+    channel: number,
+  ): number {
+    return this.images[stackIndex].getValue(row, column, channel);
+  }
+
+  /**
+   * Get a value from an image of the stack. Specify the pixel position using its index.
+   * @param stackIndex - Index of the image in the stack.
+   * @param index - The index of the pixel.
+   * @param channel - The channel to retrieve.
+   * @returns The value at the given position.
+   */
+  public getValueByIndex(
+    stackIndex: number,
+    index: number,
+    channel: number,
+  ): number {
+    return this.images[stackIndex].getValueByIndex(index, channel);
+  }
+
+  /**
    * Return the image containing the minimum values of all the images in the stack for
    * each pixel.
    */
