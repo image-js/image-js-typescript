@@ -1,5 +1,5 @@
-import { fromMask, waterShed } from '..';
-import { createGreyImage } from '../../../test/testUtils';
+import { RoiMapManager, fromMask, waterShed } from '..';
+import { createGreyImage, getInt32Array } from '../../../test/testUtils';
 import { computeRois } from '../computeRois';
 
 test('3x3 mask', () => {
@@ -32,7 +32,33 @@ test('test 2, waterShed for a grey image', () => {
   ]);
 
   const roiMapManager = waterShed(image, { threshold: 2 / 255 });
-  const rois = roiMapManager.getRois({ kind: 'bw' });
-  expect(rois[1].origin).toEqual({ column: 5, row: 5 });
-  expect(rois[0].origin).toEqual({ column: 2, row: 1 });
+
+  const result = new RoiMapManager({
+    data: getInt32Array(`
+           0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+          -1, -1, -1,  0,  0,  0,  0,  0,  0,  0, -1, -1,
+          -1, -1,  0,  0,  0,  0,  0,  0, -1, -1, -1, -1,
+           0,  0,  0,  0,  0,  0,  0,  0, -1,  0,  0,  0,
+           0,  0,  0,  0,  0,  0,  0,  0,  0, -2,  0,  0,
+           0,  0,  0,  0,  0,  0, -2, -2, -2,  0,  0,  0,
+           0,  0,  0,  0, -2, -2, -2, -2,  0,  0,  0,  0,
+           0, -2, -2, -2, -2,  0,  0,  0,  0,  0,  0,  0,
+           0,  0, -2,  0
+        `),
+    nbPositive: 0,
+    nbNegative: 2,
+    width: 10,
+    height: 10,
+  });
+  expect(roiMapManager).toStrictEqual(result);
+  computeRois(roiMapManager);
+
+  expect(roiMapManager.blackRois[0].origin).toStrictEqual({
+    column: 2,
+    row: 1,
+  });
+  expect(roiMapManager.blackRois[1].origin).toStrictEqual({
+    column: 5,
+    row: 5,
+  });
 });
