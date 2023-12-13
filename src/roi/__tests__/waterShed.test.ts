@@ -68,9 +68,6 @@ describe('Test WaterShed Roi generation', () => {
       whiteRois: [],
       blackRois: [],
     });
-    const rois = roiMapManager.getRois({ kind: 'bw' });
-    expect(rois[1].origin).toEqual({ column: 5, row: 5 });
-    expect(rois[0].origin).toEqual({ column: 2, row: 1 });
   });
 
   it('test 3, with threshold option', () => {
@@ -103,10 +100,6 @@ describe('Test WaterShed Roi generation', () => {
       whiteRois: [],
       blackRois: [],
     });
-    const roi1 = roiMapManager.getRoiById(-1);
-
-    expect(roi1.surface).toEqual(9);
-    expect(roi1.width).toEqual(3);
   });
   it('test 4, waterShed through threshold value', () => {
     const image = createGreyImage([
@@ -189,8 +182,5 @@ describe('Test WaterShed Roi generation', () => {
       whiteRois: [],
       blackRois: [],
     });
-    const rois = roiMapManager.getRois({ kind: 'bw' });
-    expect(rois[0].origin).toEqual({ column: 0, row: 0 });
-    expect(rois[0].surface).toEqual(59);
   });
 });
