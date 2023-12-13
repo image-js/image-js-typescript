@@ -18,7 +18,7 @@ test('combine minimum points on 5x5 image', () => {
   ];
 
   const result = removeClosePoints(points, image, {
-    distance: 2.5,
+    distance: 3,
     kind: 'minimum',
     channel: 0,
   });
@@ -39,7 +39,10 @@ test('combine maximum points on 3x3 image', () => {
     { column: 2, row: 2 },
   ];
 
-  const result = removeClosePoints(points, image, { distance: 2 });
+  const result = removeClosePoints(points, image, {
+    distance: 2,
+    kind: 'maximum',
+  });
 
   expect(result).toStrictEqual([{ column: 2, row: 1 }]);
 });

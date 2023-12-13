@@ -77,7 +77,7 @@ export function waterShed(
       kind: 'minimum',
       mask,
     });
-    points = removeClosePoints(points, image, { kind: 'minimum' });
+    points = removeClosePoints(points, image, { kind: 'minimum', distance: 0 });
   }
 
   const maskExpectedValue = 0;

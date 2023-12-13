@@ -7,12 +7,12 @@ export interface RemoveClosePointsOptions {
    * The minimum distance between points in the returned filtered points. If the distance is less or equal to 0, no point is removed.
    * @default `0`
    */
-  distance?: number;
+  distance: number;
   /**
    * Shows what kind of extremum is being computed.
    * @default `'maximum'`
    */
-  kind?: 'minimum' | 'maximum';
+  kind: 'minimum' | 'maximum';
   /**
    * Channel number of an image where the extremum should be found.
    * @default `0`
@@ -29,7 +29,7 @@ export interface RemoveClosePointsOptions {
 export function removeClosePoints(
   points: Point[],
   image: Image,
-  options?: RemoveClosePointsOptions,
+  options: RemoveClosePointsOptions,
 ) {
   const distance = options?.distance || 0;
   const kind = options?.kind || 'maximum';
