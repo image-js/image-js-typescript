@@ -5,7 +5,6 @@ import { Image } from '../Image';
 import { Mask } from '../Mask';
 import { getExtrema } from '../compute/getExtrema';
 import { Point } from '../geometry';
-import { removeClosePoints } from '../utils/geometry/removeClosePoints';
 import checkProcessable from '../utils/validators/checkProcessable';
 
 /**
@@ -77,7 +76,6 @@ export function waterShed(
       kind: 'minimum',
       mask,
     });
-    points = removeClosePoints(points, image, { kind: 'minimum', distance: 0 });
   }
 
   const maskExpectedValue = 0;
