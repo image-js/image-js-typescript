@@ -1,3 +1,4 @@
+import { Image } from '../../../Image';
 import { Stack } from '../../../Stack';
 import { checkProcessable } from '../checkProcessable';
 
@@ -39,4 +40,12 @@ test('should not have alpha channel', () => {
   }).toThrow(
     'stack images should not have an alpha channel to apply this algorithm',
   );
+});
+
+test('bit depth error', () => {
+  const image = new Image(1, 2, { bitDepth: 16 });
+  const stack = new Stack([image, image]);
+  expect(() => {
+    checkProcessable(stack, { bitDepth: 8 });
+  }).toThrow('image bitDepth must be 8 to apply this algorithm');
 });

@@ -36,6 +36,7 @@ export function meanImage(stack: Stack): Image {
       meanArray = new Uint16Array(dataSize);
       break;
     default:
+      /* istanbul ignore next */
       throw new Error('unknown bitDepth');
   }
   for (let i = 0; i < image.size; i++) {
@@ -48,5 +49,6 @@ export function meanImage(stack: Stack): Image {
   return new Image(image.width, image.height, {
     data: meanArray,
     colorModel: stack.colorModel,
+    bitDepth: image.bitDepth,
   });
 }
