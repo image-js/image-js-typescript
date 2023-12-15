@@ -1,11 +1,11 @@
 import { BitDepth } from 'fast-png';
 
 import { Image } from './Image';
-import { Point } from './geometry';
 import { maxImage } from './stack/maxImage';
 import { meanImage } from './stack/meanImage';
 import { medianImage } from './stack/medianImage';
 import { minImage } from './stack/minImage';
+import { sum } from './stack/sum';
 import {
   checkImagesValid,
   verifySameSize,
@@ -156,7 +156,14 @@ export class Stack {
   public meanImage(): Image {
     return meanImage(this);
   }
-
+  /**
+   * Return a 16 bits depth image containing the sum values of all the images in the stack for
+   * each pixel.
+   * @returns The sum image.
+   */
+  public sum(): Image {
+    return sum(this);
+  }
   /**
    * Get the global histogram of the stack.
    */
@@ -191,22 +198,4 @@ export class Stack {
   public filter(callback: (image: Image) => boolean): Stack {
     return new Stack(this.images.filter(callback));
   }
-}
-
-export interface CropOptions {
-  /**
-   * The top left corner of the crop rectangle.
-   * @default {row: 0, column: 0}
-   */
-  origin?: Point;
-  /**
-   * The width of the crop rectangle.
-   * @default image width
-   */
-  width?: number;
-  /**
-   * The height of the crop rectangle.
-   * @default image height
-   */
-  height?: number;
 }
