@@ -37,8 +37,9 @@ describe('Stack constructor', () => {
 });
 
 test('iterator', () => {
+  expect.assertions(2);
   const image = testUtils.createGreyImage([[1, 2, 3, 4]]);
-  const stack = new Stack([image]);
+  const stack = new Stack([image, image]);
 
   for (const image of stack) {
     expect(image).toBeInstanceOf(Image);
