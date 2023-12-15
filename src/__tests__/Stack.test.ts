@@ -16,7 +16,7 @@ describe('Stack constructor', () => {
     expect(stack.colorModel).toBe('GREY');
     expect(stack.channels).toBe(1);
     expect(stack.bitDepth).toBe(8);
-    expect(stack.sameSize).toBe(true);
+    expect(stack.sameDimensions).toBe(true);
   });
 
   it('should throw if color model is different', () => {

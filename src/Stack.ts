@@ -7,7 +7,7 @@ import { medianImage } from './stack/medianImage';
 import { minImage } from './stack/minImage';
 import {
   checkImagesValid,
-  verifySameSize,
+  verifySameDimensions,
 } from './stack/utils/checkImagesValid';
 import { ImageColorModel } from './utils/constants/colorModels';
 
@@ -33,9 +33,9 @@ export class Stack {
    */
   public readonly bitDepth: BitDepth;
   /**
-   * Wether all the images of the stack have the same size.
+   * Wether all the images of the stack have the same dimensions.
    */
-  public readonly sameSize: boolean;
+  public readonly sameDimensions: boolean;
   /**
    * The number of channels of the images.
    */
@@ -54,7 +54,7 @@ export class Stack {
     this.colorModel = images[0].colorModel;
     this.channels = images[0].channels;
     this.bitDepth = images[0].bitDepth;
-    this.sameSize = verifySameSize(images);
+    this.sameDimensions = verifySameDimensions(images);
   }
 
   *[Symbol.iterator](): IterableIterator<Image> {
