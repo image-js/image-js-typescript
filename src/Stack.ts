@@ -33,7 +33,7 @@ export class Stack {
    */
   public readonly bitDepth: BitDepth;
   /**
-   * Wether all the images of the stack have the same dimensions.
+   * Whether all the images of the stack have the same dimensions.
    */
   public readonly sameDimensions: boolean;
   /**
