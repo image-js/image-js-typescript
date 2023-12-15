@@ -46,9 +46,5 @@ export function meanImage(stack: Stack): Image {
     }
   }
 
-  return new Image(image.width, image.height, {
-    data: meanArray,
-    colorModel: stack.colorModel,
-    bitDepth: image.bitDepth,
-  });
+  return Image.createFrom(image, { data: meanArray });
 }
