@@ -2,6 +2,7 @@ import { BitDepth } from 'fast-png';
 
 import { Image } from './Image';
 import { HistogramOptions } from './compute';
+import { Point } from './geometry';
 import { histogram } from './stack/compute/histogram';
 import { maxImage } from './stack/compute/maxImage';
 import { meanImage } from './stack/compute/meanImage';
@@ -13,6 +14,7 @@ import {
   verifySameDimensions,
 } from './stack/utils/checkImagesValid';
 import { ImageColorModel } from './utils/constants/colorModels';
+import { sum as pointSum } from './utils/geometry/points';
 
 export class Stack {
   /**
@@ -43,6 +45,10 @@ export class Stack {
    * The number of channels of the images.
    */
   public readonly channels: number;
+  /**
+   * Translations required to align the image.
+   */
+  public readonly translations: Point[];
 
   /**
    * Create a new stack from an array of images.
@@ -58,6 +64,7 @@ export class Stack {
     this.channels = images[0].channels;
     this.bitDepth = images[0].bitDepth;
     this.sameDimensions = verifySameDimensions(images);
+    this.translations = new Array(images.length).fill({ row: 0, column: 0 });
   }
 
   *[Symbol.iterator](): IterableIterator<Image> {
@@ -74,6 +81,7 @@ export class Stack {
     return new Stack(this.images.map((image) => image.clone()));
   }
 
+  // GET AND SET
   /**
    * Get the images of the stack. Mainly for debugging purposes.
    * @returns The images.
@@ -122,6 +130,16 @@ export class Stack {
   ): number {
     return this.images[stackIndex].getValueByIndex(index, channel);
   }
+
+  public addTranslation(index: number, translation: Point): void {
+    this.translations[index] = pointSum(this.translations[index], translation);
+  }
+
+  public getTranslation(index: number): Point {
+    return this.translations[index];
+  }
+
+  // COMPUTE
 
   /**
    * Return the image containing the minimum values of all the images in the stack for
