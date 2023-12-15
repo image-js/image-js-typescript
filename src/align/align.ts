@@ -4,6 +4,7 @@ import {
   alignMinDifference,
   ImageColorModel,
   ThresholdAlgorithm,
+  Mask,
 } from '..';
 
 export type LevelingAlgorithm = 'none' | 'minMax' | 'uniform';
@@ -122,7 +123,7 @@ export function align(
  * @param options - Prepare for align options.
  * @returns The prepared image
  */
-function prepareForAlign(image: Image, options: AlignOptions = {}) {
+function prepareForAlign(image: Image, options: AlignOptions = {}): Image {
   const { scalingFactor = 4, blurKernelSize = 3, level = 'minMax' } = options;
 
   const blurred = image.blur({ width: blurKernelSize, height: blurKernelSize });
@@ -138,7 +139,7 @@ function prepareForAlign(image: Image, options: AlignOptions = {}) {
   return scaled;
 }
 
-function getAlignMask(image: Image, algorithm: ThresholdAlgorithm) {
+function getAlignMask(image: Image, algorithm: ThresholdAlgorithm): Mask {
   if (image.colorModel !== ImageColorModel.GREY) {
     image = image.grey();
   }
