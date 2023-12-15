@@ -87,7 +87,7 @@ test('level the images with map', () => {
   const image1 = testUtils.createGreyImage([[1, 2, 3, 4]]);
   const image2 = testUtils.createGreyImage([[4, 5, 6, 7]]);
   const stack = new Stack([image1, image2]);
-  const result = stack.map((image) => image.autoLevel());
+  const result = stack.map((image) => image.level());
   expect(result).not.toBe(stack);
   expect(result.getImage(0)).toMatchImageData([[0, 85, 170, 255]]);
   expect(result.getImage(1)).toMatchImageData([[0, 85, 170, 255]]);
