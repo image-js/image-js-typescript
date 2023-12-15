@@ -40,3 +40,13 @@ test('should throw if 16 bits depth', () => {
     return stack.sum();
   }).toThrow('image bitDepth must be 8 to apply this algorithm');
 });
+
+test('should throw if too many images in stack', () => {
+  const image1 = testUtils.createGreyImage([[1, 2, 3, 4]]);
+  const images = new Array(500).fill(image1);
+  const stack = new Stack(images);
+
+  expect(() => {
+    return stack.sum();
+  }).toThrow('Maximal valid stack size is 255');
+});
