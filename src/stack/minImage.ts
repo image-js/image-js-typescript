@@ -9,7 +9,7 @@ import { checkProcessable } from './utils/checkProcessable';
  * @returns The minimum image.
  */
 export function minImage(stack: Stack): Image {
-  checkProcessable(stack, { sameSize: true });
+  checkProcessable(stack, { sameDimensions: true });
   const newImage = Image.createFrom(stack.getImage(0));
   newImage.fill(newImage.maxValue);
 

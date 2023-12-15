@@ -18,11 +18,11 @@ export function checkImagesValid(images: Image[]) {
 }
 
 /**
- * Checks if all the images of an array are the same size.
+ * Checks if all the images of an array are the same dimensions.
  * @param images - Images array.
- * @returns `true` if all images have the same size.
+ * @returns `true` if all images have the same dimensions.
  */
-export function verifySameSize(images: Image[]): boolean {
+export function verifySameDimensions(images: Image[]): boolean {
   const width = images[0].width;
   const height = images[0].height;
 

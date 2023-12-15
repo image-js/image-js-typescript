@@ -10,7 +10,7 @@ import { minImage } from './stack/minImage';
 import { sum } from './stack/sum';
 import {
   checkImagesValid,
-  verifySameSize,
+  verifySameDimensions,
 } from './stack/utils/checkImagesValid';
 import { ImageColorModel } from './utils/constants/colorModels';
 
@@ -36,9 +36,9 @@ export class Stack {
    */
   public readonly bitDepth: BitDepth;
   /**
-   * Wether all the images of the stack have the same size.
+   * Whether all the images of the stack have the same dimensions.
    */
-  public readonly sameSize: boolean;
+  public readonly sameDimensions: boolean;
   /**
    * The number of channels of the images.
    */
@@ -57,7 +57,7 @@ export class Stack {
     this.colorModel = images[0].colorModel;
     this.channels = images[0].channels;
     this.bitDepth = images[0].bitDepth;
-    this.sameSize = verifySameSize(images);
+    this.sameDimensions = verifySameDimensions(images);
   }
 
   *[Symbol.iterator](): IterableIterator<Image> {
@@ -125,7 +125,7 @@ export class Stack {
 
   /**
    * Return the image containing the minimum values of all the images in the stack for
-   * each pixel.
+   * each pixel. All the images must have the same dimensions.
    * @returns The minimum image.
    */
   public minImage(): Image {
@@ -134,7 +134,7 @@ export class Stack {
 
   /**
    * Return the image containing the maximum values of all the images in the stack for
-   * each pixel.
+   * each pixel. All the images must have the same dimensions.
    * @returns The maximum image.
    */
   public maxImage(): Image {
@@ -143,7 +143,7 @@ export class Stack {
 
   /**
    * Return the image containing the median values of all the images in the stack for
-   * each pixel.
+   * each pixel. All the images must have the same dimensions.
    * @returns The median image.
    */
   public medianImage(): Image {
@@ -152,12 +152,13 @@ export class Stack {
 
   /**
    * Return the image containing the average values of all the images in the stack for
-   * each pixel.
+   * each pixel. All the images must have the same dimensions.
    * @returns The mean image.
    */
   public meanImage(): Image {
     return meanImage(this);
   }
+
   /**
    * Return a 16 bits depth image containing the sum values of all the images in the stack for
    * each pixel.
@@ -166,6 +167,7 @@ export class Stack {
   public sum(): Image {
     return sum(this);
   }
+
   /**
    * Get the sum of all the histograms of the stack's images. If no channel is specified in the options, the images must be GREY.
    * @param options - Histogram options.
@@ -174,7 +176,6 @@ export class Stack {
   public histogram(options: HistogramOptions = {}): Uint32Array {
     return histogram(this, options);
   }
-
   /**
    * Align all the images of the stack on the image at the given index.
    * @param refIndex - The index of the reference image.

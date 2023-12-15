@@ -1,4 +1,4 @@
-import { Image, ImageDataArray } from '../Image';
+import { Image } from '../Image';
 import { Stack } from '../Stack';
 
 import { checkProcessable } from './utils/checkProcessable';
@@ -9,7 +9,7 @@ import { checkProcessable } from './utils/checkProcessable';
  * @returns The mean image.
  */
 export function meanImage(stack: Stack): Image {
-  checkProcessable(stack, { sameSize: true, bitDepth: [8, 16] });
+  checkProcessable(stack, { sameDimensions: true, bitDepth: [8, 16] });
 
   const image = stack.getImage(0);
   const dataSize = image.size * stack.channels;
@@ -26,29 +26,13 @@ export function meanImage(stack: Stack): Image {
       }
     }
   }
-
-  let meanArray: ImageDataArray;
-  switch (image.bitDepth) {
-    case 8:
-      meanArray = new Uint8Array(dataSize);
-      break;
-    case 16:
-      meanArray = new Uint16Array(dataSize);
-      break;
-    default:
-      /* istanbul ignore next */
-      throw new Error('unknown bitDepth');
-  }
+  const meanImage = Image.createFrom(image);
   for (let i = 0; i < image.size; i++) {
     for (let channel = 0; channel < stack.channels; channel++) {
       const index = i * stack.channels + channel;
-      meanArray[index] = sum[index] / stack.size;
+      meanImage.setValueByIndex(i, channel, sum[index] / stack.size);
     }
   }
 
-  return new Image(image.width, image.height, {
-    data: meanArray,
-    colorModel: stack.colorModel,
-    bitDepth: image.bitDepth,
-  });
+  return meanImage;
 }

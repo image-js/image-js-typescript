@@ -16,7 +16,7 @@ describe('Stack constructor', () => {
     expect(stack.colorModel).toBe('GREY');
     expect(stack.channels).toBe(1);
     expect(stack.bitDepth).toBe(8);
-    expect(stack.sameSize).toBe(true);
+    expect(stack.sameDimensions).toBe(true);
   });
 
   it('should throw if color model is different', () => {
@@ -37,8 +37,9 @@ describe('Stack constructor', () => {
 });
 
 test('iterator', () => {
+  expect.assertions(2);
   const image = testUtils.createGreyImage([[1, 2, 3, 4]]);
-  const stack = new Stack([image]);
+  const stack = new Stack([image, image]);
 
   for (const image of stack) {
     expect(image).toBeInstanceOf(Image);

@@ -9,7 +9,7 @@ import { checkProcessable } from './utils/checkProcessable';
  * @returns The sum image.
  */
 export function sum(stack: Stack): Image {
-  checkProcessable(stack, { sameSize: true, bitDepth: 8 });
+  checkProcessable(stack, { sameDimensions: true, bitDepth: 8 });
 
   const image = stack.getImage(0);
   const dataSize = image.size * stack.channels;

@@ -3,10 +3,10 @@ import { format } from '../../utils/validators/checkProcessable';
 
 interface CheckStackOptions {
   /**
-   * All images should have the same size.
+   * All images should have the same dimensions.
    * @default `false`
    */
-  sameSize?: boolean;
+  sameDimensions?: boolean;
   /**
    * Verify that the images have or don't have an alpha channel.
    */
@@ -26,9 +26,9 @@ export function checkProcessable(
   stack: Stack,
   options: CheckStackOptions = {},
 ) {
-  const { sameSize = false, alpha } = options;
+  const { sameDimensions = false, alpha } = options;
   let { bitDepth } = options;
-  if (sameSize) {
+  if (sameDimensions) {
     const width = stack.getImage(0).width;
     const height = stack.getImage(0).height;
 
