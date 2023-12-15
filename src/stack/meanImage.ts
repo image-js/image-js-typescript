@@ -9,7 +9,7 @@ import { checkProcessable } from './utils/checkProcessable';
  * @returns The mean image.
  */
 export function meanImage(stack: Stack): Image {
-  checkProcessable(stack, { sameSize: true, bitDepth: [8, 16] });
+  checkProcessable(stack, { sameDimensions: true, bitDepth: [8, 16] });
 
   const image = stack.getImage(0);
   const dataSize = image.size * stack.channels;

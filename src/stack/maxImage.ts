@@ -9,7 +9,7 @@ import { checkProcessable } from './utils/checkProcessable';
  * @returns The maximum image.
  */
 export function maxImage(stack: Stack): Image {
-  checkProcessable(stack, { sameSize: true });
+  checkProcessable(stack, { sameDimensions: true });
   const newImage = Image.createFrom(stack.getImage(0));
 
   const nbChannels = newImage.channels;

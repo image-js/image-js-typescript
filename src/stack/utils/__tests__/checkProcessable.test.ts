@@ -7,7 +7,7 @@ test('should throw if images have different sizes', () => {
   const image2 = testUtils.createGreyImage([[4, 3]]);
   const stack = new Stack([image1, image2]);
   expect(() => {
-    checkProcessable(stack, { sameSize: true });
+    checkProcessable(stack, { sameDimensions: true });
   }).toThrow('images must all have same dimensions to apply this algorithm');
 });
 

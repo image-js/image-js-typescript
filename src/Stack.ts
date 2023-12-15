@@ -1,7 +1,6 @@
 import { BitDepth } from 'fast-png';
 
 import { Image } from './Image';
-import { Point } from './geometry';
 import { maxImage } from './stack/maxImage';
 import { meanImage } from './stack/meanImage';
 import { medianImage } from './stack/medianImage';
@@ -123,7 +122,7 @@ export class Stack {
 
   /**
    * Return the image containing the minimum values of all the images in the stack for
-   * each pixel.
+   * each pixel. All the images must have the same dimensions.
    * @returns The minimum image.
    */
   public minImage(): Image {
@@ -132,7 +131,7 @@ export class Stack {
 
   /**
    * Return the image containing the maximum values of all the images in the stack for
-   * each pixel.
+   * each pixel. All the images must have the same dimensions.
    * @returns The maximum image.
    */
   public maxImage(): Image {
@@ -141,7 +140,7 @@ export class Stack {
 
   /**
    * Return the image containing the median values of all the images in the stack for
-   * each pixel.
+   * each pixel. All the images must have the same dimensions.
    * @returns The median image.
    */
   public medianImage(): Image {
@@ -150,7 +149,7 @@ export class Stack {
 
   /**
    * Return the image containing the average values of all the images in the stack for
-   * each pixel.
+   * each pixel. All the images must have the same dimensions.
    * @returns The mean image.
    */
   public meanImage(): Image {
@@ -169,12 +168,6 @@ export class Stack {
   // public alignImages(refIndex: number): Stack {}
 
   /**
-   * Add all the images of the stack and return a 16 bits image containing the sum.
-   * @param callback
-   */
-  // public sum(): Image {}
-
-  /**
    * Map a function on all the images of the stack.
    * @param callback - Function to apply on each image.
    * @returns New stack with the modified images.
@@ -191,22 +184,4 @@ export class Stack {
   public filter(callback: (image: Image) => boolean): Stack {
     return new Stack(this.images.filter(callback));
   }
-}
-
-export interface CropOptions {
-  /**
-   * The top left corner of the crop rectangle.
-   * @default {row: 0, column: 0}
-   */
-  origin?: Point;
-  /**
-   * The width of the crop rectangle.
-   * @default image width
-   */
-  width?: number;
-  /**
-   * The height of the crop rectangle.
-   * @default image height
-   */
-  height?: number;
 }
