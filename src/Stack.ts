@@ -2,12 +2,12 @@ import { BitDepth } from 'fast-png';
 
 import { Image } from './Image';
 import { HistogramOptions } from './compute';
-import { histogram } from './stack/histogram';
-import { maxImage } from './stack/maxImage';
-import { meanImage } from './stack/meanImage';
-import { medianImage } from './stack/medianImage';
-import { minImage } from './stack/minImage';
-import { sum } from './stack/sum';
+import { histogram } from './stack/compute/histogram';
+import { maxImage } from './stack/compute/maxImage';
+import { meanImage } from './stack/compute/meanImage';
+import { medianImage } from './stack/compute/medianImage';
+import { minImage } from './stack/compute/minImage';
+import { sum } from './stack/compute/sum';
 import {
   checkImagesValid,
   verifySameDimensions,
@@ -67,7 +67,7 @@ export class Stack {
   }
 
   /**
-   * Clone a stack.
+   * Clone a stack. The images are a copy of the original images.
    * @returns A new stack with the same images.
    */
   public clone(): Stack {

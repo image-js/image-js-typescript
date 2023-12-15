@@ -1,7 +1,6 @@
-import { Stack } from '../Stack';
-import { HistogramOptions } from '../compute';
-
-import { checkProcessable } from './utils/checkProcessable';
+import { Stack } from '../../Stack';
+import { HistogramOptions } from '../../compute';
+import { checkProcessable } from '../utils/checkProcessable';
 
 /**
  * Get the sum of all the histograms of the stack's images. If no channel is specified in the options, the images must be GREY.
