@@ -54,8 +54,8 @@ export function getImageFromIFD(ifd: TiffIfd): Image {
             ? 'RGBA'
             : 'RGB'
           : ifd.alpha
-          ? 'GREYA'
-          : 'GREY',
+            ? 'GREYA'
+            : 'GREY',
       meta: getMetadata(ifd),
     });
   }
