@@ -23,7 +23,7 @@ describe('Stack constructor', () => {
     const image1 = testUtils.createGreyImage([[1, 2, 3, 4]]);
     const image2 = testUtils.createRgbaImage([[1, 2, 3, 4]]);
     expect(() => {
-      new Stack([image1, image2]);
+      return new Stack([image1, image2]);
     }).toThrow('images must all have the same bit depth and color model');
   });
 
@@ -31,7 +31,7 @@ describe('Stack constructor', () => {
     const image1 = testUtils.createGreyImage([[1, 2, 3, 4]], { bitDepth: 8 });
     const image2 = testUtils.createGreyImage([[1, 2, 3, 4]], { bitDepth: 16 });
     expect(() => {
-      new Stack([image1, image2]);
+      return new Stack([image1, image2]);
     }).toThrow('images must all have the same bit depth and color model');
   });
 });
