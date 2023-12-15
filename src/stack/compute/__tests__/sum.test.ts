@@ -48,5 +48,5 @@ test('should throw if too many images in stack', () => {
 
   expect(() => {
     return stack.sum();
-  }).toThrow('Maximal valid stack size is 255');
+  }).toThrow('Maximal valid stack size is 257');
 });
