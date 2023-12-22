@@ -1,4 +1,4 @@
-import { Image, Point } from '../..';
+import { Image, Mask, Point } from '../..';
 
 export interface AlignDifferentSizeOptions {
   /**
@@ -11,6 +11,11 @@ export interface AlignDifferentSizeOptions {
    * @default 0.1
    */
   minFractionPixels?: number;
+  /**
+   * Mask of the source image, which specifies the pixels to consider for the calculation.
+   * @default Mask with the dimensions of source and all pixels set to 1.
+   */
+  sourceMask?: Image;
 }
 
 /**
@@ -28,7 +33,10 @@ export function getNormalisedDifference(
   translation: Point,
   options: AlignDifferentSizeOptions = {},
 ): number {
-  const { minFractionPixels } = options;
+  const {
+    minFractionPixels,
+    sourceMask = new Mask(source.width, source.height).fill(1),
+  } = options;
   let { minNbPixels } = options;
 
   if (minNbPixels === undefined && minFractionPixels === undefined) {
@@ -70,35 +78,39 @@ export function getNormalisedDifference(
   const width = maxX - minX;
   const height = maxY - minY;
 
-  const nbPixels = width * height;
-  if (nbPixels < minNbPixels) {
-    throw new Error(
-      `The number of pixels to compare is too low (less than ${minNbPixels})`,
-    );
-  }
+  let nbPixels = 0;
 
   for (let row = 0; row < height; row++) {
     for (let column = 0; column < width; column++) {
       for (let channel = 0; channel < source.channels; channel++) {
-        const sourceValue = source.getValue(
-          column + sourceXOffet,
-          row + sourceYOffset,
-          channel,
-        );
-        const destinationValue = destination.getValue(
-          column + destinationXOffset,
-          row + destinationYOffset,
-          channel,
-        );
+        if (sourceMask.getValue(column, row, 0)) {
+          const sourceValue = source.getValue(
+            column + sourceXOffet,
+            row + sourceYOffset,
+            channel,
+          );
+          const destinationValue = destination.getValue(
+            column + destinationXOffset,
+            row + destinationYOffset,
+            channel,
+          );
 
-        const currentDifference = sourceValue - destinationValue;
-        if (currentDifference < 0) {
-          difference -= currentDifference;
-        } else {
-          difference += currentDifference;
+          const currentDifference = sourceValue - destinationValue;
+          if (currentDifference < 0) {
+            difference -= currentDifference;
+          } else {
+            difference += currentDifference;
+          }
+          nbPixels++;
         }
       }
     }
+  }
+
+  if (nbPixels < minNbPixels) {
+    throw new Error(
+      `The number of pixels compared is too low (less than ${minNbPixels})`,
+    );
   }
 
   return difference / nbPixels;

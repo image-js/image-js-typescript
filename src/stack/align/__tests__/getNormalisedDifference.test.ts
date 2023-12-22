@@ -70,7 +70,7 @@ test('not enough overlapping points', () => {
         minNbPixels: 1,
       },
     ),
-  ).toThrow(/The number of pixels to compare is too low/);
+  ).toThrow(`The number of pixels compared is too low (less than 1)`);
 });
 
 test('options error', () => {
