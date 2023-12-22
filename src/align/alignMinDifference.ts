@@ -12,7 +12,7 @@ export interface AlignMinDifferenceOptions {
 
 /**
  * Aligns two images by finding the translation that minimizes the mean difference of all channels.
- * between them. The source image should fit entirely in the destination image.
+ * The source image should fit entirely in the destination image.
  * @param source - Image to align.
  * @param destination - Image to align to.
  * @param options - Align images min difference options.

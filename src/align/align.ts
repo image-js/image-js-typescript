@@ -39,7 +39,7 @@ export interface AlignOptions {
 }
 
 /**
- * Align an enlarged crop on a reference crop by doing the min difference.
+ * Align a source image on a destination image. The source must fit entirely inside the destination image.
  * A rough alignment is first done on the images scaled down and a precise alignment is then
  * applied on the real size images. Only part of the pixels are used for the comparison.
  * The pixel to considered are defined by a mask. The algorithm used to create the mask
@@ -47,7 +47,7 @@ export interface AlignOptions {
  * @param source - The source image. Must be smaller than the destination image.
  * @param destination - The destination image.
  * @param options - Aligning options.
- * @returns The coordinates of the reference relative to the top-left corner
+ * @returns The coordinates of the source image relative to the top-left corner
  * of the destination image for an optimal alignment.
  */
 export function align(
@@ -123,7 +123,10 @@ export function align(
  * @param options - Prepare for align options.
  * @returns The prepared image
  */
-function prepareForAlign(image: Image, options: AlignOptions = {}): Image {
+export function prepareForAlign(
+  image: Image,
+  options: AlignOptions = {},
+): Image {
   const { scalingFactor = 4, blurKernelSize = 3, level = 'minMax' } = options;
 
   const blurred = image.blur({ width: blurKernelSize, height: blurKernelSize });
