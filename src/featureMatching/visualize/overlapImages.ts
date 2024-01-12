@@ -2,19 +2,19 @@ import { Image, ImageColorModel, ImageCoordinates, Point, merge } from '../..';
 
 export interface OverlapImageOptions {
   /**
-   * Origin of the second image relatively to top-left corner of first image.
+   * Origin of the first image relatively to top-left corner of second image.
    * @default `{row: 0, column: 0}`
    */
   origin?: Point;
 
   /**
-   * Desired rotation of image 2 in degrees around its top-left corner.
+   * Desired rotation of image1 in degrees around its top-left corner.
    * @default `0`
    */
   angle?: number;
 
   /**
-   * Factor by which to scale the second image.
+   * Factor by which to scale the first image.
    *  @default `1`
    */
   scale?: number;

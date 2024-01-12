@@ -28,7 +28,7 @@ export interface AlignOptions {
   /**
    * Whether to auto level the images before the precise alignment phase. You can chose between `minMax`
    * leveling (span all channels from 0 to max value) or `uniform`(keep the color balance).
-   * @default false
+   * @default 'minMax'
    */
   level?: LevelingAlgorithm;
   /**
