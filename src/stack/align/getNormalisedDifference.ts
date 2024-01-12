@@ -15,22 +15,22 @@ export interface AlignDifferentSizeOptions {
    * Mask of the source image, which specifies the pixels to consider for the calculation.
    * @default Mask with the dimensions of source and all pixels set to 1.
    */
-  sourceMask?: Image;
+  sourceMask?: Mask;
 }
 
 /**
- * Compute the difference between two images that are not entirely overlapping and normalise it using the nb of pixels processed.
+ * Compute the difference between two images that are not entirely overlapping and normalise it using the nb of pixels overlapping.
  * Only the pixels present in both images are taken into account.
  * @param source - Source image.
  * @param destination - Destination image.
- * @param translation - Translation to apply on the source image before computing the difference.
+ * @param sourceTranslation - Translation to apply on the source image before computing the difference.
  * @param options - Options.
  * @returns The normalised difference.
  */
 export function getNormalisedDifference(
   source: Image,
   destination: Image,
-  translation: Point,
+  sourceTranslation: Point,
   options: AlignDifferentSizeOptions = {},
 ): number {
   const {
@@ -58,22 +58,28 @@ export function getNormalisedDifference(
   let destinationXOffset = 0;
   let destinationYOffset = 0;
 
-  if (translation.column < 0) {
-    sourceXOffet = -translation.column;
+  if (sourceTranslation.column < 0) {
+    sourceXOffet = -sourceTranslation.column;
   } else {
-    destinationXOffset = translation.column;
+    destinationXOffset = sourceTranslation.column;
   }
 
-  if (translation.row < 0) {
-    sourceYOffset = -translation.row;
+  if (sourceTranslation.row < 0) {
+    sourceYOffset = -sourceTranslation.row;
   } else {
-    destinationYOffset = translation.row;
+    destinationYOffset = sourceTranslation.row;
   }
 
-  const maxX = Math.min(destination.width, source.width + translation.column);
-  const minX = Math.max(0, translation.column);
-  const maxY = Math.min(destination.height, source.height + translation.row);
-  const minY = Math.max(0, translation.row);
+  const maxX = Math.min(
+    destination.width,
+    source.width + sourceTranslation.column,
+  );
+  const minX = Math.max(0, sourceTranslation.column);
+  const maxY = Math.min(
+    destination.height,
+    source.height + sourceTranslation.row,
+  );
+  const minY = Math.max(0, sourceTranslation.row);
 
   const width = maxX - minX;
   const height = maxY - minY;

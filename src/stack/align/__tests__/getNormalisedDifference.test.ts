@@ -91,3 +91,33 @@ test('options error', () => {
     ),
   ).toThrow(/You cannot specify both minNbPixels and minFractionPixels/);
 });
+
+test.each([
+  {
+    translation: { column: -1, row: 0 },
+    expected: 3,
+  },
+  {
+    translation: { column: 1, row: 0 },
+    expected: 2,
+  },
+])('use source mask ($translation)', (data) => {
+  const source = testUtils.createGreyImage([
+    [1, 2, 3, 4],
+    [0, 0, 0, 0],
+  ]);
+  const destination = testUtils.createGreyImage([
+    [0, 0, 0, 0],
+    [1, 1, 1, 1],
+  ]);
+  const mask = testUtils.createMask([
+    [1, 1, 1, 1],
+    [0, 0, 0, 0],
+  ]);
+  expect(
+    getNormalisedDifference(source, destination, data.translation, {
+      minNbPixels: 1,
+      sourceMask: mask,
+    }),
+  ).toBe(data.expected);
+});
