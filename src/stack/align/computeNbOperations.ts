@@ -1,14 +1,31 @@
 import { Image } from '../..';
 
 export interface ComputeNbOperationsOptions {
+  /**
+   * Horizontal fraction of the images that can not be overlapping.
+   * This fraction is applied on the image with the smallest width.
+   * @default 0
+   */
   xFactor?: number;
+  /**
+   * Vertical fraction of the images that can not be overlapping.
+   * This fraction is applied on the image with the smallest height.
+   * @default 0
+   */
   yFactor?: number;
 }
 
 export interface Margins {
+  /**
+   * Horizontal margin in pixels.
+   */
   xMargin: number;
+  /**
+   * Vertical margin in pixels.
+   */
   yMargin: number;
 }
+
 /**
  * Compute the margins that around the destination image in which the source can be translated.
  * @param source - Source image.
@@ -41,6 +58,8 @@ export function computeXYMargins(
   return { xMargin, yMargin };
 }
 
+const defaultMargins = { xMargin: 0, yMargin: 0 };
+
 /**
  * Compute the number of translations that will be performed for the alignment.
  * @param source - Source image.
@@ -51,7 +70,7 @@ export function computeXYMargins(
 export function computeNbTranslations(
   source: Image,
   destination: Image,
-  margins: Margins,
+  margins: Margins = defaultMargins,
 ): number {
   const minRow = -margins.yMargin;
   const minColumn = -margins.xMargin;
@@ -72,7 +91,7 @@ export function computeNbTranslations(
 export function computeNbOperations(
   source: Image,
   destination: Image,
-  margins: Margins,
+  margins: Margins = defaultMargins,
 ): number {
   const nbTranslations = computeNbTranslations(source, destination, margins);
   const minHeight = Math.min(source.height, destination.height);
