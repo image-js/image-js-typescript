@@ -10,6 +10,7 @@ import {
   computeNbOperations,
   computeXYMargins,
 } from './utils/computeNbOperations';
+import { findOverlap } from './utils/findOverlap';
 import { getMinDiffTranslation } from './utils/getMinDiffTranslation';
 
 export interface AlignDifferentSizeOptions extends ComputeNbOperationsOptions {
@@ -113,28 +114,16 @@ export function alignDifferentSize(
     row: Math.round(roughTranslation.row * scalingFactor),
   };
 
-  const minX = Math.max(0, scaledTranslation.column);
-  const maxX = Math.min(
-    destination.width,
-    source.width + scaledTranslation.column,
-  );
-  const minY = Math.max(0, scaledTranslation.row);
-  const maxY = Math.min(
-    destination.height,
-    source.height + scaledTranslation.row,
-  );
-
-  const overlapWidth = maxX - minX;
-  const overlapHeight = maxY - minY;
-
-  const sourceOrigin = {
-    column: Math.max(0, -scaledTranslation.column),
-    row: Math.max(0, -scaledTranslation.row),
-  };
-  const destinationOrigin = {
-    column: Math.max(0, scaledTranslation.column),
-    row: Math.max(0, scaledTranslation.row),
-  };
+  const {
+    width: overlapWidth,
+    height: overlapHeight,
+    sourceOrigin,
+    destinationOrigin,
+  } = findOverlap({
+    source,
+    destination,
+    sourceTranslation: scaledTranslation,
+  });
 
   // Precise alignment
   const sourceCrop = source.crop({

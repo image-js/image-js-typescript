@@ -20,6 +20,16 @@ export interface FindOverlapParameters {
    * @default { column: 0, row: 0 }
    */
   commonAreaOrigin?: Point;
+  /**
+   * Theoretical width of the common area on the iteration before.
+   * @default destination.width
+   */
+  previousWidth?: number;
+  /**
+   * Theoretical height of the common area on the iteration before.
+   * @default destination.height
+   */
+  previousHeight?: number;
 }
 export interface Overlap {
   /**
@@ -53,17 +63,19 @@ export function findOverlap(
     destination,
     sourceTranslation = { column: 0, row: 0 },
     commonAreaOrigin = { column: 0, row: 0 },
+    previousWidth = destination.width,
+    previousHeight = destination.height,
   } = findOverlapParameters;
 
   const minX = Math.max(commonAreaOrigin.column, sourceTranslation.column);
   const maxX = Math.min(
-    destination.width,
-    source.width + sourceTranslation.column,
+    commonAreaOrigin.column + previousWidth,
+    sourceTranslation.column + source.width,
   );
   const minY = Math.max(commonAreaOrigin.row, sourceTranslation.row);
   const maxY = Math.min(
-    destination.height,
-    source.height + sourceTranslation.row,
+    commonAreaOrigin.row + previousHeight,
+    sourceTranslation.row + source.height,
   );
 
   const width = maxX - minX;
