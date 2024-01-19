@@ -17,6 +17,11 @@ export interface GetMinDiffTranslationOptions
    * @default 0
    */
   topBottomMargin?: number;
+  /**
+   * Minimal fraction of the pixels of the source that have to overlap to apply the algorithm.
+   * @default 0.1
+   */
+  minFractionPixels?: number;
 }
 
 /**

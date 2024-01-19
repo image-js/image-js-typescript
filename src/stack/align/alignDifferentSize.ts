@@ -1,4 +1,10 @@
-import { Image, Point, ThresholdAlgorithm } from '../..';
+import {
+  Image,
+  Point,
+  ThresholdAlgorithm,
+  overlapImages,
+  writeSync,
+} from '../..';
 import {
   LevelingAlgorithm,
   getAlignMask,
@@ -17,7 +23,7 @@ export interface AlignDifferentSizeOptions extends ComputeNbOperationsOptions {
    * Maximal number of operations that the algorithm can perform.
    * This number is used to rescale the images if they are too big so that
    * the algorithm takes roughly always the same time to compute.
-   * @default 100000
+   * @default 1e8
    */
   maxNbOperations?: number;
   /**
@@ -41,6 +47,11 @@ export interface AlignDifferentSizeOptions extends ComputeNbOperationsOptions {
    * @default 3
    */
   blurKernelSize?: number;
+  /**
+   * Minimal fraction of the pixels of the source that have to overlap to apply the algorithm.
+   * @default 0.1
+   */
+  minFractionPixels?: number;
 }
 
 /**
@@ -58,14 +69,16 @@ export function alignDifferentSize(
   const {
     xFactor = 0.5,
     yFactor = 0.5,
-    maxNbOperations = 100000,
+    maxNbOperations = 1e8,
     precisionFactor = 1.5,
     thresholdAlgoritm = 'otsu',
     level = 'minMax',
     blurKernelSize,
+    minFractionPixels,
   } = options;
 
   const margins = computeXYMargins(source, destination, { xFactor, yFactor });
+  console.log({ margins });
 
   const nbOperations = computeNbOperations(source, destination, margins);
 
@@ -73,6 +86,7 @@ export function alignDifferentSize(
   if (nbOperations > maxNbOperations) {
     scalingFactor = Math.sqrt(nbOperations / maxNbOperations);
   }
+  console.log({ scalingFactor });
 
   // Rough alignment
   const smallSource = prepareForAlign(source, {
@@ -86,8 +100,12 @@ export function alignDifferentSize(
     level,
     blurKernelSize,
   });
-  const smallMargins = computeXYMargins(smallSource, smallDestination);
+  const smallMargins = computeXYMargins(smallSource, smallDestination, {
+    xFactor,
+    yFactor,
+  });
 
+  console.log({ smallMargins });
   const roughTranslation = getMinDiffTranslation(
     smallSource,
     smallDestination,
@@ -95,8 +113,14 @@ export function alignDifferentSize(
       sourceMask: smallMask,
       leftRightMargin: smallMargins.xMargin,
       topBottomMargin: smallMargins.yMargin,
+      minFractionPixels,
     },
   );
+
+  const smallOverlap = overlapImages(smallSource, smallDestination, {
+    origin: roughTranslation,
+  });
+  writeSync(`${__dirname}/smallOverlap.png`, smallOverlap);
 
   // Find overlapping surface and source and destination origins
   const scaledTranslation = {
@@ -153,6 +177,7 @@ export function alignDifferentSize(
     {
       leftRightMargin: preciseMargins,
       topBottomMargin: preciseMargins,
+      minFractionPixels,
     },
   );
 
