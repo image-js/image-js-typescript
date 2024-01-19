@@ -39,7 +39,6 @@ export function computeXYMargins(
   options: ComputeNbOperationsOptions = {},
 ): Margins {
   const { xFactor = 0, yFactor = 0 } = options;
-  console.log({ xFactor, yFactor });
   let xMargin = 0;
   let yMargin = 0;
 

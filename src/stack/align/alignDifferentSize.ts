@@ -1,10 +1,4 @@
-import {
-  Image,
-  Point,
-  ThresholdAlgorithm,
-  overlapImages,
-  writeSync,
-} from '../..';
+import { Image, Point, ThresholdAlgorithm } from '../..';
 import {
   LevelingAlgorithm,
   getAlignMask,
@@ -78,7 +72,6 @@ export function alignDifferentSize(
   } = options;
 
   const margins = computeXYMargins(source, destination, { xFactor, yFactor });
-  console.log({ margins });
 
   const nbOperations = computeNbOperations(source, destination, margins);
 
@@ -86,8 +79,6 @@ export function alignDifferentSize(
   if (nbOperations > maxNbOperations) {
     scalingFactor = Math.sqrt(nbOperations / maxNbOperations);
   }
-  console.log({ scalingFactor });
-
   // Rough alignment
   const smallSource = prepareForAlign(source, {
     scalingFactor,
@@ -105,7 +96,6 @@ export function alignDifferentSize(
     yFactor,
   });
 
-  console.log({ smallMargins });
   const roughTranslation = getMinDiffTranslation(
     smallSource,
     smallDestination,
@@ -116,11 +106,6 @@ export function alignDifferentSize(
       minFractionPixels,
     },
   );
-
-  const smallOverlap = overlapImages(smallSource, smallDestination, {
-    origin: roughTranslation,
-  });
-  writeSync(`${__dirname}/smallOverlap.png`, smallOverlap);
 
   // Find overlapping surface and source and destination origins
   const scaledTranslation = {
@@ -163,10 +148,16 @@ export function alignDifferentSize(
     height: overlapHeight,
   });
 
-  const preciseSource = prepareForAlign(sourceCrop, { level, blurKernelSize });
+  const preciseSource = prepareForAlign(sourceCrop, {
+    level,
+    blurKernelSize,
+    scalingFactor: 1,
+  });
+  const mask = getAlignMask(preciseSource, thresholdAlgoritm);
   const preciseDestination = prepareForAlign(destinationCrop, {
     level,
     blurKernelSize,
+    scalingFactor: 1,
   });
 
   const preciseMargins = Math.round(precisionFactor * scalingFactor);
@@ -178,6 +169,7 @@ export function alignDifferentSize(
       leftRightMargin: preciseMargins,
       topBottomMargin: preciseMargins,
       minFractionPixels,
+      sourceMask: mask,
     },
   );
 

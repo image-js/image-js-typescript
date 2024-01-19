@@ -15,7 +15,7 @@ test('id crops', () => {
   expect(overlap).toMatchImageSnapshot();
 });
 
-test.only('different image sizes', () => {
+test('different image sizes, rounding problem', () => {
   const einstein = testUtils.load('ssim/ssim-original.png');
 
   const origin = { row: 50, column: 50 };
@@ -35,11 +35,34 @@ test.only('different image sizes', () => {
     yFactor: 0.5,
   });
 
-  console.log(result);
+  const overlap = overlapImages(source, destination, { origin: result });
+  writeSync(`${__dirname}/overlap.png`, overlap);
+
+  expect(result).toStrictEqual(origin);
+});
+
+test('different image sizes, no rounding problem', () => {
+  const einstein = testUtils.load('ssim/ssim-original.png');
+
+  const origin = { row: 20, column: 24 };
+  const destination = einstein.crop({
+    width: 150,
+    height: 200,
+  });
+  const source = einstein.crop({
+    width: 160,
+    height: 120,
+    origin,
+  });
+
+  const result = alignDifferentSize(source, destination, {
+    maxNbOperations: 1e8,
+    xFactor: 0.5,
+    yFactor: 0.5,
+  });
 
   const overlap = overlapImages(source, destination, { origin: result });
   writeSync(`${__dirname}/overlap.png`, overlap);
 
-  // expect(overlap).toMatchImageSnapshot();
   expect(result).toStrictEqual(origin);
 });
