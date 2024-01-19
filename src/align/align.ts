@@ -142,7 +142,16 @@ export function prepareForAlign(
   return scaled;
 }
 
-function getAlignMask(image: Image, algorithm: ThresholdAlgorithm): Mask {
+/**
+ * Create a mask from an image to specify which pixels to use for the alignment.
+ * @param image - Image to create the mask from.
+ * @param algorithm - Threshold algorithm to use.
+ * @returns The mask.
+ */
+export function getAlignMask(
+  image: Image,
+  algorithm: ThresholdAlgorithm,
+): Mask {
   if (image.colorModel !== ImageColorModel.GREY) {
     image = image.grey();
   }
