@@ -1,4 +1,4 @@
-import { Image, Point } from '../..';
+import { Image, Point } from '../../..';
 
 import {
   AlignDifferentSizeOptions,

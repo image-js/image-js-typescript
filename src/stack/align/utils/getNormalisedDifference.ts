@@ -1,4 +1,4 @@
-import { Image, Mask, Point } from '../..';
+import { Image, Mask, Point } from '../../..';
 
 export interface AlignDifferentSizeOptions {
   /**

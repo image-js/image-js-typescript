@@ -9,8 +9,8 @@ import {
   ComputeNbOperationsOptions,
   computeNbOperations,
   computeXYMargins,
-} from './computeNbOperations';
-import { getMinDiffTranslation } from './getMinDiffTranslation';
+} from './utils/computeNbOperations';
+import { getMinDiffTranslation } from './utils/getMinDiffTranslation';
 
 export interface AlignDifferentSizeOptions extends ComputeNbOperationsOptions {
   /**

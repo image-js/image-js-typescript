@@ -1,4 +1,4 @@
-import { overlapImages } from '../../../featureMatching';
+import { overlapImages } from '../../../../featureMatching';
 import { getMinDiffTranslation } from '../getMinDiffTranslation';
 
 test('no margins on sides', () => {
