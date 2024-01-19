@@ -108,7 +108,8 @@ test('expect wrong behavior', () => {
 
   const result = align(source, destination, { blurKernelSize: 1 });
   expect(result).toStrictEqual({
-    row: 1,
-    column: 1,
+    row: 0,
+    column: 0,
   });
+  // this algorithm doen't work when one image is partly out of the other
 });

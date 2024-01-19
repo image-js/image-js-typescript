@@ -3,16 +3,18 @@ import { Point } from '../../../geometry';
 
 import { findOverlap } from './findOverlap';
 
+export interface CommonArea {
+  origin: Point;
+  width: number;
+  height: number;
+}
+
 /**
  * Find the common area of all images of a stack.
  * @param stack - Stack to process.
  * @returns The common area origin relative to the first image of the stack, the width and the height.
  */
-export function findCommonArea(stack: Stack): {
-  origin: Point;
-  width: number;
-  height: number;
-} {
+export function findCommonArea(stack: Stack): CommonArea {
   if (stack.size < 2) {
     throw new RangeError('Stack must contain at least 2 images');
   }
@@ -31,15 +33,13 @@ export function findCommonArea(stack: Stack): {
       previousWidth: width,
     });
 
-    console.log({ overlap });
     commonAreaOrigin = {
       column: Math.max(commonAreaOrigin.column, stack.translations[i].column),
       row: Math.max(commonAreaOrigin.row, stack.translations[i].row),
     };
     width = overlap.width;
     height = overlap.height;
-
-    console.log({ origin: commonAreaOrigin, width, height });
   }
+
   return { origin: commonAreaOrigin, width, height };
 }
