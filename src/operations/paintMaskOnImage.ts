@@ -29,7 +29,7 @@ export interface PaintMaskOnImageOptions {
 }
 
 /**
- * Paint a mask onto an image and the given position and with the given color.
+ * Paint a mask onto an image at the given position and with the given color.
  * @param image - Image on which to paint the mask.
  * @param mask - Mask to paint on the image.
  * @param options - Paint mask options.

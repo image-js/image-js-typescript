@@ -53,7 +53,7 @@ export function computeXYMargins(
   if (source.height < destination.height) {
     yMargin = Math.round(yFactor * source.height);
   } else {
-    yMargin = source.height - destination.height * (1 - yFactor);
+    yMargin = Math.round(source.height - destination.height * (1 - yFactor));
   }
   return { xMargin, yMargin };
 }

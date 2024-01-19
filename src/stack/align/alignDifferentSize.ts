@@ -36,6 +36,11 @@ export interface AlignDifferentSizeOptions extends ComputeNbOperationsOptions {
    * @default 'minMax'
    */
   level?: LevelingAlgorithm;
+  /**
+   * Kernel size for the blur applied to the images before the rough alignment phase.
+   * @default 3
+   */
+  blurKernelSize?: number;
 }
 
 /**
@@ -48,7 +53,7 @@ export interface AlignDifferentSizeOptions extends ComputeNbOperationsOptions {
 export function alignDifferentSize(
   source: Image,
   destination: Image,
-  options: AlignDifferentSizeOptions,
+  options: AlignDifferentSizeOptions = {},
 ): Point {
   const {
     xFactor = 0.5,
@@ -57,6 +62,7 @@ export function alignDifferentSize(
     precisionFactor = 1.5,
     thresholdAlgoritm = 'otsu',
     level = 'minMax',
+    blurKernelSize,
   } = options;
 
   const margins = computeXYMargins(source, destination, { xFactor, yFactor });
@@ -72,11 +78,13 @@ export function alignDifferentSize(
   const smallSource = prepareForAlign(source, {
     scalingFactor,
     level,
+    blurKernelSize,
   });
   const smallMask = getAlignMask(smallSource, thresholdAlgoritm);
   const smallDestination = prepareForAlign(destination, {
     scalingFactor,
     level,
+    blurKernelSize,
   });
   const smallMargins = computeXYMargins(smallSource, smallDestination);
 
@@ -91,27 +99,32 @@ export function alignDifferentSize(
   );
 
   // Find overlapping surface and source and destination origins
-  const minX = Math.min(0, roughTranslation.column);
+  const scaledTranslation = {
+    column: Math.round(roughTranslation.column * scalingFactor),
+    row: Math.round(roughTranslation.row * scalingFactor),
+  };
+
+  const minX = Math.max(0, scaledTranslation.column);
   const maxX = Math.min(
     destination.width,
-    source.width + roughTranslation.column,
+    source.width + scaledTranslation.column,
   );
-  const minY = Math.min(0, roughTranslation.row);
+  const minY = Math.max(0, scaledTranslation.row);
   const maxY = Math.min(
     destination.height,
-    source.height + roughTranslation.row,
+    source.height + scaledTranslation.row,
   );
 
   const overlapWidth = maxX - minX;
   const overlapHeight = maxY - minY;
 
   const sourceOrigin = {
-    column: Math.max(0, -roughTranslation.column),
-    row: Math.max(0, -roughTranslation.row),
+    column: Math.max(0, -scaledTranslation.column),
+    row: Math.max(0, -scaledTranslation.row),
   };
   const destinationOrigin = {
-    column: Math.max(0, roughTranslation.column),
-    row: Math.max(0, roughTranslation.row),
+    column: Math.max(0, scaledTranslation.column),
+    row: Math.max(0, scaledTranslation.row),
   };
 
   // Precise alignment
@@ -126,11 +139,17 @@ export function alignDifferentSize(
     height: overlapHeight,
   });
 
-  const preciseMargins = precisionFactor * scalingFactor;
+  const preciseSource = prepareForAlign(sourceCrop, { level, blurKernelSize });
+  const preciseDestination = prepareForAlign(destinationCrop, {
+    level,
+    blurKernelSize,
+  });
+
+  const preciseMargins = Math.round(precisionFactor * scalingFactor);
 
   const preciseTranslation = getMinDiffTranslation(
-    sourceCrop,
-    destinationCrop,
+    preciseSource,
+    preciseDestination,
     {
       leftRightMargin: preciseMargins,
       topBottomMargin: preciseMargins,
@@ -138,7 +157,7 @@ export function alignDifferentSize(
   );
 
   return {
-    column: roughTranslation.column + preciseTranslation.column,
-    row: roughTranslation.row + preciseTranslation.row,
+    column: scaledTranslation.column + preciseTranslation.column,
+    row: scaledTranslation.row + preciseTranslation.row,
   };
 }
