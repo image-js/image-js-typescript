@@ -139,6 +139,17 @@ export class Stack {
     return this.translations[index];
   }
 
+  public setTranslations(translations: Point[]): void {
+    if (translations.length !== this.size) {
+      throw new RangeError(
+        'The number of translations must be equal to the number of images',
+      );
+    }
+    for (let i = 0; i < this.size; i++) {
+      this.translations[i] = translations[i];
+    }
+  }
+
   // COMPUTE
 
   /**

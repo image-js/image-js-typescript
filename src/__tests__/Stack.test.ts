@@ -103,3 +103,14 @@ test('remove images too dark using filter', () => {
   expect(result.size).toBe(1);
   expect(result.getImage(0)).toMatchImageData([[100, 100, 100, 100]]);
 });
+
+test('set translations, wrong length', () => {
+  const image1 = testUtils.createGreyImage([[1, 2, 3, 4]]);
+  const image2 = testUtils.createGreyImage([[100, 100, 100, 100]]);
+  const stack = new Stack([image1, image2]);
+  expect(() => {
+    stack.setTranslations([{ row: 0, column: 0 }]);
+  }).toThrow(
+    'The number of translations must be equal to the number of images',
+  );
+});
