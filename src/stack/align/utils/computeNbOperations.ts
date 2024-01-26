@@ -112,8 +112,8 @@ export function computeNbOperations(
   const minHeight = Math.min(source.height, destination.height);
   const minWidth = Math.min(source.width, destination.width);
   // take mask into account
-  const nbMaskPixels = sourceMask.getNbNonZeroPixels();
-  const totalNbPixels = source.size;
+  const fractionWhitePixels = sourceMask.getNbNonZeroPixels() / source.size;
+  console.log({ fractionWhitePixels });
 
-  return nbTranslations * minHeight * minWidth * (nbMaskPixels / totalNbPixels);
+  return nbTranslations * minHeight * minWidth * fractionWhitePixels;
 }

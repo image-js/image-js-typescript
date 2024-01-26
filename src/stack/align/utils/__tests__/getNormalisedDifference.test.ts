@@ -1,3 +1,4 @@
+import { Mask } from '../../../../Mask';
 import { getNormalisedDifference } from '../getNormalisedDifference';
 
 test.each([
@@ -118,6 +119,7 @@ test.each([
     getNormalisedDifference(source, destination, data.translation, {
       minNbPixels: 1,
       sourceMask: mask,
+      destinationMask: new Mask(destination.width, destination.height),
     }),
   ).toBe(data.expected);
 });
@@ -207,10 +209,20 @@ test('same size', () => {
     [0, 0, 0, 0],
   ]);
 
+  const destinationMask = testUtils.createMask([
+    [0, 0, 0, 0],
+    [0, 0, 1, 1],
+    [0, 0, 1, 1],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+  ]);
+
   const translation = { row: -3, column: -3 };
 
   const result = getNormalisedDifference(source, destination, translation, {
     sourceMask,
+    destinationMask,
   });
 
   expect(result).toBe(255);

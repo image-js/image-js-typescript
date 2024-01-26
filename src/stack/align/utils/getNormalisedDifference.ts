@@ -16,6 +16,11 @@ export interface AlignDifferentSizeOptions {
    * @default Mask with the dimensions of source and all pixels set to 1.
    */
   sourceMask?: Mask;
+  /**
+   * Mask of the destination image, which specifies the pixels to consider for the calculation.
+   * @default Mask with the dimensions of destination and all pixels set to 1.
+   */
+  destinationMask?: Mask;
 }
 
 /**
@@ -36,6 +41,7 @@ export function getNormalisedDifference(
   const {
     minFractionPixels,
     sourceMask = new Mask(source.width, source.height).fill(1),
+    destinationMask = new Mask(destination.width, destination.height).fill(1),
   } = options;
   let { minNbPixels } = options;
 
@@ -70,9 +76,6 @@ export function getNormalisedDifference(
     destinationYOffset = sourceTranslation.row;
   }
 
-  console.log({ sourceXOffet, sourceYOffset });
-  console.log({ destinationXOffset, destinationYOffset });
-
   const maxX = Math.min(
     destination.width,
     source.width + sourceTranslation.column,
@@ -87,17 +90,19 @@ export function getNormalisedDifference(
   const width = maxX - minX;
   const height = maxY - minY;
 
-  console.log({ width, height });
-
   let nbPixels = 0;
 
   for (let row = 0; row < height; row++) {
     for (let column = 0; column < width; column++) {
       for (let channel = 0; channel < source.channels; channel++) {
         if (
-          sourceMask.getValue(column + sourceXOffet, row + sourceYOffset, 0)
+          sourceMask.getValue(column + sourceXOffet, row + sourceYOffset, 0) ||
+          destinationMask.getValue(
+            column + destinationXOffset,
+            row + destinationYOffset,
+            0,
+          )
         ) {
-          console.log({ column, row, channel });
           const sourceValue = source.getValue(
             column + sourceXOffet,
             row + sourceYOffset,
@@ -122,9 +127,7 @@ export function getNormalisedDifference(
   }
 
   if (nbPixels < minNbPixels) {
-    console.log(
-      `The number of pixels compared is too low (${nbPixels} less than ${minNbPixels})`,
-    );
+    // If there are not enough pixels overlapping, we consider the difference to be maximal
     return 2 ** source.bitDepth - 1;
   }
 
