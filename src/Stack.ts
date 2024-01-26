@@ -2,7 +2,6 @@ import { BitDepth } from 'fast-png';
 
 import { Image } from './Image';
 import { HistogramOptions } from './compute';
-import { Point } from './geometry';
 import { histogram } from './stack/compute/histogram';
 import { maxImage } from './stack/compute/maxImage';
 import { meanImage } from './stack/compute/meanImage';
@@ -14,7 +13,6 @@ import {
   verifySameDimensions,
 } from './stack/utils/checkImagesValid';
 import { ImageColorModel } from './utils/constants/colorModels';
-import { sum as pointSum } from './utils/geometry/points';
 
 export class Stack {
   /**
@@ -45,10 +43,6 @@ export class Stack {
    * The number of channels of the images.
    */
   public readonly channels: number;
-  /**
-   * Translations required to align the image.
-   */
-  public readonly translations: Point[];
 
   /**
    * Create a new stack from an array of images.
@@ -64,7 +58,6 @@ export class Stack {
     this.channels = images[0].channels;
     this.bitDepth = images[0].bitDepth;
     this.sameDimensions = verifySameDimensions(images);
-    this.translations = new Array(images.length).fill({ row: 0, column: 0 });
   }
 
   *[Symbol.iterator](): IterableIterator<Image> {
@@ -129,25 +122,6 @@ export class Stack {
     channel: number,
   ): number {
     return this.images[stackIndex].getValueByIndex(index, channel);
-  }
-
-  public addTranslation(index: number, translation: Point): void {
-    this.translations[index] = pointSum(this.translations[index], translation);
-  }
-
-  public getTranslation(index: number): Point {
-    return this.translations[index];
-  }
-
-  public setTranslations(translations: Point[]): void {
-    if (translations.length !== this.size) {
-      throw new RangeError(
-        'The number of translations must be equal to the number of images',
-      );
-    }
-    for (let i = 0; i < this.size; i++) {
-      this.translations[i] = translations[i];
-    }
   }
 
   // COMPUTE

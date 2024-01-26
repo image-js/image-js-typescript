@@ -6,7 +6,7 @@ const image1 = new Image(4, 4);
 const image2 = new Image(3, 4);
 const image3 = new Image(6, 5);
 const image4 = new Image(4, 2);
-const translations = [
+const absoluteTranslations = [
   { column: 0, row: 0 },
   { column: 2, row: -2 },
   { column: 1, row: 1 },
@@ -14,9 +14,9 @@ const translations = [
 ];
 test('stack of 2 images', () => {
   const stack = new Stack([image1, image2]);
-  stack.setTranslations(translations.slice(0, 2));
+  const absTranslations = absoluteTranslations.slice(0, 2);
 
-  const result = findCommonArea(stack);
+  const result = findCommonArea(stack, absTranslations);
 
   expect(result).toStrictEqual({
     origin: { column: 2, row: 0 },
@@ -27,9 +27,9 @@ test('stack of 2 images', () => {
 
 test('stack of 3 images', () => {
   const stack = new Stack([image1, image2, image3]);
-  stack.setTranslations(translations.slice(0, 3));
+  const absTranslations = absoluteTranslations.slice(0, 3);
 
-  const result = findCommonArea(stack);
+  const result = findCommonArea(stack, absTranslations);
 
   expect(result).toStrictEqual({
     origin: { column: 2, row: 1 },
@@ -40,9 +40,9 @@ test('stack of 3 images', () => {
 
 test('stack of 4 images', () => {
   const stack = new Stack([image1, image2, image3, image4]);
-  stack.setTranslations(translations.slice(0, 4));
+  const absTranslations = absoluteTranslations.slice(0, 4);
 
-  const result = findCommonArea(stack);
+  const result = findCommonArea(stack, absTranslations);
 
   expect(result).toStrictEqual({
     origin: { column: 2, row: 1 },
@@ -54,7 +54,7 @@ test('stack of 4 images', () => {
 test('stack of 1 images error', () => {
   const stack = new Stack([image1]);
 
-  expect(() => findCommonArea(stack)).toThrow(
+  expect(() => findCommonArea(stack, [{ row: 0, column: 0 }])).toThrow(
     'Stack must contain at least 2 images',
   );
 });
