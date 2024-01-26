@@ -105,12 +105,7 @@ export function getNormalisedDifference(
           )
         ) {
           pixelCounted = true;
-          if (
-            sourceTranslation.column === 15 &&
-            sourceTranslation.row === -12
-          ) {
-            console.log({ column, row, channel });
-          }
+
           const sourceValue = source.getValue(
             column + sourceXOffet,
             row + sourceYOffset,
@@ -142,8 +137,6 @@ export function getNormalisedDifference(
     // If there are not enough pixels overlapping, we consider the difference to be maximal
     return 2 ** source.bitDepth - 1;
   }
-  if (sourceTranslation.column === 15 && sourceTranslation.row === -12) {
-    console.log({ nbPixels, diff: difference / nbPixels });
-  }
+
   return difference / nbPixels;
 }

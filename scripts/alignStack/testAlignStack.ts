@@ -10,7 +10,6 @@ import { crop, writeSync } from '../../src';
 const folder = `${__dirname}/BloodMoon`;
 let imageNames = readdirSync(folder);
 
-imageNames = imageNames.slice(0, 2);
 console.log(imageNames);
 
 const paths = imageNames.map((name) => `${folder}/${name}`);
@@ -26,7 +25,7 @@ console.log(
 console.log('Compute absolute translations');
 const translations = alignStack(stack, {
   debug: true,
-  scalingFactor: 150,
+  scalingFactor: 20,
 });
 
 console.log('Cropping all images');
