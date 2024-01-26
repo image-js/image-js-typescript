@@ -1,26 +1,41 @@
-import { Image, Point, ThresholdAlgorithm } from '../..';
+import {
+  Image,
+  Point,
+  ThresholdAlgorithm,
+  overlapImages,
+  writeSync,
+} from '../..';
 import {
   LevelingAlgorithm,
   getAlignMask,
   prepareForAlign,
 } from '../../align/align';
+import { max } from '../../operations/greyAlgorithms';
 
 import {
-  ComputeNbOperationsOptions,
+  ComputeXYMarginsOptions,
   computeNbOperations,
   computeXYMargins,
 } from './utils/computeNbOperations';
 import { findOverlap } from './utils/findOverlap';
 import { getMinDiffTranslation } from './utils/getMinDiffTranslation';
 
-export interface AlignDifferentSizeOptions extends ComputeNbOperationsOptions {
+export interface AlignDifferentSizeOptions extends ComputeXYMarginsOptions {
   /**
    * Maximal number of operations that the algorithm can perform.
    * This number is used to rescale the images if they are too big so that
    * the algorithm takes roughly always the same time to compute.
+   * You can use scalingFactor instead to specify the scaling factor to apply,
+   * in that case, maxNbOperations should be undefined.
    * @default 1e8
    */
   maxNbOperations?: number;
+  /**
+   * Scaling factor to apply to the images before the rough alignment phase.
+   * Can only be used if maxnbOperations is undefined.
+   * @default undefined
+   */
+  scalingFactor?: number;
   /**
    * Threshold algorithm to use for the alignment masks.
    * @default 'otsu'
@@ -47,10 +62,20 @@ export interface AlignDifferentSizeOptions extends ComputeNbOperationsOptions {
    * @default 0.1
    */
   minFractionPixels?: number;
+  /**
+   * Minimal number of overlapping pixels to apply the algorithm.
+   * @default undefined
+   */
+  minNbPixels?: number;
+  /**
+   * Display debug information?
+   * @default false
+   */
+  debug?: boolean;
 }
 
 /**
- * Align two different size images by finding the position wchich minimises the difference.
+ * Align two different size images by finding the position which minimises the difference.
  * @param source - Source image.
  * @param destination - Destination image.
  * @param options - Align different size options.
@@ -64,34 +89,82 @@ export function alignDifferentSize(
   const {
     xFactor = 0.5,
     yFactor = 0.5,
-    maxNbOperations = 1e8,
     precisionFactor = 1.5,
     thresholdAlgoritm = 'otsu',
     level = 'minMax',
     blurKernelSize,
     minFractionPixels,
+    debug = false,
   } = options;
+
+  let maxNbOperations;
+  let scalingFactor;
+  if (
+    options.maxNbOperations === undefined &&
+    options.scalingFactor === undefined
+  ) {
+    maxNbOperations = 1e8;
+  } else if (
+    options.maxNbOperations !== undefined &&
+    options.scalingFactor === undefined
+  ) {
+    maxNbOperations = options.maxNbOperations;
+  } else if (
+    options.maxNbOperations === undefined &&
+    options.scalingFactor !== undefined
+  ) {
+    scalingFactor = options.scalingFactor;
+  } else {
+    throw new Error('You cannot define both maxNbOperations and scalingFactor');
+  }
 
   const margins = computeXYMargins(source, destination, { xFactor, yFactor });
 
-  const nbOperations = computeNbOperations(source, destination, margins);
-
-  let scalingFactor = 1;
-  if (nbOperations > maxNbOperations) {
-    scalingFactor = Math.sqrt(nbOperations / maxNbOperations);
+  if (maxNbOperations !== undefined) {
+    const initialSrcMask = getAlignMask(source, thresholdAlgoritm);
+    const initialDstMask = getAlignMask(destination, thresholdAlgoritm);
+    const nbOperations = computeNbOperations(source, destination, {
+      sourceMask: initialSrcMask,
+      destinationMask: initialDstMask,
+      margins,
+    });
+    if (debug) {
+      console.log({ nbOperations });
+    }
+    scalingFactor = 1;
+    if (nbOperations > maxNbOperations) {
+      scalingFactor = Math.sqrt(nbOperations / maxNbOperations);
+    }
   }
+  if (debug) {
+    console.log({ scalingFactor });
+  }
+
   // Rough alignment
   const smallSource = prepareForAlign(source, {
     scalingFactor,
     level,
     blurKernelSize,
   });
-  const smallMask = getAlignMask(smallSource, thresholdAlgoritm);
+  const smallSrcMask = getAlignMask(smallSource, thresholdAlgoritm);
   const smallDestination = prepareForAlign(destination, {
     scalingFactor,
     level,
     blurKernelSize,
   });
+  const smallDstMask = getAlignMask(smallDestination, thresholdAlgoritm);
+
+  const smallNbPixels =
+    (smallSrcMask.getNbNonZeroPixels() + smallDstMask.getNbNonZeroPixels()) / 2;
+
+  if (debug) {
+    console.log({ smallNbPixels });
+    writeSync(`${__dirname}/smallSource.png`, smallSource);
+    writeSync(`${__dirname}/smallDestination.png`, smallDestination);
+    writeSync(`${__dirname}/smallSrcMask.png`, smallSrcMask);
+    writeSync(`${__dirname}/smallDstMask.png`, smallDstMask);
+  }
+
   const smallMargins = computeXYMargins(smallSource, smallDestination, {
     xFactor,
     yFactor,
@@ -101,14 +174,26 @@ export function alignDifferentSize(
     smallSource,
     smallDestination,
     {
-      sourceMask: smallMask,
+      sourceMask: smallSrcMask,
+      destinationMask: smallDstMask,
       leftRightMargin: smallMargins.xMargin,
       topBottomMargin: smallMargins.yMargin,
-      minFractionPixels,
+      minNbPixels: smallNbPixels,
     },
   );
 
+  if (debug) {
+    console.log({ roughTranslation });
+    const overlap = overlapImages(smallSource, smallDestination, {
+      origin: roughTranslation,
+    });
+    writeSync(`${__dirname}/roughOverlap.png`, overlap);
+  }
+
   // Find overlapping surface and source and destination origins
+  if (debug) {
+    console.log('Find overlap');
+  }
   const scaledTranslation = {
     column: Math.round(roughTranslation.column * scalingFactor),
     row: Math.round(roughTranslation.row * scalingFactor),
@@ -142,15 +227,28 @@ export function alignDifferentSize(
     blurKernelSize,
     scalingFactor: 1,
   });
-  const mask = getAlignMask(preciseSource, thresholdAlgoritm);
+  const srcMask = getAlignMask(preciseSource, thresholdAlgoritm);
   const preciseDestination = prepareForAlign(destinationCrop, {
     level,
     blurKernelSize,
     scalingFactor: 1,
   });
+  const dstMask = getAlignMask(preciseDestination, thresholdAlgoritm);
+  if (debug) {
+    writeSync(`${__dirname}/preciseSource.png`, preciseSource);
+    writeSync(`${__dirname}/preciseDestination.png`, preciseDestination);
+    writeSync(`${__dirname}/srcMask.png`, srcMask);
+    writeSync(`${__dirname}/dstMask.png`, dstMask);
+  }
+
+  const nbPixels =
+    (srcMask.getNbNonZeroPixels() + dstMask.getNbNonZeroPixels()) / 2;
 
   const preciseMargins = Math.round(precisionFactor * scalingFactor);
 
+  if (debug) {
+    console.log('Compute precise translation');
+  }
   const preciseTranslation = getMinDiffTranslation(
     preciseSource,
     preciseDestination,
@@ -158,7 +256,9 @@ export function alignDifferentSize(
       leftRightMargin: preciseMargins,
       topBottomMargin: preciseMargins,
       minFractionPixels,
-      sourceMask: mask,
+      sourceMask: srcMask,
+      destinationMask: dstMask,
+      minNbPixels: nbPixels,
     },
   );
 

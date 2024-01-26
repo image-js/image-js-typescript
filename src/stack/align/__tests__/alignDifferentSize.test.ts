@@ -59,6 +59,7 @@ test('different image sizes, no rounding problem', () => {
     maxNbOperations: 1e8,
     xFactor: 0.5,
     yFactor: 0.5,
+    debug: true,
   });
 
   const overlap = overlapImages(source, destination, { origin: result });

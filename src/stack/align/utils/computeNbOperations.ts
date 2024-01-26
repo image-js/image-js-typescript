@@ -86,6 +86,11 @@ export interface ComputeNbOperationsOptions {
    */
   sourceMask?: Mask;
   /**
+   * The mask of the destination image.
+   * @default new Mask(destination.width, destination.height).fill(1)
+   */
+  destinationMask?: Mask;
+  /**
    * The margins around the destination image in which the source can be translated.
    * @default { xMargin: 0, yMargin: 0 }
    */
@@ -106,13 +111,17 @@ export function computeNbOperations(
 ): number {
   const {
     sourceMask = new Mask(source.width, source.height).fill(1),
+    destinationMask = new Mask(destination.width, destination.height).fill(1),
     margins = defaultMargins,
   } = options;
   const nbTranslations = computeNbTranslations(source, destination, margins);
   const minHeight = Math.min(source.height, destination.height);
   const minWidth = Math.min(source.width, destination.width);
   // take mask into account
-  const fractionWhitePixels = sourceMask.getNbNonZeroPixels() / source.size;
+  const fractionWhitePixels =
+    (sourceMask.getNbNonZeroPixels() / source.size +
+      destinationMask.getNbNonZeroPixels() / destination.size) /
+    2;
   console.log({ fractionWhitePixels });
 
   return nbTranslations * minHeight * minWidth * fractionWhitePixels;
