@@ -155,9 +155,10 @@ export function getAlignMask(
   if (image.colorModel !== ImageColorModel.GREY) {
     image = image.grey();
   }
-  const mask = image
-    .threshold({ algorithm })
-    .invert()
-    .dilate({ iterations: 2 });
-  return mask;
+  let mask = image.threshold({ algorithm });
+
+  if (mask.getNbNonZeroPixels() > image.size / 2) {
+    mask = mask.invert();
+  }
+  return mask.dilate({ iterations: 2 });
 }
