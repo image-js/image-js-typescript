@@ -11,10 +11,9 @@ const folder = `${__dirname}/BloodMoon`;
 let imageNames = readdirSync(folder);
 
 imageNames = imageNames.slice(0, 2);
+console.log(imageNames);
 
 const paths = imageNames.map((name) => `${folder}/${name}`);
-
-console.log(paths);
 
 console.log('Number of images in stack:', paths.length);
 
@@ -26,9 +25,8 @@ console.log(
 
 console.log('Compute absolute translations');
 const translations = alignStack(stack, {
-  minNbPixels: 1000,
   debug: true,
-  scalingFactor: 100,
+  scalingFactor: 150,
 });
 
 console.log('Cropping all images');

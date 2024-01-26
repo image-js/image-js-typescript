@@ -1,5 +1,6 @@
 import {
   Image,
+  ImageColorModel,
   Point,
   ThresholdAlgorithm,
   overlapImages,
@@ -98,7 +99,7 @@ export function alignDifferentSize(
   } = options;
 
   let maxNbOperations;
-  let scalingFactor;
+  let scalingFactor = 1;
   if (
     options.maxNbOperations === undefined &&
     options.scalingFactor === undefined
@@ -154,11 +155,11 @@ export function alignDifferentSize(
   });
   const smallDstMask = getAlignMask(smallDestination, thresholdAlgoritm);
 
-  const smallNbPixels =
-    (smallSrcMask.getNbNonZeroPixels() + smallDstMask.getNbNonZeroPixels()) / 2;
+  const smallNbPixels = Math.round(
+    (smallSrcMask.getNbNonZeroPixels() + smallDstMask.getNbNonZeroPixels()) / 2,
+  );
 
   if (debug) {
-    console.log({ smallNbPixels });
     writeSync(`${__dirname}/smallSource.png`, smallSource);
     writeSync(`${__dirname}/smallDestination.png`, smallDestination);
     writeSync(`${__dirname}/smallSrcMask.png`, smallSrcMask);
@@ -170,6 +171,9 @@ export function alignDifferentSize(
     yFactor,
   });
 
+  if (debug) {
+    console.log({ smallMargins, smallNbPixels });
+  }
   const roughTranslation = getMinDiffTranslation(
     smallSource,
     smallDestination,
@@ -188,6 +192,14 @@ export function alignDifferentSize(
       origin: roughTranslation,
     });
     writeSync(`${__dirname}/roughOverlap.png`, overlap);
+    const maskOverlap = overlapImages(
+      smallSrcMask.convertColor(ImageColorModel.GREY),
+      smallDstMask.convertColor(ImageColorModel.GREY),
+      {
+        origin: roughTranslation,
+      },
+    );
+    writeSync(`${__dirname}/roughMaskOverlap.png`, maskOverlap);
   }
 
   // Find overlapping surface and source and destination origins
@@ -241,8 +253,9 @@ export function alignDifferentSize(
     writeSync(`${__dirname}/dstMask.png`, dstMask);
   }
 
-  const nbPixels =
-    (srcMask.getNbNonZeroPixels() + dstMask.getNbNonZeroPixels()) / 2;
+  const nbPixels = Math.round(
+    (srcMask.getNbNonZeroPixels() + dstMask.getNbNonZeroPixels()) / 2,
+  );
 
   const preciseMargins = Math.round(precisionFactor * scalingFactor);
 

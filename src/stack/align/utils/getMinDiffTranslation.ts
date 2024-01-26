@@ -37,6 +37,9 @@ export function getMinDiffTranslation(
   const maxRow = destination.height - source.height + topBottomMargin;
   const maxColumn = destination.width - source.width + leftRightMargin;
 
+  const nbTranslations = (maxRow + 1) * (maxColumn + 1);
+  console.log({ nbTranslations: (maxRow + 1) * (maxColumn + 1) });
+
   let minDiff = Number.MAX_SAFE_INTEGER;
   let minDiffTranslation: Point = { row: 0, column: 0 };
   for (let row = -topBottomMargin; row <= maxRow; row++) {
@@ -54,6 +57,6 @@ export function getMinDiffTranslation(
       }
     }
   }
-
+  console.log({ minDiff, minDiffTranslation });
   return minDiffTranslation;
 }
