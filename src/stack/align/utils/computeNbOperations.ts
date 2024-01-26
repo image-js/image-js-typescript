@@ -1,6 +1,6 @@
-import { Image } from '../../..';
+import { Image, Mask } from '../../..';
 
-export interface ComputeNbOperationsOptions {
+export interface ComputeXYMarginsOptions {
   /**
    * Horizontal fraction of the images that can not be overlapping.
    * This fraction is applied on the image with the smallest width.
@@ -36,7 +36,7 @@ export interface Margins {
 export function computeXYMargins(
   source: Image,
   destination: Image,
-  options: ComputeNbOperationsOptions = {},
+  options: ComputeXYMarginsOptions = {},
 ): Margins {
   const { xFactor = 0, yFactor = 0 } = options;
   let xMargin = 0;
@@ -79,21 +79,41 @@ export function computeNbTranslations(
   return nbTranslations;
 }
 
+export interface ComputeNbOperationsOptions {
+  /**
+   * The mask of the source image.
+   * @default new Mask(source.width, source.height).fill(1)
+   */
+  sourceMask?: Mask;
+  /**
+   * The margins around the destination image in which the source can be translated.
+   * @default { xMargin: 0, yMargin: 0 }
+   */
+  margins?: Margins;
+}
 /**
  * Approximate the number of operations that will be performed for the alignment. This is an overestimate!!
  * The bigger the margins the more we overestimate. For margins that are zero, the value is exact.
  * @param source - Source image.
  * @param destination - Destination image.
- * @param margins - The margins around the destination image in which the source can be translated.
+ * @param options - Options.
  * @returns The number of operations that will be performed for the alignment.
  */
 export function computeNbOperations(
   source: Image,
   destination: Image,
-  margins: Margins = defaultMargins,
+  options: ComputeNbOperationsOptions,
 ): number {
+  const {
+    sourceMask = new Mask(source.width, source.height).fill(1),
+    margins = defaultMargins,
+  } = options;
   const nbTranslations = computeNbTranslations(source, destination, margins);
   const minHeight = Math.min(source.height, destination.height);
   const minWidth = Math.min(source.width, destination.width);
-  return nbTranslations * minHeight * minWidth;
+  // take mask into account
+  const nbMaskPixels = sourceMask.getNbNonZeroPixels();
+  const totalNbPixels = source.size;
+
+  return nbTranslations * minHeight * minWidth * (nbMaskPixels / totalNbPixels);
 }
