@@ -23,7 +23,7 @@ export interface AlignDifferentSizeOptions {
  * Only the pixels present in both images are taken into account.
  * @param source - Source image.
  * @param destination - Destination image.
- * @param sourceTranslation - Translation to apply on the source image before computing the difference.
+ * @param sourceTranslation - Translation to apply on the source image relative to the top-left corner of the destination image before computing the difference.
  * @param options - Options.
  * @returns The normalised difference.
  */
@@ -70,6 +70,9 @@ export function getNormalisedDifference(
     destinationYOffset = sourceTranslation.row;
   }
 
+  console.log({ sourceXOffet, sourceYOffset });
+  console.log({ destinationXOffset, destinationYOffset });
+
   const maxX = Math.min(
     destination.width,
     source.width + sourceTranslation.column,
@@ -84,12 +87,17 @@ export function getNormalisedDifference(
   const width = maxX - minX;
   const height = maxY - minY;
 
+  console.log({ width, height });
+
   let nbPixels = 0;
 
   for (let row = 0; row < height; row++) {
     for (let column = 0; column < width; column++) {
       for (let channel = 0; channel < source.channels; channel++) {
-        if (sourceMask.getValue(column, row, 0)) {
+        if (
+          sourceMask.getValue(column + sourceXOffet, row + sourceYOffset, 0)
+        ) {
+          console.log({ column, row, channel });
           const sourceValue = source.getValue(
             column + sourceXOffet,
             row + sourceYOffset,
@@ -114,9 +122,10 @@ export function getNormalisedDifference(
   }
 
   if (nbPixels < minNbPixels) {
-    throw new Error(
-      `The number of pixels compared is too low (less than ${minNbPixels})`,
+    console.log(
+      `The number of pixels compared is too low (${nbPixels} less than ${minNbPixels})`,
     );
+    return 2 ** source.bitDepth - 1;
   }
 
   return difference / nbPixels;

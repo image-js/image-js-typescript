@@ -121,3 +121,97 @@ test.each([
     }),
   ).toBe(data.expected);
 });
+
+test('small source', () => {
+  const source = testUtils.createGreyImage([
+    [1, 1],
+    [1, 1],
+  ]);
+  const destination = testUtils.createGreyImage([
+    [0, 0, 0, 0],
+    [0, 0, 1, 1],
+    [0, 0, 1, 1],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+  ]);
+
+  expect(
+    getNormalisedDifference(
+      source,
+      destination,
+      { row: 1, column: 2 },
+      {
+        minNbPixels: 1,
+      },
+    ),
+  ).toBe(0);
+
+  expect(
+    getNormalisedDifference(
+      source,
+      destination,
+      { row: 0, column: 0 },
+      {
+        minNbPixels: 1,
+      },
+    ),
+  ).toBe(1);
+
+  expect(
+    getNormalisedDifference(
+      source,
+      destination,
+      { row: 0, column: 3 },
+      {
+        minNbPixels: 1,
+      },
+    ),
+  ).toBe(1 / 2);
+
+  expect(
+    getNormalisedDifference(
+      source,
+      destination,
+      { row: 0, column: 3 },
+      {
+        minNbPixels: 1,
+      },
+    ),
+  ).toBe(1 / 2);
+});
+
+test('same size', () => {
+  const source = testUtils.createGreyImage([
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [1, 1, 0, 0],
+    [1, 1, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+  ]);
+  const sourceMask = testUtils.createMask([
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [1, 1, 0, 0],
+    [1, 1, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+  ]);
+  const destination = testUtils.createGreyImage([
+    [0, 0, 0, 0],
+    [0, 0, 1, 1],
+    [0, 0, 1, 1],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+  ]);
+
+  const translation = { row: -3, column: -3 };
+
+  const result = getNormalisedDifference(source, destination, translation, {
+    sourceMask,
+  });
+
+  expect(result).toBe(255);
+});
