@@ -38,6 +38,7 @@ export type TestImagePath =
   | 'various/grayscale_by_zimmyrose.png'
   | 'various/alphabet.jpg'
   | 'various/without-metadata.jpg'
+  | 'various/sudoku.jpg'
   | 'morphology/alphabetCannyEdge.png'
   | 'morphology/grayscaleCannyEdge.png'
   | 'morphology/grayscaleClearBorder.png'
