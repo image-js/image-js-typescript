@@ -2,8 +2,7 @@ import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-import { fromMask, Image, Point, readSync } from '../src';
-import { Roi } from '../src/roi/Roi';
+import { fromMask, Image, Point, readSync, Roi } from '../src';
 
 import { TestImagePath } from './TestImagePath';
 import { createImageFromData, CreateImageOptions } from './createImageFromData';

@@ -12,8 +12,9 @@ export type CropRectangleOptions = Omit<
 /**
  * Crop an oriented rectangle from an image.
  * If the rectangle's length or width are not an integers, its dimension is expanded in both directions such as the length and width are integers.
+ * @param image The input image
  * @param points The points of the rectangle. Points must be circling around the rectangle (clockwise or anti-clockwise)
- *
+ * @param options Crop options, see {@link CropRectangleOptions}
  */
 export function cropRectangle(
   image: Image,
@@ -33,7 +34,7 @@ export function cropRectangle(
     column: (points[0].column + points[2].column) / 2,
   };
 
-  // Rotated points form a straight rectangle
+  // Rotated points form an upright rectangle
   const rotatedPoints = points.map((p) => rotatePoint(p, center, angle));
   const [p1, p2, p3] = rotatedPoints;
 
@@ -72,10 +73,7 @@ export function cropRectangle(
     [angleCos, -angleSin, translation.column],
     [angleSin, angleCos, translation.row],
   ];
-  console.log(
-    `<path d="M${points.map((p) => `${p.column},${p.row}`).join('L')}Z" stroke-width="0.03" stroke="black" fill="transparent"/>`,
-    imagePointsSvg(width, height, matrix),
-  );
+
   return transform(image, matrix, {
     inverse: true,
     width: width,
@@ -84,45 +82,12 @@ export function cropRectangle(
   });
 }
 
-function transformPoint(transform: number[][], point: Point): Point {
-  const nx =
-    transform[0][0] * point.column +
-    transform[0][1] * point.row +
-    transform[0][2];
-  const ny =
-    transform[1][0] * point.column +
-    transform[1][1] * point.row +
-    transform[1][2];
-  return {
-    column: nx,
-    row: ny,
-  };
-}
-
-function imagePointsSvg(width: number, height: number, transform: number[][]) {
-  const points: string[] = [];
-  for (let row = 0; row < height; row++) {
-    for (let column = 0; column < width; column++) {
-      const point = transformPoint(transform, { row, column });
-      points.push(pointToSvg(point));
-    }
-  }
-  return points.join('\n');
-}
-
-function pointToSvg(point: Point) {
-  return `<circle cx="${point.column}" cy="${point.row}" r="0.04" stroke="blue" stroke-width="0.02" fill="transparent" />`;
-}
-
-function toDeg(rad: number) {
-  return (rad / Math.PI) * 180;
-}
-
 /**
  * Get the smallest angle to put the rectangle in an upright position
  * @param points
  */
 function getSmallestAngle(points: Point[]) {
+  // Angle respective to horizontal, -π/2 and π/2
   let angleHorizontal = -getAngle(points[1], points[0]);
 
   if (angleHorizontal > Math.PI / 2) {
