@@ -22,7 +22,7 @@ export default function moments(histogram: Uint32Array, total: number): number {
   let sum = 0;
   let threshold = -1;
   const histogramLength = histogram.length;
-  const normalizedHistogram = new Array(histogramLength);
+  const normalizedHistogram = new Array<number>(histogramLength);
   for (let i = 0; i < histogramLength; i++) {
     normalizedHistogram[i] = histogram[i] / total;
   }
