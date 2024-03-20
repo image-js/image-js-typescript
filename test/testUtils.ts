@@ -1,8 +1,8 @@
-import { readFileSync, mkdtempSync, rmSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-import { fromMask, Image, readSync } from '../src';
+import { fromMask, Image, Point, readSync } from '../src';
 import { Roi } from '../src/roi/Roi';
 
 import { TestImagePath } from './TestImagePath';
@@ -152,6 +152,11 @@ export function getInt32Array(string: string) {
       .map(Number),
   );
 }
+
+export function createPoints(...points: Array<[number, number]>): Point[] {
+  return points.map(([column, row]) => ({ column, row }));
+}
+
 declare global {
   // eslint-disable-next-line no-var
   var testUtils: {
@@ -168,6 +173,7 @@ declare global {
     cleanTmpDir: typeof cleanTmpDir;
     getInt16Array: typeof getInt16Array;
     getInt32Array: typeof getInt32Array;
+    createPoints: typeof createPoints;
   };
 }
 

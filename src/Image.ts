@@ -37,12 +37,12 @@ import {
   GradientFilterOptions,
   hypotenuse,
   HypotenuseOptions,
+  increaseContrast,
+  IncreaseContrastOptions,
   invert,
   InvertOptions,
   level,
   LevelOptions,
-  increaseContrast,
-  IncreaseContrastOptions,
   medianFilter,
   MedianFilterOptions,
   pixelate,
@@ -109,6 +109,10 @@ import {
   threshold,
   ThresholdOptions,
 } from './index';
+import {
+  cropRectangle,
+  CropRectangleOptions,
+} from './operations/cropRectangle';
 
 export type ImageDataArray = Uint8Array | Uint16Array | Uint8ClampedArray;
 
@@ -805,6 +809,13 @@ export class Image {
    */
   public crop(options?: CropOptions): Image {
     return crop(this, options);
+  }
+
+  /**
+   *
+   */
+  public cropRectangle(points: Point[], options?: CropRectangleOptions) {
+    return cropRectangle(this, points, options);
   }
 
   /**
