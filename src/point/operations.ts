@@ -1,5 +1,11 @@
 import { Point } from '../utils/geometry/points';
 
+/**
+ * Rotate a point around a center by a given angle.
+ * @param point - The point to rotate
+ * @param rotationCenter - The center of rotation
+ * @param angle - The angle of rotation in radians
+ */
 export function rotatePoint(
   point: Point,
   rotationCenter: Point,

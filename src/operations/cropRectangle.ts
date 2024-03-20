@@ -1,8 +1,8 @@
-import { Point } from '../utils/geometry/points';
 import { Image } from '../Image';
-import { rotatePoint } from '../point/operations';
-import { getAngle } from '../maskAnalysis/utils/getAngle';
 import { transform, TransformOptions } from '../geometry';
+import { getAngle } from '../maskAnalysis/utils/getAngle';
+import { rotatePoint } from '../point/operations';
+import { Point } from '../utils/geometry/points';
 
 export type CropRectangleOptions = Omit<
   TransformOptions,
@@ -12,9 +12,9 @@ export type CropRectangleOptions = Omit<
 /**
  * Crop an oriented rectangle from an image.
  * If the rectangle's length or width are not an integers, its dimension is expanded in both directions such as the length and width are integers.
- * @param image The input image
- * @param points The points of the rectangle. Points must be circling around the rectangle (clockwise or anti-clockwise)
- * @param options Crop options, see {@link CropRectangleOptions}
+ * @param image - The input image
+ * @param points - The points of the rectangle. Points must be circling around the rectangle (clockwise or anti-clockwise)
+ * @param options - Crop options, see {@link CropRectangleOptions}
  */
 export function cropRectangle(
   image: Image,
@@ -76,8 +76,8 @@ export function cropRectangle(
 
   return transform(image, matrix, {
     inverse: true,
-    width: width,
-    height: height,
+    width,
+    height,
     ...options,
   });
 }

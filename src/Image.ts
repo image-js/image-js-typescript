@@ -811,6 +811,8 @@ export class Image {
 
   /**
    *
+   * @param points
+   * @param options
    */
   public cropRectangle(points: Point[], options?: CropRectangleOptions) {
     return cropRectangle(this, points, options);
