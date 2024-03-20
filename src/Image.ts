@@ -94,6 +94,10 @@ import {
   split,
 } from './operations';
 import { cropAlpha } from './operations/cropAlpha';
+import {
+  cropRectangle,
+  CropRectangleOptions,
+} from './operations/cropRectangle';
 import { colorModels, ImageColorModel } from './utils/constants/colorModels';
 import { getMinMax } from './utils/getMinMax';
 import { validateChannel, validateValue } from './utils/validators/validators';
@@ -109,10 +113,6 @@ import {
   threshold,
   ThresholdOptions,
 } from './index';
-import {
-  cropRectangle,
-  CropRectangleOptions,
-} from './operations/cropRectangle';
 
 export type ImageDataArray = Uint8Array | Uint16Array | Uint8ClampedArray;
 
