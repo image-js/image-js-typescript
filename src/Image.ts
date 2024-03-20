@@ -86,18 +86,16 @@ import {
   copyTo,
   CopyToOptions,
   crop,
+  cropAlpha,
   CropAlphaOptions,
   CropOptions,
+  cropRectangle,
+  CropRectangleOptions,
   grey,
   paintMaskOnImage,
   PaintMaskOnImageOptions,
   split,
 } from './operations';
-import { cropAlpha } from './operations/cropAlpha';
-import {
-  cropRectangle,
-  CropRectangleOptions,
-} from './operations/cropRectangle';
 import { colorModels, ImageColorModel } from './utils/constants/colorModels';
 import { getMinMax } from './utils/getMinMax';
 import { validateChannel, validateValue } from './utils/validators/validators';
