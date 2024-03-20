@@ -45,7 +45,7 @@ test('vertical rectangle with small angle', () => {
   ]);
   const points = testUtils
     .createPoints([1.5, 0], [2.5, 0], [2.5, 3], [1.5, 3])
-    .map((p) => rotatePoint(p, { row: 1.5, column: 1.5 }, 0.01));
+    .map((p) => rotatePoint(p, { row: 1.5, column: 1.5 }, 0.1));
 
   const expected = testUtils.createGreyImage([[3], [6], [8]]);
   expectCropRectangleToMatch({
