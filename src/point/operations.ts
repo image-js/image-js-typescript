@@ -5,6 +5,7 @@ import { Point } from '../utils/geometry/points';
  * @param point - The point to rotate
  * @param rotationCenter - The center of rotation
  * @param angle - The angle of rotation in radians
+ * @returns The rotated point
  */
 export function rotatePoint(
   point: Point,

@@ -15,6 +15,7 @@ export type CropRectangleOptions = Omit<
  * @param image - The input image
  * @param points - The points of the rectangle. Points must be circling around the rectangle (clockwise or anti-clockwise)
  * @param options - Crop options, see {@link CropRectangleOptions}
+ * @returns The cropped image. The orientation of the image is the one closest to the rectangle passed as input.
  */
 export function cropRectangle(
   image: Image,
@@ -84,9 +85,10 @@ export function cropRectangle(
 
 /**
  * Get the smallest angle to put the rectangle in an upright position
- * @param points
+ * @param points - 2 points forming a line
+ * @returns The angle in radians
  */
-function getSmallestAngle(points: Point[]) {
+function getSmallestAngle(points: Point[]): number {
   // Angle respective to horizontal, -π/2 and π/2
   let angleHorizontal = -getAngle(points[1], points[0]);
 

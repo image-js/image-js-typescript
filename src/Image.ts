@@ -810,9 +810,11 @@ export class Image {
   }
 
   /**
-   *
-   * @param points
-   * @param options
+   * Crop an oriented rectangle from the image.
+   * If the rectangle's length or width are not an integers, its dimension is expanded in both directions such as the length and width are integers.
+   * @param points - The points of the rectangle. Points must be circling around the rectangle (clockwise or anti-clockwise)
+   * @param options - Crop options, see {@link CropRectangleOptions}
+   * @returns The cropped image. The orientation of the image is the one closest to the rectangle passed as input.
    */
   public cropRectangle(points: Point[], options?: CropRectangleOptions) {
     return cropRectangle(this, points, options);
