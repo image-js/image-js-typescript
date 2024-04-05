@@ -64,11 +64,14 @@ test('affineTransformation', () => {
   const img = testUtils.load('opencv/test.png');
   const transformed = img.transform(
     [
-      [2, 1, 2],
-      [-1, 1, 2],
+      [1 / 3, -1 / 3, 0],
+      [1 / 3, 2 / 3, -2],
     ],
-    { inverse: true, fullImage: true },
+    { fullImage: false, inverse: true },
   );
+  // Equivalent python code with opencv
+  //M = np.float32([[2,1,2], [-1,1, 2],[0,0,1]])
+  //dst = cv.warpPerspective(img,M,(cols,rows))
   expect(transformed).toMatchImage('opencv/testAffine.png');
 });
 
