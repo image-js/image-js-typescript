@@ -1160,6 +1160,6 @@ function printData(img: Image): string {
   }
 
   return `{
-    ${`[\n     ${result.join('\n     ')}\n    ]`}
+    [\n     ${result.join('\n     ')}\n    ]
   }`;
 }
