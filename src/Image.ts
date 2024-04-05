@@ -431,6 +431,16 @@ export class Image {
     this.data[(row * this.width + column) * this.channels + channel] = value;
   }
 
+  public setClampedValue(
+    column: number,
+    row: number,
+    channel: number,
+    value: number,
+  ): void {
+    if (value < 0) value = 0;
+    else if (value > image.maxValue) value = image.maxValue;
+    this.data[(row * this.width + column) * this.channels + channel] = value;
+  }
   /**
    * Get the value of a specific pixel channel. Select pixel using index.
    * @param index - Index of the pixel.
@@ -447,6 +457,16 @@ export class Image {
    * @param value - Value to set.
    */
   public setValueByIndex(index: number, channel: number, value: number): void {
+    this.data[index * this.channels + channel] = value;
+  }
+
+  public setClampedValueByIndex(
+    index: number,
+    channel: number,
+    value: number,
+  ): void {
+    if (value < 0) value = 0;
+    else if (value > image.maxValue) value = image.maxValue;
     this.data[index * this.channels + channel] = value;
   }
 
