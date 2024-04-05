@@ -446,7 +446,7 @@ export class Image {
     value: number,
   ): void {
     if (value < 0) value = 0;
-    else if (value > image.maxValue) value = image.maxValue;
+    else if (value > this.maxValue) value = this.maxValue;
     this.data[(row * this.width + column) * this.channels + channel] = value;
   }
   /**
@@ -481,7 +481,7 @@ export class Image {
     value: number,
   ): void {
     if (value < 0) value = 0;
-    else if (value > image.maxValue) value = image.maxValue;
+    else if (value > this.maxValue) value = this.maxValue;
     this.data[index * this.channels + channel] = value;
   }
 
