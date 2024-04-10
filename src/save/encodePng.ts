@@ -14,5 +14,14 @@ export function encodePng(
   image: Image,
   options?: EncodePngOptions,
 ): Uint8Array {
-  return encode(image.getRawImage(), options);
+  return encode(
+    {
+      data: image.getRawImage().data,
+      width: image.getRawImage().width,
+      height: image.getRawImage().height,
+      channels: image.getRawImage().channels,
+      depth: image.getRawImage().bitDepth,
+    },
+    options,
+  );
 }
