@@ -38,12 +38,12 @@ test('more complex stack', () => {
 
 test('2 grey images 16 bits depth', () => {
   const data = new Uint16Array([1, 2, 3, 4]);
-  const image1 = new Image(4, 1, { data, depth: 16, colorModel: 'GREY' });
-  const image2 = new Image(4, 1, { data, depth: 16, colorModel: 'GREY' });
+  const image1 = new Image(4, 1, { data, bitDepth: 16, colorModel: 'GREY' });
+  const image2 = new Image(4, 1, { data, bitDepth: 16, colorModel: 'GREY' });
   const stack = new Stack([image1, image2]);
   const meanImage = stack.meanImage();
 
   expect(meanImage).toBeInstanceOf(Image);
-  expect(meanImage.depth).toBe(16);
+  expect(meanImage.bitDepth).toBe(16);
   expect(meanImage).toMatchImage(image1);
 });

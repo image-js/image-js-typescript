@@ -27,14 +27,17 @@ export function hypotenuse(
   } = options;
 
   checkProcessable(image, {
-    depth: [8, 16],
+    bitDepth: [8, 16],
   });
 
   if (image.width !== otherImage.width || image.height !== otherImage.height) {
     throw new RangeError('both images must have the same size');
   }
-  if (image.alpha !== otherImage.alpha || image.depth !== otherImage.depth) {
-    throw new RangeError('both images must have the same alpha and depth');
+  if (
+    image.alpha !== otherImage.alpha ||
+    image.bitDepth !== otherImage.bitDepth
+  ) {
+    throw new RangeError('both images must have the same alpha and bitDepth');
   }
   if (image.channels !== otherImage.channels) {
     throw new RangeError('both images must have the same number of channels');

@@ -47,7 +47,7 @@ export function drawLineOnImage(
   validateColor(color, newImage);
 
   checkProcessable(newImage, {
-    depth: [8, 16],
+    bitDepth: [8, 16],
   });
 
   line(

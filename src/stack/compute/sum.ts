@@ -8,7 +8,7 @@ import { checkProcessable } from '../utils/checkProcessable';
  * @returns The sum image.
  */
 export function sum(stack: Stack): Image {
-  checkProcessable(stack, { sameDimensions: true, depth: 8 });
+  checkProcessable(stack, { sameDimensions: true, bitDepth: 8 });
   // Because 255*257 = 2**16 - 1
   if (stack.size > 257) {
     throw new Error('Maximal valid stack size is 257');
@@ -32,6 +32,6 @@ export function sum(stack: Stack): Image {
   return new Image(image.width, image.height, {
     data: sum,
     colorModel: stack.colorModel,
-    depth: 16,
+    bitDepth: 16,
   });
 }

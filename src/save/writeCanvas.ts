@@ -49,8 +49,8 @@ export function writeCanvas(
   if (image.colorModel !== 'RGBA') {
     image = image.convertColor('RGBA');
   }
-  if (image.depth !== 8 && image instanceof Image) {
-    image = image.convertDepth(8);
+  if (image.bitDepth !== 8 && image instanceof Image) {
+    image = image.convertBitDepth(8);
   }
   const {
     resizeCanvas = true,

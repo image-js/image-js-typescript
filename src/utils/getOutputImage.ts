@@ -53,7 +53,7 @@ export function getOutputImage(
     const requirements: NewImageParameters = {
       width: thisImage.width,
       height: thisImage.height,
-      depth: thisImage.depth,
+      bitDepth: thisImage.bitDepth,
       colorModel: thisImage.colorModel,
       ...newParameters,
     };
@@ -86,7 +86,7 @@ export function maskToOutputImage(mask: Mask, options: OutOptions = {}): Image {
     const requirements: NewImageParameters = {
       width: mask.width,
       height: mask.height,
-      depth: 8,
+      bitDepth: 8,
       colorModel: 'GREY',
     };
     checkRequirements(requirements, out);
@@ -115,7 +115,7 @@ export function imageToOutputMask(
     const requirements: NewImageParameters = {
       width: image.width,
       height: image.height,
-      depth: 1,
+      bitDepth: 1,
       colorModel: 'BINARY',
     };
     checkRequirements(requirements, out);
@@ -166,7 +166,7 @@ export function maskToOutputMask(
     const requirements: NewImageParameters = {
       width: mask.width,
       height: mask.height,
-      depth: 1,
+      bitDepth: 1,
       colorModel: 'BINARY',
     };
     checkRequirements(requirements, out);

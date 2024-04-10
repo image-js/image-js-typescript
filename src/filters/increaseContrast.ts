@@ -27,7 +27,7 @@ export function increaseContrast(
 ): Image {
   const { uniform = false } = options;
   checkProcessable(image, {
-    depth: [8, 16],
+    bitDepth: [8, 16],
   });
   const minMax = image.minMax();
 

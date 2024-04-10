@@ -43,7 +43,7 @@ export function open(
 
   if (image instanceof Image) {
     checkProcessable(image, {
-      depth: [1, 8, 16],
+      bitDepth: [1, 8, 16],
       components: 1,
       alpha: false,
     });

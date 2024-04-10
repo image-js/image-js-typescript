@@ -14,7 +14,7 @@ interface CheckStackOptions {
   /**
    *
    */
-  depth?: number | number[];
+  bitDepth?: number | number[];
 }
 
 /**
@@ -27,7 +27,7 @@ export function checkProcessable(
   options: CheckStackOptions = {},
 ) {
   const { sameDimensions = false, alpha } = options;
-  let { depth } = options;
+  let { bitDepth } = options;
   if (sameDimensions) {
     const width = stack.getImage(0).width;
     const height = stack.getImage(0).height;
@@ -48,13 +48,13 @@ export function checkProcessable(
       } have an alpha channel to apply this algorithm`,
     );
   }
-  if (depth) {
-    if (!Array.isArray(depth)) {
-      depth = [depth];
+  if (bitDepth) {
+    if (!Array.isArray(bitDepth)) {
+      bitDepth = [bitDepth];
     }
-    if (!depth.includes(stack.depth)) {
+    if (!bitDepth.includes(stack.bitDepth)) {
       throw new RangeError(
-        `image depth must be ${format(depth)} to apply this algorithm`,
+        `image bitDepth must be ${format(bitDepth)} to apply this algorithm`,
       );
     }
   }

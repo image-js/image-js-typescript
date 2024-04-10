@@ -41,7 +41,7 @@ export function crop(image: Image, options: CropOptions = {}) {
   const { column, row } = origin;
 
   checkProcessable(image, {
-    depth: [8, 16],
+    bitDepth: [8, 16],
   });
 
   checkPointIsInteger(origin, 'Origin');

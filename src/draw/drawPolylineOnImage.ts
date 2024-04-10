@@ -40,7 +40,7 @@ export function drawPolylineOnImage(
   } = options;
 
   checkProcessable(image, {
-    depth: [8, 16],
+    bitDepth: [8, 16],
   });
   const newImage = getOutputImage(image, options, { clone: true });
 

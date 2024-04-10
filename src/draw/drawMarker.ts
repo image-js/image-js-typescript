@@ -54,7 +54,7 @@ export function drawMarker(
   const size = Math.round(markerSize);
   validateColor(color, newImage);
   checkProcessable(newImage, {
-    depth: [8, 16],
+    bitDepth: [8, 16],
   });
   if (shape === 'circle') {
     newImage.drawCircle(point, size, {

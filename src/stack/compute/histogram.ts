@@ -12,8 +12,8 @@ export function histogram(
   stack: Stack,
   options: HistogramOptions,
 ): Uint32Array {
-  checkProcessable(stack, { depth: [8, 16] });
-  const { slots = 2 ** stack.depth, channel = 0 } = options;
+  checkProcessable(stack, { bitDepth: [8, 16] });
+  const { slots = 2 ** stack.bitDepth, channel = 0 } = options;
   const result = new Uint32Array(slots);
   for (let i = 0; i < stack.size; i++) {
     const image = stack.getImage(i);

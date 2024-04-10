@@ -57,7 +57,7 @@ export function drawPoints(
   }
 
   checkProcessable(newImage, {
-    depth: [1, 8, 16],
+    bitDepth: [1, 8, 16],
   });
 
   for (const point of points) {

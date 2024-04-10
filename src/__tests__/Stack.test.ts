@@ -15,7 +15,7 @@ describe('Stack constructor', () => {
     expect(stack.alpha).toBe(false);
     expect(stack.colorModel).toBe('GREY');
     expect(stack.channels).toBe(1);
-    expect(stack.depth).toBe(8);
+    expect(stack.bitDepth).toBe(8);
     expect(stack.sameDimensions).toBe(true);
   });
 
@@ -28,8 +28,8 @@ describe('Stack constructor', () => {
   });
 
   it('should throw if bit depths different', () => {
-    const image1 = testUtils.createGreyImage([[1, 2, 3, 4]], { depth: 8 });
-    const image2 = testUtils.createGreyImage([[1, 2, 3, 4]], { depth: 16 });
+    const image1 = testUtils.createGreyImage([[1, 2, 3, 4]], { bitDepth: 8 });
+    const image2 = testUtils.createGreyImage([[1, 2, 3, 4]], { bitDepth: 16 });
     expect(() => {
       return new Stack([image1, image2]);
     }).toThrow('images must all have the same bit depth and color model');

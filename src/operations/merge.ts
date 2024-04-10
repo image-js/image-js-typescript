@@ -46,10 +46,10 @@ export function merge(images: Image[]): Image {
     if (
       img.width !== first.width ||
       img.height !== first.height ||
-      img.depth !== first.depth
+      img.bitDepth !== first.bitDepth
     ) {
       throw new RangeError(
-        'all images must have the same width, height and depth',
+        'all images must have the same width, height and bitDepth',
       );
     }
   }

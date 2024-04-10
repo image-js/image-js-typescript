@@ -11,7 +11,7 @@ test('2 grey images', () => {
   const sum = stack.sum();
 
   expect(sum).toBeInstanceOf(Image);
-  expect(sum.depth).toBe(16);
+  expect(sum.bitDepth).toBe(16);
   expect(sum).toMatchImageData([[5, 5, 5, 5]]);
 });
 
@@ -32,13 +32,13 @@ test('more complex stack', () => {
 
 test('should throw if 16 bits depth', () => {
   const data = new Uint16Array([1, 2, 3, 4]);
-  const image1 = new Image(4, 1, { data, depth: 16, colorModel: 'GREY' });
-  const image2 = new Image(4, 1, { data, depth: 16, colorModel: 'GREY' });
+  const image1 = new Image(4, 1, { data, bitDepth: 16, colorModel: 'GREY' });
+  const image2 = new Image(4, 1, { data, bitDepth: 16, colorModel: 'GREY' });
   const stack = new Stack([image1, image2]);
 
   expect(() => {
     return stack.sum();
-  }).toThrow('image depth must be 8 to apply this algorithm');
+  }).toThrow('image bitDepth must be 8 to apply this algorithm');
 });
 
 test('should throw if too many images in stack', () => {

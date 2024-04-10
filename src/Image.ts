@@ -80,7 +80,7 @@ import {
   TopHatOptions,
 } from './morphology';
 import {
-  convertDepth,
+  convertBitDepth,
   convertColor,
   ConvertColorOptions,
   copyTo,
@@ -115,7 +115,7 @@ export type ImageDataArray = Uint8Array | Uint16Array | Uint8ClampedArray;
 /**
  * Bit depth of the image (nb of bits that encode each value in the image).
  */
-export type Depth = 1 | 8 | 16;
+export type BitDepth = 1 | 8 | 16;
 
 export const ImageCoordinates = {
   CENTER: 'center',
@@ -133,7 +133,7 @@ export interface ImageOptions {
    * Number of bits per value in each channel.
    * @default `8`.
    */
-  depth?: Depth;
+  bitDepth?: BitDepth;
 
   /**
    * Typed array holding the image data.
@@ -181,7 +181,7 @@ export class Image {
   /**
    * The number of bits per value in each channel.
    */
-  public readonly depth: Depth;
+  public readonly bitDepth: BitDepth;
 
   /**
    * The color model of the image.
@@ -232,7 +232,7 @@ export class Image {
     options: ImageOptions = {},
   ) {
     const {
-      depth = 8,
+      bitDepth = 8,
       data,
       colorModel = 'RGB',
       origin = { row: 0, column: 0 },
@@ -254,7 +254,7 @@ export class Image {
     this.width = width;
     this.height = height;
     this.size = width * height;
-    this.depth = depth;
+    this.bitDepth = bitDepth;
     this.colorModel = colorModel;
     this.origin = origin;
     this.meta = meta;
@@ -264,21 +264,21 @@ export class Image {
     this.alpha = colorModelDef.alpha;
     this.channels = colorModelDef.channels;
 
-    this.maxValue = 2 ** depth - 1;
+    this.maxValue = 2 ** bitDepth - 1;
 
     if (data === undefined) {
       this.data = createPixelArray(
         this.size,
         this.channels,
         this.alpha,
-        this.depth,
+        this.bitDepth,
         this.maxValue,
       );
     } else {
-      if (depth === 8 && data instanceof Uint16Array) {
-        throw new RangeError(`depth is ${depth} but data is Uint16Array`);
-      } else if (depth === 16 && data instanceof Uint8Array) {
-        throw new RangeError(`depth is ${depth} but data is Uint8Array`);
+      if (bitDepth === 8 && data instanceof Uint16Array) {
+        throw new RangeError(`bitDepth is ${bitDepth} but data is Uint16Array`);
+      } else if (bitDepth === 16 && data instanceof Uint8Array) {
+        throw new RangeError(`bitDepth is ${bitDepth} but data is Uint8Array`);
       }
       const expectedLength = this.size * this.channels;
       if (data.length !== expectedLength) {
@@ -301,14 +301,14 @@ export class Image {
     options: CreateFromOptions = {},
   ): Image {
     const { width = other.width, height = other.height } = options;
-    let depth: Depth;
+    let bitDepth: BitDepth;
     if (other instanceof Image) {
-      depth = other.depth;
+      bitDepth = other.bitDepth;
     } else {
-      depth = 8;
+      bitDepth = 8;
     }
     return new Image(width, height, {
-      depth,
+      bitDepth,
       colorModel: other.colorModel,
       origin: other.origin,
       ...options,
@@ -488,7 +488,7 @@ export class Image {
       height: this.height,
       data: this.data,
       channels: this.channels,
-      depth: this.depth,
+      bitDepth: this.bitDepth,
     };
   }
 
@@ -502,7 +502,7 @@ export class Image {
     return `Image {
   width: ${this.width}
   height: ${this.height}
-  depth: ${this.depth}
+  bitDepth: ${this.bitDepth}
   colorModel: ${this.colorModel}
   channels: ${this.channels}
   data: ${dataString}
@@ -782,8 +782,8 @@ export class Image {
     return convertColor(this, colorModel, options);
   }
 
-  public convertDepth(newDepth: Depth): Image {
-    return convertDepth(this, newDepth);
+  public convertBitDepth(newDepth: BitDepth): Image {
+    return convertBitDepth(this, newDepth);
   }
 
   public grey(options?: GreyOptions): Image {
@@ -1069,7 +1069,7 @@ export class Image {
  * @param size - Number of pixels.
  * @param channels - Number of channels.
  * @param alpha - Specify if there is alpha channel.
- * @param depth - Number of bits per channel.
+ * @param bitDepth - Number of bits per channel.
  * @param maxValue - Maximal acceptable value for the channels.
  * @returns The new pixel array.
  */
@@ -1077,12 +1077,12 @@ function createPixelArray(
   size: number,
   channels: number,
   alpha: boolean,
-  depth: Depth,
+  bitDepth: BitDepth,
   maxValue: number,
 ): ImageDataArray {
   const length = channels * size;
   let arr;
-  switch (depth) {
+  switch (bitDepth) {
     case 8:
       arr = new Uint8Array(length);
       break;
@@ -1090,7 +1090,7 @@ function createPixelArray(
       arr = new Uint16Array(length);
       break;
     default:
-      throw new RangeError(`invalid depth: ${depth}`);
+      throw new RangeError(`invalid bitDepth: ${bitDepth}`);
   }
 
   // Alpha channel is 100% by default.
@@ -1110,7 +1110,7 @@ function createPixelArray(
  */
 function printData(img: Image): string {
   const result = [];
-  const padding = img.depth === 8 ? 3 : 5;
+  const padding = img.bitDepth === 8 ? 3 : 5;
 
   for (let row = 0; row < img.height; row++) {
     const currentRow = [];
@@ -1125,6 +1125,6 @@ function printData(img: Image): string {
   }
 
   return `{
-    [\n     ${result.join('\n     ')}\n    ]
+    ${`[\n     ${result.join('\n     ')}\n    ]`}
   }`;
 }

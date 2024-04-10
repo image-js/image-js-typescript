@@ -30,7 +30,7 @@ test('different bit depth or alpha error', () => {
 
   expect(() => {
     image.hypotenuse(otherImage);
-  }).toThrow('both images must have the same alpha and depth');
+  }).toThrow('both images must have the same alpha and bitDepth');
 });
 
 test('different number of channels', () => {

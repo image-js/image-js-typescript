@@ -25,7 +25,7 @@ export function alignMinDifference(
   options: AlignMinDifferenceOptions = {},
 ) {
   checkProcessable(source, {
-    depth: [8, 16],
+    bitDepth: [8, 16],
   });
 
   const xSpan = destination.width - source.width;

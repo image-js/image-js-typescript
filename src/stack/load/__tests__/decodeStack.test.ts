@@ -5,34 +5,34 @@ test.each([
   {
     name: 'formats/tif/grey8-multi.tif',
     colorModel: 'GREY',
-    depth: 8,
+    bitDepth: 8,
     pages: 2,
   },
   {
     name: 'formats/tif/grey16-multi.tif',
     colorModel: 'GREY',
-    depth: 16,
+    bitDepth: 16,
     pages: 2,
   },
   {
     name: 'formats/tif/color8-multi.tif',
     colorModel: 'RGB',
-    depth: 8,
+    bitDepth: 8,
     pages: 2,
   },
   {
     name: 'formats/tif/color16-multi.tif',
     colorModel: 'RGB',
-    depth: 16,
+    bitDepth: 16,
     pages: 2,
   },
-])('stacks with 2 images ($colorModel, depth = $depth)', (data) => {
+])('stacks with 2 images ($colorModel, bitDepth = $bitDepth)', (data) => {
   const buffer = testUtils.loadBuffer(data.name as TestImagePath);
   const stack = decodeStack(buffer);
   expect(stack.size).toBe(data.pages);
   for (const image of stack) {
     expect(image.colorModel).toBe(data.colorModel);
-    expect(image.depth).toBe(data.depth);
+    expect(image.bitDepth).toBe(data.bitDepth);
   }
 });
 

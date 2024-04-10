@@ -6,10 +6,10 @@ import { Image } from '../../Image';
  */
 export function checkImagesValid(images: Image[]) {
   const colorModel = images[0].colorModel;
-  const depth = images[0].depth;
+  const bitDepth = images[0].bitDepth;
 
   for (const image of images) {
-    if (image.colorModel !== colorModel || image.depth !== depth) {
+    if (image.colorModel !== colorModel || image.bitDepth !== bitDepth) {
       throw new RangeError(
         `images must all have the same bit depth and color model`,
       );

@@ -10,7 +10,7 @@ describe('create new images', () => {
       width: 10,
       height: 20,
       size: 200,
-      depth: 8,
+      bitDepth: 8,
       colorModel: 'RGB',
       components: 3,
       channels: 3,
@@ -21,12 +21,12 @@ describe('create new images', () => {
   });
 
   it('should create a 16-bit image', () => {
-    const img = new Image(10, 20, { depth: 16 });
+    const img = new Image(10, 20, { bitDepth: 16 });
     expect(img).toMatchObject({
       width: 10,
       height: 20,
       size: 200,
-      depth: 16,
+      bitDepth: 16,
       colorModel: 'RGB',
       components: 3,
       channels: 3,
@@ -39,7 +39,7 @@ describe('create new images', () => {
   it('should create a grey image with alpha', () => {
     const img = new Image(10, 20, { colorModel: 'GREYA' });
     expect(img).toMatchObject({
-      depth: 8,
+      bitDepth: 8,
       colorModel: 'GREYA',
       components: 1,
       channels: 2,
@@ -79,20 +79,22 @@ describe('create new images', () => {
 
   it('should throw on wrong data size', () => {
     const data = new Uint16Array(2);
-    expect(() => new Image(2, 2, { data, depth: 16 })).toThrow(
+    expect(() => new Image(2, 2, { data, bitDepth: 16 })).toThrow(
       /incorrect data size: 2. Expected 12/,
     );
   });
 
   it('should throw on wrong bit depth', () => {
     // @ts-expect-error we want to test the error.
-    expect(() => new Image(1, 1, { depth: 20 })).toThrow(/invalid depth: 20/);
+    expect(() => new Image(1, 1, { bitDepth: 20 })).toThrow(
+      /invalid bitDepth: 20/,
+    );
   });
 
   it('should throw with bit depth 8 but data 16', () => {
     const data = new Uint16Array([1, 2, 3, 4]);
     expect(() => new Image(2, 2, { colorModel: 'GREY', data })).toThrow(
-      'depth is 8 but data is Uint16Array',
+      'bitDepth is 8 but data is Uint16Array',
     );
   });
   it('should throw with bit depth 16 but data 8', () => {
@@ -101,10 +103,10 @@ describe('create new images', () => {
       () =>
         new Image(2, 2, {
           colorModel: 'GREY',
-          depth: 16,
+          bitDepth: 16,
           data,
         }),
-    ).toThrow('depth is 16 but data is Uint8Array');
+    ).toThrow('bitDepth is 16 but data is Uint8Array');
   });
 });
 

@@ -33,7 +33,7 @@ export interface ExtremaOptions {
 export function getExtrema(image: Image, options: ExtremaOptions): Point[] {
   const { kind = 'maximum', mask, algorithm = 'star', maxEquals = 2 } = options;
   checkProcessable(image, {
-    depth: [8, 16],
+    bitDepth: [8, 16],
   });
   const searchingMinimum = kind === 'minimum';
 

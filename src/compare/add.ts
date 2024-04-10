@@ -12,7 +12,7 @@ import { validateForComparison } from '../utils/validators/validators';
 export function add(image: Image, otherImage: Image): Image {
   if (image instanceof Image) {
     checkProcessable(image, {
-      depth: [8, 16],
+      bitDepth: [8, 16],
       components: [1, 3],
       alpha: false,
     });

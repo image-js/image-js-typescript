@@ -7,9 +7,9 @@ test('wrong bit depth', () => {
   ]);
   expect(() => {
     checkProcessable(img, {
-      depth: [1, 16],
+      bitDepth: [1, 16],
     });
-  }).toThrow('image depth must be 1 or 16 to apply this algorithm');
+  }).toThrow('image bitDepth must be 1 or 16 to apply this algorithm');
 });
 
 test('wrong alpha', () => {
@@ -63,7 +63,7 @@ test('only one valid bit depth or channel', () => {
   ]);
   expect(() => {
     checkProcessable(img, {
-      depth: 8,
+      bitDepth: 8,
       channels: 1,
     });
   }).not.toThrow();
@@ -73,7 +73,7 @@ test('only grey images accepted', () => {
   const img = testUtils.createRgbImage([[0, 1, 2]]);
   expect(() => {
     checkProcessable(img, {
-      depth: 8,
+      bitDepth: 8,
       components: 1,
     });
   }).toThrow(
