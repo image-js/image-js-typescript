@@ -33,9 +33,9 @@ describe('toMatchImage', () => {
   });
 
   it('should throw if bit depth is different', () => {
-    const image1 = new Image(1, 1, { bitDepth: 8 });
-    const image2 = new Image(1, 1, { bitDepth: 16 });
-    expect(() => expect(image1).toMatchImage(image2)).toThrow(/bitDepth/);
+    const image1 = new Image(1, 1, { depth: 8 });
+    const image2 = new Image(1, 1, { depth: 16 });
+    expect(() => expect(image1).toMatchImage(image2)).toThrow(/depth/);
   });
 
   it('should throw if color model is different', () => {
@@ -50,7 +50,7 @@ describe('toMatchImage', () => {
     image2.setValue(0, 1, 0, 128);
     image2.setValue(0, 2, 0, 255);
     expect(() => expect(image1).toMatchImage(image2)).toThrow(
-      /Expected pixel at \(0, 1\) to be \[128, 0, 0\], but got \[0, 0, 0\]/,
+      /Expected pixel at \(0, 1\) to be \[128, 0, 0], but got \[0, 0, 0]/,
     );
   });
   it('error range of 1', () => {
@@ -59,7 +59,7 @@ describe('toMatchImage', () => {
     expected.setValue(0, 1, 0, 128);
     expected.setValue(0, 1, 0, 255);
     expect(() => expect(received).toMatchImage(expected, { error: 1 })).toThrow(
-      /Expected value at \(3, 0\) to be in range \[49,51\], but got 4/,
+      /Expected value at \(3, 0\) to be in range \[49,51], but got 4/,
     );
   });
 });

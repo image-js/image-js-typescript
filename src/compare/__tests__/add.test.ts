@@ -28,16 +28,16 @@ test('add two different images whose sum exceeds the maxValue', () => {
   ]);
 });
 
-test('different bitDepth should throw', () => {
+test('different depth should throw', () => {
   const image = testUtils.createRgbImage([[5, 5, 5, 10, 10, 10, 15, 15, 15]], {
-    bitDepth: 16,
+    depth: 16,
   });
   const other = testUtils.createRgbImage([[0, 0, 0, 20, 20, 20, 15, 15, 15]], {
-    bitDepth: 8,
+    depth: 8,
   });
   expect(() => {
     return add(image, other);
-  }).toThrow('both images must have the same alpha and bitDepth');
+  }).toThrow('both images must have the same alpha and depth');
 });
 
 test('different size images should throw', () => {

@@ -8,7 +8,7 @@ import checkProcessable from '../utils/validators/checkProcessable';
  */
 export default function flipY(image: Image): Image {
   checkProcessable(image, {
-    bitDepth: [8, 16],
+    depth: [8, 16],
   });
 
   for (let row = 0; row < Math.floor(image.height / 2); row++) {

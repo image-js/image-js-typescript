@@ -49,7 +49,7 @@ export function dilate(
 
   if (image instanceof Image) {
     checkProcessable(image, {
-      bitDepth: [1, 8, 16],
+      depth: [1, 8, 16],
       components: 1,
       alpha: false,
     });

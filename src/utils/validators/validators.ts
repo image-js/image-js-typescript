@@ -63,8 +63,8 @@ export function validateForComparison(
   if (image.width !== other.width || image.height !== other.height) {
     throw new RangeError('both images must have the same size');
   }
-  if (image.alpha !== other.alpha || image.bitDepth !== other.bitDepth) {
-    throw new RangeError('both images must have the same alpha and bitDepth');
+  if (image.alpha !== other.alpha || image.depth !== other.depth) {
+    throw new RangeError('both images must have the same alpha and depth');
   }
   if (image.channels !== other.channels) {
     throw new RangeError('both images must have the same number of channels');

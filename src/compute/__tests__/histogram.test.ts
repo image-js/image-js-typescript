@@ -46,7 +46,7 @@ test('grey 16-bit image', () => {
       [0, 0, 0, 0, 0],
     ],
     'GREY',
-    { bitDepth: 16 },
+    { depth: 16 },
   );
   const histogram = image.histogram();
 
@@ -63,7 +63,7 @@ test('grey 16-bit image with 2 slots', () => {
       [0, 0, 0, 0, 0],
     ],
     'GREY',
-    { bitDepth: 16 },
+    { depth: 16 },
   );
   const histogram = image.histogram({ slots: 2 });
 

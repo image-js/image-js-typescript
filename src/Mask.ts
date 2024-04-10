@@ -1,4 +1,4 @@
-import { BitDepth, Image } from './Image';
+import { Depth, Image } from './Image';
 import { subtract, SubtractImageOptions } from './compare';
 import {
   drawLineOnMask,
@@ -96,7 +96,7 @@ export class Mask {
   /**
    * The number of bits per value in each channel (always 1).
    */
-  public readonly bitDepth: BitDepth;
+  public readonly depth: Depth;
 
   /**
    * The color model of the mask (always BINARY).
@@ -157,7 +157,7 @@ export class Mask {
     this.width = width;
     this.height = height;
     this.size = width * height;
-    this.bitDepth = 1;
+    this.depth = 1;
     this.colorModel = 'BINARY';
     this.origin = origin;
 

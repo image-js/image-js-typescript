@@ -1,7 +1,7 @@
 import { decodePng } from '..';
 
 const tests = [
-  // ['name', components, alpha, bitDepth]
+  // ['name', components, alpha, depth]
   ['grey8', 8, 'GREY'],
   ['grey16', 16, 'GREY'],
   ['greya16', 8, 'GREYA'],
@@ -14,9 +14,9 @@ const tests = [
   ['plt-8bpp-color', 8, 'RGB'],
 ] as const;
 
-test.each(tests)('should load from buffer %s', (name, bitDepth, colorModel) => {
+test.each(tests)('should load from buffer %s', (name, depth, colorModel) => {
   const buffer = testUtils.loadBuffer(`formats/${name}.png`);
   const img = decodePng(buffer);
-  expect(img.bitDepth).toBe(bitDepth);
+  expect(img.depth).toBe(depth);
   expect(img.colorModel).toBe(colorModel);
 });

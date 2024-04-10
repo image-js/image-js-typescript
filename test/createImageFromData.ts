@@ -1,5 +1,5 @@
 import {
-  BitDepth,
+  Depth,
   Image,
   ImageColorModel,
   ImageDataArray,
@@ -7,11 +7,10 @@ import {
 } from '../src';
 import { colorModels } from '../src/utils/constants/colorModels';
 
-export type CreateImageOptions = Pick<ImageOptions, 'bitDepth'>;
+export type CreateImageOptions = Pick<ImageOptions, 'depth'>;
 
 /**
  * Create a new Image object from image data.
- *
  * @param data - Image data.
  * @param colorModel - Image color model.
  * @param options - Additional options to create the image.
@@ -22,31 +21,30 @@ export function createImageFromData(
   colorModel: ImageColorModel,
   options: CreateImageOptions = {},
 ): Image {
-  const { bitDepth = 8 } = options;
+  const { depth = 8 } = options;
   if (Array.isArray(data)) {
-    return createImageFrom2DArray(data, colorModel, bitDepth);
+    return createImageFrom2DArray(data, colorModel, depth);
   } else {
-    return createImageFromString(data, colorModel, bitDepth);
+    return createImageFromString(data, colorModel, depth);
   }
 }
 
 /**
  * Create a new Image object from a 2D matrix.
- *
  * @param data - Image data.
  * @param colorModel - Image color model.
- * @param bitDepth - Bit depth.
+ * @param depth - Bit depth.
  * @returns - The new image.
  */
 function createImageFrom2DArray(
   data: number[][],
   colorModel: ImageColorModel,
-  bitDepth: BitDepth,
+  depth: Depth,
 ): Image {
   const { channels } = colorModels[colorModel];
   const height = data.length;
   const width = data[0].length / channels;
-  const imageData = createDataArray(height * width * channels, bitDepth);
+  const imageData = createDataArray(height * width * channels, depth);
   for (let row = 0; row < height; row++) {
     if (data[row].length % channels !== 0) {
       throw new RangeError(
@@ -69,7 +67,7 @@ function createImageFrom2DArray(
     }
   }
   return new Image(width, height, {
-    bitDepth,
+    depth,
     colorModel,
     data: imageData,
   });
@@ -77,26 +75,25 @@ function createImageFrom2DArray(
 
 /**
  * Create a new Image object from data encoded in a string.
- *
  * @param data - Image data.
  * @param colorModel - Image color model.
- * @param bitDepth - Bit depth.
+ * @param depth - Bit depth.
  * @returns - The new image.
  */
 function createImageFromString(
   data: string,
   colorModel: ImageColorModel,
-  bitDepth: BitDepth,
+  depth: Depth,
 ): Image {
   const { channels } = colorModels[colorModel];
   const trimmed = data.trim();
   const lines = trimmed.split('\n');
   const height = lines.length;
-  const width = lines[0].trim().split(/[^0-9]+/).length / channels;
-  const imageData = createDataArray(height * width * channels, bitDepth);
+  const width = lines[0].trim().split(/\D+/).length / channels;
+  const imageData = createDataArray(height * width * channels, depth);
   for (let row = 0; row < height; row++) {
     const line = lines[row].trim();
-    const values = line.split(/[^0-9]+/).map((v) => parseInt(v, 10));
+    const values = line.split(/\D+/).map((v) => Number.parseInt(v, 10));
     if (values.length % channels !== 0) {
       throw new RangeError(
         `length of row ${row} (${values.length}) is not a multiple of channels (${channels})`,
@@ -118,7 +115,7 @@ function createImageFromString(
     }
   }
   return new Image(width, height, {
-    bitDepth,
+    depth,
     colorModel,
     data: imageData,
   });
@@ -126,13 +123,12 @@ function createImageFromString(
 
 /**
  * Create a new data typed array for an image.
- *
  * @param size - Total size of the data array.
- * @param bitDepth - Bit depth.
+ * @param depth - Bit depth.
  * @returns The created array.
  */
-function createDataArray(size: number, bitDepth: BitDepth): ImageDataArray {
-  if (bitDepth === 8) {
+function createDataArray(size: number, depth: Depth): ImageDataArray {
+  if (depth === 8) {
     return new Uint8Array(size);
   } else {
     return new Uint16Array(size);

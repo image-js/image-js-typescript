@@ -57,7 +57,7 @@ export function computeSsim(
     windowSize = Math.min(11, image.height, image.width);
   }
   checkProcessable(image, {
-    bitDepth: [8],
+    depth: [8],
     channels: [1, 3, 4],
   });
 

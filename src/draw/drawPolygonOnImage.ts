@@ -41,7 +41,7 @@ export function drawPolygonOnImage(
   } = options;
 
   checkProcessable(image, {
-    bitDepth: [8, 16],
+    depth: [8, 16],
   });
 
   const newImage = getOutputImage(image, options, { clone: true });

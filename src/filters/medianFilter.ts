@@ -30,7 +30,7 @@ export function medianFilter(image: Image, options: MedianFilterOptions) {
   const { cellSize = 3, borderType = 'reflect101', borderValue } = options;
 
   checkProcessable(image, {
-    bitDepth: [8, 16],
+    depth: [8, 16],
   });
 
   if (cellSize < 1) {

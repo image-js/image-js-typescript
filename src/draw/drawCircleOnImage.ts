@@ -49,7 +49,7 @@ export function drawCircleOnImage(
   validateColor(color, newImage);
 
   checkProcessable(newImage, {
-    bitDepth: [8, 16],
+    depth: [8, 16],
   });
 
   if (radius < 0) {

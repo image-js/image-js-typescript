@@ -1,7 +1,7 @@
 import { decodeTiff } from '../decodeTiff';
 
 const tests = [
-  // ['name', components, alpha, bitDepth]
+  // ['name', components, alpha, depth]
   ['grey8', 'GREY', 8],
   ['grey16', 'GREY', 16],
   // TODO: support 32 bits again.
@@ -13,9 +13,9 @@ const tests = [
   ['palette', 'RGB', 16],
 ] as const;
 
-test.each(tests)('%s', (name, colorModel, bitDepth) => {
+test.each(tests)('%s', (name, colorModel, depth) => {
   const buffer = testUtils.loadBuffer(`formats/tif/${name}.tif`);
   const img = decodeTiff(buffer);
   expect(img.colorModel).toBe(colorModel);
-  expect(img.bitDepth).toBe(bitDepth);
+  expect(img.depth).toBe(depth);
 });

@@ -55,7 +55,7 @@ test('different alpha should throw', () => {
   const other = testUtils.createRgbImage([[1, 1, 1, 5, 5, 5, 10, 10, 10]]);
   expect(() => {
     image.subtract(other);
-  }).toThrow(`both images must have the same alpha and bitDepth`);
+  }).toThrow(`both images must have the same alpha and depth`);
 });
 
 test('different number of channels should throw', () => {

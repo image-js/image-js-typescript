@@ -1,4 +1,4 @@
-import { BitDepth } from 'fast-png';
+import { BitDepth as Depth } from 'fast-png';
 
 import { Image } from './Image';
 import { HistogramOptions } from './compute';
@@ -34,7 +34,7 @@ export class Stack {
   /**
    * The bit depth of the images.
    */
-  public readonly bitDepth: BitDepth;
+  public readonly depth: Depth;
   /**
    * Whether all the images of the stack have the same dimensions.
    */
@@ -56,7 +56,7 @@ export class Stack {
     this.alpha = images[0].alpha;
     this.colorModel = images[0].colorModel;
     this.channels = images[0].channels;
-    this.bitDepth = images[0].bitDepth;
+    this.depth = images[0].depth;
     this.sameDimensions = verifySameDimensions(images);
   }
 

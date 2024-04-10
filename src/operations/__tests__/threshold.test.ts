@@ -99,7 +99,7 @@ test('error threshold out of range', () => {
 test('16 bits image simple', () => {
   const image = new Image(2, 2, {
     colorModel: ImageColorModel.GREY,
-    bitDepth: 16,
+    depth: 16,
     data: new Uint16Array([0, 100, 20000, 30000]),
   });
   const threshold = image.threshold();

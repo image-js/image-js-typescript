@@ -43,9 +43,9 @@ test('should not have alpha channel', () => {
 });
 
 test('bit depth error', () => {
-  const image = new Image(1, 2, { bitDepth: 16 });
+  const image = new Image(1, 2, { depth: 16 });
   const stack = new Stack([image, image]);
   expect(() => {
-    checkProcessable(stack, { bitDepth: 8 });
-  }).toThrow('image bitDepth must be 8 to apply this algorithm');
+    checkProcessable(stack, { depth: 8 });
+  }).toThrow('image depth must be 8 to apply this algorithm');
 });

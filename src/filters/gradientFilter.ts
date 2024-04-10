@@ -1,4 +1,4 @@
-import { BitDepth, Image } from '..';
+import { Depth, Image } from '..';
 import type { BorderType } from '../utils/interpolateBorder';
 import checkProcessable from '../utils/validators/checkProcessable';
 
@@ -15,9 +15,9 @@ export interface GradientFilterBaseOptions {
   borderValue?: number;
   /**
    * Specify the bit depth of the resulting image.
-   * @default `image.bitDepth`
+   * @default `image.depth`
    */
-  bitDepth?: BitDepth;
+  depth?: Depth;
 }
 
 export interface GradientFilterXOptions extends GradientFilterBaseOptions {
@@ -62,7 +62,7 @@ export function gradientFilter(
   const { borderType = 'replicate', borderValue = 0 } = options;
 
   checkProcessable(image, {
-    bitDepth: [8, 16],
+    depth: [8, 16],
     colorModel: 'GREY',
   });
 

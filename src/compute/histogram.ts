@@ -11,7 +11,7 @@ export interface HistogramOptions {
   channel?: number;
   /**
    * The number of slots that histogram can have.
-   * @default 2 ** image.bitDepth
+   * @default 2 ** image.depth
    */
   slots?: number;
 }
@@ -27,7 +27,7 @@ export function histogram(
   options: HistogramOptions = {},
 ): Uint32Array {
   let { channel } = options;
-  const { slots = 2 ** image.bitDepth } = options;
+  const { slots = 2 ** image.depth } = options;
   if (!(slots !== 0 && (slots & (slots - 1)) === 0)) {
     throw new RangeError(
       'slots must be a power of 2, for example: 64, 256, 1024',
@@ -47,7 +47,7 @@ export function histogram(
 
   let bitShift = 0;
   const bitSlots = Math.log2(slots);
-  bitShift = image.bitDepth - bitSlots;
+  bitShift = image.depth - bitSlots;
   for (let i = 0; i < image.size; i++) {
     hist[image.getValueByIndex(i, channel) >> bitShift]++;
   }

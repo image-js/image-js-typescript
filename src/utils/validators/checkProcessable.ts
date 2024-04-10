@@ -1,10 +1,10 @@
-import { BitDepth, Image, ImageColorModel, Mask } from '../..';
+import { Depth, Image, ImageColorModel, Mask } from '../..';
 
 // @ts-expect-error Intl types don't exist yet
 const formatter = new Intl.ListFormat('en', { type: 'disjunction' });
 
 interface CheckOptions {
-  bitDepth?: BitDepth[] | BitDepth;
+  depth?: Depth[] | Depth;
   alpha?: boolean[] | boolean;
   colorModel?: ImageColorModel[] | ImageColorModel;
   components?: number[] | number;
@@ -20,14 +20,14 @@ export default function checkProcessable(
   image: Image | Mask,
   options: CheckOptions = {},
 ) {
-  let { bitDepth, alpha, colorModel, components, channels } = options;
-  if (bitDepth) {
-    if (!Array.isArray(bitDepth)) {
-      bitDepth = [bitDepth];
+  let { depth, alpha, colorModel, components, channels } = options;
+  if (depth) {
+    if (!Array.isArray(depth)) {
+      depth = [depth];
     }
-    if (!bitDepth.includes(image.bitDepth)) {
+    if (!depth.includes(image.depth)) {
       throw new RangeError(
-        `image bitDepth must be ${format(bitDepth)} to apply this algorithm`,
+        `image depth must be ${format(depth)} to apply this algorithm`,
       );
     }
   }
@@ -82,7 +82,7 @@ export default function checkProcessable(
   }
 }
 
-type ArrayType = number[] | ImageColorModel[] | BitDepth[] | boolean[];
+type ArrayType = number[] | ImageColorModel[] | Depth[] | boolean[];
 
 /**
  * Format array to a string.

@@ -1,4 +1,4 @@
-import { BitDepth, Image } from '..';
+import { Depth, Image } from '..';
 import {
   PREWITT_X,
   PREWITT_Y,
@@ -39,9 +39,9 @@ export interface DerivativeFilterOptions {
   borderValue?: number;
   /**
    * Specify the bit depth of the resulting image.
-   * @default `image.bitDepth`
+   * @default `image.depth`
    */
-  bitDepth?: BitDepth;
+  depth?: Depth;
 }
 
 /**

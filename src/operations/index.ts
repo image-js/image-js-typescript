@@ -1,5 +1,5 @@
 export * from './convertColor';
-export * from './convertBitDepth';
+export * from './convertDepth';
 export * from './extract';
 export * from './merge';
 export * from './split';

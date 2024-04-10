@@ -69,7 +69,7 @@ export function drawRectangle(
   let newImage: Image | Mask;
   if (image instanceof Image) {
     checkProcessable(image, {
-      bitDepth: [8, 16],
+      depth: [8, 16],
     });
     newImage = getOutputImage(image, options, { clone: true });
   } else {

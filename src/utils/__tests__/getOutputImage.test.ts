@@ -19,7 +19,7 @@ describe('getOutputImage', () => {
       width: 2,
       height: 2,
       colorModel: ImageColorModel.GREY,
-      bitDepth: 8,
+      depth: 8,
     });
     expect(output).toMatchImageData([
       [0, 0],
@@ -37,7 +37,7 @@ describe('getOutputImage', () => {
       width: 2,
       height: 2,
       colorModel: ImageColorModel.GREY,
-      bitDepth: 8,
+      depth: 8,
     });
     expect(output).toMatchImageData([
       [0, 1],
@@ -121,7 +121,7 @@ describe('maskToOutputImage', () => {
       width: 2,
       height: 2,
       colorModel: ImageColorModel.GREY,
-      bitDepth: 8,
+      depth: 8,
     });
     expect(output).toMatchImageData([
       [0, 0],
@@ -165,7 +165,7 @@ describe('imageToOutputMask', () => {
       width: 2,
       height: 2,
       colorModel: ImageColorModel.BINARY,
-      bitDepth: 1,
+      depth: 1,
     });
     expect(output).toMatchMaskData([
       [0, 0],
@@ -209,7 +209,7 @@ describe('maskToOutputMask', () => {
       width: 2,
       height: 2,
       colorModel: ImageColorModel.BINARY,
-      bitDepth: 1,
+      depth: 1,
     });
     expect(output).toMatchMaskData([
       [0, 0],

@@ -20,7 +20,6 @@ interface MatcherResult {
 export interface JestMatcherOptions {
   /**
    * Acceptable difference between the received image and the expected for each channel.
-   *
    * @default `0`
    */
   error?: number;
@@ -28,7 +27,6 @@ export interface JestMatcherOptions {
 
 /**
  * Match a received image to an expected image.
- *
  * @param this - Jest matcher context.
  * @param received - Received image.
  * @param expected - Expected image.
@@ -52,8 +50,8 @@ export function toMatchImage(
     errorString = `Expected image width to be ${expectedImage.width}, but got ${received.width}`;
   } else if (received.height !== expectedImage.height) {
     errorString = `Expected image height to be ${expectedImage.height}, but got ${received.height}`;
-  } else if (received.bitDepth !== expectedImage.bitDepth) {
-    errorString = `Expected image bitDepth to be ${expectedImage.bitDepth}, but got ${received.bitDepth}`;
+  } else if (received.depth !== expectedImage.depth) {
+    errorString = `Expected image depth to be ${expectedImage.depth}, but got ${received.depth}`;
   } else if (received.colorModel !== expectedImage.colorModel) {
     errorString = `Expected image color model to be ${expectedImage.colorModel}, but got ${received.colorModel}`;
   } else if (error === 0) {
@@ -94,7 +92,6 @@ export function toMatchImage(
 
 /**
  * Match a received image to expected image data.
- *
  * @param this - Jest matcher context.
  * @param received - Received image.
  * @param expectedData - Expected image data.
@@ -108,14 +105,13 @@ export function toMatchImageData(
   options: JestMatcherOptions = {},
 ): MatcherResult {
   const expectedImage = createImageFromData(expectedData, received.colorModel, {
-    bitDepth: received.bitDepth,
+    depth: received.depth,
   });
   return toMatchImage.call(this, received, expectedImage, options);
 }
 
 /**
  * Match a received mask to an expected mask.
- *
  * @param this - Jest matcher context.
  * @param received - Received mask.
  * @param expected - Expected mask.
@@ -153,7 +149,6 @@ export function toMatchMask(
 
 /**
  * Match a received mask to expected mask data.
- *
  * @param this - Jest matcher context.
  * @param received - Received mask.
  * @param expectedData - Expected mask data.
@@ -172,7 +167,6 @@ const toMatchImageFileSnapshot = configureToMatchImageSnapshot({});
 
 /**
  * Snapshot matching with Image objects.
- *
  * @param this - Jest matcher context.
  * @param received - Received image.
  * @param options - Options.

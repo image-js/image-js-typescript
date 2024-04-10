@@ -41,7 +41,7 @@ export function subtract(
 
   if (image instanceof Image) {
     checkProcessable(image, {
-      bitDepth: [1, 8, 16],
+      depth: [1, 8, 16],
       components: [1, 3],
       alpha: false,
     });

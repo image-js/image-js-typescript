@@ -1,17 +1,17 @@
-import { Image, BitDepth } from '../Image';
+import { Image, Depth } from '../Image';
 
 /**
  * Convert the bit depth of an image.
  * @param image - Image to convert.
- * @param newBitDepth - Bit depth to convert to.
+ * @param newDepth - Bit depth to convert to.
  * @returns Converted image.
  */
-export function convertBitDepth(image: Image, newBitDepth: BitDepth): Image {
-  if (image.bitDepth === newBitDepth) {
-    throw new RangeError('cannot convert image to same bitDepth');
+export function convertDepth(image: Image, newDepth: Depth): Image {
+  if (image.depth === newDepth) {
+    throw new RangeError('cannot convert image to same depth');
   }
 
-  if (newBitDepth === 16) {
+  if (newDepth === 16) {
     return convertToUint16(image);
   } else {
     return convertToUint8(image);
@@ -25,7 +25,7 @@ export function convertBitDepth(image: Image, newBitDepth: BitDepth): Image {
  */
 function convertToUint16(image: Image): Image {
   const newImage = new Image(image.width, image.height, {
-    bitDepth: 16,
+    depth: 16,
     colorModel: image.colorModel,
     origin: image.origin,
   });
@@ -45,7 +45,7 @@ function convertToUint16(image: Image): Image {
  */
 function convertToUint8(image: Image): Image {
   const newImage = new Image(image.width, image.height, {
-    bitDepth: 8,
+    depth: 8,
     colorModel: image.colorModel,
     origin: image.origin,
   });

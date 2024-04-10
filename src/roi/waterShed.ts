@@ -63,7 +63,7 @@ export function waterShed(
   const { mask, threshold = 1 } = options;
   const currentImage = image;
   checkProcessable(image, {
-    bitDepth: [8, 16],
+    depth: [8, 16],
     components: 1,
   });
 

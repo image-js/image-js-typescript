@@ -64,7 +64,7 @@ export function level(image: Image, options: LevelOptions = {}) {
   validateChannels(channels, image);
 
   checkProcessable(image, {
-    bitDepth: [8, 16],
+    depth: [8, 16],
   });
 
   const newImage = getOutputImage(image, options, { clone: true });
