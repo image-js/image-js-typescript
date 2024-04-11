@@ -116,3 +116,27 @@ test('16 bits image', () => {
 
   expect(threshold).toMatchImageSnapshot();
 });
+
+test('16 bits image simple with default number of slots 2**16', () => {
+  const image = new Image(2, 2, {
+    colorModel: ImageColorModel.GREY,
+    bitDepth: 16,
+    data: new Uint16Array([0, 100, 20000, 30000]),
+  });
+  const threshold = image.threshold({ slots: 2 ** image.bitDepth });
+  const defaultThreshold = image.threshold();
+
+  expect(threshold).toEqual(defaultThreshold);
+});
+
+test('16 bits image simple with custom number of slots 2**8', () => {
+  const image = new Image(2, 2, {
+    colorModel: ImageColorModel.GREY,
+    bitDepth: 16,
+    data: new Uint16Array([0, 100, 20000, 30000]),
+  });
+  const threshold = image.threshold({ slots: 2 ** 8 });
+  const defaultThreshold = image.threshold();
+
+  expect(threshold).not.toEqual(defaultThreshold);
+});
