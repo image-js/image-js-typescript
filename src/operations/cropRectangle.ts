@@ -13,7 +13,7 @@ export type CropRectangleOptions = Omit<
  * Crop an oriented rectangle from an image.
  * If the rectangle's length or width are not an integers, its dimension is expanded in both directions such as the length and width are integers.
  * @param image - The input image
- * @param points - The points of the rectangle. Points must be circling around the rectangle (clockwise or anti-clockwise)
+ * @param points - The points of the rectangle. Points must be circling around the rectangle (clockwise or anti-clockwise). The validity of the points passed is assumed and not checked.
  * @param options - Crop options, see {@link CropRectangleOptions}
  * @returns The cropped image. The orientation of the image is the one closest to the rectangle passed as input.
  */
@@ -26,8 +26,7 @@ export function cropRectangle(
     throw new Error('The points array must contain 4 points');
   }
 
-  // Compute the angle between the first segment defined by the points
-  // And the horizontal axis
+  // get the smallest possible angle which puts the rectangle in an upright position
   const angle = getSmallestAngle(points);
 
   const center: Point = {
@@ -47,6 +46,7 @@ export function cropRectangle(
     Math.abs(p1.row - p2.row),
     Math.abs(p2.row - p3.row),
   );
+
   // Deal with numerical imprecision when the rectangle actually had a whole number width or height
   const width = Math.min(
     Math.ceil(originalWidth),
@@ -57,6 +57,7 @@ export function cropRectangle(
     Math.ceil(originalHeight - 1e-10),
   );
 
+  // Top left position of the upright rectangle after normalization of width and height
   const expandedTopLeft = {
     row:
       Math.min(...rotatedPoints.map((p) => p.row)) -
