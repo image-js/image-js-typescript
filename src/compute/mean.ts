@@ -15,7 +15,5 @@ export function mean(image: Image): number[] {
       }
     }
   }
-  const channelMeans = pixel.map((channel) => channel / image.size);
-
-  return channelMeans;
+  return pixel.map((channel) => channel / image.size);
 }
