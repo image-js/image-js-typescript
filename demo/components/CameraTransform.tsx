@@ -68,9 +68,7 @@ export default function CameraTransform(props: CameraTransformProps) {
           }
           nextFrameRequest = requestAnimationFrame(nextFrame);
         })
-        .catch((err: unknown) => {
-          console.error(err);
-        });
+        .catch((err: unknown) => console.error(err));
     };
 
     return () => {

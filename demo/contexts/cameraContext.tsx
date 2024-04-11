@@ -101,9 +101,7 @@ export function CameraProvider(props: { children: ReactNode }) {
     }
 
     function handleDeviceChange() {
-      getCameras().catch((err: unknown) => {
-        console.error(err);
-      });
+      getCameras().catch((err: unknown) => console.error(err));
     }
 
     navigator.mediaDevices.addEventListener('devicechange', handleDeviceChange);
