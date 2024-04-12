@@ -20,7 +20,7 @@ export function getMaskFromCannyEdge(
   image: Image,
   options?: GetMaskFromCannyEdgeOptions,
 ) {
-  const { dilateOrder = 1 } = options as GetMaskFromCannyEdgeOptions;
+  const dilateOrder = options?.dilateOrder ?? 1;
   let mask = image.cannyEdgeDetector();
   for (let i = 0; i < dilateOrder; i++) {
     mask = mask.dilate();
