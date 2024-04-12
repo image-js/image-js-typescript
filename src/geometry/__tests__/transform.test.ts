@@ -47,6 +47,7 @@ test('get a vertical reflection of an image', () => {
   // dst = cv.warpPerspective(img,M,(cols,rows))
   expect(transformed).toMatchImage('opencv/testReflection.png');
 });
+
 test('get a scale of an image to 80*100', () => {
   const img = testUtils.load('opencv/test.png');
   const transformed = img.transform(
@@ -54,7 +55,7 @@ test('get a scale of an image to 80*100', () => {
       [10, 0, 0],
       [0, 10, 0],
     ],
-    { inverse: false, fullImage: false },
+    { inverse: false, fullImage: true },
   );
   // Equivalent python code with opencv
   //dst = cv.resize(img, (80,100), interpolation=cv.INTER_CUBIC)
@@ -64,11 +65,14 @@ test('affineTransformation', () => {
   const img = testUtils.load('opencv/test.png');
   const transformed = img.transform(
     [
-      [2, 1, 2],
-      [-1, 1, 2],
+      [1 / 3, -1 / 3, 0],
+      [1 / 3, 2 / 3, -2],
     ],
-    { inverse: true, fullImage: true },
+    { inverse: true, fullImage: false },
   );
+  // Equivalent python code with opencv
+  //M = np.float32([[2,1,2], [-1,1, 2],[0,0,1]])
+  //dst = cv.warpPerspective(img,M,(cols,rows))
   expect(transformed).toMatchImage('opencv/testAffine.png');
 });
 
