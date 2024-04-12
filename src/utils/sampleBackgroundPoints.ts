@@ -19,7 +19,16 @@ export function sampleBackgroundPoints(
   const background: Point[] = [];
   const verticalSpread = Math.floor(image.height / numberOfRows);
   const horizontalSpread = Math.floor(image.width / numberOfColumns);
-
+  if (verticalSpread <= 0) {
+    throw new RangeError(
+      `Too many rows per image.Your number of rows:${numberOfRows}`,
+    );
+  }
+  if (horizontalSpread <= 0) {
+    throw new RangeError(
+      `Too many columns per image.Your number of columns: ${numberOfColumns}`,
+    );
+  }
   for (
     let row = Math.floor(verticalSpread / 2);
     row < mask.height - Math.floor(verticalSpread / 2);
