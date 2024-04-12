@@ -18,9 +18,9 @@ interface GetMaskFromCannyEdgeOptions {
  */
 export function getMaskFromCannyEdge(
   image: Image,
-  options: GetMaskFromCannyEdgeOptions,
+  options?: GetMaskFromCannyEdgeOptions,
 ) {
-  const { dilateOrder = 1 } = options;
+  const { dilateOrder = 1 } = options as GetMaskFromCannyEdgeOptions;
   let mask = image.cannyEdgeDetector();
   for (let i = 0; i < dilateOrder; i++) {
     mask = mask.dilate();

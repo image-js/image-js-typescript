@@ -44,7 +44,7 @@ test('testing 10x10 with dilation', () => {
     [0, 0, 0, 0, 1, 1, 1, 1, 1, 1],
     [0, 0, 0, 0, 1, 1, 1, 1, 1, 1],
   ]);
-  const fromCannyMask = getMaskFromCannyEdge(image, { dilateOrder: 1 });
+  const fromCannyMask = getMaskFromCannyEdge(image);
   expect(fromCannyMask).toEqual(mask);
 });
 
@@ -90,6 +90,6 @@ test('testing 7x7 with dilation', () => {
     [1, 1, 1, 1, 1, 1, 1],
     [1, 1, 1, 1, 1, 1, 1],
   ]);
-  const fromCannyMask = getMaskFromCannyEdge(image, { dilateOrder: 1 });
+  const fromCannyMask = getMaskFromCannyEdge(image);
   expect(fromCannyMask).toEqual(mask);
 });
