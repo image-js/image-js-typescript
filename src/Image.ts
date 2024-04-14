@@ -37,12 +37,12 @@ import {
   GradientFilterOptions,
   hypotenuse,
   HypotenuseOptions,
+  increaseContrast,
+  IncreaseContrastOptions,
   invert,
   InvertOptions,
   level,
   LevelOptions,
-  increaseContrast,
-  IncreaseContrastOptions,
   medianFilter,
   MedianFilterOptions,
   pixelate,
@@ -86,14 +86,16 @@ import {
   copyTo,
   CopyToOptions,
   crop,
+  cropAlpha,
   CropAlphaOptions,
   CropOptions,
+  cropRectangle,
+  CropRectangleOptions,
   grey,
   paintMaskOnImage,
   PaintMaskOnImageOptions,
   split,
 } from './operations';
-import { cropAlpha } from './operations/cropAlpha';
 import { colorModels, ImageColorModel } from './utils/constants/colorModels';
 import { getMinMax } from './utils/getMinMax';
 import { validateChannel, validateValue } from './utils/validators/validators';
@@ -432,6 +434,24 @@ export class Image {
   }
 
   /**
+   * Set the value of a specific pixel channel. Select pixel using coordinates.
+   * If the value is out of range it is set to the closest extremety.
+   * @param column - Column index.
+   * @param row - Row index.
+   * @param channel - Channel index.
+   * @param value - Value to set.
+   */
+  public setClampedValue(
+    column: number,
+    row: number,
+    channel: number,
+    value: number,
+  ): void {
+    if (value < 0) value = 0;
+    else if (value > this.maxValue) value = this.maxValue;
+    this.data[(row * this.width + column) * this.channels + channel] = value;
+  }
+  /**
    * Get the value of a specific pixel channel. Select pixel using index.
    * @param index - Index of the pixel.
    * @param channel - Channel index.
@@ -447,6 +467,23 @@ export class Image {
    * @param value - Value to set.
    */
   public setValueByIndex(index: number, channel: number, value: number): void {
+    this.data[index * this.channels + channel] = value;
+  }
+
+  /**
+   * Set the value of a specific pixel channel. Select pixel using index.
+   * If the value is out of range it is set to the closest extremety.
+   * @param index - Index of the pixel.
+   * @param channel - Channel index.
+   * @param value - Value to set.
+   */
+  public setClampedValueByIndex(
+    index: number,
+    channel: number,
+    value: number,
+  ): void {
+    if (value < 0) value = 0;
+    else if (value > this.maxValue) value = this.maxValue;
     this.data[index * this.channels + channel] = value;
   }
 
@@ -808,6 +845,17 @@ export class Image {
   }
 
   /**
+   * Crop an oriented rectangle from the image.
+   * If the rectangle's length or width are not an integers, its dimension is expanded in both directions such as the length and width are integers.
+   * @param points - The points of the rectangle. Points must be circling around the rectangle (clockwise or anti-clockwise)
+   * @param options - Crop options, see {@link CropRectangleOptions}
+   * @returns The cropped image. The orientation of the image is the one closest to the rectangle passed as input.
+   */
+  public cropRectangle(points: Point[], options?: CropRectangleOptions) {
+    return cropRectangle(this, points, options);
+  }
+
+  /**
    * Crops the image based on the alpha channel
    * This removes lines and columns where the alpha channel is lower than a threshold value.
    * @param options - Crop alpha options.
@@ -1125,6 +1173,6 @@ function printData(img: Image): string {
   }
 
   return `{
-    ${`[\n     ${result.join('\n     ')}\n    ]`}
+    [\n     ${result.join('\n     ')}\n    ]
   }`;
 }
