@@ -26,13 +26,13 @@ test('computeThreshold with OTSU', () => {
   const testImage = testUtils.load('opencv/test.png');
 
   const grey = testImage.convertColor('GREY');
-  const thresholdValue = computeThreshold(grey, 'otsu');
+  const thresholdValue = computeThreshold(grey, { algorithm: 'otsu' });
   expect(thresholdValue).toBe(127);
 });
 
 test('computeThreshold with OTSU (2)', () => {
   const img = testUtils.load('various/grayscale_by_zimmyrose.png');
-  const thresholdValue = computeThreshold(img, 'otsu');
+  const thresholdValue = computeThreshold(img, { algorithm: 'otsu' });
   expect(thresholdValue).toBe(135);
 });
 
