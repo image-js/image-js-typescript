@@ -65,10 +65,10 @@ test('affineTransformation', () => {
   const img = testUtils.load('opencv/test.png');
   const transformed = img.transform(
     [
-      [1 / 3, -1 / 3, 0],
-      [1 / 3, 2 / 3, -2],
+      [2, 1, 2],
+      [-1, 1, 2],
     ],
-    { inverse: true, fullImage: false },
+    { inverse: false, fullImage: false },
   );
   // Equivalent python code with opencv
   //M = np.float32([[2,1,2], [-1,1, 2],[0,0,1]])
