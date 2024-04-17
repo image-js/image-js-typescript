@@ -1,13 +1,6 @@
 import { Image } from '../Image';
+import { DilateOptions } from '../morphology';
 import { fromMask } from '../roi';
-
-interface GetMaskFromCannyEdgeOptions {
-  /**
-   * Number of iterations to dilate a mask.
-   * @default `1`
-   */
-  dilateOrder: number;
-}
 
 /**
  * Creates a mask with ROIs shapes with CannyEdge filter. Then shapes
@@ -16,15 +9,17 @@ interface GetMaskFromCannyEdgeOptions {
  * @param options - GetMaskFromCannyEdge options
  * @returns mask
  */
-export function getMaskFromCannyEdge(
-  image: Image,
-  options?: GetMaskFromCannyEdgeOptions,
-) {
-  const dilateOrder = options?.dilateOrder ?? 1;
+export function getMaskFromCannyEdge(image: Image, options?: DilateOptions) {
+  const kernel = options?.kernel ?? [
+    [1, 1, 1],
+    [1, 1, 1],
+    [1, 1, 1],
+  ];
+  const iterations = options?.iterations ?? 1;
+
   let mask = image.cannyEdgeDetector();
-  for (let i = 0; i < dilateOrder; i++) {
-    mask = mask.dilate();
-  }
+  mask = mask.dilate({ iterations, kernel });
+
   const roiMap = fromMask(mask);
   const rois = roiMap.getRois({ kind: 'white' });
   for (const roi of rois) {

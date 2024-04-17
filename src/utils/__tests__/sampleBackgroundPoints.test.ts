@@ -9,8 +9,11 @@ test('basic test', () => {
     [2, 50, 50, 50, 2],
     [2, 2, 2, 2, 2],
   ]);
-  const mask = getMaskFromCannyEdge(image, { dilateOrder: 0 });
-  const points = sampleBackgroundPoints(image, mask, 3, 3);
+  const mask = getMaskFromCannyEdge(image, { iterations: 0 });
+  const points = sampleBackgroundPoints(image, mask, {
+    numberOfColumns: 3,
+    numberOfRows: 3,
+  });
   expect(points).toEqual([
     { column: 0, row: 0 },
     { column: 1, row: 0 },
@@ -42,7 +45,10 @@ test('basic test with basic mask', () => {
     [0, 200, 0, 0, 0, 0, 200],
   ]);
   const mask = image.threshold();
-  const points = sampleBackgroundPoints(image, mask, 3, 3);
+  const points = sampleBackgroundPoints(image, mask, {
+    numberOfColumns: 3,
+    numberOfRows: 3,
+  });
   expect(points).toEqual([
     { column: 3, row: 1 },
     { column: 5, row: 1 },
@@ -63,7 +69,10 @@ test('basic test with basic mask', () => {
     [0, 200, 0, 0, 0, 0, 0],
   ]);
   const mask = image.threshold();
-  const points = sampleBackgroundPoints(image, mask, 3, 3);
+  const points = sampleBackgroundPoints(image, mask, {
+    numberOfColumns: 3,
+    numberOfRows: 3,
+  });
   expect(points).toEqual([
     { column: 1, row: 1 },
     { column: 3, row: 1 },
@@ -76,8 +85,11 @@ test('throw an error', () => {
     [0, 0, 0],
     [0, 0, 0],
   ]);
-  const mask = getMaskFromCannyEdge(image, { dilateOrder: 0 });
-  expect(() => sampleBackgroundPoints(image, mask, -3, 3)).toThrow(
-    `Too many columns per image.Your number of columns: -3`,
-  );
+  const mask = getMaskFromCannyEdge(image, { iterations: 0 });
+  expect(() =>
+    sampleBackgroundPoints(image, mask, {
+      numberOfColumns: -3,
+      numberOfRows: 3,
+    }),
+  ).toThrow(`Too many columns per image.Your number of columns: -3`);
 });
