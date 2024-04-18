@@ -87,7 +87,7 @@ export function computeThreshold(
     );
   }
   const histogram = image.histogram({ slots });
-  const scale = options.slots ? 2 ** image.bitDepth / options.slots : 1;
+  const scale = slots ? 2 ** image.bitDepth / slots : 1;
 
   switch (algorithm) {
     case 'huang':
