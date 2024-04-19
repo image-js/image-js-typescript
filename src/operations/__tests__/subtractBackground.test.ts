@@ -102,7 +102,7 @@ test('basic screws image test', () => {
     numberOfRows: 15,
   });
   const newImage = subtractBackground(image, points, 2);
-  expect(newImage).toMatchSnapshot('/__image_snapshots__/output.png');
+  expect(newImage).toMatchSnapshot();
 });
 
 test('basic sudoku image test', () => {
@@ -113,5 +113,5 @@ test('basic sudoku image test', () => {
     numberOfRows: 15,
   });
   const newImage = subtractBackground(image, points, 2);
-  expect(newImage).toMatchSnapshot('/__image_snapshots__/sudokuOutput.png');
+  expect(newImage).toMatchSnapshot();
 });
