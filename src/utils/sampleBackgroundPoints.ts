@@ -11,8 +11,8 @@ interface SampleBackgroundPointsOptions {
  * Returns a sample of points that belongs to background.
  * @param image - Image to sample points from.
  * @param mask - Mask to check if the point belongs to background.
- * @param options
- * @returns array of points.
+ * @param options - SampleBackgroundPointsOptions.
+ * @returns Array of points.
  */
 export function sampleBackgroundPoints(
   image: Image,

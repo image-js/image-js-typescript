@@ -9,8 +9,8 @@ import checkProcessable from '../utils/validators/checkProcessable';
  * Subtracts background from an image for baseline correction.
  * @param image - Image to subtract background from.
  * @param background - Points that are considered the background of an image.
- * @param order - order of regression function
- * @returns image with corrected baseline.
+ * @param order - Order of regression function.
+ * @returns Image with corrected baseline.
  */
 export function subtractBackground(
   image: Image,
@@ -38,14 +38,11 @@ export function subtractBackground(
       ];
     }
   }
-
-  // let bgImage = new Image(image.width, image.height, { colorModel: 'GREY' });
   const Y = model.predict(X);
 
   for (let i = 0; i < image.height; i++) {
     for (let j = 0; j < image.width; j++) {
       const value = Math.abs(Y[i * image.width + j] - image.getValue(j, i, 0));
-      //bgImage.setValue(j, i, 0, Y[i * image.width + j]);
       image.setValue(j, i, 0, value);
     }
   }

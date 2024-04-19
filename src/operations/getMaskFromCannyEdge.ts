@@ -3,11 +3,11 @@ import { DilateOptions } from '../morphology';
 import { fromMask } from '../roi';
 
 /**
- * Creates a mask with ROIs shapes with CannyEdge filter. Then shapes
- * get filled by internalIds.
- * @param image - image to get the mask with
- * @param options - GetMaskFromCannyEdge options
- * @returns mask
+ * Creates a mask with ROI shapes with CannyEdge filter. Then these shapes
+ * get "filled" through internalIds.
+ * @param image - Image to get the mask with.
+ * @param options - GetMaskFromCannyEdge options.
+ * @returns Mask
  */
 export function getMaskFromCannyEdge(image: Image, options?: DilateOptions) {
   const kernel = options?.kernel ?? [
