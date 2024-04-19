@@ -10,7 +10,7 @@ test('rotate + scale compared to opencv (nearest)', () => {
     center: { column: 2, row: 4 },
   });
 
-  expect(rotated).toMatchImage('opencv/testRotate.png');
+  expect(rotated).toMatchImage('opencv/testInterpolate.png');
 });
 
 test('rotate + scale compared to opencv (bilinear)', () => {
