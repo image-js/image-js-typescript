@@ -1,3 +1,4 @@
+import { Point } from '../../geometry';
 import { readSync } from '../../load';
 import { sampleBackgroundPoints } from '../../utils/sampleBackgroundPoints';
 import { getMaskFromCannyEdge } from '../getMaskFromCannyEdge';
@@ -27,43 +28,67 @@ test('basic test', () => {
   expect(newImage).toEqual(result);
 });
 
-test('test with object 8x8', () => {
+test('test with object 8x8 and manually picked points', () => {
   const image = testUtils.createGreyImage([
     [1, 2, 3, 4, 5, 6, 7, 8],
+    [1, 2, 3, 4, 5, 6, 7, 8],
     [1, 2, 250, 250, 250, 250, 7, 8],
     [1, 2, 250, 4, 5, 250, 7, 8],
     [1, 2, 250, 4, 5, 250, 7, 8],
     [1, 2, 250, 250, 250, 250, 7, 8],
     [1, 2, 3, 4, 5, 6, 7, 8],
+    [1, 2, 3, 4, 5, 6, 7, 8],
+  ]);
+  const points: Point[] = [
+    { column: 0, row: 0 },
+    { column: 1, row: 6 },
+    { column: 2, row: 1 },
+    { column: 3, row: 1 },
+    { column: 4, row: 6 },
+    { column: 3, row: 7 },
+    { column: 4, row: 7 },
+    { column: 5, row: 7 },
+  ];
+
+  const newImage = subtractBackground(image, points, 2);
+  const result = testUtils.createGreyImage([
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 247, 246, 245, 244, 0, 0],
+    [0, 0, 247, 0, 0, 244, 0, 0],
+    [0, 0, 247, 0, 0, 244, 0, 0],
+    [0, 0, 247, 246, 245, 244, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+  ]);
+  expect(newImage).toEqual(result);
+});
+
+test('test with object 8x8 and sampled points', () => {
+  const image = testUtils.createGreyImage([
+    [1, 2, 3, 4, 5, 6, 7, 8],
+    [1, 2, 3, 4, 5, 6, 7, 8],
+    [1, 2, 250, 250, 250, 250, 7, 8],
+    [1, 2, 250, 4, 5, 250, 7, 8],
+    [1, 2, 250, 4, 5, 250, 7, 8],
+    [1, 2, 250, 250, 250, 250, 7, 8],
     [1, 2, 3, 4, 5, 6, 7, 8],
     [1, 2, 3, 4, 5, 6, 7, 8],
   ]);
   const mask = getMaskFromCannyEdge(image, { iterations: 0 });
-  console.log(
-    image.cannyEdgeDetector({
-      lowThreshold: 0,
-      highThreshold: 0.001,
-      hysteresis: false,
-    }),
-  );
-  console.log(image.derivativeFilter().threshold());
-  const points = sampleBackgroundPoints(
-    image,
-    image.derivativeFilter().threshold(),
-    {
-      numberOfColumns: 5,
-      numberOfRows: 5,
-    },
-  );
+
+  const points = sampleBackgroundPoints(image, mask, {
+    numberOfColumns: 5,
+    numberOfRows: 5,
+  });
   const newImage = subtractBackground(image, points, 2);
-  console.log(newImage);
   const result = testUtils.createGreyImage([
     [0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 47, 48, 49, 0, 0, 0],
-    [0, 0, 0, 47, 48, 49, 0, 0],
-    [0, 0, 0, 47, 48, 49, 0, 0],
-    [0, 0, 0, 47, 48, 49, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 247, 246, 245, 244, 0, 0],
+    [0, 0, 247, 0, 0, 244, 0, 0],
+    [0, 0, 247, 0, 0, 244, 0, 0],
+    [0, 0, 247, 246, 245, 244, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0],
   ]);
