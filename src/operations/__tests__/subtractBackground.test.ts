@@ -104,3 +104,14 @@ test('basic screws image test', () => {
   const newImage = subtractBackground(image, points, 2);
   expect(newImage).toMatchSnapshot('/__image_snapshots__/output.png');
 });
+
+test('basic sudoku image test', () => {
+  const image = testUtils.load('various/sudoku.jpg').grey();
+  const mask = getMaskFromCannyEdge(image, { iterations: 0 });
+  const points = sampleBackgroundPoints(image, mask, {
+    numberOfColumns: 15,
+    numberOfRows: 15,
+  });
+  const newImage = subtractBackground(image, points, 2);
+  expect(newImage).toMatchSnapshot('/__image_snapshots__/sudokuOutput.png');
+});
