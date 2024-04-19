@@ -28,7 +28,7 @@ cv.imwrite('testClockwiseRot90.png', dst)
 #Image interpolation
 matrix = cv.getRotationMatrix2D((2, 4), angle=30, scale=0.8)
 dst = cv.warpAffine(img, matrix, dsize=(cols, rows), flags=cv.INTER_NEAREST,borderMode=cv.BORDER_REFLECT)
-cv.imwrite('tesInterpolate.png', dst)
+cv.imwrite('testInterpolate.png', dst)
 
 
 #Image bilinear interpolation
