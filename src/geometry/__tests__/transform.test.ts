@@ -15,36 +15,33 @@ test('compare result of translation with opencv', () => {
   expect(transformed).toMatchImage('opencv/testTranslation.png');
 });
 
-test('compare result of rotation with opencv', () => {
+test('compare result of clockwise rotation with opencv', () => {
   const img = testUtils.load('opencv/test.png');
   const transformed = img.transform(
     [
-      [0, -1, img.getCoordinates('center').row],
-      [
-        1,
-        0,
-        -img.getCoordinates('center').column + img.getCoordinates('center').row,
-      ],
+      [0, -1, img.width + 1],
+      [1, 0, 0],
     ],
-    { inverse: false, fullImage: true },
+    { inverse: false, fullImage: false, width: 10, height: 8 },
   );
   // Equivalent python code with opencv
-  // M = cv.getRotationMatrix2D(((cols-1)/2.0,(rows-1)/2.0),90,1)
-  // dst = cv.warpAffine(img,M,(cols,rows))
+  // M = np.float32([[0, -1, cols+1], [1, 0,0]])
+  // dst = cv.warpAffine(img,M,(rows,cols))
   expect(transformed).toMatchImage('opencv/testRotated90.png');
 });
+
 test('get a vertical reflection of an image', () => {
   const img = testUtils.load('opencv/test.png');
   const transformed = img.transform(
     [
       [1, 0, 0],
-      [0, -1, 0],
+      [0, -1, img.height - 1],
     ],
-    { inverse: false, fullImage: true },
+    { inverse: false, fullImage: false },
   );
   // Equivalent python code with opencv
-  // M = np.float32([[1, 0, 0], [0, -1, rows],[0,  0, 1]])
-  // dst = cv.warpPerspective(img,M,(cols,rows))
+  // M = np.float32([[1, 0, 0], [0, -1, rows-1]])
+  // dst = cv.warpAffine(img,M,(cols,rows))
   expect(transformed).toMatchImage('opencv/testReflection.png');
 });
 
