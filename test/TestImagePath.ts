@@ -39,6 +39,7 @@ export type TestImagePath =
   | 'various/alphabet.jpg'
   | 'various/without-metadata.jpg'
   | 'various/sudoku.jpg'
+  | 'various/screws2.png'
   | 'morphology/alphabetCannyEdge.png'
   | 'morphology/grayscaleCannyEdge.png'
   | 'morphology/grayscaleClearBorder.png'

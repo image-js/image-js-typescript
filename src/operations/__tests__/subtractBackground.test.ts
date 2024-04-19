@@ -1,5 +1,4 @@
 import { Point } from '../../geometry';
-import { readSync } from '../../load';
 import { sampleBackgroundPoints } from '../../utils/sampleBackgroundPoints';
 import { getMaskFromCannyEdge } from '../getMaskFromCannyEdge';
 import { subtractBackground } from '../subtractBackground';
@@ -96,9 +95,7 @@ test('test with object 8x8 and sampled points', () => {
 });
 
 test('basic screws image test', () => {
-  const image = readSync(
-    __dirname.concat('/__image_snapshots__/screws2.png'),
-  ).grey();
+  const image = testUtils.load('various/screws2.png').grey();
   const mask = getMaskFromCannyEdge(image);
   const points = sampleBackgroundPoints(image, mask, {
     numberOfColumns: 15,
