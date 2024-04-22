@@ -45,19 +45,18 @@ test('get a vertical reflection of an image', () => {
   expect(transformed).toMatchImage('opencv/testReflect.png');
 });
 
-test('get a scale of an image to 80*100', () => {
+test('get a scale of an image to 32*40', () => {
   const img = testUtils.load('opencv/test.png');
   const transformed = img.transform(
     [
-      [2, 0, 0],
-      [0, 2, 0],
+      [4, 0, 0],
+      [0, 4, 0],
     ],
     {
       inverse: false,
       fullImage: false,
-      width: 16,
-      height: 20,
-      interpolationType: 'bilinear',
+      width: img.width * 4,
+      height: img.height * 4,
     },
   );
   // M = np.float32([[10,0,0],[0,10,0]])
@@ -71,7 +70,12 @@ test('affineTransformation', () => {
       [2, 1, 2],
       [-1, 1, 2],
     ],
-    { inverse: false, fullImage: false, interpolationType: 'bilinear' },
+    {
+      inverse: false,
+      fullImage: false,
+      interpolationType: 'bilinear',
+      borderType: 'reflect101',
+    },
   );
   // Equivalent python code with opencv
   //M = np.float32([[2,1,2], [-1,1, 2],[0,0,1]])
