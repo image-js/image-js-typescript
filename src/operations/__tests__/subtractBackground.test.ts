@@ -106,7 +106,7 @@ test('test with object 8x8 and sampled points', () => {
 });
 
 test('basic screws image test', () => {
-  const image = testUtils.load('various/screws2.png').grey();
+  const image = testUtils.load('various/screws.png').grey();
   const mask = getMaskFromCannyEdge(image);
   const points = sampleBackgroundPoints(image, mask, {
     gridWidth: 15,
