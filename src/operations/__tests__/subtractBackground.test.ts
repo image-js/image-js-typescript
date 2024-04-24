@@ -16,7 +16,11 @@ test('basic test', () => {
     gridWidth: 3,
     gridHeight: 3,
   });
-  const newImage = subtractBackground(image, { background: points, order: 2 });
+  const newImage = subtractBackground(image, {
+    background: points,
+    order: 2,
+    backgroundKind: 'dark',
+  });
   const result = testUtils.createGreyImage([
     [0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0],
@@ -49,7 +53,10 @@ test('test with object 8x8 and manually picked points', () => {
     { column: 5, row: 7 },
   ];
 
-  const newImage = subtractBackground(image, { background: points });
+  const newImage = subtractBackground(image, {
+    background: points,
+    backgroundKind: 'dark',
+  });
   const result = testUtils.createGreyImage([
     [0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0],
@@ -80,7 +87,11 @@ test('test with object 8x8 and sampled points', () => {
     gridWidth: 5,
     gridHeight: 5,
   });
-  const newImage = subtractBackground(image, { background: points, order: 3 });
+  const newImage = subtractBackground(image, {
+    background: points,
+    order: 3,
+    backgroundKind: 'dark',
+  });
   const result = testUtils.createGreyImage([
     [0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0],
@@ -101,7 +112,11 @@ test('basic screws image test', () => {
     gridWidth: 15,
     gridHeight: 15,
   });
-  const newImage = subtractBackground(image, { background: points, order: 2 });
+  const newImage = subtractBackground(image, {
+    background: points,
+    order: 2,
+    backgroundKind: 'light',
+  });
   expect(newImage).toMatchImageSnapshot();
 });
 
