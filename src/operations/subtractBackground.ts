@@ -16,6 +16,12 @@ interface SubtractBackgroundOptions {
    * @default `2`
    */
   order?: number;
+  /**
+   * Checks if the image background is light or dark. If the background is
+   *  light, the output image will be inverted.
+   * @default `'light'`
+   */
+  backgroundKind?: 'dark' | 'light';
 }
 
 /**
@@ -28,7 +34,7 @@ export function subtractBackground(
   image: Image,
   options: SubtractBackgroundOptions,
 ) {
-  const { background, order = 2 } = options;
+  const { background, order = 2, backgroundKind = 'light' } = options;
   checkProcessable(image, { colorModel: ['GREY'] });
   const Xs = new Matrix(background.length, 2);
   const Ys = new Matrix(background.length, 1);
@@ -62,5 +68,9 @@ export function subtractBackground(
       image.setValue(column, row, 0, value);
     }
   }
-  return image;
+  if (backgroundKind === 'light') {
+    return image.invert();
+  } else {
+    return image;
+  }
 }
