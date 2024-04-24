@@ -7,17 +7,17 @@ interface SampleBackgroundPointsOptions {
    * Number of rows in the grid.
    * @default `image.height`
    */
-  gridHeight?: number;
+  gridHeight: number;
   /**
    * Number of columns in the grid.
    * @default `image.width`
    */
-  gridWidth?: number;
+  gridWidth: number;
   /**
    * The kind of background to sample.
    * @default `'black'`
    */
-  kind?: 'black' | 'white';
+  kind: 'black' | 'white';
 }
 /**
  * Applies the grid that samples points that belong to background.
@@ -29,13 +29,12 @@ interface SampleBackgroundPointsOptions {
 export function sampleBackgroundPoints(
   image: Image,
   mask: Mask,
-  options: SampleBackgroundPointsOptions,
+  options?: Partial<SampleBackgroundPointsOptions>,
 ) {
-  const {
-    kind = 'black',
-    gridWidth = image.width,
-    gridHeight = image.height,
-  } = options;
+  const kind = options?.kind ?? 'black';
+  const gridHeight = options?.gridHeight ?? image.height;
+  const gridWidth = options?.gridWidth ?? image.width;
+
   const backgroundValue = kind === 'black' ? 0 : 1;
   const background: Point[] = [];
   const verticalSpread = Math.floor(image.height / gridHeight);
