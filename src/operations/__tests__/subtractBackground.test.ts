@@ -13,8 +13,8 @@ test('basic test', () => {
   ]);
   const mask = getMaskFromCannyEdge(image);
   const points = sampleBackgroundPoints(image, mask, {
-    numberOfColumns: 3,
-    numberOfRows: 3,
+    gridWidth: 3,
+    gridHeight: 3,
   });
   const newImage = subtractBackground(image, { background: points, order: 2 });
   const result = testUtils.createGreyImage([
@@ -77,8 +77,8 @@ test('test with object 8x8 and sampled points', () => {
   const mask = getMaskFromCannyEdge(image, { iterations: 0 });
 
   const points = sampleBackgroundPoints(image, mask, {
-    numberOfColumns: 5,
-    numberOfRows: 5,
+    gridWidth: 5,
+    gridHeight: 5,
   });
   const newImage = subtractBackground(image, { background: points, order: 3 });
   const result = testUtils.createGreyImage([
@@ -98,8 +98,8 @@ test('basic screws image test', () => {
   const image = testUtils.load('various/screws2.png').grey();
   const mask = getMaskFromCannyEdge(image);
   const points = sampleBackgroundPoints(image, mask, {
-    numberOfColumns: 15,
-    numberOfRows: 15,
+    gridWidth: 15,
+    gridHeight: 15,
   });
   const newImage = subtractBackground(image, { background: points, order: 2 });
   expect(newImage).toMatchImageSnapshot();
@@ -109,8 +109,8 @@ test('basic sudoku image test', () => {
   const image = testUtils.load('various/sudoku.jpg').grey();
   const mask = getMaskFromCannyEdge(image, { iterations: 0 });
   const points = sampleBackgroundPoints(image, mask, {
-    numberOfColumns: 15,
-    numberOfRows: 15,
+    gridWidth: 15,
+    gridHeight: 15,
   });
   const newImage = subtractBackground(image, { background: points });
   expect(newImage).toMatchImageSnapshot();

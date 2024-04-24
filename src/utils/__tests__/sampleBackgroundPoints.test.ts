@@ -11,8 +11,8 @@ test('basic test', () => {
   ]);
   const mask = getMaskFromCannyEdge(image, { iterations: 0 });
   const points = sampleBackgroundPoints(image, mask, {
-    numberOfColumns: 3,
-    numberOfRows: 3,
+    gridWidth: 3,
+    gridHeight: 3,
   });
   expect(points).toEqual([
     { column: 0, row: 0 },
@@ -46,8 +46,8 @@ test('basic test with basic mask', () => {
   ]);
   const mask = image.threshold();
   const points = sampleBackgroundPoints(image, mask, {
-    numberOfColumns: 3,
-    numberOfRows: 3,
+    gridWidth: 3,
+    gridHeight: 3,
   });
   expect(points).toEqual([
     { column: 3, row: 1 },
@@ -70,8 +70,8 @@ test('basic test with basic mask', () => {
   ]);
   const mask = image.threshold();
   const points = sampleBackgroundPoints(image, mask, {
-    numberOfColumns: 3,
-    numberOfRows: 3,
+    gridWidth: 3,
+    gridHeight: 3,
   });
   expect(points).toEqual([
     { column: 1, row: 1 },
@@ -88,8 +88,8 @@ test('throw an error', () => {
   const mask = getMaskFromCannyEdge(image, { iterations: 0 });
   expect(() =>
     sampleBackgroundPoints(image, mask, {
-      numberOfColumns: -3,
-      numberOfRows: 3,
+      gridWidth: -3,
+      gridHeight: 3,
     }),
-  ).toThrow(`Too many columns per image.Your number of columns: -3`);
+  ).toThrow(`The grid has bigger width than the image. Grid's width: -3`);
 });

@@ -3,12 +3,12 @@ import { Mask } from '../Mask';
 import { Point } from '../geometry';
 
 interface SampleBackgroundPointsOptions {
-  numberOfRows?: number;
-  numberOfColumns?: number;
+  gridHeight?: number;
+  gridWidth?: number;
   kind?: 'black' | 'white';
 }
 /**
- * Returns a sample of points that belongs to background.
+ * Applies the grid that samples points that belong to background.
  * @param image - Image to sample points from.
  * @param mask - Mask to check if the point belongs to background.
  * @param options - SampleBackgroundPointsOptions.
@@ -19,19 +19,19 @@ export function sampleBackgroundPoints(
   mask: Mask,
   options: SampleBackgroundPointsOptions,
 ) {
-  const { kind = 'black', numberOfColumns = 10, numberOfRows = 10 } = options;
+  const { kind = 'black', gridWidth = 10, gridHeight = 10 } = options;
   const backgroundValue = kind === 'black' ? 0 : 1;
   const background: Point[] = [];
-  const verticalSpread = Math.floor(image.height / numberOfRows);
-  const horizontalSpread = Math.floor(image.width / numberOfColumns);
+  const verticalSpread = Math.floor(image.height / gridHeight);
+  const horizontalSpread = Math.floor(image.width / gridWidth);
   if (verticalSpread <= 0) {
     throw new RangeError(
-      `Too many rows per image.Your number of rows:${numberOfRows}`,
+      `The grid has bigger height than the image. Grid's height:${gridHeight}`,
     );
   }
   if (horizontalSpread <= 0) {
     throw new RangeError(
-      `Too many columns per image.Your number of columns: ${numberOfColumns}`,
+      `The grid has bigger width than the image. Grid's width: ${gridWidth}`,
     );
   }
   for (
