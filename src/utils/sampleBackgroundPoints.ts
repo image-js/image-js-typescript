@@ -3,8 +3,20 @@ import { Mask } from '../Mask';
 import { Point } from '../geometry';
 
 interface SampleBackgroundPointsOptions {
+  /**
+   * Number of rows in the grid.
+   * @default `image.height`
+   */
   gridHeight?: number;
+  /**
+   * Number of columns in the grid.
+   * @default `image.width`
+   */
   gridWidth?: number;
+  /**
+   * The kind of background to sample.
+   * @default `'black'`
+   */
   kind?: 'black' | 'white';
 }
 /**
@@ -19,7 +31,11 @@ export function sampleBackgroundPoints(
   mask: Mask,
   options: SampleBackgroundPointsOptions,
 ) {
-  const { kind = 'black', gridWidth = 10, gridHeight = 10 } = options;
+  const {
+    kind = 'black',
+    gridWidth = image.width,
+    gridHeight = image.height,
+  } = options;
   const backgroundValue = kind === 'black' ? 0 : 1;
   const background: Point[] = [];
   const verticalSpread = Math.floor(image.height / gridHeight);
