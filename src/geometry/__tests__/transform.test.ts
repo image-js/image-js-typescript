@@ -1,6 +1,6 @@
 //To look at the equivalent opencv code go to generate.py in test/img/opencv
 //folder.
-test('compare result of translation with opencv', () => {
+test('compare result of translation with opencv with default parameters', () => {
   const img = testUtils.load('opencv/test.png');
   const translation = [
     [1, 0, 2],
