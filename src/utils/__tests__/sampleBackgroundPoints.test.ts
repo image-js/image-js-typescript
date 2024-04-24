@@ -79,6 +79,22 @@ test('basic test with basic mask', () => {
     { column: 5, row: 1 },
   ]);
 });
+test('basic test of default values', () => {
+  const image = testUtils.createGreyImage([
+    [0, 1, 0],
+    [1, 1, 1],
+    [0, 1, 0],
+  ]);
+  const mask = image.threshold();
+  const points = sampleBackgroundPoints(image, mask);
+  expect(points).toEqual([
+    { column: 0, row: 0 },
+    { column: 2, row: 0 },
+    { column: 0, row: 2 },
+    { column: 2, row: 2 },
+  ]);
+});
+
 test('throw an error', () => {
   const image = testUtils.createGreyImage([
     [0, 0, 0],
