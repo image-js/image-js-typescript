@@ -20,30 +20,34 @@ export function subtractBackground(
   checkProcessable(image, { colorModel: ['GREY'] });
   const Xs = new Matrix(background.length, 2);
   const Ys = new Matrix(background.length, 1);
-  for (let i = 0; i < background.length; i++) {
-    Xs.setRow(i, [
-      0.5 - background[i].column / (image.width - 1),
-      0.5 - background[i].row / (image.height - 1),
+  for (let point = 0; point < background.length; point++) {
+    Xs.setRow(point, [
+      0.5 - background[point].column / (image.width - 1),
+      0.5 - background[point].row / (image.height - 1),
     ]);
-    Ys.setRow(i, [image.getValue(background[i].column, background[i].row, 0)]);
+    Ys.setRow(point, [
+      image.getValue(background[point].column, background[point].row, 0),
+    ]);
   }
   const model = new Regression.PolinomialFitting2D(Xs, Ys, { order });
   const X = new Array(image.width * image.height);
 
-  for (let i = 0; i < image.height; i++) {
-    for (let j = 0; j < image.width; j++) {
-      X[i * image.width + j] = [
-        0.5 - j / (image.width - 1),
-        0.5 - i / (image.height - 1),
+  for (let row = 0; row < image.height; row++) {
+    for (let column = 0; column < image.width; column++) {
+      X[row * image.width + column] = [
+        0.5 - column / (image.width - 1),
+        0.5 - row / (image.height - 1),
       ];
     }
   }
   const Y = model.predict(X);
 
-  for (let i = 0; i < image.height; i++) {
-    for (let j = 0; j < image.width; j++) {
-      const value = Math.abs(Y[i * image.width + j] - image.getValue(j, i, 0));
-      image.setValue(j, i, 0, value);
+  for (let row = 0; row < image.height; row++) {
+    for (let column = 0; column < image.width; column++) {
+      const value = Math.abs(
+        Y[row * image.width + column] - image.getValue(column, row, 0),
+      );
+      image.setValue(column, row, 0, value);
     }
   }
   return image;
