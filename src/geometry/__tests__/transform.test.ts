@@ -21,7 +21,15 @@ test('compare result of clockwise rotation with opencv', () => {
       [0, -1, img.width + 1],
       [1, 0, 0],
     ],
-    { inverse: false, fullImage: false, width: 10, height: 8 },
+    {
+      inverse: false,
+      fullImage: false,
+      width: 10,
+      height: 8,
+      borderType: 'constant',
+      borderValue: 0,
+      interpolationType: 'bilinear',
+    },
   );
   expect(transformed).toMatchImage('opencv/testClockwiseRot90.png');
 });
@@ -33,7 +41,13 @@ test('get a vertical reflection of an image', () => {
       [1, 0, 0],
       [0, -1, img.height - 1],
     ],
-    { inverse: false, fullImage: false },
+    {
+      inverse: false,
+      fullImage: false,
+      borderType: 'constant',
+      borderValue: 0,
+      interpolationType: 'bilinear',
+    },
   );
   expect(transformed).toMatchImage('opencv/testReflect.png');
 });
@@ -51,6 +65,9 @@ test('get a scale of an image to 32*40', () => {
       fullImage: false,
       width: img.width * 4,
       height: img.height * 4,
+      borderType: 'constant',
+      borderValue: 0,
+      interpolationType: 'bilinear',
     },
   );
   expect(transformed).toMatchImage('opencv/testScale.png');
