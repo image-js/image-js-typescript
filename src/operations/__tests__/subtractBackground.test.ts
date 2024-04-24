@@ -16,7 +16,7 @@ test('basic test', () => {
     numberOfColumns: 3,
     numberOfRows: 3,
   });
-  const newImage = subtractBackground(image, points, 2);
+  const newImage = subtractBackground(image, { background: points, order: 2 });
   const result = testUtils.createGreyImage([
     [0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0],
@@ -49,7 +49,7 @@ test('test with object 8x8 and manually picked points', () => {
     { column: 5, row: 7 },
   ];
 
-  const newImage = subtractBackground(image, points, 2);
+  const newImage = subtractBackground(image, { background: points });
   const result = testUtils.createGreyImage([
     [0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0],
@@ -80,7 +80,7 @@ test('test with object 8x8 and sampled points', () => {
     numberOfColumns: 5,
     numberOfRows: 5,
   });
-  const newImage = subtractBackground(image, points, 2);
+  const newImage = subtractBackground(image, { background: points, order: 3 });
   const result = testUtils.createGreyImage([
     [0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0],
@@ -101,7 +101,7 @@ test('basic screws image test', () => {
     numberOfColumns: 15,
     numberOfRows: 15,
   });
-  const newImage = subtractBackground(image, points, 2);
+  const newImage = subtractBackground(image, { background: points, order: 2 });
   expect(newImage).toMatchImageSnapshot();
 });
 
@@ -112,6 +112,6 @@ test('basic sudoku image test', () => {
     numberOfColumns: 15,
     numberOfRows: 15,
   });
-  const newImage = subtractBackground(image, points, 2);
+  const newImage = subtractBackground(image, { background: points });
   expect(newImage).toMatchImageSnapshot();
 });

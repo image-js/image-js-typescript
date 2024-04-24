@@ -5,18 +5,30 @@ import * as Regression from 'ml-regression';
 import { Image } from '../Image';
 import { Point } from '../geometry';
 import checkProcessable from '../utils/validators/checkProcessable';
+
+interface SubtractBackgroundOptions {
+  /**
+   * @param background - Points that are considered the background of an image.
+   */
+  background: Point[];
+  /**
+   * @param order - Order of regression function.
+   * @default `2`
+   */
+  order?: number;
+}
+
 /**
  * Subtracts background from an image for baseline correction.
  * @param image - Image to subtract background from.
- * @param background - Points that are considered the background of an image.
- * @param order - Order of regression function.
+ * @param options - SubtractBackgroundOptions.
  * @returns Image with corrected baseline.
  */
 export function subtractBackground(
   image: Image,
-  background: Point[],
-  order: number,
+  options: SubtractBackgroundOptions,
 ) {
+  const { background, order = 2 } = options;
   checkProcessable(image, { colorModel: ['GREY'] });
   const Xs = new Matrix(background.length, 2);
   const Ys = new Matrix(background.length, 1);
