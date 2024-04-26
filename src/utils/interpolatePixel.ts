@@ -61,8 +61,8 @@ function interpolateNearest(
   channel: number,
   interpolateBorder: BorderInterpolationFunction,
 ): number {
-  column = Math.round(column);
-  row = Math.round(row);
+  column = Math.floor(column);
+  row = Math.floor(row);
 
   return interpolateBorder(column, row, channel, image);
 }

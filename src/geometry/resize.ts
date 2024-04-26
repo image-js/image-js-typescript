@@ -58,17 +58,21 @@ export function resize(image: Image, options: ResizeOptions): Image {
     borderType = 'constant',
     borderValue = 0,
   } = options;
-  const { width, height } = checkOptions(image, options);
+  const { width, height, xFactor, yFactor } = checkOptions(image, options);
   const newImage = Image.createFrom(image, { width, height });
   const interpolate = getInterpolationFunction(interpolationType);
   const interpolateBorder = getBorderInterpolation(borderType, borderValue);
   const clamp = getClamp(newImage);
-  const intervalX = (image.width - 1) / (width - 1);
-  const intervalY = (image.height - 1) / (height - 1);
+  const wRatio = 1 / xFactor;
+  const hRatio = 1 / yFactor;
+  // const intervalX = (image.width - 1) / (width - 1);
+  // const intervalY = (image.height - 1) / (height - 1);
   for (let row = 0; row < newImage.height; row++) {
     for (let column = 0; column < newImage.width; column++) {
-      const nx = column * intervalX;
-      const ny = row * intervalY;
+      const nx = (column + 0.5) * wRatio;
+      const ny = (row + 0.5) * hRatio;
+      // const nx = column / xFactor;
+      // const ny = row / yFactor;
       for (let channel = 0; channel < newImage.channels; channel++) {
         const newValue = interpolate(
           image,
