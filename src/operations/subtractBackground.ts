@@ -63,7 +63,7 @@ export function subtractBackground(
   for (let row = 0; row < image.height; row++) {
     for (let column = 0; column < image.width; column++) {
       const value = Math.abs(
-        Y[row * image.width + column] - image.getValue(column, row, 0),
+        image.getValue(column, row, 0) - Y[row * image.width + column],
       );
       image.setValue(column, row, 0, value);
     }
