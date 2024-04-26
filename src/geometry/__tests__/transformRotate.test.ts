@@ -22,6 +22,7 @@ test('rotate + scale compared to opencv (bilinear)', () => {
     interpolationType: 'bilinear',
     center: { column: 2, row: 4 },
   });
+  // OpenCV bilinear interpolation is less precise for speed.
   expect(rotated).toMatchImage('opencv/testRotateBilinear.png', { error: 5 });
 });
 
@@ -35,6 +36,7 @@ test('rotate + scale compared to opencv (bicubic)', () => {
     center: { column: 2, row: 4 },
   });
 
+  // OpenCV bilinear interpolation is less precise for speed.
   expect(rotated).toMatchImage('opencv/testRotateBicubic.png', { error: 13 });
 });
 

@@ -72,10 +72,8 @@ test('get a scale of an image to 32*40', () => {
   );
   expect(transformed).toMatchImage('opencv/testScale.png');
 });
-//Although the results are close, the opencv warpAffine function
-//does border interpolation differently which gives different values
-//at the image borders.
-test.skip('affineTransformation', () => {
+
+test('affineTransformation', () => {
   const img = testUtils.load('opencv/test.png');
   const transformed = img.transform(
     [
@@ -89,7 +87,10 @@ test.skip('affineTransformation', () => {
       borderType: 'constant',
     },
   );
-  expect(transformed).toMatchImage('opencv/testAffineTransform.png');
+  // OpenCV bilinear interpolation is less precise for speed.
+  expect(transformed).toMatchImage('opencv/testAffineTransform.png', {
+    error: 3,
+  });
 });
 
 test('should throw if matrix has wrong size', () => {
