@@ -93,9 +93,9 @@ export function resize(image: Image, options: ResizeOptions): Image {
           image,
           clamp,
           interpolateBorder,
+          nx,
+          ny,
           channel,
-          row: ny,
-          column: nx,
         });
         newImage.setValue(column, row, channel, newValue);
       }

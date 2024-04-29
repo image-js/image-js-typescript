@@ -18,13 +18,13 @@ interface InterpolationNeighbourFunctionOptions {
    */
   image: Image;
   /**
-   * column index.
+   * interpolation of original column (float) from target column.
    */
-  column: number;
+  nx: number;
   /**
-   * row index.
+   * interpolation of original row (float) from target row.
    */
-  row: number;
+  ny: number;
   /**
    * channel index.
    */
@@ -74,8 +74,12 @@ export function getInterpolationNeighbourFunction(
 function interpolateNeighbourNearest(
   options: InterpolationNeighbourFunctionOptions,
 ): number {
-  const { interpolateBorder, row, column, channel, image } = options;
-  return interpolateBorder(Math.round(column), Math.round(row), channel, image);
+  const { interpolateBorder, ny, nx, channel, image } = options;
+
+  const column = Math.floor(nx);
+  const row = Math.floor(ny);
+
+  return interpolateBorder(column, row, channel, image);
 }
 
 /**
@@ -86,33 +90,22 @@ function interpolateNeighbourNearest(
 function interpolateNeighbourBilinear(
   options: InterpolationNeighbourFunctionOptions,
 ): number {
-  const { image, column, row, channel, interpolateBorder } = options;
+  const { image, nx, ny, channel, interpolateBorder } = options;
 
-  const px0 = Math.floor(column);
-  const py0 = Math.floor(row);
+  const px0 = Math.floor(nx);
+  const py0 = Math.floor(ny);
 
   const px1 = px0 + 1;
   const py1 = py0 + 1;
 
-  if (px1 < image.width && py1 < image.height && px0 >= 0 && py0 >= 0) {
-    const vx0y0 = image.getValue(px0, py0, channel);
-    const vx1y0 = image.getValue(px1, py0, channel);
-    const vx0y1 = image.getValue(px0, py1, channel);
-    const vx1y1 = image.getValue(px1, py1, channel);
+  const vx0y0 = interpolateBorder(px0, py0, channel, image);
+  const vx1y0 = interpolateBorder(px1, py0, channel, image);
+  const vx0y1 = interpolateBorder(px0, py1, channel, image);
+  const vx1y1 = interpolateBorder(px1, py1, channel, image);
 
-    const r1 = (px1 - column) * vx0y0 + (column - px0) * vx1y0;
-    const r2 = (px1 - column) * vx0y1 + (column - px0) * vx1y1;
-    return round((py1 - row) * r1 + (row - py0) * r2);
-  } else {
-    const vx0y0 = interpolateBorder(px0, py0, channel, image);
-    const vx1y0 = interpolateBorder(px1, py0, channel, image);
-    const vx0y1 = interpolateBorder(px0, py1, channel, image);
-    const vx1y1 = interpolateBorder(px1, py1, channel, image);
-
-    const r1 = (px1 - column) * vx0y0 + (column - px0) * vx1y0;
-    const r2 = (px1 - column) * vx0y1 + (column - px0) * vx1y1;
-    return round((py1 - row) * r1 + (row - py0) * r2);
-  }
+  const r1 = (px1 - nx) * vx0y0 + (nx - px0) * vx1y0;
+  const r2 = (px1 - nx) * vx0y1 + (nx - px0) * vx1y1;
+  return round((py1 - ny) * r1 + (ny - py0) * r2);
 }
 
 /**
@@ -123,17 +116,17 @@ function interpolateNeighbourBilinear(
 function interpolateNeighbourBicubic(
   options: InterpolationNeighbourFunctionOptions,
 ): number {
-  const { image, column, row, channel, interpolateBorder, clamp } = options;
+  const { image, nx, ny, channel, interpolateBorder, clamp } = options;
 
-  const px1 = Math.floor(column);
-  const py1 = Math.floor(row);
+  const px1 = Math.floor(nx);
+  const py1 = Math.floor(ny);
 
-  if (px1 === column && py1 === row) {
+  if (px1 === nx && py1 === ny) {
     return interpolateBorder(px1, py1, channel, image);
   }
 
-  const xNorm = column - px1;
-  const yNorm = row - py1;
+  const xNorm = nx - px1;
+  const yNorm = ny - py1;
 
   const vx0y0 = interpolateBorder(px1 - 1, py1 - 1, channel, image);
   const vx1y0 = interpolateBorder(px1, py1 - 1, channel, image);
@@ -223,19 +216,19 @@ function interpolatePositionNearest(
   options: InterpolationPositionFunctionOptions,
 ): number {
   const { targetValue, ratio } = options;
-  return Math.floor((targetValue + 0.5) * ratio);
+  return (targetValue + 0.5) * ratio;
 }
 
 function interpolatePositionBilinear(
   options: InterpolationPositionFunctionOptions,
 ) {
   const { targetValue, minOneRatio } = options;
-  return Math.round(targetValue * minOneRatio);
+  return targetValue * minOneRatio;
 }
 
 function interpolatePositionBicubic(
   options: InterpolationPositionFunctionOptions,
 ) {
   const { targetValue, minOneRatio } = options;
-  return Math.round(targetValue * minOneRatio);
+  return targetValue * minOneRatio;
 }

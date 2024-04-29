@@ -139,9 +139,9 @@ export function transform(
       for (let channel = 0; channel < newImage.channels; channel++) {
         const newValue = interpolate({
           image,
+          nx,
+          ny,
           channel,
-          column: nx,
-          row: ny,
           interpolateBorder,
           clamp,
         });

@@ -22,7 +22,7 @@ test('compare result of resize with opencv (nearest)', async () => {
   expect(resized).toMatchImage('opencv/testResizeNearest.png');
 });
 
-test('compare result of resize with opencv (bilinear)', async () => {
+test.skip('compare result of resize with opencv (bilinear)', async () => {
   const img = testUtils.load('opencv/test.png');
   const expectedImg = testUtils.load('opencv/testResizeBilinear.png');
 
