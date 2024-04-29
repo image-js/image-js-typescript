@@ -75,7 +75,7 @@ function interpolateNeighbourNearest(
   options: InterpolationNeighbourFunctionOptions,
 ): number {
   const { interpolateBorder, row, column, channel, image } = options;
-  return interpolateBorder(Math.round(column), Math.floor(row), channel, image);
+  return interpolateBorder(Math.round(column), Math.round(row), channel, image);
 }
 
 /**
