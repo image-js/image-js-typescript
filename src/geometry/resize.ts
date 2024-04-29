@@ -2,7 +2,8 @@ import { Image } from '../Image';
 import { getClamp } from '../utils/clamp';
 import { getBorderInterpolation, BorderType } from '../utils/interpolateBorder';
 import {
-  getInterpolationFunction,
+  getInterpolationNeighbourFunction,
+  getInterpolationPositionFunction,
   InterpolationType,
 } from '../utils/interpolatePixel';
 import { assert } from '../utils/validators/assert';
@@ -58,30 +59,44 @@ export function resize(image: Image, options: ResizeOptions): Image {
     borderType = 'constant',
     borderValue = 0,
   } = options;
-  const { width, height, xFactor, yFactor } = checkOptions(image, options);
+  const { width, height } = checkOptions(image, options);
   const newImage = Image.createFrom(image, { width, height });
-  const interpolate = getInterpolationFunction(interpolationType);
+
+  const interpolatePosition =
+    getInterpolationPositionFunction(interpolationType);
+  const interpolateNeighbour =
+    getInterpolationNeighbourFunction(interpolationType);
   const interpolateBorder = getBorderInterpolation(borderType, borderValue);
   const clamp = getClamp(newImage);
-  const wRatio = 1 / xFactor;
-  const hRatio = 1 / yFactor;
-  // const intervalX = (image.width - 1) / (width - 1);
-  // const intervalY = (image.height - 1) / (height - 1);
+
+  const wRatio = image.width / width;
+  const hRatio = image.height / height;
+  const intervalX = (image.width - 1) / (width - 1);
+  const intervalY = (image.height - 1) / (height - 1);
+
   for (let row = 0; row < newImage.height; row++) {
+    const ny = interpolatePosition({
+      targetValue: row,
+      ratio: hRatio,
+      minOneRatio: intervalY,
+    });
+
     for (let column = 0; column < newImage.width; column++) {
-      const nx = (column + 0.5) * wRatio;
-      const ny = (row + 0.5) * hRatio;
-      // const nx = column / xFactor;
-      // const ny = row / yFactor;
+      const nx = interpolatePosition({
+        targetValue: column,
+        ratio: wRatio,
+        minOneRatio: intervalX,
+      });
+
       for (let channel = 0; channel < newImage.channels; channel++) {
-        const newValue = interpolate(
+        const newValue = interpolateNeighbour({
           image,
-          nx,
-          ny,
-          channel,
-          interpolateBorder,
           clamp,
-        );
+          interpolateBorder,
+          channel,
+          row: ny,
+          column: nx,
+        });
         newImage.setValue(column, row, channel, newValue);
       }
     }

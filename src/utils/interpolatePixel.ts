@@ -12,32 +12,53 @@ export const InterpolationType = {
 export type InterpolationType =
   (typeof InterpolationType)[keyof typeof InterpolationType];
 
-type InterpolationFunction = (
-  image: Image,
-  column: number,
-  row: number,
-  channel: number,
-  intepolateBorder: BorderInterpolationFunction,
-  clamp: ClampFunction,
+interface InterpolationNeighbourFunctionOptions {
+  /**
+   * The image to interpolate.
+   */
+  image: Image;
+  /**
+   * column index.
+   */
+  column: number;
+  /**
+   * row index.
+   */
+  row: number;
+  /**
+   * channel index.
+   */
+  channel: number;
+  /**
+   * Border interpolation function.
+   */
+  interpolateBorder: BorderInterpolationFunction;
+  /**
+   * Clamp function.
+   */
+  clamp: ClampFunction;
+}
+type InterpolationNeighbourFunction = (
+  options: InterpolationNeighbourFunctionOptions,
 ) => number;
 
 /**
- * Get the interpolation function based on its name.
+ * Get the interpolation neighbour function based on its name.
  * @param interpolationType - Specified interpolation type.
  * @returns The interpolation function.
  */
-export function getInterpolationFunction(
+export function getInterpolationNeighbourFunction(
   interpolationType: InterpolationType,
-): InterpolationFunction {
+): InterpolationNeighbourFunction {
   switch (interpolationType) {
     case 'nearest': {
-      return interpolateNearest;
+      return interpolateNeighbourNearest;
     }
     case 'bilinear': {
-      return interpolateBilinear;
+      return interpolateNeighbourBilinear;
     }
     case 'bicubic': {
-      return interpolateBicubic;
+      return interpolateNeighbourBicubic;
     }
     default: {
       throw new RangeError(`invalid interpolationType: ${interpolationType}`);
@@ -47,42 +68,26 @@ export function getInterpolationFunction(
 
 /**
  * Interpolate using nearest neighbor.
- * @param image - The image to interpolate.
- * @param column - Column index.
- * @param row - Row index.
- * @param channel - Channel index.
- * @param interpolateBorder - Border interpolation function.
+ * @param options - configuration for interpolateNeighbourNearest
  * @returns The interpolated value.
  */
-function interpolateNearest(
-  image: Image,
-  column: number,
-  row: number,
-  channel: number,
-  interpolateBorder: BorderInterpolationFunction,
+function interpolateNeighbourNearest(
+  options: InterpolationNeighbourFunctionOptions,
 ): number {
-  column = Math.floor(column);
-  row = Math.floor(row);
-
-  return interpolateBorder(column, row, channel, image);
+  const { interpolateBorder, row, column, channel, image } = options;
+  return interpolateBorder(Math.round(column), Math.floor(row), channel, image);
 }
 
 /**
  * Interpolate using bilinear interpolation.
- * @param image - The image to interpolate.
- * @param column - Column index.
- * @param row - Row index.
- * @param channel - Channel index.
- * @param interpolateBorder - Border interpolation function.
+ * @param options - configuration for interpolateBilinear
  * @returns The interpolated value.
  */
-function interpolateBilinear(
-  image: Image,
-  column: number,
-  row: number,
-  channel: number,
-  interpolateBorder: BorderInterpolationFunction,
+function interpolateNeighbourBilinear(
+  options: InterpolationNeighbourFunctionOptions,
 ): number {
+  const { image, column, row, channel, interpolateBorder } = options;
+
   const px0 = Math.floor(column);
   const py0 = Math.floor(row);
 
@@ -112,22 +117,14 @@ function interpolateBilinear(
 
 /**
  * Interpolate using bicubic interpolation.
- * @param image - The image to interpolate.
- * @param column - Column index.
- * @param row - Row index.
- * @param channel - Channel index.
- * @param interpolateBorder - Border interpolation function.
- * @param clamp - Clamp function.
+ * @param options - configuration for interpolateBilinear
  * @returns The interpolated value.
  */
-function interpolateBicubic(
-  image: Image,
-  column: number,
-  row: number,
-  channel: number,
-  interpolateBorder: BorderInterpolationFunction,
-  clamp: ClampFunction,
+function interpolateNeighbourBicubic(
+  options: InterpolationNeighbourFunctionOptions,
 ): number {
+  const { image, column, row, channel, interpolateBorder, clamp } = options;
+
   const px1 = Math.floor(column);
   const py1 = Math.floor(row);
 
@@ -181,4 +178,64 @@ function cubic(a: number, b: number, c: number, d: number, x: number): number {
       x *
       (c - a + x * (2 * a - 5 * b + 4 * c - d + x * (3 * (b - c) + d - a)))
   );
+}
+
+interface InterpolationPositionFunctionOptions {
+  /**
+   * originalMax / targetMax
+   */
+  ratio: number;
+  /**
+   * (originalMax - 1) / (targetMax - 1)
+   */
+  minOneRatio: number;
+  targetValue: number;
+}
+type InterpolationPositionFunction = (
+  options: InterpolationPositionFunctionOptions,
+) => number;
+
+/**
+ * Get the interpolation position function based on its name.
+ * @param interpolationType - Specified interpolation type.
+ * @returns The interpolation function.
+ */
+export function getInterpolationPositionFunction(
+  interpolationType: InterpolationType,
+): InterpolationPositionFunction {
+  switch (interpolationType) {
+    case 'nearest': {
+      return interpolatePositionNearest;
+    }
+    case 'bilinear': {
+      return interpolatePositionBilinear;
+    }
+    case 'bicubic': {
+      return interpolatePositionBicubic;
+    }
+    default: {
+      throw new RangeError(`invalid interpolationType: ${interpolationType}`);
+    }
+  }
+}
+
+function interpolatePositionNearest(
+  options: InterpolationPositionFunctionOptions,
+): number {
+  const { targetValue, ratio } = options;
+  return Math.floor((targetValue + 0.5) * ratio);
+}
+
+function interpolatePositionBilinear(
+  options: InterpolationPositionFunctionOptions,
+) {
+  const { targetValue, minOneRatio } = options;
+  return Math.round(targetValue * minOneRatio);
+}
+
+function interpolatePositionBicubic(
+  options: InterpolationPositionFunctionOptions,
+) {
+  const { targetValue, minOneRatio } = options;
+  return Math.round(targetValue * minOneRatio);
 }

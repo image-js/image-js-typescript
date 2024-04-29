@@ -4,7 +4,7 @@ import { Image } from '../Image';
 import { getClamp } from '../utils/clamp';
 import { BorderType, getBorderInterpolation } from '../utils/interpolateBorder';
 import {
-  getInterpolationFunction,
+  getInterpolationNeighbourFunction,
   InterpolationType,
 } from '../utils/interpolatePixel';
 
@@ -130,20 +130,21 @@ export function transform(
   const interpolateBorder = getBorderInterpolation(borderType, borderValue);
   const clamp = getClamp(newImage);
 
-  const interpolate = getInterpolationFunction(interpolationType);
+  const interpolate = getInterpolationNeighbourFunction(interpolationType);
   for (let row = 0; row < newImage.height; row++) {
     for (let column = 0; column < newImage.width; column++) {
       const nx = transformPoint(transformMatrix[0], column, row);
       const ny = transformPoint(transformMatrix[1], column, row);
+
       for (let channel = 0; channel < newImage.channels; channel++) {
-        const newValue = interpolate(
+        const newValue = interpolate({
           image,
-          nx,
-          ny,
           channel,
+          column: nx,
+          row: ny,
           interpolateBorder,
           clamp,
-        );
+        });
         newImage.setValue(column, row, channel, newValue);
       }
     }
