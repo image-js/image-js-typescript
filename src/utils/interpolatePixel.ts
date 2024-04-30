@@ -64,10 +64,10 @@ export function getInterpolationNeighbourFunction(
 }
 
 /**
- * Interpolate using the nearest neighbor.
+ * Interpolate using the nearest neighbour.
  * @param image - The image to interpolate.
- * @param nx - interpolation of original column (float) from target column.
- * @param ny - interpolation of original row (float) from target row.
+ * @param nx - column (float) of the point to interpolate
+ * @param ny - row (float) of the point to interpolate
  * @param channel - channel index.
  * @param interpolateBorder - Border interpolation function.
  * @returns The interpolated value.
@@ -88,8 +88,8 @@ function interpolateNeighbourNearest(
 /**
  * Interpolate using bilinear interpolation.
  * @param image - The image to interpolate.
- * @param nx - interpolation of original column (float) from target column.
- * @param ny - interpolation of original row (float) from target row.
+ * @param nx - column (float) of the point to interpolate
+ * @param ny - row (float) of the point to interpolate
  * @param channel - channel index.
  * @param interpolateBorder - Border interpolation function.
  * @returns The interpolated value.
