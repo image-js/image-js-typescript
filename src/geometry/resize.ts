@@ -49,9 +49,9 @@ export interface ResizeOptions {
  * @returns The new image.
  */
 export function resize(image: Image, options: ResizeOptions): Image {
+  const { interpolationType = 'bilinear' } = options;
   const {
-    interpolationType = 'bilinear',
-    borderType = 'constant',
+    borderType = interpolationType === 'bilinear' ? 'replicate' : 'constant',
     borderValue = 0,
   } = options;
   const { width, height, xFactor, yFactor } = checkOptions(image, options);

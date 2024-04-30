@@ -30,7 +30,6 @@ test('compare result of resize with opencv (bilinear)', async () => {
     xFactor: 10,
     yFactor: 10,
     interpolationType: 'bilinear',
-    borderType: 'replicate',
   });
 
   const substraction = expectedImg.clone().subtract(resized);
