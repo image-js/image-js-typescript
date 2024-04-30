@@ -22,7 +22,7 @@ test('compare result of resize with opencv (nearest)', async () => {
   expect(resized).toMatchImage('opencv/testResizeNearest.png');
 });
 
-test.skip('compare result of resize with opencv (bilinear)', async () => {
+test('compare result of resize with opencv (bilinear)', async () => {
   const img = testUtils.load('opencv/test.png');
   const expectedImg = testUtils.load('opencv/testResizeBilinear.png');
 
@@ -30,6 +30,7 @@ test.skip('compare result of resize with opencv (bilinear)', async () => {
     xFactor: 10,
     yFactor: 10,
     interpolationType: 'bilinear',
+    borderType: 'replicate',
   });
 
   const substraction = expectedImg.clone().subtract(resized);

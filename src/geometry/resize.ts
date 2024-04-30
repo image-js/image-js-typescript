@@ -1,11 +1,6 @@
 import { Image } from '../Image';
-import { getClamp } from '../utils/clamp';
-import { getBorderInterpolation, BorderType } from '../utils/interpolateBorder';
-import {
-  getInterpolationNeighbourFunction,
-  getInterpolationPositionFunction,
-  InterpolationType,
-} from '../utils/interpolatePixel';
+import { BorderType } from '../utils/interpolateBorder';
+import { InterpolationType } from '../utils/interpolatePixel';
 import { assert } from '../utils/validators/assert';
 
 export interface ResizeOptions {
@@ -59,49 +54,21 @@ export function resize(image: Image, options: ResizeOptions): Image {
     borderType = 'constant',
     borderValue = 0,
   } = options;
-  const { width, height } = checkOptions(image, options);
-  const newImage = Image.createFrom(image, { width, height });
+  const { width, height, xFactor, yFactor } = checkOptions(image, options);
 
-  const interpolatePosition =
-    getInterpolationPositionFunction(interpolationType);
-  const interpolateNeighbour =
-    getInterpolationNeighbourFunction(interpolationType);
-  const interpolateBorder = getBorderInterpolation(borderType, borderValue);
-  const clamp = getClamp(newImage);
-
-  const wRatio = image.width / width;
-  const hRatio = image.height / height;
-  const intervalX = (image.width - 1) / (width - 1);
-  const intervalY = (image.height - 1) / (height - 1);
-
-  for (let row = 0; row < newImage.height; row++) {
-    const ny = interpolatePosition({
-      targetValue: row,
-      ratio: hRatio,
-      minOneRatio: intervalY,
-    });
-
-    for (let column = 0; column < newImage.width; column++) {
-      const nx = interpolatePosition({
-        targetValue: column,
-        ratio: wRatio,
-        minOneRatio: intervalX,
-      });
-
-      for (let channel = 0; channel < newImage.channels; channel++) {
-        const newValue = interpolateNeighbour({
-          image,
-          clamp,
-          interpolateBorder,
-          nx,
-          ny,
-          channel,
-        });
-        newImage.setValue(column, row, channel, newValue);
-      }
-    }
-  }
-  return newImage;
+  return image.transform(
+    [
+      [xFactor, 0, 0],
+      [0, yFactor, 0],
+    ],
+    {
+      width,
+      height,
+      borderType,
+      borderValue,
+      interpolationType,
+    },
+  );
 }
 
 /**

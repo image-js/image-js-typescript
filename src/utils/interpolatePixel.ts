@@ -90,11 +90,14 @@ function interpolateNeighbourNearest(
 function interpolateNeighbourBilinear(
   options: InterpolationNeighbourFunctionOptions,
 ): number {
-  const { image, nx, ny, channel, interpolateBorder } = options;
+  const { image, channel, interpolateBorder } = options;
+  let { nx, ny } = options;
+
+  nx = Math.max(0, Math.min(nx - 0.5, image.width));
+  ny = Math.max(0, Math.min(ny - 0.5, image.height));
 
   const px0 = Math.floor(nx);
   const py0 = Math.floor(ny);
-
   const px1 = px0 + 1;
   const py1 = py0 + 1;
 
@@ -103,9 +106,18 @@ function interpolateNeighbourBilinear(
   const vx0y1 = interpolateBorder(px0, py1, channel, image);
   const vx1y1 = interpolateBorder(px1, py1, channel, image);
 
-  const r1 = (px1 - nx) * vx0y0 + (nx - px0) * vx1y0;
-  const r2 = (px1 - nx) * vx0y1 + (nx - px0) * vx1y1;
-  return round((py1 - ny) * r1 + (ny - py0) * r2);
+  const weightRatio = (px1 - px0) * (py1 - py0);
+  const px1nx = px1 - nx;
+  const nxpx0 = nx - px0;
+  const py1ny = py1 - ny;
+  const nypy0 = ny - py0;
+
+  const wx0y0 = (px1nx * py1ny) / weightRatio;
+  const wx1y0 = (nxpx0 * py1ny) / weightRatio;
+  const wx0y1 = (px1nx * nypy0) / weightRatio;
+  const wx1y1 = (nxpx0 * nypy0) / weightRatio;
+
+  return vx0y0 * wx0y0 + vx1y0 * wx1y0 + vx0y1 * wx0y1 + vx1y1 * wx1y1;
 }
 
 /**
