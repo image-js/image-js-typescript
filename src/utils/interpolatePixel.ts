@@ -12,34 +12,31 @@ export const InterpolationType = {
 export type InterpolationType =
   (typeof InterpolationType)[keyof typeof InterpolationType];
 
-interface InterpolationNeighbourFunctionOptions {
+type InterpolationNeighbourFunction = (
   /**
    * The image to interpolate.
    */
-  image: Image;
+  image: Image,
   /**
    * interpolation of original column (float) from target column.
    */
-  nx: number;
+  nx: number,
   /**
    * interpolation of original row (float) from target row.
    */
-  ny: number;
+  ny: number,
   /**
    * channel index.
    */
-  channel: number;
+  channel: number,
   /**
    * Border interpolation function.
    */
-  interpolateBorder: BorderInterpolationFunction;
+  interpolateBorder: BorderInterpolationFunction,
   /**
    * Clamp function.
    */
-  clamp: ClampFunction;
-}
-type InterpolationNeighbourFunction = (
-  options: InterpolationNeighbourFunctionOptions,
+  clamp: ClampFunction,
 ) => number;
 
 /**
@@ -67,15 +64,21 @@ export function getInterpolationNeighbourFunction(
 }
 
 /**
- * Interpolate using nearest neighbor.
- * @param options - configuration for interpolateNeighbourNearest
+ * Interpolate using the nearest neighbor.
+ * @param image - The image to interpolate.
+ * @param nx - interpolation of original column (float) from target column.
+ * @param ny - interpolation of original row (float) from target row.
+ * @param channel - channel index.
+ * @param interpolateBorder - Border interpolation function.
  * @returns The interpolated value.
  */
 function interpolateNeighbourNearest(
-  options: InterpolationNeighbourFunctionOptions,
+  image: Image,
+  nx: number,
+  ny: number,
+  channel: number,
+  interpolateBorder: BorderInterpolationFunction,
 ): number {
-  const { interpolateBorder, ny, nx, channel, image } = options;
-
   const column = Math.floor(nx);
   const row = Math.floor(ny);
 
@@ -84,15 +87,20 @@ function interpolateNeighbourNearest(
 
 /**
  * Interpolate using bilinear interpolation.
- * @param options - configuration for interpolateBilinear
+ * @param image - The image to interpolate.
+ * @param nx - interpolation of original column (float) from target column.
+ * @param ny - interpolation of original row (float) from target row.
+ * @param channel - channel index.
+ * @param interpolateBorder - Border interpolation function.
  * @returns The interpolated value.
  */
 function interpolateNeighbourBilinear(
-  options: InterpolationNeighbourFunctionOptions,
+  image: Image,
+  nx: number,
+  ny: number,
+  channel: number,
+  interpolateBorder: BorderInterpolationFunction,
 ): number {
-  const { image, channel, interpolateBorder } = options;
-  let { nx, ny } = options;
-
   nx = Math.max(0, Math.min(nx - 0.5, image.width));
   ny = Math.max(0, Math.min(ny - 0.5, image.height));
 
@@ -118,14 +126,22 @@ function interpolateNeighbourBilinear(
 
 /**
  * Interpolate using bicubic interpolation.
- * @param options - configuration for interpolateBilinear
+ * @param image - The image to interpolate.
+ * @param nx - interpolation of original column (float) from target column.
+ * @param ny - interpolation of original row (float) from target row.
+ * @param channel - channel index.
+ * @param interpolateBorder - Border interpolation function.
+ * @param clamp - Clamp function.
  * @returns The interpolated value.
  */
 function interpolateNeighbourBicubic(
-  options: InterpolationNeighbourFunctionOptions,
+  image: Image,
+  nx: number,
+  ny: number,
+  channel: number,
+  interpolateBorder: BorderInterpolationFunction,
+  clamp: ClampFunction,
 ): number {
-  const { image, nx, ny, channel, interpolateBorder, clamp } = options;
-
   const px1 = Math.floor(nx);
   const py1 = Math.floor(ny);
 

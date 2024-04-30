@@ -137,14 +137,14 @@ export function transform(
       const ny = transformPoint(transformMatrix[1], column, row);
 
       for (let channel = 0; channel < newImage.channels; channel++) {
-        const newValue = interpolate({
+        const newValue = interpolate(
           image,
           nx,
           ny,
           channel,
           interpolateBorder,
           clamp,
-        });
+        );
         newImage.setValue(column, row, channel, newValue);
       }
     }
