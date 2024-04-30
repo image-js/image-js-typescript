@@ -106,18 +106,14 @@ function interpolateNeighbourBilinear(
   const vx0y1 = interpolateBorder(px0, py1, channel, image);
   const vx1y1 = interpolateBorder(px1, py1, channel, image);
 
-  const weightRatio = (px1 - px0) * (py1 - py0);
   const px1nx = px1 - nx;
   const nxpx0 = nx - px0;
   const py1ny = py1 - ny;
   const nypy0 = ny - py0;
 
-  const wx0y0 = (px1nx * py1ny) / weightRatio;
-  const wx1y0 = (nxpx0 * py1ny) / weightRatio;
-  const wx0y1 = (px1nx * nypy0) / weightRatio;
-  const wx1y1 = (nxpx0 * nypy0) / weightRatio;
-
-  return vx0y0 * wx0y0 + vx1y0 * wx1y0 + vx0y1 * wx0y1 + vx1y1 * wx1y1;
+  const r1 = px1nx * vx0y0 + nxpx0 * vx1y0;
+  const r2 = px1nx * vx0y1 + nxpx0 * vx1y1;
+  return py1ny * r1 + nypy0 * r2;
 }
 
 /**
@@ -183,64 +179,4 @@ function cubic(a: number, b: number, c: number, d: number, x: number): number {
       x *
       (c - a + x * (2 * a - 5 * b + 4 * c - d + x * (3 * (b - c) + d - a)))
   );
-}
-
-interface InterpolationPositionFunctionOptions {
-  /**
-   * originalMax / targetMax
-   */
-  ratio: number;
-  /**
-   * (originalMax - 1) / (targetMax - 1)
-   */
-  minOneRatio: number;
-  targetValue: number;
-}
-type InterpolationPositionFunction = (
-  options: InterpolationPositionFunctionOptions,
-) => number;
-
-/**
- * Get the interpolation position function based on its name.
- * @param interpolationType - Specified interpolation type.
- * @returns The interpolation function.
- */
-export function getInterpolationPositionFunction(
-  interpolationType: InterpolationType,
-): InterpolationPositionFunction {
-  switch (interpolationType) {
-    case 'nearest': {
-      return interpolatePositionNearest;
-    }
-    case 'bilinear': {
-      return interpolatePositionBilinear;
-    }
-    case 'bicubic': {
-      return interpolatePositionBicubic;
-    }
-    default: {
-      throw new RangeError(`invalid interpolationType: ${interpolationType}`);
-    }
-  }
-}
-
-function interpolatePositionNearest(
-  options: InterpolationPositionFunctionOptions,
-): number {
-  const { targetValue, ratio } = options;
-  return (targetValue + 0.5) * ratio;
-}
-
-function interpolatePositionBilinear(
-  options: InterpolationPositionFunctionOptions,
-) {
-  const { targetValue, minOneRatio } = options;
-  return targetValue * minOneRatio;
-}
-
-function interpolatePositionBicubic(
-  options: InterpolationPositionFunctionOptions,
-) {
-  const { targetValue, minOneRatio } = options;
-  return targetValue * minOneRatio;
 }
