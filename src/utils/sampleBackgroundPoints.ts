@@ -4,13 +4,18 @@ import { Point } from '../geometry';
 
 interface SampleBackgroundPointsOptions {
   /**
+   * Mask to sample points from. If mask is undefined, all the points
+   * of the grid are taken as background.
+   */
+  mask?: Mask;
+  /**
    * Number of rows in the grid.
-   * @default `image.height`
+   * @default `10`
    */
   gridHeight?: number;
   /**
    * Number of columns in the grid.
-   * @default `image.width`
+   * @default `10`
    */
   gridWidth?: number;
   /**
@@ -28,17 +33,16 @@ interface SampleBackgroundPointsOptions {
  */
 export function sampleBackgroundPoints(
   image: Image,
-  mask: Mask,
   options: SampleBackgroundPointsOptions = {},
 ) {
   const {
+    mask,
     kind = 'black',
     gridHeight = image.height,
     gridWidth = image.width,
   } = options;
-
-  const backgroundValue = kind === 'black' ? 0 : 1;
   const background: Point[] = [];
+  let backgroundValue: number;
   const verticalSpread = Math.floor(image.height / gridHeight);
   const horizontalSpread = Math.floor(image.width / gridWidth);
   if (verticalSpread <= 0) {
@@ -51,17 +55,34 @@ export function sampleBackgroundPoints(
       `The grid has bigger width than the image. Grid's width: ${gridWidth}`,
     );
   }
-  for (
-    let row = Math.floor(verticalSpread / 2);
-    row < mask.height - Math.floor(verticalSpread / 2);
-    row += verticalSpread
-  ) {
+  if (mask) {
+    backgroundValue = kind === 'black' ? 0 : 1;
     for (
-      let column = Math.floor(horizontalSpread / 2);
-      column < mask.width - Math.floor(horizontalSpread / 2);
-      column += horizontalSpread
+      let row = Math.floor(verticalSpread / 2);
+      row < image.height - Math.floor(verticalSpread / 2);
+      row += verticalSpread
     ) {
-      if (mask.getBit(column, row) === backgroundValue) {
+      for (
+        let column = Math.floor(horizontalSpread / 2);
+        column < image.width - Math.floor(horizontalSpread / 2);
+        column += horizontalSpread
+      ) {
+        if (mask.getBit(column, row) === backgroundValue) {
+          background.push({ column, row });
+        }
+      }
+    }
+  } else {
+    for (
+      let row = Math.floor(verticalSpread / 2);
+      row < image.height - Math.floor(verticalSpread / 2);
+      row += verticalSpread
+    ) {
+      for (
+        let column = Math.floor(horizontalSpread / 2);
+        column < image.width - Math.floor(horizontalSpread / 2);
+        column += horizontalSpread
+      ) {
         background.push({ column, row });
       }
     }
