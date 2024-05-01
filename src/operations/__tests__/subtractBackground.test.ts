@@ -12,7 +12,8 @@ test('basic test', () => {
     [1, 2, 3, 4, 5],
   ]);
   const mask = getMaskFromCannyEdge(image);
-  const points = sampleBackgroundPoints(image, mask, {
+  const points = sampleBackgroundPoints(image, {
+    mask,
     gridWidth: 3,
     gridHeight: 3,
   });
@@ -83,7 +84,8 @@ test('test with object 8x8 and sampled points', () => {
   ]);
   const mask = getMaskFromCannyEdge(image, { iterations: 0 });
 
-  const points = sampleBackgroundPoints(image, mask, {
+  const points = sampleBackgroundPoints(image, {
+    mask,
     gridWidth: 5,
     gridHeight: 5,
   });
@@ -108,7 +110,8 @@ test('test with object 8x8 and sampled points', () => {
 test('basic screws image test', () => {
   const image = testUtils.load('various/screws.png').grey();
   const mask = getMaskFromCannyEdge(image);
-  const points = sampleBackgroundPoints(image, mask, {
+  const points = sampleBackgroundPoints(image, {
+    mask,
     gridWidth: 15,
     gridHeight: 15,
   });
@@ -123,7 +126,8 @@ test('basic screws image test', () => {
 test('basic sudoku image test', () => {
   const image = testUtils.load('various/sudoku.jpg').grey();
   const mask = getMaskFromCannyEdge(image, { iterations: 0 });
-  const points = sampleBackgroundPoints(image, mask, {
+  const points = sampleBackgroundPoints(image, {
+    mask,
     gridWidth: 15,
     gridHeight: 15,
   });
