@@ -4,20 +4,12 @@ import { encodePng, write } from '../../save';
 
 test('compare result of resize with opencv (nearest)', async () => {
   const img = testUtils.load('opencv/test.png');
-  const expectedImg = testUtils.load('opencv/testResizeNearest.png');
 
   const resized = img.resize({
     xFactor: 10,
     yFactor: 10,
     interpolationType: 'nearest',
   });
-
-  const substraction = expectedImg.clone().subtract(resized);
-  await write(
-    path.join(__dirname, 'resize_nearest_substraction.png'),
-    substraction,
-  );
-  await write(path.join(__dirname, 'resize_nearest.png'), resized);
 
   expect(resized).toMatchImage('opencv/testResizeNearest.png');
 });
