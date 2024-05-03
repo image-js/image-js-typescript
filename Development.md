@@ -18,7 +18,7 @@ To add a new test reference file:
 To run the generation script, use the following steps:
 
 - Install Python 3.x
-- Run `python -m venv .venv` to create a virtual environment for the project
+- Run `python3 -m venv .venv` to create a virtual environment for the project
 - Activate the venv or run the local `pip` and `python` commands.
   - `source .venv/bin/activate` (UNIX)
   - `.venv/Scripts/Activate.ps1` (Windows)
