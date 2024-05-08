@@ -1,3 +1,4 @@
+import { Image } from '../../Image';
 import { divide } from '../divide';
 
 test('divide by 2', () => {
@@ -45,4 +46,29 @@ test('divide by prime number', () => {
     [14, 20, 1, 0],
   ]);
   expect(image).toStrictEqual(result);
+});
+test('testing channels option', () => {
+  let image = testUtils.createRgbaImage([
+    [230, 80, 120, 255],
+    [100, 140, 13, 1],
+  ]);
+  image = divide(image, 7, { channels: [0, 1, 3] });
+  const result = testUtils.createRgbaImage([
+    [32, 11, 120, 36],
+    [14, 20, 13, 0],
+  ]);
+  expect(image).toStrictEqual(result);
+});
+test('testing out option', () => {
+  const image = testUtils.createRgbaImage([
+    [230, 80, 120, 255],
+    [100, 140, 13, 1],
+  ]);
+  const out = new Image(image.width, image.height, { colorModel: 'RGBA' });
+  divide(image, 7, { out });
+  const result = testUtils.createRgbaImage([
+    [32, 11, 17, 36],
+    [14, 20, 1, 0],
+  ]);
+  expect(out).toStrictEqual(result);
 });
