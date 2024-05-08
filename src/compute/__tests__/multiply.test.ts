@@ -25,3 +25,15 @@ test('mulitply by 100', () => {
   ]);
   expect(image).toStrictEqual(result);
 });
+test('multiply by decimal', () => {
+  let image = testUtils.createRgbaImage([
+    [230, 80, 120, 255],
+    [100, 140, 13, 1],
+  ]);
+  image = multiply(image, 0.5);
+  const result = testUtils.createRgbaImage([
+    [115, 40, 60, 255],
+    [50, 70, 6, 1],
+  ]);
+  expect(image).toStrictEqual(result);
+});
