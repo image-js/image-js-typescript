@@ -4,14 +4,14 @@ import { validateChannels } from '../utils/validators/validators';
 
 import { OperationBasedOptions } from './multiply';
 
-export interface DivideOptions extends OperationBasedOptions {}
+interface DivideOptions extends OperationBasedOptions {}
 
 /**
  *
  * Divides image pixels by a certain value.
  * @param image - image to which division will be applied.
  * @param value - Value by which each pixel will be divided.
- * @param options - Multiply options
+ * @param options - Divide options
  * @returns image.
  */
 export function divide(

@@ -14,7 +14,7 @@ export interface OperationBasedOptions {
   out?: Image;
 }
 
-export interface MultiplyOptions extends OperationBasedOptions {}
+interface MultiplyOptions extends OperationBasedOptions {}
 
 /**
  *

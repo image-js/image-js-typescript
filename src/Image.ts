@@ -3,8 +3,8 @@ import { RgbColor } from 'colord';
 import { Mask } from './Mask';
 import { add, subtract, SubtractImageOptions } from './compare';
 import { median } from './compute';
-import { DivideOptions, divide } from './compute/divide';
-import { multiply, MultiplyOptions } from './compute/multiply';
+import { divide } from './compute/divide';
+import { multiply, OperationBasedOptions } from './compute/multiply';
 import { variance } from './compute/variance';
 import { correctColor } from './correctColor';
 import {
@@ -687,7 +687,7 @@ export class Image {
    * @param options - Multiply options.
    * @returns Multiplied image.
    */
-  public multiply(value: number, options: MultiplyOptions = {}): Image {
+  public multiply(value: number, options: OperationBasedOptions = {}): Image {
     return multiply(this, value, options);
   }
   /**
@@ -696,7 +696,7 @@ export class Image {
    * @param options - Divide options.
    * @returns Divided image.
    */
-  public divide(value: number, options: DivideOptions = {}): Image {
+  public divide(value: number, options: OperationBasedOptions = {}): Image {
     return divide(this, value, options);
   }
   // COMPUTE
