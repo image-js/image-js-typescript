@@ -13,14 +13,14 @@ test('divide by 2', () => {
   expect(image).toStrictEqual(result);
 });
 
-test('must throw error', () => {
+test('error when dividing by 0', () => {
   const image = testUtils.createRgbaImage([
     [230, 80, 120, 255],
     [100, 140, 13, 1],
   ]);
   expect(() => {
     divide(image, 0);
-  }).toThrow('Value cannot be equal to 0.');
+  }).toThrow('Cannot divide by 0');
 });
 test('divide by decimal', () => {
   let image = testUtils.createRgbaImage([

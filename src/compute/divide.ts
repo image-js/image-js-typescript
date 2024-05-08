@@ -23,7 +23,7 @@ export function divide(
   } = options;
   validateChannels(channels, image);
   if (value === 0) {
-    throw new Error(`Value cannot be equal to 0.`);
+    throw new TypeError(`Cannot divide by 0`);
   }
   const newImage = getOutputImage(image, options, { clone: true });
   if (channels.length === 0) {
