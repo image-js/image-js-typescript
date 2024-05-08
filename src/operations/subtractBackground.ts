@@ -1,6 +1,4 @@
-import Matrix from 'ml-matrix';
-//@ts-expect-error check test
-import * as Regression from 'ml-regression';
+import { PolynomialRegression2D } from 'ml-regression-polynomial-2d';
 
 import { Image } from '../Image';
 import { Point } from '../geometry';
@@ -36,30 +34,27 @@ export function subtractBackground(
 ) {
   const { background, order = 2, backgroundKind = 'light' } = options;
   checkProcessable(image, { colorModel: ['GREY'] });
-  const Xs = new Matrix(background.length, 2);
-  const Ys = new Matrix(background.length, 1);
-  for (let point = 0; point < background.length; point++) {
-    Xs.setRow(point, [
-      0.5 - background[point].column / (image.width - 1),
-      0.5 - background[point].row / (image.height - 1),
-    ]);
-    Ys.setRow(point, [
-      image.getValue(background[point].column, background[point].row, 0),
-    ]);
+  const columns = new Array<number>();
+  const rows = new Array<number>();
+  const values = new Array<number>();
+  for (const point of background) {
+    columns.push(point.column);
+    rows.push(point.row);
+    values.push(image.getValueByPoint(point, 0));
   }
-  const model = new Regression.PolinomialFitting2D(Xs, Ys, { order });
-  const X = new Array(image.width * image.height);
+
+  const model = new PolynomialRegression2D({ x: columns, y: rows }, values, {
+    order,
+  });
+  const points: { x: number[]; y: number[] } = { x: [], y: [] };
 
   for (let row = 0; row < image.height; row++) {
     for (let column = 0; column < image.width; column++) {
-      X[row * image.width + column] = [
-        0.5 - column / (image.width - 1),
-        0.5 - row / (image.height - 1),
-      ];
+      points.x.push(column);
+      points.y.push(row);
     }
   }
-  const Y = model.predict(X);
-
+  const Y = model.predict(points);
   for (let row = 0; row < image.height; row++) {
     for (let column = 0; column < image.width; column++) {
       const value = Math.abs(
