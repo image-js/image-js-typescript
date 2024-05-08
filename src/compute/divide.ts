@@ -20,7 +20,7 @@ export function divide(
   options: DivideOptions = {},
 ) {
   const {
-    channels = new Array(image.components).fill(0).map((value, index) => index),
+    channels = new Array(image.channels).fill(0).map((value, index) => index),
   } = options;
   validateChannels(channels, image);
   if (value === 0) {
