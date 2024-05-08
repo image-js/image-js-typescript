@@ -3,6 +3,8 @@ import { RgbColor } from 'colord';
 import { Mask } from './Mask';
 import { add, subtract, SubtractImageOptions } from './compare';
 import { median } from './compute';
+import { DivideOptions, divide } from './compute/divide';
+import { multiply, MultiplyOptions } from './compute/multiply';
 import { variance } from './compute/variance';
 import { correctColor } from './correctColor';
 import {
@@ -679,7 +681,12 @@ export class Image {
   public add(other: Image): Image {
     return add(this, other);
   }
-
+  public multiply(value: number, options: MultiplyOptions = {}): Image {
+    return multiply(this, value, options);
+  }
+  public divide(value: number, options: DivideOptions = {}): Image {
+    return divide(this, value, options);
+  }
   // COMPUTE
 
   public histogram(options?: HistogramOptions): Uint32Array {

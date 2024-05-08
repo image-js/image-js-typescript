@@ -4,7 +4,7 @@ import { validateChannels } from '../utils/validators/validators';
 
 import { OperationBasedOptions } from './multiply';
 
-interface DivideOptions extends OperationBasedOptions {}
+export interface DivideOptions extends OperationBasedOptions {}
 
 /**
  *
