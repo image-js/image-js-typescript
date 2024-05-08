@@ -8,7 +8,7 @@ test('multiply by 2', () => {
   image = multiply(image, 2);
   const result = testUtils.createRgbaImage([
     [255, 160, 240, 255],
-    [200, 255, 26, 1],
+    [200, 255, 26, 2],
   ]);
   expect(image).toStrictEqual(result);
 });
@@ -21,7 +21,7 @@ test('mulitply by 100', () => {
   image = multiply(image, 100);
   const result = testUtils.createRgbaImage([
     [255, 255, 255, 255],
-    [255, 255, 255, 1],
+    [255, 255, 255, 100],
   ]);
   expect(image).toStrictEqual(result);
 });
@@ -32,8 +32,8 @@ test('multiply by decimal', () => {
   ]);
   image = multiply(image, 0.5);
   const result = testUtils.createRgbaImage([
-    [115, 40, 60, 255],
-    [50, 70, 6, 1],
+    [115, 40, 60, 127],
+    [50, 70, 6, 0],
   ]);
   expect(image).toStrictEqual(result);
 });
