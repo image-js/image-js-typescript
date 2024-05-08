@@ -2,8 +2,9 @@ import { Image } from '../Image';
 import { getOutputImage } from '../utils/getOutputImage';
 import { validateChannels } from '../utils/validators/validators';
 
-//The used options are the same as in multiply function.
-import { MultiplyOptions } from './multiply';
+import { OperationBasedOptions } from './multiply';
+
+interface DivideOptions extends OperationBasedOptions {}
 
 /**
  *
@@ -16,7 +17,7 @@ import { MultiplyOptions } from './multiply';
 export function divide(
   image: Image,
   value: number,
-  options: MultiplyOptions = {},
+  options: DivideOptions = {},
 ) {
   const {
     channels = new Array(image.components).fill(0).map((value, index) => index),
@@ -29,11 +30,10 @@ export function divide(
   if (channels.length === 0) {
     return newImage;
   }
-  for (let channel = 0; channel < channels.length; channel++) {
+  for (const channel of channels) {
     for (let row = 0; row < newImage.height; row++) {
       for (let column = 0; column < newImage.width; column++) {
-        const newIntensity =
-          newImage.getValue(column, row, channels[channel]) / value;
+        const newIntensity = newImage.getValue(column, row, channel) / value;
         newImage.setClampedValue(column, row, channel, newIntensity);
       }
     }

@@ -2,7 +2,7 @@ import { Image } from '../Image';
 import { getOutputImage } from '../utils/getOutputImage';
 import { validateChannels } from '../utils/validators/validators';
 
-export interface MultiplyOptions {
+export interface OperationBasedOptions {
   /**
    * Channels where value will be multiplied.
    * @default all channels
@@ -13,6 +13,8 @@ export interface MultiplyOptions {
    */
   out?: Image;
 }
+
+interface MultiplyOptions extends OperationBasedOptions {}
 
 /**
  *
@@ -36,11 +38,10 @@ export function multiply(
   if (channels.length === 0) {
     return newImage;
   }
-  for (let channel = 0; channel < channels.length; channel++) {
+  for (const channel of channels) {
     for (let row = 0; row < newImage.height; row++) {
       for (let column = 0; column < newImage.width; column++) {
-        const newIntensity =
-          newImage.getValue(column, row, channels[channel]) * value;
+        const newIntensity = newImage.getValue(column, row, channel) * value;
         newImage.setClampedValue(column, row, channel, newIntensity);
       }
     }
