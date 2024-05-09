@@ -1,9 +1,11 @@
 import { Image } from '../Image';
-import { BorderType } from '../utils/interpolateBorder';
-import { InterpolationType } from '../utils/interpolatePixel';
+import { getClamp } from '../utils/clamp';
+import { BorderType, getBorderInterpolation } from '../utils/interpolateBorder';
+import {
+  getInterpolationFunction,
+  InterpolationType,
+} from '../utils/interpolatePixel';
 import { assert } from '../utils/validators/assert';
-
-import { transform } from './transform';
 
 export interface ResizeOptions {
   /**
@@ -56,22 +58,32 @@ export function resize(image: Image, options: ResizeOptions): Image {
     borderType = 'replicate',
     borderValue = 0,
   } = options;
-  const { width, height, xFactor, yFactor } = checkOptions(image, options);
-
-  return transform(
-    image,
-    [
-      [xFactor, 0, xFactor / 2],
-      [0, yFactor, yFactor / 2],
-    ],
-    {
-      interpolationType,
-      borderType,
-      borderValue,
-      height,
-      width,
-    },
-  );
+  const { width, height } = checkOptions(image, options);
+  const newImage = Image.createFrom(image, { width, height });
+  const interpolate = getInterpolationFunction(interpolationType);
+  const interpolateBorder = getBorderInterpolation(borderType, borderValue);
+  const clamp = getClamp(newImage);
+  const intervalX = image.width / (width + 1);
+  const intervalY = image.height / (height + 1);
+  for (let row = 0; row < newImage.height; row++) {
+    for (let column = 0; column < newImage.width; column++) {
+      const nx = column * intervalX + intervalX / 2;
+      const ny = row * intervalY + intervalY / 2;
+      console.log({ row, column, nx, ny });
+      for (let channel = 0; channel < newImage.channels; channel++) {
+        const newValue = interpolate(
+          image,
+          nx,
+          ny,
+          channel,
+          interpolateBorder,
+          clamp,
+        );
+        newImage.setValue(column, row, channel, newValue);
+      }
+    }
+  }
+  return newImage;
 }
 
 /**

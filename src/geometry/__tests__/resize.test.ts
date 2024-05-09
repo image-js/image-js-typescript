@@ -3,17 +3,44 @@ import path from 'node:path';
 import { Image } from '../../Image';
 import { write } from '../../save';
 
-async function writeDebug(resized: Image, type: string) {
+async function writeDebug(
+  resized: Image,
+  type: string,
+  ref: 'simple' | 'test' = 'test',
+) {
+  console.log(resized);
   // @ts-expect-error Dynamic string.
-  const expected = testUtils.load(`opencv/test_resize_${type}.png`);
-  await write(path.join(__dirname, `resize_${type}_expected.png`), expected);
-  await write(path.join(__dirname, `resize_${type}_resized.png`), resized);
+  const expected = testUtils.load(`opencv/${ref}_resize_${type}.png`);
+  console.log(expected);
+  await write(
+    path.join(__dirname, `${ref}_resize_${type}_expected.png`),
+    expected,
+  );
+  await write(
+    path.join(__dirname, `${ref}_resize_${type}_resized.png`),
+    resized,
+  );
   const subtraction = expected.subtract(resized);
   await write(
-    path.join(__dirname, `resize_${type}_subtraction.png`),
+    path.join(__dirname, `${ref}_resize_${type}_subtraction.png`),
     subtraction,
   );
 }
+
+test.only('simple 3x3 (bilinear, larger)', async () => {
+  const img = testUtils.load('opencv/simple.png');
+
+  const resized = img.resize({
+    xFactor: 2,
+    yFactor: 2,
+    interpolationType: 'bilinear',
+  });
+
+  const rgb = resized.convertColor('RGB');
+  await writeDebug(rgb, 'bilinear_larger', 'simple');
+
+  expect(rgb).toMatchImage('opencv/simple_resize_bilinear_larger.png');
+});
 
 test('compare with OpenCV (nearest, larger)', async () => {
   const img = testUtils.load('opencv/test.png');
@@ -47,10 +74,12 @@ test('compare with OpenCV (nearest, smaller)', async () => {
     interpolationType: 'nearest',
   });
 
+  await writeDebug(resized, 'nearest_smaller');
+
   expect(resized).toMatchImage('opencv/test_resize_nearest_smaller.png');
 });
 
-test.skip('compare with OpenCV (bilinear, larger)', async () => {
+test('compare with OpenCV (bilinear, larger)', async () => {
   const img = testUtils.load('opencv/test.png');
 
   const resized = img.resize({
@@ -63,7 +92,7 @@ test.skip('compare with OpenCV (bilinear, larger)', async () => {
   expect(resized).toMatchImage('opencv/test_resize_bilinear_larger.png');
 });
 
-test.skip('compare with OpenCV (bilinear, same)', async () => {
+test('compare with OpenCV (bilinear, same)', async () => {
   const img = testUtils.load('opencv/test.png');
 
   const resized = img.resize({

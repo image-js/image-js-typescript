@@ -14,6 +14,7 @@ interpolations = [
 ]
 
 img = cv.imread(path.join(dirname, 'test.png'))
+img_simple = cv.imread(path.join(dirname, 'simple.png'))
 assert img is not None, "file could not be read, check with os.path.exists()"
 rows, cols = img.shape[0], img.shape[1]
 
@@ -35,6 +36,17 @@ for interpolation, interpolationName in interpolations:
         writeImg(
             f'test_resize_{interpolationName}_{sizeName}.png',
             cv.resize(img, size, interpolation=interpolation)
+        )
+
+# Image resizing (simple).
+sizes = [
+    [(6, 6), 'larger'],
+]
+for interpolation, interpolationName in interpolations:
+    for size, sizeName in sizes:
+        writeImg(
+            f'simple_resize_{interpolationName}_{sizeName}.png',
+            cv.resize(img_simple, size, interpolation=interpolation)
         )
 
 # Image rotate counter-clockwise by 90 degrees
