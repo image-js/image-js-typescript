@@ -55,21 +55,30 @@ export interface ResizeOptions {
 export function resize(image: Image, options: ResizeOptions): Image {
   const {
     interpolationType = 'bilinear',
-    borderType = 'replicate',
+    borderType = 'replicate', // in this code we don't use borderType
     borderValue = 0,
   } = options;
+  image = image.grey();
   const { width, height } = checkOptions(image, options);
   const newImage = Image.createFrom(image, { width, height });
   const interpolate = getInterpolationFunction(interpolationType);
   const interpolateBorder = getBorderInterpolation(borderType, borderValue);
   const clamp = getClamp(newImage);
-  const intervalX = image.width / (width + 1);
-  const intervalY = image.height / (height + 1);
+  // Interval should change depending the interpolate method
+  // nearest use a round value, bilinear a floor
+  const intervalX =
+    interpolationType === 'nearest'
+      ? image.width / width
+      : (image.width - 1.00001) / (width - 1);
+  const intervalY =
+    interpolationType === 'nearest'
+      ? image.height / height
+      : (image.height - 1.00001) / (height - 1);
+
   for (let row = 0; row < newImage.height; row++) {
+    const ny = row * intervalY;
     for (let column = 0; column < newImage.width; column++) {
-      const nx = column * intervalX + intervalX / 2;
-      const ny = row * intervalY + intervalY / 2;
-      console.log({ row, column, nx, ny });
+      const nx = column * intervalX;
       for (let channel = 0; channel < newImage.channels; channel++) {
         const newValue = interpolate(
           image,
@@ -83,6 +92,7 @@ export function resize(image: Image, options: ResizeOptions): Image {
       }
     }
   }
+  console.log(newImage);
   return newImage;
 }
 
