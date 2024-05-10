@@ -1,7 +1,7 @@
 import { Point } from '../../geometry';
 import { sampleBackgroundPoints } from '../../utils/sampleBackgroundPoints';
+import { correctBackground } from '../correctBackground';
 import { getMaskFromCannyEdge } from '../getMaskFromCannyEdge';
-import { subtractBackground } from '../subtractBackground';
 
 test('basic test', () => {
   const image = testUtils.createGreyImage([
@@ -17,7 +17,7 @@ test('basic test', () => {
     gridWidth: 3,
     gridHeight: 3,
   });
-  const newImage = subtractBackground(image, {
+  const newImage = correctBackground(image, {
     background: points,
     order: 2,
     backgroundKind: 'dark',
@@ -54,7 +54,7 @@ test('test with object 8x8 and manually picked points', () => {
     { column: 5, row: 7 },
   ];
 
-  const newImage = subtractBackground(image, {
+  const newImage = correctBackground(image, {
     background: points,
     backgroundKind: 'dark',
   });
@@ -89,7 +89,7 @@ test('test with object 8x8 and sampled points', () => {
     gridWidth: 5,
     gridHeight: 5,
   });
-  const newImage = subtractBackground(image, {
+  const newImage = correctBackground(image, {
     background: points,
     order: 3,
     backgroundKind: 'dark',
@@ -115,7 +115,7 @@ test('basic screws image test', () => {
     gridWidth: 15,
     gridHeight: 15,
   });
-  const newImage = subtractBackground(image, {
+  const newImage = correctBackground(image, {
     background: points,
     order: 2,
     backgroundKind: 'light',
@@ -131,7 +131,7 @@ test('basic sudoku image test', () => {
     gridWidth: 15,
     gridHeight: 15,
   });
-  const newImage = subtractBackground(image, { background: points });
+  const newImage = correctBackground(image, { background: points });
   expect(newImage).toMatchImageSnapshot();
 });
 test('throw if insufficient number of points', () => {
@@ -150,7 +150,7 @@ test('throw if insufficient number of points', () => {
   });
 
   expect(() => {
-    subtractBackground(image, {
+    correctBackground(image, {
       background: points,
       order: 2,
       backgroundKind: 'dark',

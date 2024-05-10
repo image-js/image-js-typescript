@@ -4,7 +4,7 @@ import { Image } from '../Image';
 import { Point } from '../geometry';
 import checkProcessable from '../utils/validators/checkProcessable';
 
-interface SubtractBackgroundOptions {
+interface CorrectBackgroundOptions {
   /**
    * @param background - Points that are considered the background of an image.
    */
@@ -23,14 +23,14 @@ interface SubtractBackgroundOptions {
 }
 
 /**
- * Subtracts background from an image for baseline correction.
+ * Corrects background from an image for baseline correction.
  * @param image - Image to subtract background from.
- * @param options - SubtractBackgroundOptions.
+ * @param options - CorrectBackgroundOptions.
  * @returns Image with corrected baseline.
  */
-export function subtractBackground(
+export function correctBackground(
   image: Image,
-  options: SubtractBackgroundOptions,
+  options: CorrectBackgroundOptions,
 ) {
   const { background, order = 2, backgroundKind = 'light' } = options;
   checkProcessable(image, { colorModel: ['GREY'] });
