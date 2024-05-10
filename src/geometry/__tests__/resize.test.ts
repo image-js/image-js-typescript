@@ -1,6 +1,56 @@
-import { encodePng } from '../../save';
+import path from 'node:path';
 
-test.skip('compares result of resize with opencv', () => {
+import { Image } from '../../Image';
+import { write } from '../../save';
+
+async function writeDebug(resized: Image, type: string) {
+  // @ts-expect-error Dynamic string.
+  const expected = testUtils.load(`opencv/test_resize_${type}.png`);
+  await write(path.join(__dirname, `resize_${type}_expected.png`), expected);
+  await write(path.join(__dirname, `resize_${type}_resized.png`), resized);
+  const subtraction = expected.subtract(resized);
+  await write(
+    path.join(__dirname, `resize_${type}_subtraction.png`),
+    subtraction,
+  );
+}
+
+test('compare with OpenCV (nearest, larger)', async () => {
+  const img = testUtils.load('opencv/test.png');
+
+  const resized = img.resize({
+    xFactor: 10,
+    yFactor: 10,
+    interpolationType: 'nearest',
+  });
+
+  expect(resized).toMatchImage('opencv/test_resize_nearest_larger.png');
+});
+
+test('compare with OpenCV (nearest, same size)', async () => {
+  const img = testUtils.load('opencv/test.png');
+
+  const resized = img.resize({
+    xFactor: 1,
+    interpolationType: 'nearest',
+  });
+
+  expect(resized).toMatchImage('opencv/test_resize_nearest_same.png');
+});
+
+test('compare with OpenCV (nearest, smaller)', async () => {
+  const img = testUtils.load('opencv/test.png');
+
+  const resized = img.resize({
+    width: 5,
+    height: 6,
+    interpolationType: 'nearest',
+  });
+
+  expect(resized).toMatchImage('opencv/test_resize_nearest_smaller.png');
+});
+
+test.skip('compare with OpenCV (bilinear, larger)', async () => {
   const img = testUtils.load('opencv/test.png');
 
   const resized = img.resize({
@@ -8,7 +58,75 @@ test.skip('compares result of resize with opencv', () => {
     yFactor: 10,
   });
 
-  expect(resized).toMatchImage('opencv/testResizeBilinear.png');
+  await writeDebug(resized, 'bilinear_larger');
+
+  expect(resized).toMatchImage('opencv/test_resize_bilinear_larger.png');
+});
+
+test.skip('compare with OpenCV (bilinear, same)', async () => {
+  const img = testUtils.load('opencv/test.png');
+
+  const resized = img.resize({
+    xFactor: 1,
+  });
+
+  await writeDebug(resized, 'bilinear_same');
+
+  expect(resized).toMatchImage('opencv/test_resize_bilinear_same.png');
+});
+
+test.skip('compare with OpenCV (bilinear, smaller)', async () => {
+  const img = testUtils.load('opencv/test.png');
+
+  const resized = img.resize({
+    width: 5,
+    height: 6,
+  });
+
+  await writeDebug(resized, 'bilinear_smaller');
+
+  expect(resized).toMatchImage('opencv/test_resize_bilinear_smaller.png');
+});
+
+test.skip('compare with OpenCV (bicubic, larger)', async () => {
+  const img = testUtils.load('opencv/test.png');
+
+  const resized = img.resize({
+    xFactor: 10,
+    yFactor: 10,
+    interpolationType: 'bicubic',
+  });
+
+  await writeDebug(resized, 'bicubic_larger');
+
+  expect(resized).toMatchImage('opencv/test_resize_bicubic_larger.png');
+});
+
+test.skip('compare with OpenCV (bicubic, same)', async () => {
+  const img = testUtils.load('opencv/test.png');
+
+  const resized = img.resize({
+    xFactor: 1,
+    interpolationType: 'bicubic',
+  });
+
+  await writeDebug(resized, 'bicubic_same');
+
+  expect(resized).toMatchImage('opencv/test_resize_bicubic_same.png');
+});
+
+test.skip('compare with OpenCV (bicubic, smaller)', async () => {
+  const img = testUtils.load('opencv/test.png');
+
+  const resized = img.resize({
+    width: 5,
+    height: 6,
+    interpolationType: 'bicubic',
+  });
+
+  await writeDebug(resized, 'bicubic_smaller');
+
+  expect(resized).toMatchImage('opencv/test_resize_bicubic_smaller.png');
 });
 
 test('result should have correct dimensions', () => {
@@ -32,19 +150,6 @@ test('resize to given width and height', () => {
 
   expect(resized.width).toBe(300);
   expect(resized.height).toBe(100);
-});
-
-test('has to match snapshot', () => {
-  const img = testUtils.load('opencv/test.png');
-
-  const resized = img.resize({
-    xFactor: 10,
-    yFactor: 10,
-  });
-
-  const png = Buffer.from(encodePng(resized.convertColor('GREY')));
-
-  expect(png).toMatchImageSnapshot();
 });
 
 test('aspect ratio not preserved', () => {

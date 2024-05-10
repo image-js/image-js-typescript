@@ -41,6 +41,10 @@ export type ThresholdAlgorithm =
 
 interface ThresholdOptionsBase {
   /**
+   * Number of slots that histogram can have. Slots must be a power of 2.
+   */
+  slots?: number;
+  /**
    * Image to use as the output.
    */
   out?: Mask;
@@ -69,51 +73,53 @@ export type ThresholdOptions =
 /**
  * Compute threshold value for an image using the specified algorithm.
  * @param image - The grey image.
- * @param algorithm - Algorithm that defines the threshold.
+ * @param options - Threshold options.
  * @returns The threshold value for the image.
  */
 export function computeThreshold(
   image: Image,
-  algorithm: ThresholdAlgorithm = 'otsu',
+  options: ThresholdOptionsAlgorithm = {},
 ): number {
+  const { algorithm = 'otsu', slots } = options;
   if (image.channels !== 1) {
     throw new TypeError(
       'threshold can only be computed on images with one channel',
     );
   }
-  const histogram = image.histogram();
+  const histogram = image.histogram({ slots });
+  const scale = slots ? 2 ** image.bitDepth / slots : 1;
 
   switch (algorithm) {
     case 'huang':
-      return huang(histogram);
+      return huang(histogram) * scale;
     case 'intermodes':
-      return intermodes(histogram);
+      return intermodes(histogram) * scale;
     case 'isodata':
-      return isodata(histogram);
+      return isodata(histogram) * scale;
     case 'li':
-      return li(histogram, image.size);
+      return li(histogram, image.size) * scale;
     case 'maxEntropy':
-      return maxEntropy(histogram, image.size);
+      return maxEntropy(histogram, image.size) * scale;
     case 'mean':
-      return mean(histogram, image.size);
+      return mean(histogram, image.size) * scale;
     case 'minimum':
-      return minimum(histogram);
+      return minimum(histogram) * scale;
     case 'minError':
-      return minError(histogram, image.size);
+      return minError(histogram, image.size) * scale;
     case 'moments':
-      return moments(histogram, image.size);
+      return moments(histogram, image.size) * scale;
     case 'otsu':
-      return otsu(histogram, image.size);
+      return otsu(histogram, image.size) * scale;
     case 'percentile':
-      return percentile(histogram);
+      return percentile(histogram) * scale;
     case 'renyiEntropy':
-      return renyiEntropy(histogram, image.size);
+      return renyiEntropy(histogram, image.size) * scale;
     case 'shanbhag':
-      return shanbhag(histogram, image.size);
+      return shanbhag(histogram, image.size) * scale;
     case 'triangle':
-      return triangle(histogram);
+      return triangle(histogram) * scale;
     case 'yen':
-      return yen(histogram, image.size);
+      return yen(histogram, image.size) * scale;
     default:
       throw new RangeError(`invalid threshold algorithm: ${algorithm}`);
   }
@@ -136,7 +142,7 @@ export function threshold(image: Image, options: ThresholdOptions = {}): Mask {
     }
     thresholdValue = threshold * image.maxValue;
   } else {
-    thresholdValue = computeThreshold(image, options.algorithm);
+    thresholdValue = computeThreshold(image, options);
   }
   const result = imageToOutputMask(image, options);
   for (let i = 0; i < image.size; i++) {
