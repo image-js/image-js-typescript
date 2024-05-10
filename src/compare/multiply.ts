@@ -17,7 +17,7 @@ export interface MultiplyOptions {
 /**
  *
  * Multiplies points by a certain value.
- * @param image - image to whcih multiplication will be applied.
+ * @param image - image to which multiplication will be applied.
  * @param value - Value by which each pixel will be multiplied.
  * @param options - Multiply options
  * @returns image.
