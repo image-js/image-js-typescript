@@ -34,12 +34,7 @@ export function sampleBackgroundPoints(
   image: Image,
   options: SampleBackgroundPointsOptions = {},
 ) {
-  const {
-    mask,
-    kind = 'black',
-    gridHeight = image.height,
-    gridWidth = image.width,
-  } = options;
+  const { mask, kind = 'black', gridHeight = 10, gridWidth = 10 } = options;
   const background: Point[] = [];
   const verticalSpread = Math.floor(image.height / gridHeight);
   const horizontalSpread = Math.floor(image.width / gridWidth);
