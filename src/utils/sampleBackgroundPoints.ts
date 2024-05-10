@@ -27,7 +27,6 @@ interface SampleBackgroundPointsOptions {
 /**
  * Applies the grid that samples points that belong to background.
  * @param image - Image to sample points from.
- * @param mask - Mask to check if the point belongs to background.
  * @param options - SampleBackgroundPointsOptions.
  * @returns Array of points.
  */
@@ -42,7 +41,6 @@ export function sampleBackgroundPoints(
     gridWidth = image.width,
   } = options;
   const background: Point[] = [];
-  let backgroundValue: number;
   const verticalSpread = Math.floor(image.height / gridHeight);
   const horizontalSpread = Math.floor(image.width / gridWidth);
   if (verticalSpread <= 0) {
@@ -56,7 +54,7 @@ export function sampleBackgroundPoints(
     );
   }
   if (mask) {
-    backgroundValue = kind === 'black' ? 0 : 1;
+    const backgroundValue = kind === 'black' ? 0 : 1;
     for (
       let row = Math.floor(verticalSpread / 2);
       row < image.height - Math.floor(verticalSpread / 2);
