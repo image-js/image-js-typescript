@@ -2,7 +2,7 @@ import { Image } from '../Image';
 import { getOutputImage } from '../utils/getOutputImage';
 import { validateChannels } from '../utils/validators/validators';
 
-export interface OperationBasedOptions {
+export interface MultiplyOptions {
   /**
    * Channels where value will be multiplied.
    * @default all channels
@@ -13,8 +13,6 @@ export interface OperationBasedOptions {
    */
   out?: Image;
 }
-
-export interface MultiplyOptions extends OperationBasedOptions {}
 
 /**
  *

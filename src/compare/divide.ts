@@ -2,9 +2,17 @@ import { Image } from '../Image';
 import { getOutputImage } from '../utils/getOutputImage';
 import { validateChannels } from '../utils/validators/validators';
 
-import { OperationBasedOptions } from './multiply';
-
-export interface DivideOptions extends OperationBasedOptions {}
+export interface DivideOptions {
+  /**
+   * Channels where value will be divided.
+   * @default all channels
+   */
+  channels?: number[];
+  /**
+   * Image to which the resulting image has to be put.
+   */
+  out?: Image;
+}
 
 /**
  *
