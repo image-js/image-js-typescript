@@ -134,3 +134,26 @@ test('basic sudoku image test', () => {
   const newImage = subtractBackground(image, { background: points });
   expect(newImage).toMatchImageSnapshot();
 });
+test('throw if insufficient number of points', () => {
+  const image = testUtils.createGreyImage([
+    [1, 2, 3, 4, 5],
+    [1, 2, 3, 4, 5],
+    [1, 2, 3, 4, 5],
+    [1, 2, 3, 4, 5],
+    [1, 2, 3, 4, 5],
+  ]);
+  const mask = getMaskFromCannyEdge(image);
+  const points = sampleBackgroundPoints(image, {
+    mask,
+    gridWidth: 2,
+    gridHeight: 2,
+  });
+
+  expect(() => {
+    subtractBackground(image, {
+      background: points,
+      order: 2,
+      backgroundKind: 'dark',
+    });
+  }).toThrow('Insufficient number of points to create regression model.');
+});
