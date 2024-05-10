@@ -2,9 +2,9 @@ import { RgbColor } from 'colord';
 
 import { Mask } from './Mask';
 import { add, subtract, SubtractImageOptions } from './compare';
+import { divide } from './compare/divide';
+import { multiply, OperationBasedOptions } from './compare/multiply';
 import { median } from './compute';
-import { divide } from './compute/divide';
-import { multiply, OperationBasedOptions } from './compute/multiply';
 import { variance } from './compute/variance';
 import { correctColor } from './correctColor';
 import {
