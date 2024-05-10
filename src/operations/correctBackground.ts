@@ -4,7 +4,7 @@ import { Image } from '../Image';
 import { Point } from '../geometry';
 import checkProcessable from '../utils/validators/checkProcessable';
 
-interface CorrectBackgroundOptions {
+export interface CorrectBackgroundOptions {
   /**
    * @param background - Points that are considered the background of an image.
    */
