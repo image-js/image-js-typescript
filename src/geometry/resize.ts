@@ -1,6 +1,6 @@
 import { Image } from '../Image';
 import { getClamp } from '../utils/clamp';
-import { BorderType, getBorderInterpolation } from '../utils/interpolateBorder';
+import { getBorderInterpolation } from '../utils/interpolateBorder';
 import {
   getInterpolationFunction,
   InterpolationType,
@@ -34,16 +34,6 @@ export interface ResizeOptions {
    * @default `'bilinear'`
    */
   interpolationType?: InterpolationType;
-  /**
-   * Specify how the borders should be handled.
-   * @default `'constant'`
-   */
-  borderType?: BorderType;
-  /**
-   * Value of the border if BorderType is 'constant'.
-   * @default `0`
-   */
-  borderValue?: number;
 }
 
 /**
@@ -53,16 +43,12 @@ export interface ResizeOptions {
  * @returns The new image.
  */
 export function resize(image: Image, options: ResizeOptions): Image {
-  const {
-    interpolationType = 'bilinear',
-    borderType = 'replicate', // in this code we don't use borderType
-    borderValue = 0,
-  } = options;
-  image = image.grey();
+  const { interpolationType = 'bilinear' } = options;
   const { width, height } = checkOptions(image, options);
   const newImage = Image.createFrom(image, { width, height });
   const interpolate = getInterpolationFunction(interpolationType);
-  const interpolateBorder = getBorderInterpolation(borderType, borderValue);
+  // The algorithm should not end up requesting pixels outside the image.
+  const interpolateBorder = getBorderInterpolation('constant', 0);
   const clamp = getClamp(newImage);
   // Interval should change depending the interpolate method
   // nearest use a round value, bilinear a floor
@@ -92,7 +78,6 @@ export function resize(image: Image, options: ResizeOptions): Image {
       }
     }
   }
-  console.log(newImage);
   return newImage;
 }
 

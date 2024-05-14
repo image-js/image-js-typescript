@@ -8,10 +8,8 @@ async function writeDebug(
   type: string,
   ref: 'simple' | 'test' = 'test',
 ) {
-  console.log(resized);
   // @ts-expect-error Dynamic string.
   const expected = testUtils.load(`opencv/${ref}_resize_${type}.png`);
-  console.log(expected);
   await write(
     path.join(__dirname, `${ref}_resize_${type}_expected.png`),
     expected,
@@ -27,7 +25,7 @@ async function writeDebug(
   );
 }
 
-test.only('simple 3x3 (bilinear, larger)', async () => {
+test('simple 3x3 (bilinear, larger)', async () => {
   const img = testUtils.load('opencv/simple.png');
 
   const resized = img.resize({
@@ -104,7 +102,7 @@ test('compare with OpenCV (bilinear, same)', async () => {
   expect(resized).toMatchImage('opencv/test_resize_bilinear_same.png');
 });
 
-test.skip('compare with OpenCV (bilinear, smaller)', async () => {
+test('compare with OpenCV (bilinear, smaller)', async () => {
   const img = testUtils.load('opencv/test.png');
 
   const resized = img.resize({
@@ -117,7 +115,7 @@ test.skip('compare with OpenCV (bilinear, smaller)', async () => {
   expect(resized).toMatchImage('opencv/test_resize_bilinear_smaller.png');
 });
 
-test.skip('compare with OpenCV (bicubic, larger)', async () => {
+test('compare with OpenCV (bicubic, larger)', async () => {
   const img = testUtils.load('opencv/test.png');
 
   const resized = img.resize({
@@ -131,7 +129,7 @@ test.skip('compare with OpenCV (bicubic, larger)', async () => {
   expect(resized).toMatchImage('opencv/test_resize_bicubic_larger.png');
 });
 
-test.skip('compare with OpenCV (bicubic, same)', async () => {
+test('compare with OpenCV (bicubic, same)', async () => {
   const img = testUtils.load('opencv/test.png');
 
   const resized = img.resize({
@@ -144,7 +142,7 @@ test.skip('compare with OpenCV (bicubic, same)', async () => {
   expect(resized).toMatchImage('opencv/test_resize_bicubic_same.png');
 });
 
-test.skip('compare with OpenCV (bicubic, smaller)', async () => {
+test('compare with OpenCV (bicubic, smaller)', async () => {
   const img = testUtils.load('opencv/test.png');
 
   const resized = img.resize({
