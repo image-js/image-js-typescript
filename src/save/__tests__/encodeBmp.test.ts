@@ -1,5 +1,5 @@
 import { encode } from '../encode';
-//import { writeSync } from '../write';
+import { writeSync } from '../write';
 
 test('encode an 8-bit rgba image', () => {
   const image = testUtils.createGreyImage([
@@ -10,19 +10,16 @@ test('encode an 8-bit rgba image', () => {
     [255, 255, 255, 255, 255],
   ]);
   const mask = image.threshold();
-  //console.log(mask);
+  /*//console.log(mask);
   const encoded = encode(mask, { format: 'bmp' });
   //const encoded2 = encodeJpeg(image);
-  //console.log(encoded);
-  /*
-  writeFileSync(
+  writeSync(
     '/Users/maxim/git/zakodium/image-js-typescript/src/save/__tests__/bmpTest.bmp',
-    encoded,
+    mask,
   );
- 
-  writeFileSync(
+
+  writeSync(
     '/Users/maxim/git/zakodium/image-js-typescript/src/save/__tests__/bmpTest.jpeg',
-    encoded2,
-  );
-  */
+    mask,
+  );*/
 });

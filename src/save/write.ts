@@ -4,7 +4,12 @@ import url from 'node:url';
 
 import { Image, Mask } from '..';
 
-import { encode, EncodeOptionsJpeg, EncodeOptionsPng } from './encode';
+import {
+  encode,
+  EncodeOptionsBmp,
+  EncodeOptionsJpeg,
+  EncodeOptionsPng,
+} from './encode';
 
 export interface WriteOptions {
   /**
@@ -15,6 +20,7 @@ export interface WriteOptions {
 
 export type WriteOptionsPng = WriteOptions & EncodeOptionsPng;
 export type WriteOptionsJpeg = WriteOptions & EncodeOptionsJpeg;
+export type WriteOptionsBmp = WriteOptions & EncodeOptionsBmp;
 
 /**
  * Write an image to the disk.
@@ -56,6 +62,21 @@ export async function write(
   image: Image | Mask,
   options: WriteOptionsJpeg,
 ): Promise<void>;
+
+/**
+ * Write an image to the disk as BMP.
+ * When the `jpeg` format is specified, the file's extension doesn't matter.
+ * (TODO check if extension doesn't matter!)
+ * @param path - Path or file URL where the image should be written.
+ * @param image - Image to save.
+ * @param options - Encode options for bmp images.
+ * @returns A promise that resolves when the image is written.
+ */
+export async function write(
+  path: string | URL,
+  image: Mask,
+  options?: WriteOptionsBmp,
+): Promise<void>;
 /**
  * Asynchronously write an image to the disk.
  * @param path - Path where the image should be written.
@@ -65,7 +86,7 @@ export async function write(
 export async function write(
   path: string | URL,
   image: Image | Mask,
-  options?: WriteOptionsPng | WriteOptionsJpeg | WriteOptions,
+  options?: WriteOptionsBmp | WriteOptionsPng | WriteOptionsJpeg | WriteOptions,
 ): Promise<void> {
   if (typeof path !== 'string') {
     path = url.fileURLToPath(path);
@@ -90,15 +111,21 @@ export async function write(
 export function writeSync(
   path: string | URL,
   image: Image | Mask,
-  options?: WriteOptionsPng | WriteOptionsJpeg | WriteOptions,
+  options?: WriteOptionsBmp | WriteOptionsPng | WriteOptionsJpeg | WriteOptions,
 ): void {
   if (typeof path !== 'string') {
     path = url.fileURLToPath(path);
   }
+  let toWrite: Uint8Array;
   if (image instanceof Mask) {
-    image = image.convertColor('GREY');
+    //TODO: find a better way to do comparison.
+    if (nodePath.extname(path).slice(1).toLowerCase() === 'bmp') {
+      toWrite = getDataToWrite(path, image, options);
+    } else {
+      image = image.convertColor('GREY');
+    }
   }
-  const toWrite = getDataToWrite(path, image, options);
+  toWrite = getDataToWrite(path, image, options);
   if (options?.recursive) {
     const dir = nodePath.dirname(path);
     fs.mkdirSync(dir, { recursive: true });
@@ -115,12 +142,17 @@ export function writeSync(
  */
 function getDataToWrite(
   destinationPath: string,
-  image: Image,
-  options?: WriteOptionsPng | WriteOptionsJpeg | WriteOptions,
+  image: Image | Mask,
+  options?: WriteOptionsBmp | WriteOptionsPng | WriteOptionsJpeg | WriteOptions,
+  //@ts-expect-error checking proof of concept
 ): Uint8Array {
   if (!options || !('format' in options)) {
     const extension = nodePath.extname(destinationPath).slice(1).toLowerCase();
-    if (extension === 'png' || extension === 'jpg' || extension === 'jpeg') {
+    if (image instanceof Image) {
+      if (extension === 'png' || extension === 'jpg' || extension === 'jpeg') {
+        return encode(image, { ...options, format: extension });
+      }
+    } else if (extension === 'bmp') {
       return encode(image, { ...options, format: extension });
     } else {
       throw new RangeError(

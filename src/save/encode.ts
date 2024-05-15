@@ -47,7 +47,7 @@ export function encode(
     } else {
       throw new RangeError(`invalid format: ${options.format}`);
     }
-  } else if (image instanceof Mask && options.format === 'bmp') {
+  } else if (options.format === 'bmp') {
     return encodeBmp(image);
   } else {
     throw new RangeError(`invalid format: ${options.format}`);
