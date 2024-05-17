@@ -116,16 +116,7 @@ export function writeSync(
   if (typeof path !== 'string') {
     path = url.fileURLToPath(path);
   }
-  let toWrite: Uint8Array;
-  if (image instanceof Mask) {
-    //TODO: find a better way to do comparison.
-    if (nodePath.extname(path).slice(1).toLowerCase() === 'bmp') {
-      toWrite = getDataToWrite(path, image, options);
-    } else {
-      image = image.convertColor('GREY');
-    }
-  }
-  toWrite = getDataToWrite(path, image, options);
+  const toWrite = getDataToWrite(path, image, options);
   if (options?.recursive) {
     const dir = nodePath.dirname(path);
     fs.mkdirSync(dir, { recursive: true });
@@ -144,15 +135,15 @@ function getDataToWrite(
   destinationPath: string,
   image: Image | Mask,
   options?: WriteOptionsBmp | WriteOptionsPng | WriteOptionsJpeg | WriteOptions,
-  //@ts-expect-error checking proof of concept
 ): Uint8Array {
   if (!options || !('format' in options)) {
     const extension = nodePath.extname(destinationPath).slice(1).toLowerCase();
-    if (image instanceof Image) {
-      if (extension === 'png' || extension === 'jpg' || extension === 'jpeg') {
-        return encode(image, { ...options, format: extension });
+    if (extension === 'png' || extension === 'jpg' || extension === 'jpeg') {
+      if (image instanceof Mask) {
+        image = image.convertColor('GREY');
       }
-    } else if (extension === 'bmp') {
+      return encode(image, { ...options, format: extension });
+    } else if (extension === 'bmp' && image instanceof Mask) {
       return encode(image, { ...options, format: extension });
     } else {
       throw new RangeError(

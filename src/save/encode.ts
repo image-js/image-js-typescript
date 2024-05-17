@@ -53,18 +53,3 @@ export function encode(
     throw new RangeError(`invalid format: ${options.format}`);
   }
 }
-
-/**
- *
- * @param mask
- * @param options
- */
-/*
-export function encode(mask: Mask, options: EncodeOptionsBmp) {
-  if (options.format !== 'bmp') {
-    throw new RangeError(`invalid format: ${options.format}`);
-  } else {
-    return encodeBmp(mask);
-  }
-}
-*/
