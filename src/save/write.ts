@@ -65,8 +65,7 @@ export async function write(
 
 /**
  * Write an image to the disk as BMP.
- * When the `jpeg` format is specified, the file's extension doesn't matter.
- * (TODO check if extension doesn't matter!)
+ * When the `bmp` format is specified, the file's extension doesn't matter.
  * @param path - Path or file URL where the image should be written.
  * @param image - Image to save.
  * @param options - Encode options for bmp images.

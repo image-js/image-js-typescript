@@ -27,8 +27,6 @@ export interface EncodeOptionsBmp {
 }
 const defaultPng: EncodeOptionsPng = { format: 'png' };
 
-//export function encode(image: Mask, options: EncodeOptionsBmp): Uint8Array;
-//export function encode(image: Image, options: EncodeOptionsPng): Uint8Array;
 /**
  * Encodes the image to the specified format
  * @param image - Image to encode.
