@@ -142,7 +142,7 @@ function getDataToWrite(
         image = image.convertColor('GREY');
       }
       return encode(image, { ...options, format: extension });
-    } else if (extension === 'bmp' && image instanceof Mask) {
+    } else if (extension === 'bmp') {
       return encode(image, { ...options, format: extension });
     } else {
       throw new RangeError(

@@ -10,8 +10,8 @@ import { Mask } from '../Mask';
  * @returns The buffer.
  */
 export function encodeBmp(mask: Mask | Image) {
-  const compressedBitMask = new Uint8Array(Math.ceil(mask.size / 8));
   if (mask instanceof Mask) {
+    const compressedBitMask = new Uint8Array(Math.ceil(mask.size / 8));
     let destIndex = 0;
     for (let index = 0; index < mask.size; index++) {
       if (index % 8 === 0 && index !== 0) {
