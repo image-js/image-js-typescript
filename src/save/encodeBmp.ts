@@ -1,6 +1,7 @@
 //@ts-expect-error ts package not ready yet
 import * as bmp from 'fast-bmp';
 
+import { Image } from '../Image';
 import { Mask } from '../Mask';
 
 /**
@@ -8,29 +9,32 @@ import { Mask } from '../Mask';
  * @param mask - The mask instance.
  * @returns The buffer.
  */
-export function encodeBmp(mask: Mask) {
+export function encodeBmp(mask: Mask | Image) {
   const compressedBitMask = new Uint8Array(Math.ceil(mask.size / 8));
+  if (mask instanceof Mask) {
+    let destIndex = 0;
+    for (let index = 0; index < mask.size; index++) {
+      if (index % 8 === 0 && index !== 0) {
+        destIndex++;
+      }
+      if (destIndex !== compressedBitMask.length - 1) {
+        compressedBitMask[destIndex] <<= 1;
+        compressedBitMask[destIndex] |= mask.getBitByIndex(index);
+      } else {
+        compressedBitMask[destIndex] |= mask.getBitByIndex(index);
+        compressedBitMask[destIndex] <<= 7 - (index % 8);
+      }
+    }
 
-  let destIndex = 0;
-  for (let index = 0; index < mask.size; index++) {
-    if (index % 8 === 0 && index !== 0) {
-      destIndex++;
-    }
-    if (destIndex !== compressedBitMask.length - 1) {
-      compressedBitMask[destIndex] <<= 1;
-      compressedBitMask[destIndex] |= mask.getBitByIndex(index);
-    } else {
-      compressedBitMask[destIndex] |= mask.getBitByIndex(index);
-      compressedBitMask[destIndex] <<= 7 - (index % 8);
-    }
+    return bmp.encode({
+      width: mask.width,
+      height: mask.height,
+      components: 1,
+      bitDepth: 1,
+      channels: 1,
+      data: compressedBitMask,
+    });
+  } else {
+    throw new TypeError('Image bmp encoding is not implemented.');
   }
-
-  return bmp.encode({
-    width: mask.width,
-    height: mask.height,
-    components: 1,
-    bitDepth: 1,
-    channels: 1,
-    data: compressedBitMask,
-  });
 }

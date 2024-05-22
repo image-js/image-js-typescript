@@ -37,14 +37,10 @@ export function encode(
   image: Image | Mask,
   options: EncodeOptionsBmp | EncodeOptionsPng | EncodeOptionsJpeg = defaultPng,
 ): Uint8Array {
-  if (image instanceof Image) {
-    if (options.format === 'png') {
-      return encodePng(image, options.encoderOptions);
-    } else if (options.format === 'jpg' || options.format === 'jpeg') {
-      return encodeJpeg(image, options.encoderOptions);
-    } else {
-      throw new RangeError(`invalid format: ${options.format}`);
-    }
+  if (options.format === 'png') {
+    return encodePng(image as Image, options.encoderOptions);
+  } else if (options.format === 'jpg' || options.format === 'jpeg') {
+    return encodeJpeg(image as Image, options.encoderOptions);
   } else if (options.format === 'bmp') {
     return encodeBmp(image);
   } else {
