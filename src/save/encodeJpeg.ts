@@ -21,7 +21,9 @@ export function encodeJpeg(
   options: EncodeJpegOptions = {},
 ): Uint8Array {
   const { quality = 50 } = options;
-
+  if (!(image instanceof Image)) {
+    throw new TypeError('Mask JPG/JPEG encoding is not supported.');
+  }
   if (image.colorModel !== 'RGBA') {
     image = image.convertColor('RGBA');
   }
