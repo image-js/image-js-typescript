@@ -1,6 +1,7 @@
 import { encode, PngEncoderOptions } from 'fast-png';
 
 import { Image } from '../Image';
+import { Mask } from '../Mask';
 
 export type EncodePngOptions = PngEncoderOptions;
 
@@ -11,7 +12,7 @@ export type EncodePngOptions = PngEncoderOptions;
  * @returns The buffer.
  */
 export function encodePng(
-  image: Image,
+  image: Image | Mask,
   options?: EncodePngOptions,
 ): Uint8Array {
   if (!(image instanceof Image)) {

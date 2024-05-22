@@ -38,9 +38,9 @@ export function encode(
   options: EncodeOptionsBmp | EncodeOptionsPng | EncodeOptionsJpeg = defaultPng,
 ): Uint8Array {
   if (options.format === 'png') {
-    return encodePng(image as Image, options.encoderOptions);
+    return encodePng(image, options.encoderOptions);
   } else if (options.format === 'jpg' || options.format === 'jpeg') {
-    return encodeJpeg(image as Image, options.encoderOptions);
+    return encodeJpeg(image, options.encoderOptions);
   } else if (options.format === 'bmp') {
     return encodeBmp(image);
   } else {

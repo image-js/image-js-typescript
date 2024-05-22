@@ -1,6 +1,7 @@
 import { encode } from 'jpeg-js';
 
 import { Image } from '../Image';
+import { Mask } from '../Mask';
 
 export interface EncodeJpegOptions {
   /**
@@ -17,7 +18,7 @@ export interface EncodeJpegOptions {
  * @returns The buffer.
  */
 export function encodeJpeg(
-  image: Image,
+  image: Image | Mask,
   options: EncodeJpegOptions = {},
 ): Uint8Array {
   const { quality = 50 } = options;
