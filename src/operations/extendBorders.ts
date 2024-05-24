@@ -1,6 +1,5 @@
 import { Image } from '../Image';
-
-import { BorderType, getBorderInterpolation } from './interpolateBorder';
+import { BorderType, getBorderInterpolation } from '../utils/interpolateBorder';
 
 interface ExtendBordersOptions {
   horizontal: number;
