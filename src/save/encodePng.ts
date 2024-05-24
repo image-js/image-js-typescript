@@ -17,19 +17,18 @@ export function encodePng(
 ): Uint8Array {
   if (image instanceof Mask) {
     image = image.convertColor('GREY');
-  } else {
-    if (image.bitDepth !== 8 && image.bitDepth !== 16) {
-      image = image.convertBitDepth(8);
-    }
-    if (
-      image.colorModel !== 'RGB' &&
-      image.colorModel !== 'RGBA' &&
-      image.colorModel !== 'GREY' &&
-      image.colorModel !== 'GREYA'
-    ) {
-      image = image.convertColor('GREY');
-    }
+  } else if (
+    image.colorModel !== 'RGB' &&
+    image.colorModel !== 'RGBA' &&
+    image.colorModel !== 'GREY' &&
+    image.colorModel !== 'GREYA'
+  ) {
+    image = image.convertColor('GREY');
   }
+  if (image.bitDepth !== 8 && image.bitDepth !== 16) {
+    image = image.convertBitDepth(8);
+  }
+
   const { bitDepth: depth, ...other } = image.getRawImage();
   return encode(
     {

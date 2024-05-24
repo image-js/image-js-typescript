@@ -22,8 +22,8 @@ export function encodeJpeg(
   options: EncodeJpegOptions = {},
 ): Uint8Array {
   const { quality = 50 } = options;
-  if (!(image instanceof Image)) {
-    image = image.convertColor('GREY');
+  if (image instanceof Mask) {
+    image = image.convertColor('RGB');
   } else {
     if (image.colorModel !== 'RGBA') {
       image = image.convertColor('RGBA');
