@@ -15,13 +15,12 @@ export function encodePng(
   image: Image | Mask,
   options?: EncodePngOptions,
 ): Uint8Array {
-  if (image instanceof Mask) {
-    image = image.convertColor('GREY');
-  } else if (
-    image.colorModel !== 'RGB' &&
-    image.colorModel !== 'RGBA' &&
-    image.colorModel !== 'GREY' &&
-    image.colorModel !== 'GREYA'
+  if (
+    (image.colorModel !== 'RGB' &&
+      image.colorModel !== 'RGBA' &&
+      image.colorModel !== 'GREY' &&
+      image.colorModel !== 'GREYA') ||
+    image instanceof Mask
   ) {
     image = image.convertColor('GREY');
   }
