@@ -23,7 +23,7 @@ export function encodeJpeg(
 ): Uint8Array {
   const { quality = 50 } = options;
   if (image instanceof Mask) {
-    image = image.convertColor('RGB');
+    image = image.convertColor('RGBA');
   } else {
     if (image.colorModel !== 'RGBA') {
       image = image.convertColor('RGBA');
