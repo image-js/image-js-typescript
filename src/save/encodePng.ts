@@ -24,10 +24,6 @@ export function encodePng(
   ) {
     image = image.convertColor('GREY');
   }
-  if (image.bitDepth !== 8 && image.bitDepth !== 16) {
-    image = image.convertBitDepth(8);
-  }
-
   const { bitDepth: depth, ...other } = image.getRawImage();
   return encode(
     {
