@@ -11,7 +11,7 @@ import { getMask, GetMaskOptions } from './getMask';
 import { getEllipse } from './properties/getEllipse';
 import { Border, Ellipse } from './roi.types';
 
-interface PointsOptions {
+export interface PointsOptions {
   /**
    * Kind of coordinates that will be calculated and cached.
    * For each kind the cache is different as well.
