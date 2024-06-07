@@ -11,6 +11,13 @@ import { getMask, GetMaskOptions } from './getMask';
 import { getEllipse } from './properties/getEllipse';
 import { Border, Ellipse } from './roi.types';
 
+interface PointsOptions {
+  /**
+   * Kind of coordinates that will be calculated and cached.
+   * For each kind the cache is different as well.
+   */
+  kind: 'relative' | 'absolute';
+}
 /**
  * Properties of borders of ROI.
  *
@@ -23,7 +30,8 @@ interface Computed {
   externalLengths: number[];
   borderLengths: number[];
   box: number;
-  points: Point[];
+  relativePoints: Point[];
+  absolutePoints: Point[];
   holesInfo: { number: number; surface: number };
   boxIDs: number[];
   externalBorders: Border[];
@@ -292,25 +300,17 @@ export class Roi {
   }
   /**
    * Computes current ROI points.
-   * @returns Array of points. It's an array of tuples, each tuple being the x and y coordinates of the ROI point.
+   * @param options - Points options.
+   * @returns Array of points with relative.
    */
-  get points() {
-    return this.#getComputed('points', () => {
-      const points = [];
-      for (let row = 0; row < this.height; row++) {
-        for (let column = 0; column < this.width; column++) {
-          const target =
-            (row + this.origin.row) * this.map.width +
-            column +
-            this.origin.column;
-          if (this.map.data[target] === this.id) {
-            points.push({ column, row });
-          }
-        }
-      }
+  points(options: PointsOptions) {
+    return this.#getComputed(`${options.kind}Points`, () => {
+      const absolute = options.kind === 'absolute';
+      const points = Array.from(this.#pointsGen(absolute));
       return points;
     });
   }
+
   get boxIDs() {
     return this.#getComputed('boxIDs', () => {
       const surroundingIDs = new Set<number>(); // Allows to get a unique list without indexOf.
@@ -630,5 +630,27 @@ export class Roi {
   #computeIndex(y: number, x: number): number {
     const roiMap = this.map;
     return (y + this.origin.row) * roiMap.width + x + this.origin.column;
+  }
+
+  // Generator function to find ROIs points.
+  *#pointsGen(absolute: boolean) {
+    for (let row = 0; row < this.height; row++) {
+      for (let column = 0; column < this.width; column++) {
+        const target =
+          (row + this.origin.row) * this.map.width +
+          column +
+          this.origin.column;
+        if (this.map.data[target] === this.id) {
+          if (absolute) {
+            yield {
+              column: this.origin.column + column,
+              row: this.origin.row + row,
+            };
+          } else {
+            yield { column, row };
+          }
+        }
+      }
+    }
   }
 }
