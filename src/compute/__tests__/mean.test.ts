@@ -38,7 +38,7 @@ test('2x4 GREY image', () => {
 
   expect(result).toStrictEqual([1.5]);
 });
-test('compute mean from points array', () => {
+test('mean from points', () => {
   const image = testUtils.createGreyImage([
     [1, 2, 3, 0],
     [1, 2, 3, 0],
@@ -46,18 +46,13 @@ test('compute mean from points array', () => {
   const points = [
     { column: 0, row: 0 },
     { column: 1, row: 0 },
-    { column: 2, row: 0 },
-    { column: 3, row: 0 },
-    { column: 0, row: 1 },
-    { column: 1, row: 1 },
     { column: 2, row: 1 },
-    { column: 3, row: 1 },
   ];
   const result = image.mean({ points });
 
-  expect(result).toStrictEqual([1.5]);
+  expect(result).toStrictEqual([2]);
 });
-test('compute mean from points array in rgba image', () => {
+test('mean from points in rgba image', () => {
   const image = testUtils.createRgbaImage([
     [1, 2, 3, 0],
     [1, 2, 3, 0],

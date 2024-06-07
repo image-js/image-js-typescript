@@ -16,3 +16,21 @@ test('GREY image', () => {
 
   expect(result).toStrictEqual([525]);
 });
+
+test('variance from points', () => {
+  const image = testUtils.createGreyImage([
+    [10, 20, 30, 40],
+    [50, 60, 70, 80],
+  ]);
+
+  const points = [
+    { column: 0, row: 0 },
+    { column: 1, row: 0 },
+    { column: 2, row: 0 },
+    { column: 3, row: 0 },
+  ];
+
+  const result = image.variance({ points });
+
+  expect(result).toStrictEqual([125]);
+});
