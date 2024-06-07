@@ -306,7 +306,7 @@ export class Roi {
   points(options: PointsOptions) {
     return this.#getComputed(`${options.kind}Points`, () => {
       const absolute = options.kind === 'absolute';
-      const points = Array.from(this.#pointsGen(absolute));
+      const points = Array.from(this.#points(absolute));
       return points;
     });
   }
@@ -633,7 +633,7 @@ export class Roi {
   }
 
   // Generator function to find ROIs points.
-  *#pointsGen(absolute: boolean) {
+  *#points(absolute: boolean) {
     for (let row = 0; row < this.height; row++) {
       for (let column = 0; column < this.width; column++) {
         const target =
