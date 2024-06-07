@@ -38,3 +38,33 @@ test('2x4 GREY image', () => {
 
   expect(result).toStrictEqual([2]);
 });
+
+test('median from points', () => {
+  const image = testUtils.createGreyImage([
+    [1, 2, 2, 2],
+    [1, 2, 3, 2],
+  ]);
+  const points = [
+    { column: 0, row: 0 },
+    { column: 2, row: 1 },
+    { column: 1, row: 0 },
+  ];
+
+  const result = image.median({ points });
+
+  expect(result).toStrictEqual([2]);
+});
+test('median from points on rgba image', () => {
+  const image = testUtils.createRgbaImage([
+    [1, 2, 2, 2],
+    [1, 2, 3, 2],
+  ]);
+  const points = [
+    { column: 0, row: 0 },
+    { column: 0, row: 1 },
+  ];
+
+  const result = image.median({ points });
+
+  expect(result).toStrictEqual([1, 2, 2, 2]);
+});
