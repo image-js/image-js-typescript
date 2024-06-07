@@ -23,7 +23,7 @@ interface Computed {
   externalLengths: number[];
   borderLengths: number[];
   box: number;
-  points: number[][];
+  points: Point[];
   holesInfo: { number: number; surface: number };
   boxIDs: number[];
   externalBorders: Border[];
@@ -304,7 +304,7 @@ export class Roi {
             column +
             this.origin.column;
           if (this.map.data[target] === this.id) {
-            points.push([column, row]);
+            points.push({ column, row });
           }
         }
       }
