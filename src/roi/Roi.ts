@@ -301,7 +301,7 @@ export class Roi {
   /**
    * Computes current ROI points.
    * @param options - Points options.
-   * @returns Array of points with relative.
+   * @returns Array of points with relative or absolute ROI coordinates.
    */
   points(options: PointsOptions) {
     return this.#getComputed(`${options.kind}Points`, () => {
