@@ -17,7 +17,7 @@ export interface MeanOptions{
  */
 export function mean(image: Image,options?:MeanOptions): number[] {
   const pixel = new Array<number>(image.channels).fill(0);
-  if(options !== undefined){
+  if(options){
     for(const point of options.points){
       for(let channel = 0;channel < image.channels;channel++){
         pixel[channel] += image.getValueByPoint(point,channel);
