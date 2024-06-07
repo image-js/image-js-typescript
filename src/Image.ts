@@ -4,8 +4,8 @@ import { Mask } from './Mask';
 import { add, subtract, SubtractImageOptions } from './compare';
 import { divide, DivideOptions } from './compare/divide';
 import { multiply, MultiplyOptions } from './compare/multiply';
-import { median } from './compute';
-import { variance } from './compute/variance';
+import { MeanOptions , median } from './compute';
+import { VarianceOptions , variance } from './compute/variance';
 import { correctColor } from './correctColor';
 import {
   drawCircleOnImage,
@@ -707,10 +707,11 @@ export class Image {
 
   /**
    * Compute the mean pixel of an image.
+   * @param options - Mean options.
    * @returns The mean pixel.
    */
-  public mean(): number[] {
-    return mean(this);
+  public mean(options?:MeanOptions): number[] {
+    return mean(this,options);
   }
 
   /**
@@ -723,10 +724,11 @@ export class Image {
 
   /**
    * Compute the variance of each channel of an image.
+   * @param options - Variance options.
    * @returns The variance of the channels of the image.
    */
-  public variance(): number[] {
-    return variance(this);
+  public variance(options?:VarianceOptions): number[] {
+    return variance(this,options);
   }
 
   // DRAW

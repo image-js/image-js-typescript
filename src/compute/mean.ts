@@ -1,7 +1,7 @@
 import { Image } from '../Image';
 import { Point } from '../geometry';
 
-interface MeanOptions{
+export interface MeanOptions{
   /**
    * Points to calculate mean from.
    */
