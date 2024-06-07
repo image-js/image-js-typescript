@@ -4,8 +4,13 @@ import { Mask } from './Mask';
 import { add, subtract, SubtractImageOptions } from './compare';
 import { divide, DivideOptions } from './compare/divide';
 import { multiply, MultiplyOptions } from './compare/multiply';
-import { MedianOptions, MeanOptions, median } from './compute';
-import { VarianceOptions, variance } from './compute/variance';
+import {
+  MedianOptions,
+  MeanOptions,
+  median,
+  VarianceOptions,
+  variance,
+} from './compute';
 import { correctColor } from './correctColor';
 import {
   drawCircleOnImage,
