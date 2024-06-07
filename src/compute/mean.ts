@@ -1,7 +1,7 @@
 import { Image } from '../Image';
 import { Point } from '../geometry';
 
-export interface MeanOptions{
+export interface MeanOptions {
   /**
    * Points to calculate mean from.
    */
@@ -15,23 +15,23 @@ export interface MeanOptions{
  * @param options - Mean options.
  * @returns The mean pixel.
  */
-export function mean(image: Image,options?:MeanOptions): number[] {
+export function mean(image: Image, options?: MeanOptions): number[] {
   const pixel = new Array<number>(image.channels).fill(0);
-  if(options){
-    for(const point of options.points){
-      for(let channel = 0;channel < image.channels;channel++){
-        pixel[channel] += image.getValueByPoint(point,channel);
-      }
-    }
-  }
-  else {
-  for (let row = 0; row < image.height; row++) {
-    for (let column = 0; column < image.width; column++) {
+  const nbValues = options ? options.points.length : image.size;
+  if (options) {
+    for (const point of options.points) {
       for (let channel = 0; channel < image.channels; channel++) {
-        pixel[channel] += image.getValue(column, row, channel);
+        pixel[channel] += image.getValueByPoint(point, channel);
+      }
+    }
+  } else {
+    for (let row = 0; row < image.height; row++) {
+      for (let column = 0; column < image.width; column++) {
+        for (let channel = 0; channel < image.channels; channel++) {
+          pixel[channel] += image.getValue(column, row, channel);
+        }
       }
     }
   }
-  }
-  return pixel.map((channel) => channel / image.size);
+  return pixel.map((channel) => channel / nbValues);
 }
