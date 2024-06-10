@@ -17,10 +17,10 @@ export function getEllipse(roi: Roi): Ellipse {
   const yCenter = roi.centroid.row;
 
   const xCentered = roi
-    .points({ kind: 'relative' })
+    .points('relative')
     .map((point: Point) => point.column - xCenter);
   const yCentered = roi
-    .points({ kind: 'relative' })
+    .points('relative')
     .map((point: Point) => point.row - yCenter);
 
   const centeredXVariance = xVariance(xCentered, { unbiased: false });

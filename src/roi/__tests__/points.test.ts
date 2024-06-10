@@ -9,7 +9,7 @@ test('points 1st test', () => {
   ]);
   const roiMapManager = fromMask(mask);
   const rois = roiMapManager.getRois();
-  expect(rois[0].points({ kind: 'relative' })).toStrictEqual([
+  expect(rois[0].points('relative')).toStrictEqual([
     { column: 0, row: 0 },
     { column: 1, row: 0 },
     { column: 0, row: 1 },
@@ -31,7 +31,7 @@ test('points 2nd test', () => {
   const roiMapManager = fromMask(mask);
   const rois = roiMapManager.getRois();
 
-  expect(rois[0].points({ kind: 'relative' })).toStrictEqual([
+  expect(rois[0].points('relative')).toStrictEqual([
     { column: 2, row: 0 },
     { column: 1, row: 1 },
     { column: 2, row: 1 },
@@ -54,7 +54,7 @@ test('points 3rd test with absolute values', () => {
   ]);
   const roiMapManager = fromMask(mask);
   const rois = roiMapManager.getRois();
-  expect(rois[1].points({ kind: 'absolute' })).toStrictEqual([
+  expect(rois[1].points('absolute')).toStrictEqual([
     { column: 3, row: 0 },
     { column: 4, row: 0 },
     { column: 5, row: 0 },
