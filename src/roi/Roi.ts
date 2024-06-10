@@ -11,18 +11,6 @@ import { getMask, GetMaskOptions } from './getMask';
 import { getEllipse } from './properties/getEllipse';
 import { Border, Ellipse } from './roi.types';
 
-export interface PointsOptions {
-  /**
-   * Kind of coordinates that will be calculated and cached.
-   * For each kind the cache is different as well.
-   */
-  kind: 'relative' | 'absolute';
-}
-/**
- * Properties of borders of ROI.
- *
- */
-
 interface Computed {
   perimeter: number;
   borders: Border[]; // external and internal ids which are not equal to the current roi ID
@@ -300,12 +288,12 @@ export class Roi {
   }
   /**
    * Computes current ROI points.
-   * @param options - Points options.
-   * @returns Array of points with relative or absolute ROI coordinates.
+   * @param kind - kind of coordinates.
+   * @returns Array of points with relative (coordinates are calculated based on ROI's point of origin) or absolute (coordinates are calculated based on the origin point of  an image/ROI map) ROI coordinates.
    */
-  points(options: PointsOptions) {
-    return this.#getComputed(`${options.kind}Points`, () => {
-      const absolute = options.kind === 'absolute';
+  points(kind: 'relative' | 'absolute') {
+    return this.#getComputed(`${kind}Points`, () => {
+      const absolute = kind === 'absolute';
       const points = Array.from(this.#points(absolute));
       return points;
     });
