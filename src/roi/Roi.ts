@@ -287,7 +287,7 @@ export class Roi {
     );
   }
   /**
-   * Computes current ROI points based on ROIs point of origin.
+   * Computes ROI points relative to ROIs point of `origin`.
    * @returns Array of points with relative ROI coordinates.
    */
   get relativePoints() {
@@ -297,7 +297,7 @@ export class Roi {
     });
   }
   /**
-   * Computes current ROI points based on ROIs absolute position on ROI map.
+   * Computes ROI points relative to Image's/Mask's point of `origin`.
    * @returns Array of points with absolute ROI coordinates.
    */
   get absolutePoints() {
@@ -629,9 +629,9 @@ export class Roi {
   }
 
   /**
-   * Generator function to calculate points coordinates.
-   * @param absolute - checks whether coordinates should be based on ROIs origin point(relative), or based on ROIs absolute position on the ROI map(absolute).
-   * @yields Point.
+   * Generator function to calculate point's coordinates.
+   * @param absolute - controls whether coordinates should be relative to ROI's point of `origin` (relative), or relative to ROI's position on the Image/Mask (absolute).
+   * @yields Coordinates of each point of ROI.
    */
   *points(absolute: boolean) {
     for (let row = 0; row < this.height; row++) {
