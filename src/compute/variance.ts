@@ -16,7 +16,7 @@ export interface VarianceOptions {
  * @returns The variance of the channels of the image.
  */
 export function variance(image: Image, options?: VarianceOptions): number[] {
-  const mean = options ? image.mean({ points: options.points }) : image.mean();
+  const mean = image.mean(options);
   const sum = new Array<number>(image.channels).fill(0);
   if (options) {
     for (const point of options.points) {
