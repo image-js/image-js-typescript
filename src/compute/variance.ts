@@ -22,7 +22,8 @@ export function variance(image: Image, options?: VarianceOptions): number[] {
     for (const point of options.points) {
       for (let channel = 0; channel < image.channels; channel++) {
         sum[channel] +=
-          (image.getValueByPoint(point, channel) - mean[channel]) ** 2;
+          (image.getValue(point.column, point.row, channel) - mean[channel]) **
+          2;
       }
     }
   } else {

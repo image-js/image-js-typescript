@@ -32,7 +32,7 @@ export function median(image: Image, options?: MedianOptions): number[] {
             `Invalid coordinate: {column: ${point.column}, row: ${point.row}}.`,
           );
         }
-        channel.push(image.getValueByPoint(point, i));
+        channel.push(image.getValue(point.column, point.row, i));
       }
       pixel[i] = quickMedian(channel);
     }

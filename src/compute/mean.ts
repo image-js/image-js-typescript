@@ -28,7 +28,7 @@ export function mean(image: Image, options?: MeanOptions): number[] {
             `Invalid coordinate: {column: ${point.column}, row: ${point.row}}.`,
           );
         }
-        pixelSum[channel] += image.getValueByIndex(index, channel);
+        pixelSum[channel] += image.getValue(point.column, point.row, channel);
       }
     }
   } else {
