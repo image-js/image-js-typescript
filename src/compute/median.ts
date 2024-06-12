@@ -19,6 +19,7 @@ export interface MedianOptions {
 export function median(image: Image, options?: MedianOptions): number[] {
   const pixel = new Array<number>(image.channels).fill(0);
   if (options) {
+    //console.log(options.points.length);
     if (options.points.length === 0) {
       throw new RangeError('Array of coordinates is empty.');
     }
@@ -26,9 +27,9 @@ export function median(image: Image, options?: MedianOptions): number[] {
       const channel: number[] = [];
       for (const point of options.points) {
         const index = point.row * image.width + point.column;
-        if (index + i < 0 || index + i >= image.size) {
+        if (index < 0 || index >= image.size) {
           throw new RangeError(
-            `Invalid coordinate: {column:${point.column}, row:${point.row}}.`,
+            `Invalid coordinate: {column: ${point.column}, row: ${point.row}}.`,
           );
         }
         channel.push(image.getValueByPoint(point, i));
