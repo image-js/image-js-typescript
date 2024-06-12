@@ -1,3 +1,4 @@
+import { Point } from '../../geometry';
 import { median } from '../median';
 
 test('5x1 RGB image', () => {
@@ -54,6 +55,7 @@ test('median from points', () => {
 
   expect(result).toStrictEqual([2]);
 });
+
 test('median from points on rgba image', () => {
   const image = testUtils.createRgbaImage([
     [1, 2, 2, 2],
@@ -67,4 +69,28 @@ test('median from points on rgba image', () => {
   const result = image.median({ points });
 
   expect(result).toStrictEqual([1, 2, 2, 2]);
+});
+
+test('must throw if array is empty', () => {
+  const image = testUtils.createRgbaImage([
+    [1, 2, 2, 2],
+    [1, 2, 3, 2],
+  ]);
+  const points: Point[] = [];
+  expect(() => {
+    const result = image.median({ points });
+    return result;
+  }).toThrow('Array of coordinates is empty.');
+});
+
+test("must throw if point's coordinates are invalid", () => {
+  const image = testUtils.createRgbaImage([
+    [1, 2, 2, 2],
+    [1, 2, 3, 2],
+  ]);
+  const points: Point[] = [{ column: 0, row: 2 }];
+  expect(() => {
+    const result = image.median({ points });
+    return result;
+  }).toThrow('Invalid coordinate: {column: 0, row: 2}');
 });
