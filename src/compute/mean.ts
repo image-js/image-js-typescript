@@ -16,22 +16,22 @@ export interface MeanOptions {
  * @returns The mean pixel.
  */
 export function mean(image: Image, options?: MeanOptions): number[] {
-  const pixel = new Array<number>(image.channels).fill(0);
+  const pixelSum = new Array<number>(image.channels).fill(0);
   const nbValues = options ? options.points.length : image.size;
   if (options) {
     for (const point of options.points) {
       for (let channel = 0; channel < image.channels; channel++) {
-        pixel[channel] += image.getValueByPoint(point, channel);
+        pixelSum[channel] += image.getValueByPoint(point, channel);
       }
     }
   } else {
     for (let row = 0; row < image.height; row++) {
       for (let column = 0; column < image.width; column++) {
         for (let channel = 0; channel < image.channels; channel++) {
-          pixel[channel] += image.getValue(column, row, channel);
+          pixelSum[channel] += image.getValue(column, row, channel);
         }
       }
     }
   }
-  return pixel.map((channel) => channel / nbValues);
+  return pixelSum.map((channelSum) => channelSum / nbValues);
 }
