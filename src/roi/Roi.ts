@@ -287,14 +287,22 @@ export class Roi {
     );
   }
   /**
-   * Computes current ROI points.
-   * @param kind - kind of coordinates.
-   * @returns Array of points with relative (coordinates are calculated based on ROI's point of origin) or absolute (coordinates are calculated based on the origin point of  an image/ROI map) ROI coordinates.
+   * Computes current ROI points based on ROIs point of origin.
+   * @returns Array of points with relative ROI coordinates.
    */
-  points(kind: 'relative' | 'absolute') {
-    return this.#getComputed(`${kind}Points`, () => {
-      const absolute = kind === 'absolute';
-      const points = Array.from(this.#points(absolute));
+  get relativePoints() {
+    return this.#getComputed(`relativePoints`, () => {
+      const points = Array.from(this.points(false));
+      return points;
+    });
+  }
+  /**
+   * Computes current ROI points based on ROIs absolute position on ROI map.
+   * @returns Array of points with absolute ROI coordinates.
+   */
+  get absolutePoints() {
+    return this.#getComputed(`absolutePoints`, () => {
+      const points = Array.from(this.points(true));
       return points;
     });
   }
@@ -620,8 +628,12 @@ export class Roi {
     return (y + this.origin.row) * roiMap.width + x + this.origin.column;
   }
 
-  // Generator function to find ROIs points.
-  *#points(absolute: boolean) {
+  /**
+   * Generator function to calculate points coordinates.
+   * @param absolute - checks whether coordinates should be based on ROIs origin point(relative), or based on ROIs absolute position on the ROI map(absolute).
+   * @yields Point.
+   */
+  *points(absolute: boolean) {
     for (let row = 0; row < this.height; row++) {
       for (let column = 0; column < this.width; column++) {
         const target =
