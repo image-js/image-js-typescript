@@ -1,3 +1,4 @@
+import { Point } from '../../geometry';
 import { mean } from '../mean';
 
 test('5x1 RGB image', () => {
@@ -64,4 +65,28 @@ test('mean from points in rgba image', () => {
   const result = image.mean({ points });
 
   expect(result).toStrictEqual([1, 2, 3, 0]);
+});
+test('must throw if array is empty', () => {
+  const image = testUtils.createRgbaImage([
+    [1, 2, 3, 0],
+    [1, 2, 3, 0],
+  ]);
+  const points: Point[] = [];
+
+  expect(() => {
+    const result = image.mean({ points });
+    return result;
+  }).toThrow('Array of coordinates is empty.');
+});
+test("must throw if point's coordinates are invalid.", () => {
+  const image = testUtils.createRgbaImage([
+    [1, 2, 3, 0],
+    [1, 2, 3, 0],
+  ]);
+  const points: Point[] = [{ column: 0, row: 2 }];
+
+  expect(() => {
+    const result = image.mean({ points });
+    return result;
+  }).toThrow('Invalid coordinate: {column: 0, row: 2}');
 });
