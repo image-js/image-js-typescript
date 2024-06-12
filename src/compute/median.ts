@@ -20,11 +20,17 @@ export function median(image: Image, options?: MedianOptions): number[] {
   const pixel = new Array<number>(image.channels).fill(0);
   if (options) {
     if (options.points.length === 0) {
-      throw new RangeError('Invalid number of points.');
+      throw new RangeError('Array of coordinates is empty.');
     }
     for (let i = 0; i < image.channels; i++) {
       const channel: number[] = [];
       for (const point of options.points) {
+        const index = point.row * image.width + point.column;
+        if (index + i < 0 || index + i >= image.size) {
+          throw new RangeError(
+            `Invalid coordinate: {column:${point.column}, row:${point.row}}.`,
+          );
+        }
         channel.push(image.getValueByPoint(point, i));
       }
       pixel[i] = quickMedian(channel);

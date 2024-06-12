@@ -18,11 +18,17 @@ export interface MeanOptions {
 export function mean(image: Image, options?: MeanOptions): number[] {
   const pixelSum = new Array<number>(image.channels).fill(0);
   const nbValues = options ? options.points.length : image.size;
-  if (nbValues === 0) throw new RangeError('Invalid number of points.');
+  if (nbValues === 0) throw new RangeError('Array of coordinates is empty.');
   if (options) {
     for (const point of options.points) {
+      const index = point.row * image.width + point.column;
       for (let channel = 0; channel < image.channels; channel++) {
-        pixelSum[channel] += image.getValueByPoint(point, channel);
+        if (index + channel >= image.size || index + channel < 0) {
+          throw new RangeError(
+            `Invalid coordinate: {column:${point.column}, row:${point.row}}.`,
+          );
+        }
+        pixelSum[channel] += image.getValueByIndex(index, channel);
       }
     }
   } else {
