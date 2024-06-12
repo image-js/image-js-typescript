@@ -18,6 +18,7 @@ export interface MeanOptions {
 export function mean(image: Image, options?: MeanOptions): number[] {
   const pixelSum = new Array<number>(image.channels).fill(0);
   const nbValues = options ? options.points.length : image.size;
+  if (nbValues === 0) throw new RangeError('Invalid number of points.');
   if (options) {
     for (const point of options.points) {
       for (let channel = 0; channel < image.channels; channel++) {
