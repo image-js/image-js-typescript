@@ -23,9 +23,9 @@ export function mean(image: Image, options?: MeanOptions): number[] {
     for (const point of options.points) {
       const index = point.row * image.width + point.column;
       for (let channel = 0; channel < image.channels; channel++) {
-        if (index + channel >= image.size || index + channel < 0) {
+        if (index >= image.size || index < 0) {
           throw new RangeError(
-            `Invalid coordinate: {column:${point.column}, row:${point.row}}.`,
+            `Invalid coordinate: {column: ${point.column}, row: ${point.row}}.`,
           );
         }
         pixelSum[channel] += image.getValueByIndex(index, channel);
