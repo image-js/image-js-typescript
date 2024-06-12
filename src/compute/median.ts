@@ -19,6 +19,9 @@ export interface MedianOptions {
 export function median(image: Image, options?: MedianOptions): number[] {
   const pixel = new Array<number>(image.channels).fill(0);
   if (options) {
+    if (options.points.length === 0) {
+      throw new RangeError('Invalid number of points.');
+    }
     for (let i = 0; i < image.channels; i++) {
       const channel: number[] = [];
       for (const point of options.points) {
