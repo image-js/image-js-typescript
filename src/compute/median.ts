@@ -19,20 +19,23 @@ export interface MedianOptions {
 export function median(image: Image, options?: MedianOptions): number[] {
   const pixel = new Array<number>(image.channels).fill(0);
   if (options) {
-    //console.log(options.points.length);
     if (options.points.length === 0) {
       throw new RangeError('Array of coordinates is empty.');
     }
     for (let i = 0; i < image.channels; i++) {
       const channel: number[] = [];
       for (const point of options.points) {
-        const index = point.row * image.width + point.column;
-        if (index < 0 || index >= image.size) {
+        if (
+          point.column < 0 ||
+          point.column >= image.width ||
+          point.row < 0 ||
+          point.row >= image.height
+        ) {
           throw new RangeError(
             `Invalid coordinate: {column: ${point.column}, row: ${point.row}}.`,
           );
         }
-        channel.push(image.getValue(point.column, point.row, i));
+        channel.push(image.getValueByPoint(point, i));
       }
       pixel[i] = quickMedian(channel);
     }

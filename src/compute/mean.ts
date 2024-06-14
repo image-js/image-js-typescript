@@ -21,14 +21,18 @@ export function mean(image: Image, options?: MeanOptions): number[] {
   if (nbValues === 0) throw new RangeError('Array of coordinates is empty.');
   if (options) {
     for (const point of options.points) {
-      const index = point.row * image.width + point.column;
       for (let channel = 0; channel < image.channels; channel++) {
-        if (index >= image.size || index < 0) {
+        if (
+          point.column < 0 ||
+          point.column >= image.width ||
+          point.row < 0 ||
+          point.row >= image.height
+        ) {
           throw new RangeError(
             `Invalid coordinate: {column: ${point.column}, row: ${point.row}}.`,
           );
         }
-        pixelSum[channel] += image.getValue(point.column, point.row, channel);
+        pixelSum[channel] += image.getValueByPoint(point, channel);
       }
     }
   } else {
