@@ -20,30 +20,53 @@ test('points 1st test', () => {
     { column: 1, row: 3 },
   ]);
 });
-
-test('points 2nd test', () => {
+test('points 2nt test for absolute coordinates', () => {
   const mask = testUtils.createMask([
-    [0, 0, 1, 0],
     [0, 1, 1, 0],
-    [1, 1, 1, 1],
-    [0, 0, 1, 0],
+    [0, 1, 1, 0],
+    [0, 1, 1, 0],
+    [0, 1, 1, 0],
   ]);
   const roiMapManager = fromMask(mask);
   const rois = roiMapManager.getRois();
-
-  expect(rois[0].relativePoints).toStrictEqual([
+  expect(rois[0].absolutePoints).toStrictEqual([
+    { column: 1, row: 0 },
     { column: 2, row: 0 },
     { column: 1, row: 1 },
     { column: 2, row: 1 },
-    { column: 0, row: 2 },
     { column: 1, row: 2 },
     { column: 2, row: 2 },
-    { column: 3, row: 2 },
+    { column: 1, row: 3 },
     { column: 2, row: 3 },
   ]);
 });
 
-test('points 3rd test with absolute values', () => {
+test('points 3rd test for relative coordinates', () => {
+  const mask = testUtils.createMask([
+    [0, 0, 0, 1, 1, 1],
+    [0, 1, 0, 1, 0, 1],
+    [0, 1, 0, 1, 0, 1],
+    [1, 1, 0, 1, 1, 1],
+    [0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0],
+  ]);
+  const roiMapManager = fromMask(mask);
+  const rois = roiMapManager.getRois();
+  expect(rois[1].relativePoints).toStrictEqual([
+    { column: 0, row: 0 },
+    { column: 1, row: 0 },
+    { column: 2, row: 0 },
+    { column: 0, row: 1 },
+    { column: 2, row: 1 },
+    { column: 0, row: 2 },
+    { column: 2, row: 2 },
+    { column: 0, row: 3 },
+    { column: 1, row: 3 },
+    { column: 2, row: 3 },
+  ]);
+});
+
+test('points 4th test for absolute coordinates', () => {
   const mask = testUtils.createMask([
     [0, 0, 0, 1, 1, 1],
     [0, 1, 0, 1, 0, 1],
