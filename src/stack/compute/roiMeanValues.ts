@@ -2,9 +2,9 @@ import { Stack } from '../../Stack';
 import { fromMask } from '../../roi';
 
 /**
- * Computes average grayscale value of each region of interest for each image.
+ * Find a `maxImage` of the stack, then get a map object where keys are `roi.id`s and values are arrays of average values of each ROI in each image.
  * @param stack - Stack of images.
- * @returns map object with average image values for each ROI.
+ * @returns map object with `roi.id`s and their average values in the stack.
  */
 export function roiMeanValues(stack: Stack) {
   if (stack.colorModel !== 'GREY') {
