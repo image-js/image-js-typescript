@@ -5,3 +5,4 @@ export * from './compute/medianImage';
 export * from './load/decodeStack';
 export * from './compute/minImage';
 export * from './compute/sum';
+export * from './compute/roiMeanValues';
