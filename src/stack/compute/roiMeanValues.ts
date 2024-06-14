@@ -2,9 +2,9 @@ import { Stack } from '../../Stack';
 import { fromMask } from '../../roi';
 
 /**
- * Computes average grayscale value of each region of interest throughout the stack.
+ * Computes average grayscale value of each region of interest for each image.
  * @param stack - Stack of images.
- * @returns map with average image values of each ROI.
+ * @returns map object with average image values for each ROI.
  */
 export function roiMeanValues(stack: Stack) {
   if (stack.colorModel !== 'GREY') {
