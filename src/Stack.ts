@@ -7,6 +7,7 @@ import { maxImage } from './stack/compute/maxImage';
 import { meanImage } from './stack/compute/meanImage';
 import { medianImage } from './stack/compute/medianImage';
 import { minImage } from './stack/compute/minImage';
+import { roiMeanValues } from './stack/compute/roiMeanValues';
 import { sum } from './stack/compute/sum';
 import {
   checkImagesValid,
@@ -166,6 +167,13 @@ export class Stack {
    */
   public sum(): Image {
     return sum(this);
+  }
+  /**
+   * Computes average grayscale value of each region of interest for each image.
+   * @returns map object with average image values for each ROI.
+   */
+  public roiMeanValues() {
+    return roiMeanValues(this);
   }
 
   /**
