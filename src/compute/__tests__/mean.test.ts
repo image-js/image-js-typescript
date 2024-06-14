@@ -78,7 +78,7 @@ test('must throw if array is empty', () => {
     return result;
   }).toThrow('Array of coordinates is empty.');
 });
-test("must throw if point's coordinates are invalid.", () => {
+test("must throw if point's row is invalid.", () => {
   const image = testUtils.createRgbaImage([
     [1, 2, 3, 0],
     [1, 2, 3, 0],
@@ -89,4 +89,28 @@ test("must throw if point's coordinates are invalid.", () => {
     const result = image.mean({ points });
     return result;
   }).toThrow('Invalid coordinate: {column: 0, row: 2}');
+});
+test("must throw if point's column is invalid.", () => {
+  const image = testUtils.createRgbaImage([
+    [1, 2, 3, 0],
+    [1, 2, 3, 0],
+  ]);
+  const points: Point[] = [{ column: 4, row: 1 }];
+
+  expect(() => {
+    const result = image.mean({ points });
+    return result;
+  }).toThrow('Invalid coordinate: {column: 4, row: 1}');
+});
+test('must throw if point has negative values.', () => {
+  const image = testUtils.createRgbaImage([
+    [1, 2, 3, 0],
+    [1, 2, 3, 0],
+  ]);
+  const points: Point[] = [{ column: -14, row: 0 }];
+
+  expect(() => {
+    const result = image.mean({ points });
+    return result;
+  }).toThrow('Invalid coordinate: {column: -14, row: 0}');
 });

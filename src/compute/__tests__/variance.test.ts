@@ -57,3 +57,26 @@ test("must throw if point's coordinates are invalid", () => {
     return result;
   }).toThrow('Invalid coordinate: {column: 0, row: 2}');
 });
+test("must throw if point's coordinates are invalid", () => {
+  const image = testUtils.createGreyImage([
+    [1, 2, 2, 2],
+    [1, 2, 3, 2],
+  ]);
+  const points: Point[] = [{ column: 4, row: 1 }];
+  expect(() => {
+    const result = image.median({ points });
+    return result;
+  }).toThrow('Invalid coordinate: {column: 4, row: 1}');
+});
+test('must throw if point has negative values.', () => {
+  const image = testUtils.createRgbaImage([
+    [1, 2, 3, 0],
+    [1, 2, 3, 0],
+  ]);
+  const points: Point[] = [{ column: -14, row: 0 }];
+
+  expect(() => {
+    const result = image.mean({ points });
+    return result;
+  }).toThrow('Invalid coordinate: {column: -14, row: 0}');
+});
