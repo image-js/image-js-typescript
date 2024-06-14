@@ -1,7 +1,7 @@
 import { Image } from '../../../Image';
 import { Stack } from '../../../Stack';
 
-test('', () => {
+test('simple test', () => {
   const image1 = testUtils.createGreyImage([[1, 1, 10, 1, 1]]);
   const image2 = testUtils.createGreyImage([[1, 1, 10, 1, 1]]);
   const image3 = testUtils.createGreyImage([[1, 1, 10, 1, 1]]);
