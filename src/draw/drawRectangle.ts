@@ -3,6 +3,7 @@ import { Mask } from '../Mask';
 import { Point } from '../utils/geometry/points';
 import { getDefaultColor } from '../utils/getDefaultColor';
 import { getOutputImage, maskToOutputMask } from '../utils/getOutputImage';
+import { setBlendedVisiblePixel } from '../utils/setBlendedVisiblePixel';
 import checkProcessable from '../utils/validators/checkProcessable';
 
 export interface DrawRectangleOptions<OutType> {
@@ -82,16 +83,24 @@ export function drawRectangle(
       currentColumn < column + width;
       currentColumn++
     ) {
-      newImage.setVisiblePixel(currentColumn, row, strokeColor);
-      newImage.setVisiblePixel(currentColumn, row + height - 1, strokeColor);
+      setBlendedVisiblePixel(newImage, currentColumn, row, {
+        color: strokeColor,
+      });
+      setBlendedVisiblePixel(newImage, currentColumn, row + height - 1, {
+        color: strokeColor,
+      });
     }
     for (
       let currentRow = row + 1;
       currentRow < row + height - 1;
       currentRow++
     ) {
-      newImage.setVisiblePixel(column, currentRow, strokeColor);
-      newImage.setVisiblePixel(column + width - 1, currentRow, strokeColor);
+      setBlendedVisiblePixel(newImage, column, currentRow, {
+        color: strokeColor,
+      });
+      setBlendedVisiblePixel(newImage, column + width - 1, currentRow, {
+        color: strokeColor,
+      });
     }
   }
   if (fillColor !== 'none') {
@@ -105,8 +114,12 @@ export function drawRectangle(
         currentColumn < column + width - 1;
         currentColumn++
       ) {
-        newImage.setVisiblePixel(currentColumn, currentRow, fillColor);
-        newImage.setVisiblePixel(currentColumn, currentRow, fillColor);
+        /* setBlendedVisiblePixel(newImage, currentColumn, currentRow, {
+          color: fillColor,
+        });*/
+        setBlendedVisiblePixel(newImage, currentColumn, currentRow, {
+          color: fillColor,
+        });
       }
     }
   }
