@@ -3,6 +3,7 @@ import { Mask } from '../Mask';
 import { Point } from '../utils/geometry/points';
 import { getDefaultColor } from '../utils/getDefaultColor';
 import { getOutputImage, maskToOutputMask } from '../utils/getOutputImage';
+import { setBlendedVisiblePixel } from '../utils/setBlendedVisiblePixel';
 import checkProcessable from '../utils/validators/checkProcessable';
 import { validateColor } from '../utils/validators/validators';
 
@@ -61,10 +62,11 @@ export function drawPoints(
   });
 
   for (const point of points) {
-    newImage.setVisiblePixel(
+    setBlendedVisiblePixel(
+      newImage,
       Math.round(origin.column + point.column),
       Math.round(origin.row + point.row),
-      color,
+      { color },
     );
   }
 
