@@ -66,7 +66,7 @@ export function drawPoints(
       newImage,
       Math.round(origin.column + point.column),
       Math.round(origin.row + point.row),
-      { color },
+      color,
     );
   }
 

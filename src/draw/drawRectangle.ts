@@ -83,24 +83,26 @@ export function drawRectangle(
       currentColumn < column + width;
       currentColumn++
     ) {
-      setBlendedVisiblePixel(newImage, currentColumn, row, {
-        color: strokeColor,
-      });
-      setBlendedVisiblePixel(newImage, currentColumn, row + height - 1, {
-        color: strokeColor,
-      });
+      setBlendedVisiblePixel(newImage, currentColumn, row, strokeColor);
+      setBlendedVisiblePixel(
+        newImage,
+        currentColumn,
+        row + height - 1,
+        strokeColor,
+      );
     }
     for (
       let currentRow = row + 1;
       currentRow < row + height - 1;
       currentRow++
     ) {
-      setBlendedVisiblePixel(newImage, column, currentRow, {
-        color: strokeColor,
-      });
-      setBlendedVisiblePixel(newImage, column + width - 1, currentRow, {
-        color: strokeColor,
-      });
+      setBlendedVisiblePixel(newImage, column, currentRow, strokeColor);
+      setBlendedVisiblePixel(
+        newImage,
+        column + width - 1,
+        currentRow,
+        strokeColor,
+      );
     }
   }
   if (fillColor !== 'none') {
@@ -114,12 +116,7 @@ export function drawRectangle(
         currentColumn < column + width - 1;
         currentColumn++
       ) {
-        /* setBlendedVisiblePixel(newImage, currentColumn, currentRow, {
-          color: fillColor,
-        });*/
-        setBlendedVisiblePixel(newImage, currentColumn, currentRow, {
-          color: fillColor,
-        });
+        setBlendedVisiblePixel(newImage, currentColumn, currentRow, fillColor);
       }
     }
   }

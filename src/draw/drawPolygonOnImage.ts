@@ -66,7 +66,7 @@ export function drawPolygonOnImage(
             newImage,
             Math.round(origin.column) + column,
             Math.round(origin.row) + row,
-            { color: fillColor },
+            fillColor,
           );
         }
       }

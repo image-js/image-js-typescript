@@ -57,7 +57,7 @@ export function drawLineOnImage(
     Math.round(origin.column + to.column),
     Math.round(origin.row + to.row),
     (column: number, row: number) => {
-      setBlendedVisiblePixel(newImage, column, row, { color });
+      setBlendedVisiblePixel(newImage, column, row, color);
     },
   );
   return newImage;
