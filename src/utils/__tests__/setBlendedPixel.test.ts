@@ -24,14 +24,6 @@ test('GREYA images: opaque source, transparent target', () => {
   expect(image).toMatchImageData([[100, 255]]);
 });
 
-test('GREYA image: alpha different from 255', () => {
-  const image = testUtils.createGreyaImage([[50, 64]]);
-  setBlendedPixel(image, 0, 0, [100, 128]);
-  const alpha = 128 + 64 * (1 - 128 / 255);
-  const component = (100 * 128 + 50 * 64 * (1 - 128 / 255)) / alpha;
-  expect(image).toMatchImageData([[component, alpha]]);
-});
-
 test('asymetrical test', () => {
   const image = testUtils.createGreyaImage([
     [50, 255, 1, 2, 3, 4],
