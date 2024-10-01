@@ -315,6 +315,7 @@ test('different origin, line out of image', () => {
     origin: { column: 0, row: 0 },
     strokeColor: [1],
   });
+
   expect(result).toMatchImageData([
     [1, 0, 0, 0],
     [0, 1, 0, 0],
