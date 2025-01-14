@@ -74,8 +74,8 @@ export function drawCircleOnImage(
       setBlendedVisiblePixel(newImage, center.column, center.row, fill);
     }
     //Starting points for the top and bottom row of the circle.
-    let prevBotRow = center.row + radius;
-    let prevTopRow = center.row - radius;
+    let prevRow = center.row + radius;
+
     let index = 0;
     circle(center.column, center.row, radius, (column: number, row: number) => {
       setBlendedVisiblePixel(newImage, column, row, color);
@@ -92,7 +92,7 @@ export function drawCircleOnImage(
       }
       // The bresenham algorithm is drawing the circle in 4 parts. We are filling the top and bottom part of the circle. Therefore we check whether the point belongs to top or bottom part through indexes. Index must be 1 or 3 to fill the circle.
       // Filling bottom half of the circle.
-      if ((index - 1) % 4 === 0 && prevBotRow !== row) {
+      if ((index - 1) % 4 === 0 && prevRow !== row) {
         newImage.drawLine(
           { row, column: column + 1 },
           {
@@ -101,19 +101,16 @@ export function drawCircleOnImage(
           },
           { strokeColor: fill, out: newImage },
         );
-
-        prevBotRow = row;
+        prevRow = row;
         // Filling top half of the circle.
-      } else if ((index - 3) % 4 === 0 && prevTopRow !== row) {
         newImage.drawLine(
-          { row, column: column - 1 },
+          { row: center.row - (row - center.row), column: column + 1 },
           {
-            row,
-            column: center.column - (column - center.column - 1),
+            row: center.row - (row - center.row),
+            column: center.column - (column - center.column + 1),
           },
           { strokeColor: fill, out: newImage },
         );
-        prevTopRow = row;
       }
 
       index++;
