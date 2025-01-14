@@ -73,25 +73,51 @@ export function drawCircleOnImage(
     if (radius === 1) {
       setBlendedVisiblePixel(newImage, center.column, center.row, fill);
     }
+    //Starting points for the top and bottom row of the circle.
+    let prevBotRow = center.row + radius;
+    let prevTopRow = center.row - radius;
+    let index = 0;
     circle(center.column, center.row, radius, (column: number, row: number) => {
       setBlendedVisiblePixel(newImage, column, row, color);
-
-      //todo: fill is not optimal we can fill symmetrically
-      if (column - 1 > center.column) {
+      // Filling the first line of the circle.
+      if (index === 0) {
         newImage.drawLine(
           { row, column: column - 1 },
-          { row, column: center.column },
-          { strokeColor: fill, out: newImage },
-        );
-      } else if (column + 1 < center.column) {
-        newImage.drawLine(
-          { row, column: column + 1 },
-          { row, column: center.column },
+          {
+            row,
+            column: center.column - (column - center.column - 1),
+          },
           { strokeColor: fill, out: newImage },
         );
       }
+      // The bresenham algorithm is drawing the circle in 4 parts. We are filling the top and bottom part of the circle. Therefore we check whether the point belongs to top or bottom part through indexes. Index must be 1 or 3 to fill the circle.
+      // Filling bottom half of the circle.
+      if ((index - 1) % 4 === 0 && prevBotRow !== row) {
+        newImage.drawLine(
+          { row, column: column + 1 },
+          {
+            row,
+            column: center.column - (column - center.column + 1),
+          },
+          { strokeColor: fill, out: newImage },
+        );
+
+        prevBotRow = row;
+        // Filling top half of the circle.
+      } else if ((index - 3) % 4 === 0 && prevTopRow !== row) {
+        newImage.drawLine(
+          { row, column: column - 1 },
+          {
+            row,
+            column: center.column - (column - center.column - 1),
+          },
+          { strokeColor: fill, out: newImage },
+        );
+        prevTopRow = row;
+      }
+
+      index++;
     });
   }
-
   return newImage;
 }
