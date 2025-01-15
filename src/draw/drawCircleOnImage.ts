@@ -90,9 +90,12 @@ export function drawCircleOnImage(
           { strokeColor: fill, out: newImage },
         );
       }
-      // The bresenham algorithm is drawing the circle in 4 parts. We are filling the top and bottom part of the circle. Therefore we check whether the point belongs to top or bottom part through indexes. Index must be 1 or 3 to fill the circle.
-      // Filling bottom half of the circle.
-      if ((index - 1) % 4 === 0 && prevRow !== row) {
+      // The algorithm used is Bresenham's circle algorithm (@link https://www.geeksforgeeks.org/bresenhams-circle-drawing-algorithm/) to find points that constitute the circle outline. However, in this algorithm The circle is divided in 4 parts instead of 8: top, right, bottom and left.
+      // The algorithm draws a point per quadrant until the circle is complete.
+      // We use bottom (index % 4 === 1, quadrant 2) point of the outline to fill the circle with color.
+      // Filling half of the circle.
+      if (index % 4 === 1 && prevRow !== row) {
+        // For quadrant 2, column < center.column
         newImage.drawLine(
           { row, column: column + 1 },
           {
