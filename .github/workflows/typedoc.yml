@@ -22,7 +22,7 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Build documentation
-        uses: zakodium/typedoc-action@v2
+        uses: zakodium/typedoc-action@update-debug
         with:
           entry: ${{ env.ENTRY_FILE }}
           name: ImageJS
