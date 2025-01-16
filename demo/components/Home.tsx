@@ -15,7 +15,6 @@ export default function Home() {
   const snapshotImageRef = useRef<Image>(null);
   const canvasInputRef = useRef<HTMLCanvasElement>(null);
   const [snapshotUrl, setSnapshotUrl] = useState('');
-  console.log(snapshotUrl);
   return (
     <Container title="Home">
       <div className="space-y-1">
