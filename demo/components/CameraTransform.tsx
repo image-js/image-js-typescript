@@ -38,7 +38,7 @@ export default function CameraTransform(props: CameraTransformProps) {
     const video = videoRef.current as HTMLVideoElement;
     let nextFrameRequest: number;
     video.srcObject = selectedCamera.stream;
-    video.addEventListener('loadedmetadata', () => {
+    const onLoadedMetadata = () => {
       video
         .play()
         .then(() => {
@@ -71,9 +71,11 @@ export default function CameraTransform(props: CameraTransformProps) {
           nextFrameRequest = requestAnimationFrame(nextFrame);
         })
         .catch((error_: unknown) => console.error(error_));
-    });
+    };
+    video.addEventListener('loadedmetadata', onLoadedMetadata);
 
     return () => {
+      video.removeEventListener('loadedmetadata', onLoadedMetadata);
       if (nextFrameRequest) {
         cancelAnimationFrame(nextFrameRequest);
       }

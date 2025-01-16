@@ -11,9 +11,13 @@ export default function CameraFeed() {
     const video = videoRef.current;
     if (!video || !selectedCamera) return;
     video.srcObject = selectedCamera.stream;
-    video.addEventListener('loadedmetadata', () => {
+    const onLoadedMetadata = () => {
       video.play().catch((error: unknown) => console.error(error));
-    });
+    };
+    video.addEventListener('loadedmetadata', onLoadedMetadata);
+    return () => {
+      video.removeEventListener('loadedmetadata', onLoadedMetadata);
+    };
   }, [selectedCamera]);
   if (!selectedCamera) {
     return <UnavailableCamera />;

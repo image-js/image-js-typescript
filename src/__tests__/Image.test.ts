@@ -221,7 +221,7 @@ test('getCoordinates - with rounding', () => {
 test('getCoordinates - bad parameter', () => {
   const img = new Image(4, 5);
   // @ts-expect-error bad parameter
-  expect(() => img.getCoordinates('bad')).toThrow(/bad/);
+  expect(() => img.getCoordinates('bad')).toThrow('bad');
 });
 
 test('fill with a constant color', () => {
