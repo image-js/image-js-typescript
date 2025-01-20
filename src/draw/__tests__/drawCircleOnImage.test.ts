@@ -400,5 +400,5 @@ test('draw circle image with transparent color', () => {
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   ]);
 
-  expect(expected).toMatchImage(received);
+  expect(received).toMatchImage(expected);
 });
