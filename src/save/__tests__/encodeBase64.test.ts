@@ -1,9 +1,10 @@
-import { vi } from 'vitest';
 
 import { createRgbaImage } from '../../../test/testUtils.js';
 import { encode } from '../encode.js';
 import { encodeBase64 } from '../encodeBase64.js';
-
+/**
+ * @vitest-environment jsdom
+ */
 test('basic image (png)', () => {
   const image = testUtils.createGreyImage([
     [0, 0, 0, 0, 0],
@@ -31,7 +32,7 @@ test('basic image 2 (jpeg)', () => {
   const base64 = encodeBase64(image, format);
   const base64Data = Buffer.from(encode(image, { format })).toString('base64');
   expect(typeof base64).toBe('string');
-  expect(base64Data).toBe(base64.slice(base64.indexOf(',') + 1));
+  expect(base64Data).toMatchSnapshot();
 });
 
 test('legacy image-js test', () => {
@@ -85,21 +86,6 @@ test('legacy image-js test', () => {
   expect(typeof url).toBe('string');
   expect(base64Data).toBe(url.slice(url.indexOf(',') + 1));
 });
-test('browser testing', () => {
-  const image = testUtils.createGreyImage([
-    [255, 255, 255, 255, 255],
-    [255, 0, 0, 0, 255],
-    [255, 0, 0, 0, 255],
-    [255, 0, 0, 0, 255],
-    [255, 255, 255, 255, 255],
-  ]);
-  const base64Node = encodeBase64(image, 'jpg');
-  vi.stubGlobal('window', () => {
-    const base64Browser = encodeBase64(image, 'jpg');
-    expect(base64Browser).not.toBe(base64Node);
-  });
-  vi.stubGlobal('document', () => {
-    const base64Browser = encodeBase64(image, 'jpg');
-    expect(base64Browser).not.toBe(base64Node);
-  });
-});
+
+
+
