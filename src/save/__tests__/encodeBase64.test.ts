@@ -1,10 +1,7 @@
-
 import { createRgbaImage } from '../../../test/testUtils.js';
 import { encode } from '../encode.js';
 import { encodeBase64 } from '../encodeBase64.js';
-/**
- * @vitest-environment jsdom
- */
+
 test('basic image (png)', () => {
   const image = testUtils.createGreyImage([
     [0, 0, 0, 0, 0],
@@ -86,6 +83,3 @@ test('legacy image-js test', () => {
   expect(typeof url).toBe('string');
   expect(base64Data).toBe(url.slice(url.indexOf(',') + 1));
 });
-
-
-

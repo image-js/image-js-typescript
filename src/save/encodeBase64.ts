@@ -10,9 +10,11 @@ import type { ImageFormat } from './encode.js';
  * @returns base64 string.
  */
 export function encodeBase64(image: Image, format: ImageFormat) {
-const buffer = encode(image, { format });
-const binaryString = new TextDecoder('latin1').decode(Uint8Array.from(buffer));
-const base64String = btoa(binaryString);
-return `data:image/${format};base64,${base64String}`;
-}
+  const buffer = encode(image, { format });
+  const binaryString = new TextDecoder('latin1').decode(
+    Uint8Array.from(buffer),
+  );
 
+  const base64String = btoa(binaryString);
+  return `data:image/${format};base64,${base64String}`;
+}
