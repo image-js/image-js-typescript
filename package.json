@@ -43,6 +43,7 @@
   },
   "homepage": "https://github.com/image-js/image-js#readme",
   "dependencies": {
+    "@jsonjoy.com/base64": "^1.1.2",
     "bresenham-zingl": "^0.2.0",
     "colord": "^2.9.3",
     "fast-bmp": "^2.0.1",
