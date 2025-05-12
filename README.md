@@ -9,13 +9,18 @@ Image processing and manipulation in JavaScript.
 
 ## Installation
 
-`$ npm i image-js`
+`$ npm i image-js@next`
 
 ## [API](https://image-js.github.io/image-js-typescript/)
 
 ## Development
 
 See [Development documentation](./Development.md).
+
+## Userguide
+
+See [https://image-js-docs.pages.dev/docs/Getting%20started](https://image-js-docs.pages.dev/docs/Getting%20started)
+
 
 ## License
 
