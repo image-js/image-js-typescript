@@ -1,16 +1,126 @@
-// REFERENCES :
-// https://stackoverflow.com/questions/38285229/calculating-aspect-ratio-of-perspective-transform-destination-image/38402378#38402378
-// http://www.corrmap.com/features/homography_transformation.php
-// https://ags.cs.uni-kl.de/fileadmin/inf_ags/3dcv-ws11-12/3DCV_WS11-12_lec04.pdf
-// http://graphics.cs.cmu.edu/courses/15-463/2011_fall/Lectures/morphing.pdf
-
 import { Matrix, inverse, SingularValueDecomposition } from 'ml-matrix';
 
 import { Image } from '../Image.js';
 import type { Point } from '../utils/geometry/points.js';
 
 type Vector = [number, number, number];
+interface PerspectiveWarpOptionsWithDimensions {
+  width?: number;
+  height?: number;
+}
+interface PerspectiveWarpOptionsWithRatios {
+  calculateRatio?: boolean;
+}
 
+// REFERENCES :
+// https://stackoverflow.com/questions/38285229/calculating-aspect-ratio-of-perspective-transform-destination-image/38402378#38402378
+// http://www.corrmap.com/features/homography_transformation.php
+// https://ags.cs.uni-kl.de/fileadmin/inf_ags/3dcv-ws11-12/3DCV_WS11-12_lec04.pdf
+// http://graphics.cs.cmu.edu/courses/15-463/2011_fall/Lectures/morphing.pdf
+
+/**
+ * Applies perspective warp on an image from 4 points.
+ * @param image - Image to apply the algorithm on.
+ * @param pts - 4 reference corners of the new image.
+ * @param options - PerspectiveWarpOptions
+ * @returns - New image after warp.
+ */
+export default function getPerspectiveWarp(
+  image: Image,
+  pts: Point[],
+  options: PerspectiveWarpOptionsWithDimensions &
+    PerspectiveWarpOptionsWithRatios = {},
+) {
+  const { width, height, calculateRatio } = options;
+
+  if (pts.length !== 4) {
+    throw new Error(
+      `The array pts must have four elements, which are the four corners. Currently, pts have ${pts.length} elements`,
+    );
+  }
+
+  const [tl, tr, br, bl] = order4Points(pts);
+
+  let widthRect;
+  let heightRect;
+  if (calculateRatio) {
+    [widthRect, heightRect] = computeWidthAndHeigth(
+      {
+        tl,
+        tr,
+        br,
+        bl,
+      },
+      image.width,
+      image.height,
+    );
+  } else if (height && width) {
+    widthRect = width;
+    heightRect = height;
+  } else {
+    widthRect = Math.ceil(
+      Math.max(distance2Points(tl, tr), distance2Points(bl, br)),
+    );
+    heightRect = Math.ceil(
+      Math.max(distance2Points(tl, bl), distance2Points(tr, br)),
+    );
+  }
+
+  const newImage = Image.createFrom(image, {
+    width: widthRect,
+    height: heightRect,
+  });
+  const [x1, y1] = [0, 0];
+  const [x2, y2] = [0, widthRect - 1];
+  const [x3, y3] = [heightRect - 1, widthRect - 1];
+  const [x4, y4] = [heightRect - 1, 0];
+
+  const S = new Matrix([
+    [x1, y1, 1, 0, 0, 0, -x1 * tl.column, -y1 * tl.column],
+    [x2, y2, 1, 0, 0, 0, -x2 * tr.column, -y2 * tr.column],
+    [x3, y3, 1, 0, 0, 0, -x3 * br.column, -y3 * br.column],
+    [x4, y4, 1, 0, 0, 0, -x4 * bl.column, -y4 * bl.column],
+    [0, 0, 0, x1, y1, 1, -x1 * tl.row, -y1 * tl.row],
+    [0, 0, 0, x2, y2, 1, -x2 * tr.row, -y2 * tr.row],
+    [0, 0, 0, x3, y3, 1, -x3 * br.row, -y3 * br.row],
+    [0, 0, 0, x4, y4, 1, -x4 * bl.row, -y4 * bl.row],
+  ]);
+
+  const D = Matrix.columnVector([
+    tl.column,
+    tr.column,
+    br.column,
+    bl.column,
+    tl.row,
+    tr.row,
+    br.row,
+    bl.row,
+  ]);
+
+  const svd = new SingularValueDecomposition(S);
+  const T = svd.solve(D); // solve S*T = D
+  const [a, b, c, d, e, f, g, h] = T.to1DArray();
+
+  for (let i = 0; i < heightRect; i++) {
+    for (let j = 0; j < widthRect; j++) {
+      for (let channel = 0; channel < image.channels; channel++) {
+        newImage.setValue(
+          j,
+          i,
+          channel,
+          projectionPoint(i, j, a, b, c, d, e, f, g, h, image, channel),
+        );
+      }
+    }
+  }
+
+  return newImage;
+}
+/**
+ * Sorts 4 points in order =>[top-left,top-right,bottom-right,bottom-left].
+ * @param pts - Array of 4 points.
+ * @returns Sorted array of 4 points.
+ */
 function order4Points(pts: Point[]) {
   let tl: Point;
   let tr: Point;
@@ -61,11 +171,21 @@ function order4Points(pts: Point[]) {
 
   return [tl, tr, br, bl];
 }
-
+/**
+ *  Calculates distance between points.
+ * @param p1 - Point1
+ * @param p2 - Point2
+ * @returns distance between points.
+ */
 function distance2Points(p1: Point, p2: Point) {
   return Math.hypot(p1.column - p2.column, p1.row - p2.row);
 }
-
+/**
+ * Calculates cross products between two vectors.
+ * @param u - Vector1.
+ * @param v - Vector2.
+ * @returns new calculated vector.
+ */
 function crossVect(u: Vector, v: Vector): Vector {
   const result = [
     u[1] * v[2] - u[2] * v[1],
@@ -74,11 +194,27 @@ function crossVect(u: Vector, v: Vector): Vector {
   ];
   return result as Vector;
 }
-
+/**
+ * Calculates dot product between two vectors.
+ * @param u - Vector1.
+ * @param v - Vector2.
+ * @returns result of the product.
+ */
 function dotVect(u: Vector, v: Vector): number {
   const result = u[0] * v[0] + u[1] * v[1] + u[2] * v[2];
   return result;
 }
+/**
+ * Calculates width and height of the new image for perspective warp.
+ * @param points - 4 reference corners.
+ * @param points.tl - top-left corner.
+ * @param points.tr - top-right corner.
+ * @param points.br - bottom-right corner.
+ * @param points.bl - bottom-left corner.
+ * @param widthImage - image width.
+ *  @param heightImage - image height.
+ * @returns new width and height values.
+ */
 function computeWidthAndHeigth(
   points: { tl: Point; tr: Point; br: Point; bl: Point },
   widthImage: number,
@@ -181,107 +317,4 @@ function projectionPoint(
     (d * x + e * y + f) / (g * x + h * y + 1),
   ];
   return image.getValue(Math.floor(newX), Math.floor(newY), channel);
-}
-
-/**
- * Transform a quadrilateral into a rectangle
- * @memberof Image
- * @instance
- * @param image
- * @param [pts] - Array of the four corners.
- * @param [options]
- * @param [options.calculateRatio=true] - true if you want to calculate the aspect ratio "width x height" by taking the perspectiv into consideration.
- * @returns The new image, which is a rectangle
- * @example
- * var cropped = image.warpingFourPoints({
- *   pts: [[0,0], [100, 0], [80, 50], [10, 50]]
- * });
- */
-
-export default function getPerspectiveWarp(
-  image: Image,
-  pts: Point[],
-  options: { calculateRatio?: boolean } = {},
-) {
-  const { calculateRatio = true } = options;
-
-  if (pts.length !== 4) {
-    throw new Error(
-      `The array pts must have four elements, which are the four corners. Currently, pts have ${pts.length} elements`,
-    );
-  }
-
-  const [tl, tr, br, bl] = order4Points(pts);
-
-  let widthRect;
-  let heightRect;
-  if (calculateRatio) {
-    [widthRect, heightRect] = computeWidthAndHeigth(
-      {
-        tl,
-        tr,
-        br,
-        bl,
-      },
-      image.width,
-      image.height,
-    );
-  } else {
-    widthRect = Math.ceil(
-      Math.max(distance2Points(tl, tr), distance2Points(bl, br)),
-    );
-    heightRect = Math.ceil(
-      Math.max(distance2Points(tl, bl), distance2Points(tr, br)),
-    );
-  }
-
-  const newImage = Image.createFrom(image, {
-    width: widthRect,
-    height: heightRect,
-  });
-  const [x1, y1] = [0, 0];
-  const [x2, y2] = [0, widthRect - 1];
-  const [x3, y3] = [heightRect - 1, widthRect - 1];
-  const [x4, y4] = [heightRect - 1, 0];
-
-  const S = new Matrix([
-    [x1, y1, 1, 0, 0, 0, -x1 * tl.column, -y1 * tl.column],
-    [x2, y2, 1, 0, 0, 0, -x2 * tr.column, -y2 * tr.column],
-    [x3, y3, 1, 0, 0, 0, -x3 * br.column, -y3 * br.column],
-    [x4, y4, 1, 0, 0, 0, -x4 * bl.column, -y4 * bl.column],
-    [0, 0, 0, x1, y1, 1, -x1 * tl.row, -y1 * tl.row],
-    [0, 0, 0, x2, y2, 1, -x2 * tr.row, -y2 * tr.row],
-    [0, 0, 0, x3, y3, 1, -x3 * br.row, -y3 * br.row],
-    [0, 0, 0, x4, y4, 1, -x4 * bl.row, -y4 * bl.row],
-  ]);
-
-  const D = Matrix.columnVector([
-    tl.column,
-    tr.column,
-    br.column,
-    bl.column,
-    tl.row,
-    tr.row,
-    br.row,
-    bl.row,
-  ]);
-
-  const svd = new SingularValueDecomposition(S);
-  const T = svd.solve(D); // solve S*T = D
-  const [a, b, c, d, e, f, g, h] = T.to1DArray();
-
-  for (let i = 0; i < heightRect; i++) {
-    for (let j = 0; j < widthRect; j++) {
-      for (let channel = 0; channel < image.channels; channel++) {
-        newImage.setValue(
-          j,
-          i,
-          channel,
-          projectionPoint(i, j, a, b, c, d, e, f, g, h, image, channel),
-        );
-      }
-    }
-  }
-
-  return newImage;
 }
