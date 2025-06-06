@@ -74,6 +74,7 @@ export type TestImagePath =
   | 'opencv/testConvolution.png'
   | 'opencv/testGaussianBlur.png'
   | 'opencv/testInterpolate.png'
+  | 'opencv/test_perspective_warp_plants.png'
   | 'opencv/testReflect.png'
   | 'opencv/test_resize_bicubic_larger.png'
   | 'opencv/test_resize_bicubic_same.png'
@@ -95,6 +96,7 @@ export type TestImagePath =
   | 'ssim/ssim-saltPepper.png'
   | 'various/alphabet.jpg'
   | 'various/grayscale_by_zimmyrose.png'
+  | 'various/plants.png'
   | 'various/screws.png'
   | 'various/sudoku.jpg'
   | 'various/without-metadata.jpg';

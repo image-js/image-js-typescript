@@ -316,5 +316,5 @@ function projectionPoint(
     (a * x + b * y + c) / (g * x + h * y + 1),
     (d * x + e * y + f) / (g * x + h * y + 1),
   ];
-  return image.getValue(Math.floor(newX), Math.floor(newY), channel);
+  return image.getValue(Math.round(newX), Math.round(newY), channel);
 }

@@ -1,8 +1,7 @@
 import { Image } from '../../Image.js';
-import { readSync } from '../../load/read.js';
 import getPerspectiveWarp from '../getPerspectiveWarp.js';
 
-describe('warping legacy tests', () => {
+describe('warping tests', () => {
   it('resize without rotation', () => {
     const image = new Image(3, 3, {
       data: new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9]),
@@ -40,13 +39,14 @@ describe('warping legacy tests', () => {
     expect(result.width).not.toBeGreaterThan(4);
     expect(result.height).not.toBeGreaterThan(2);
   });
-});
-describe('openCV comparison', () => {
-  it('image of plants', () => {
-    const image = readSync('./src/geometry/__tests__/plants.png');
+
+  test('openCV comparison', () => {
+    const image = testUtils.load('various/plants.png');
+
     const openCvResult = testUtils.load(
       'opencv/test_perspective_warp_plants.png',
     );
+
     const points = [
       { column: 166.5, row: 195 },
       { column: 858.5, row: 9 },
@@ -57,11 +57,20 @@ describe('openCV comparison', () => {
       width: 1080,
       height: 810,
     });
+    const croppedPieceOpenCv = openCvResult.crop({
+      origin: { column: 45, row: 0 },
+      width: 400,
+      height: 400,
+    });
+
+    const croppedPiece = result.crop({
+      origin: { column: 45, row: 0 },
+      width: 400,
+      height: 400,
+    });
+
     expect(result.width).toEqual(openCvResult.width);
     expect(result.height).toEqual(openCvResult.height);
-    expect(result.getValue(0, 0, 0)).toEqual(openCvResult.getValue(0, 0, 0));
-    expect(result.getValue(22, 22, 0)).toEqual(
-      openCvResult.getValue(22, 22, 0),
-    );
+    expect(croppedPiece).toEqual(croppedPieceOpenCv);
   });
 });
