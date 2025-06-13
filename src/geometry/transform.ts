@@ -128,7 +128,7 @@ export function transform(
 
   if (!isValidMatrix(transformMatrix)) {
     throw new TypeError(
-      `transformation matrix must be 3x3 or 2x3. Received ${transformMatrix.length}x${transformMatrix[1].length}`,
+      `transformation matrix must be 2x3 or 3x3. Received ${transformMatrix.length}x${transformMatrix[1].length}`,
     );
   }
   if (transformMatrix.length === 2) {
