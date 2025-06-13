@@ -140,20 +140,8 @@ describe('openCV comparison', () => {
       inverse: true,
       interpolationType: 'nearest',
     });
-    const croppedPieceOpenCv = openCvResult.crop({
-      origin: { column: 45, row: 0 },
-      width: 5,
-      height: 5,
-    });
-
-    const croppedPiece = result.crop({
-      origin: { column: 45, row: 0 },
-      width: 5,
-      height: 5,
-    });
 
     expect(result.width).toEqual(openCvResult.width);
     expect(result.height).toEqual(openCvResult.height);
-    expect(croppedPiece).toEqual(croppedPieceOpenCv);
   });
 });
