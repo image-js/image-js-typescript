@@ -86,7 +86,7 @@ export default function getPerspectiveWarp(
 }
 
 /**
- * Sorts 4 points in order =>[top-left,top-right,bottom-right,bottom-left].
+ * Sorts 4 points in order =>[top-left,top-right,bottom-right,bottom-left]. Input points must be in clockwise or counter-clockwise order.
  * @param pts - Array of 4 points.
  * @returns Sorted array of 4 points.
  */
@@ -137,7 +137,6 @@ function order4Points(pts: Point[]) {
       br = pts[(indexMinX + 3) % 4];
     }
   }
-
   return [tl, tr, br, bl];
 }
 /**

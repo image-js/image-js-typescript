@@ -46,16 +46,15 @@ describe('warping tests', () => {
 describe('openCV comparison', () => {
   test('nearest interpolation plants', () => {
     const image = testUtils.load('various/plants.png');
-
     const openCvResult = testUtils.load(
       'opencv/test_perspective_warp_plants_nearest.png',
     );
 
     const points = [
-      { column: 166.5, row: 195 },
       { column: 858.5, row: 9 },
       { column: 911.5, row: 786 },
       { column: 154.5, row: 611 },
+      { column: 166.5, row: 195 },
     ];
     const matrix = getPerspectiveWarp(points, {
       width: 1080,
@@ -81,17 +80,17 @@ describe('openCV comparison', () => {
     expect(result.height).toEqual(openCvResult.height);
     expect(croppedPiece).toEqual(croppedPieceOpenCv);
   });
+
   test('nearest interpolation card', () => {
     const image = testUtils.load('various/card.png');
-
     const openCvResult = testUtils.load(
       'opencv/test_perspective_warp_card_nearest.png',
     );
     const points = [
-      { column: 55, row: 140 },
-      { column: 680, row: 38 },
       { column: 840, row: 340 },
       { column: 145, row: 460 },
+      { column: 55, row: 140 },
+      { column: 680, row: 38 },
     ];
     const matrix = getPerspectiveWarp(points, {
       width: 700,
@@ -121,16 +120,15 @@ describe('openCV comparison', () => {
   });
   test('nearest interpolation plants', () => {
     const image = testUtils.load('various/plants.png');
-
     const openCvResult = testUtils.load(
       'opencv/test_perspective_warp_plants_linear.png',
     );
 
     const points = [
       { column: 166.5, row: 195 },
-      { column: 858.5, row: 9 },
-      { column: 911.5, row: 786 },
       { column: 154.5, row: 611 },
+      { column: 911.5, row: 786 },
+      { column: 858.5, row: 9 },
     ];
     const matrix = getPerspectiveWarp(points, {
       width: 1080,
@@ -143,5 +141,15 @@ describe('openCV comparison', () => {
 
     expect(result.width).toEqual(openCvResult.width);
     expect(result.height).toEqual(openCvResult.height);
+  });
+});
+
+describe('error testing', () => {
+  test("should throw if there aren't 4 points", () => {
+    expect(() => {
+      getPerspectiveWarp([{ column: 1, row: 1 }]);
+    }).toThrow(
+      'The array pts must have four elements, which are the four corners. Currently, pts have 1 elements',
+    );
   });
 });
