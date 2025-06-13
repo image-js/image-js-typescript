@@ -87,10 +87,10 @@ describe('openCV comparison', () => {
       'opencv/test_perspective_warp_card_nearest.png',
     );
     const points = [
-      { column: 840, row: 340 },
       { column: 145, row: 460 },
       { column: 55, row: 140 },
       { column: 680, row: 38 },
+      { column: 840, row: 340 },
     ];
     const matrix = getPerspectiveWarp(points, {
       width: 700,
@@ -125,10 +125,10 @@ describe('openCV comparison', () => {
     );
 
     const points = [
+      { column: 858.5, row: 9 },
       { column: 166.5, row: 195 },
       { column: 154.5, row: 611 },
       { column: 911.5, row: 786 },
-      { column: 858.5, row: 9 },
     ];
     const matrix = getPerspectiveWarp(points, {
       width: 1080,

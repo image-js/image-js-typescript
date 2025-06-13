@@ -109,13 +109,12 @@ function order4Points(pts: Point[]) {
   let minX2 = pts[(indexMinX + 1) % pts.length].column;
   let indexMinX2 = (indexMinX + 1) % pts.length;
 
-  for (let i = 1; i < pts.length; i++) {
+  for (let i = 0; i < pts.length; i++) {
     if (pts[i].column < minX2 && i !== indexMinX) {
       minX2 = pts[i].column;
       indexMinX2 = i;
     }
   }
-
   if (pts[indexMinX2].row < pts[indexMinX].row) {
     tl = pts[indexMinX2];
     bl = pts[indexMinX];
