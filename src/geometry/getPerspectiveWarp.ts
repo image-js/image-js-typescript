@@ -3,9 +3,21 @@ import { Matrix, SingularValueDecomposition } from 'ml-matrix';
 import type { Point } from '../utils/geometry/points.js';
 
 interface GetPerspectiveWarpOptions {
+  /**
+   * The horizontal dimension (in pixels) of the final rectified rectangular image.
+   */
   width?: number;
+  /**
+   * The vertical dimension (in pixels) of the final rectified rectangular image.
+   */
   height?: number;
 }
+/**
+ * Returns result matrix along with vertical and horizontal dimensions for the rectangular image.
+ */
+type GetPerspectiveWarpData = Required<GetPerspectiveWarpOptions> & {
+  matrix: number[][];
+};
 
 // REFERENCES :
 // https://stackoverflow.com/questions/38285229/calculating-aspect-ratio-of-perspective-transform-destination-image/38402378#38402378
@@ -21,7 +33,7 @@ interface GetPerspectiveWarpOptions {
 export default function getPerspectiveWarp(
   pts: Point[],
   options: GetPerspectiveWarpOptions = {},
-) {
+): GetPerspectiveWarpData {
   if (pts.length !== 4) {
     throw new Error(
       `The array pts must have four elements, which are the four corners. Currently, pts have ${pts.length} elements`,
@@ -82,7 +94,7 @@ export default function getPerspectiveWarp(
     }
     M.push(row);
   }
-  return M;
+  return { matrix: M, width: widthRect, height: heightRect };
 }
 
 /**
@@ -90,7 +102,7 @@ export default function getPerspectiveWarp(
  * @param pts - Array of 4 points.
  * @returns Sorted array of 4 points.
  */
-function order4Points(pts: Point[]) {
+export function order4Points(pts: Point[]) {
   let tl: Point;
   let tr: Point;
   let br: Point;
