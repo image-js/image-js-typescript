@@ -77,6 +77,7 @@ export type TestImagePath =
   | 'opencv/test_perspective_warp_card_nearest.png'
   | 'opencv/test_perspective_warp_plants_linear.png'
   | 'opencv/test_perspective_warp_plants_nearest.png'
+  | 'opencv/test_perspective_warp_poker_cards_nearest.png'
   | 'opencv/testReflect.png'
   | 'opencv/test_resize_bicubic_larger.png'
   | 'opencv/test_resize_bicubic_same.png'
@@ -100,6 +101,7 @@ export type TestImagePath =
   | 'various/card.png'
   | 'various/grayscale_by_zimmyrose.png'
   | 'various/plants.png'
+  | 'various/poker_cards.png'
   | 'various/screws.png'
   | 'various/sudoku.jpg'
   | 'various/without-metadata.jpg';

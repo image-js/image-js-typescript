@@ -1,5 +1,57 @@
 import { Image } from '../../Image.js';
-import getPerspectiveWarp from '../getPerspectiveWarp.js';
+import getPerspectiveWarp, { order4Points } from '../getPerspectiveWarp.js';
+
+describe('4 points sorting', () => {
+  test('basic sorting test', () => {
+    const points = [
+      { column: 0, row: 100 },
+      { column: 0, row: 0 },
+      { column: 100, row: 1 },
+      { column: 100, row: 100 },
+    ];
+
+    const result = order4Points(points);
+    expect(result).toEqual([
+      { column: 0, row: 0 },
+      { column: 100, row: 1 },
+      { column: 100, row: 100 },
+      { column: 0, row: 100 },
+    ]);
+  });
+  test('inclined square', () => {
+    const points = [
+      { column: 45, row: 0 },
+      { column: 0, row: 45 },
+      { column: 45, row: 90 },
+      { column: 90, row: 45 },
+    ];
+
+    const result = order4Points(points);
+    expect(result).toEqual([
+      { column: 0, row: 45 },
+      { column: 90, row: 45 },
+      { column: 45, row: 0 },
+      { column: 45, row: 90 },
+    ]);
+  });
+  test('basic sorting test', () => {
+    const points = [
+      { column: 155, row: 195 },
+      { column: 154, row: 611 },
+      { column: 858.5, row: 700 },
+      { column: 911.5, row: 786 },
+    ];
+
+    const result = order4Points(points);
+    expect(result).toEqual([
+      { column: 155, row: 195 },
+
+      { column: 858.5, row: 700 },
+      { column: 911.5, row: 786 },
+      { column: 154, row: 611 },
+    ]);
+  });
+});
 
 describe('warping tests', () => {
   it('resize without rotation', () => {
@@ -14,7 +66,7 @@ describe('warping tests', () => {
       { column: 0, row: 2 },
     ];
     const matrix = getPerspectiveWarp(points);
-    const result = image.transform(matrix, { inverse: true });
+    const result = image.transform(matrix.matrix, { inverse: true });
     expect(result.width).not.toBeLessThan(2);
     expect(result.height).not.toBeLessThan(2);
     expect(result.width).not.toBeGreaterThan(3);
@@ -35,7 +87,7 @@ describe('warping tests', () => {
       { column: 0, row: 1 },
     ];
     const matrix = getPerspectiveWarp(points);
-    const result = image.transform(matrix, { inverse: true });
+    const result = image.transform(matrix.matrix, { inverse: true });
     expect(result.width).not.toBeLessThan(3);
     expect(result.height).not.toBeLessThan(1);
     expect(result.width).not.toBeGreaterThan(4);
@@ -60,7 +112,7 @@ describe('openCV comparison', () => {
       width: 1080,
       height: 810,
     });
-    const result = image.transform(matrix, {
+    const result = image.transform(matrix.matrix, {
       inverse: true,
       interpolationType: 'nearest',
     });
@@ -87,16 +139,16 @@ describe('openCV comparison', () => {
       'opencv/test_perspective_warp_card_nearest.png',
     );
     const points = [
-      { column: 145, row: 460 },
       { column: 55, row: 140 },
       { column: 680, row: 38 },
       { column: 840, row: 340 },
+      { column: 145, row: 460 },
     ];
     const matrix = getPerspectiveWarp(points, {
       width: 700,
       height: 400,
     });
-    const result = image.transform(matrix, {
+    const result = image.transform(matrix.matrix, {
       inverse: true,
       interpolationType: 'nearest',
       width: 700,
@@ -118,29 +170,40 @@ describe('openCV comparison', () => {
     expect(result.height).toEqual(openCvResult.height);
     expect(croppedPiece).toEqual(croppedPieceOpenCv);
   });
-  test('nearest interpolation plants', () => {
-    const image = testUtils.load('various/plants.png');
+  test('nearest interpolation poker card', () => {
+    const image = testUtils.load('various/poker_cards.png');
     const openCvResult = testUtils.load(
-      'opencv/test_perspective_warp_plants_linear.png',
+      'opencv/test_perspective_warp_poker_cards_nearest.png',
     );
 
     const points = [
-      { column: 858.5, row: 9 },
-      { column: 166.5, row: 195 },
-      { column: 154.5, row: 611 },
-      { column: 911.5, row: 786 },
+      { column: 1100, row: 660 },
+      { column: 680, row: 660 },
+      { column: 660, row: 290 },
+      { column: 970, row: 290 },
     ];
-    const matrix = getPerspectiveWarp(points, {
-      width: 1080,
-      height: 810,
-    });
-    const result = image.transform(matrix, {
+    const matrix = getPerspectiveWarp(points);
+    const result = image.transform(matrix.matrix, {
       inverse: true,
       interpolationType: 'nearest',
+      height: matrix.height,
+      width: matrix.width,
+    });
+
+    const cropped = result.crop({
+      origin: { column: 10, row: 10 },
+      width: 100,
+      height: 100,
+    });
+    const croppedCV = openCvResult.crop({
+      origin: { column: 10, row: 10 },
+      width: 100,
+      height: 100,
     });
 
     expect(result.width).toEqual(openCvResult.width);
     expect(result.height).toEqual(openCvResult.height);
+    expect(cropped).toEqual(croppedCV);
   });
 });
 
