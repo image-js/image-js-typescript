@@ -1,5 +1,5 @@
 import { Image } from '../../Image.js';
-import getPerspectiveWarp, { order4Points } from '../getPerspectiveWarp.js';
+import { getPerspectiveWarp, order4Points } from '../getPerspectiveWarp.js';
 
 describe('4 points sorting', () => {
   test('basic sorting test', () => {
@@ -97,7 +97,7 @@ describe('warping tests', () => {
 
 describe('openCV comparison', () => {
   test('nearest interpolation plants', () => {
-    const image = testUtils.load('various/plants.png');
+    const image = testUtils.load('opencv/plants.png');
     const openCvResult = testUtils.load(
       'opencv/test_perspective_warp_plants_nearest.png',
     );
@@ -134,7 +134,7 @@ describe('openCV comparison', () => {
   });
 
   test('nearest interpolation card', () => {
-    const image = testUtils.load('various/card.png');
+    const image = testUtils.load('opencv/card.png');
     const openCvResult = testUtils.load(
       'opencv/test_perspective_warp_card_nearest.png',
     );
@@ -171,7 +171,7 @@ describe('openCV comparison', () => {
     expect(croppedPiece).toEqual(croppedPieceOpenCv);
   });
   test('nearest interpolation poker card', () => {
-    const image = testUtils.load('various/poker_cards.png');
+    const image = testUtils.load('opencv/poker_cards.png');
     const openCvResult = testUtils.load(
       'opencv/test_perspective_warp_poker_cards_nearest.png',
     );
@@ -214,5 +214,18 @@ describe('error testing', () => {
     }).toThrow(
       'The array pts must have four elements, which are the four corners. Currently, pts have 1 elements',
     );
+  });
+  test('should throw if either only width or only height are defined', () => {
+    expect(() => {
+      getPerspectiveWarp(
+        [
+          { column: 1, row: 1 },
+          { column: 2, row: 1 },
+          { column: 2, row: 2 },
+          { column: 1, row: 2 },
+        ],
+        { width: 10 },
+      );
+    }).toThrow('Height is not defined');
   });
 });

@@ -2,6 +2,9 @@ import { Matrix, SingularValueDecomposition } from 'ml-matrix';
 
 import type { Point } from '../utils/geometry/points.js';
 
+/**
+ * Options for getPerspectiveWarp function.
+ */
 interface GetPerspectiveWarpOptions {
   /**
    * The horizontal dimension (in pixels) of the final rectified rectangular image.
@@ -30,7 +33,7 @@ type GetPerspectiveWarpData = Required<GetPerspectiveWarpOptions> & {
  * @param options - PerspectiveWarpOptions
  * @returns - Matrix from 4 points.
  */
-export default function getPerspectiveWarp(
+export function getPerspectiveWarp(
   pts: Point[],
   options: GetPerspectiveWarpOptions = {},
 ): GetPerspectiveWarpData {
@@ -47,13 +50,15 @@ export default function getPerspectiveWarp(
   if (height && width) {
     widthRect = width;
     heightRect = height;
-  } else {
+  } else if (!height && !width) {
     widthRect = Math.ceil(
       Math.max(distance2Points(tl, tr), distance2Points(bl, br)),
     );
     heightRect = Math.ceil(
       Math.max(distance2Points(tl, bl), distance2Points(tr, br)),
     );
+  } else {
+    throw new Error(`${width ? 'Height' : 'Width'} is not defined.`);
   }
 
   const [x1, y1] = [0, 0];
