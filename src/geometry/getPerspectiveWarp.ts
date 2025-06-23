@@ -5,7 +5,7 @@ import type { Point } from '../utils/geometry/points.js';
 /**
  * Options for getPerspectiveWarp function.
  */
-interface GetPerspectiveWarpOptions {
+export interface GetPerspectiveWarpOptions {
   /**
    * The horizontal dimension (in pixels) of the final rectified rectangular image.
    */
@@ -18,7 +18,7 @@ interface GetPerspectiveWarpOptions {
 /**
  * Returns result matrix along with vertical and horizontal dimensions for the rectangular image.
  */
-type GetPerspectiveWarpData = Required<GetPerspectiveWarpOptions> & {
+export type GetPerspectiveWarpData = Required<GetPerspectiveWarpOptions> & {
   matrix: number[][];
 };
 
