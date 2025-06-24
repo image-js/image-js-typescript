@@ -27,9 +27,9 @@ export type GetPerspectiveWarpData = Required<GetPerspectiveWarpOptions> & {
 /**
  * Computes a perspective transformation matrix to rectify a quadrilateral region into a rectangle.
  *
- * This function takes four corner points of a distorted quadrilateral (e.g., a document photographed at an angle) and calculates the transformation matrix needed to "unwarp" it into a rectangular image.
+ * This function takes four corner points of a quadrilateral (e.g., a document photographed at an angle) and calculates the transformation matrix needed to "unwarp" it into a rectangular image.
  * The output dimensions can be specified or calculated automatically based on the input geometry.
- * @param pts - 4 reference corners of the new image.
+ * @param pts - 4 reference corners.
  * @param options - PerspectiveWarpOptions.
  * @returns - Matrix from 4 points.
  */
