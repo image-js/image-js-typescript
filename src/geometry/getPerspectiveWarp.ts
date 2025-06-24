@@ -23,14 +23,14 @@ export type GetPerspectiveWarpData = Required<GetPerspectiveWarpOptions> & {
 };
 
 // REFERENCES :
-// https://stackoverflow.com/questions/38285229/calculating-aspect-ratio-of-perspective-transform-destination-image/38402378#38402378
-// http://www.corrmap.com/features/homography_transformation.php
-// https://ags.cs.uni-kl.de/fileadmin/inf_ags/3dcv-ws11-12/3DCV_WS11-12_lec04.pdf
 // http://graphics.cs.cmu.edu/courses/15-463/2011_fall/Lectures/morphing.pdf
 /**
- * Returns perspective warp matrix from 4 points.
+ * Computes a perspective transformation matrix to rectify a quadrilateral region into a rectangle.
+ *
+ * This function takes four corner points of a distorted quadrilateral (e.g., a document photographed at an angle) and calculates the transformation matrix needed to "unwarp" it into a rectangular image.
+ * The output dimensions can be specified or calculated automatically based on the input geometry.
  * @param pts - 4 reference corners of the new image.
- * @param options - PerspectiveWarpOptions
+ * @param options - PerspectiveWarpOptions.
  * @returns - Matrix from 4 points.
  */
 export function getPerspectiveWarp(
@@ -58,7 +58,10 @@ export function getPerspectiveWarp(
       Math.max(distance2Points(tl, bl), distance2Points(tr, br)),
     );
   } else {
-    throw new Error(`${width ? 'Height' : 'Width'} is not defined.`);
+    throw new Error(
+      `Invalid dimensions: ${width ? '`height`' : '`width`'} is missing. ` +
+        `Either provide both width and height, or omit both to auto-calculate dimensions.`,
+    );
   }
 
   const [x1, y1] = [0, 0];

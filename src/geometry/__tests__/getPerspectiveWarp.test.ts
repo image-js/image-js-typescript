@@ -226,6 +226,8 @@ describe('error testing', () => {
         ],
         { width: 10 },
       );
-    }).toThrow('Height is not defined');
+    }).toThrow(
+      'Invalid dimensions: `height` is missing. Either provide both width and height, or omit both to auto-calculate dimensions.',
+    );
   });
 });
